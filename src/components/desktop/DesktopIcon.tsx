@@ -42,7 +42,7 @@ const iconGradients: Record<string, [string, string]> = {
 const defaultGradient: [string, string] = ["#636e72", "#b2bec3"];
 
 function getIcon(name: string) {
-  const IconComponent = (Icons as Record<string, React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>>)[name];
+  const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>>)[name];
   return IconComponent || Icons.File;
 }
 
