@@ -68,7 +68,7 @@ export default function WindowContent({ windowState, contentMap }: WindowContent
     }
     return (
       <div className="p-5 text-sm text-desktop-text-secondary">
-        No content found for "{fsItem.name}".
+        No content found for &ldquo;{fsItem.name}&rdquo;.
         {fsItem.contentPath && (
           <span> Create <code className="text-xs bg-desktop-border/50 px-1 py-0.5 rounded">src/content/{fsItem.contentPath}</code> to add content.</span>
         )}

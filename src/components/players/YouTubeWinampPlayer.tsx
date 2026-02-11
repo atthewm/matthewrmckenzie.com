@@ -53,6 +53,7 @@ export default function YouTubeWinampPlayer() {
   const timerRef = useRef<ReturnType<typeof setInterval>>();
 
   // Load YouTube IFrame API
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.YT) {
