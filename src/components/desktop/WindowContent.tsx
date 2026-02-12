@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { findFSItem } from "@/data/fs";
+import { findFSItem, type FSItem } from "@/data/fs";
 import type { WindowState } from "@/hooks/useDesktopStore";
 import FolderView from "@/components/apps/FolderView";
 import AboutApp from "@/components/apps/AboutApp";
@@ -13,20 +13,16 @@ import SettingsApp from "@/components/settings/SettingsApp";
 import SoundCloudPlayer from "@/components/players/SoundCloudPlayer";
 import YouTubeWinampPlayer from "@/components/players/YouTubeWinampPlayer";
 import AppleMusicFolder from "@/components/apps/AppleMusicFolder";
-
-// ============================================================================
-// WINDOW CONTENT RESOLVER
-// ============================================================================
-// Resolves the correct component to render inside a window based on the
-// file system item type and configuration.
-// ============================================================================
+import WhoopDashboardApp from "@/components/apps/whoop/WhoopDashboardApp";
+import WhoopSplitApp from "@/components/apps/whoop/WhoopSplitApp";
+import GetWhoopApp from "@/components/apps/whoop/GetWhoopApp";
 
 interface WindowContentProps {
   windowState: WindowState;
-  contentMap: Record<string, string>; // fsItemId -> HTML content
+  contentMap: Record<string, string>;
 }
 
-const appComponents: Record<string, React.ComponentType<{ contentHtml?: string }>> = {
+const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; fsItem?: FSItem }>> = {
   AboutApp,
   ProjectsApp,
   ContactApp,
@@ -35,32 +31,25 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string }
   SoundCloudPlayer,
   YouTubeWinampPlayer,
   AppleMusicFolder,
+  WhoopDashboardApp,
+  WhoopSplitApp,
+  GetWhoopApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {
   const fsItem = findFSItem(windowState.fsItemId);
   if (!fsItem) {
-    return (
-      <div className="p-5 text-sm text-desktop-text-secondary">
-        Item not found: {windowState.fsItemId}
-      </div>
-    );
+    return <div className="p-5 text-sm text-desktop-text-secondary">Item not found: {windowState.fsItemId}</div>;
   }
-
-  // Folder → show children as icons
   if (fsItem.type === "folder") {
     return <FolderView item={fsItem} />;
   }
-
-  // App → render the associated component
   if (fsItem.type === "app" && fsItem.appComponent) {
     const Component = appComponents[fsItem.appComponent];
     if (Component) {
-      return <Component contentHtml={contentMap[fsItem.id]} />;
+      return <Component contentHtml={contentMap[fsItem.id]} fsItem={fsItem} />;
     }
   }
-
-  // Document → render markdown
   if (fsItem.type === "document") {
     const html = contentMap[fsItem.id];
     if (html) {
@@ -75,10 +64,5 @@ export default function WindowContent({ windowState, contentMap }: WindowContent
       </div>
     );
   }
-
-  return (
-    <div className="p-5 text-sm text-desktop-text-secondary">
-      Unknown item type.
-    </div>
-  );
+  return <div className="p-5 text-sm text-desktop-text-secondary">Unknown item type.</div>;
 }
