@@ -329,7 +329,7 @@ export function loadState(): DesktopState | null {
 // ---------------------------------------------------------------------------
 
 export function usePersistence(state: DesktopState) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);

@@ -50,7 +50,7 @@ export default function YouTubeWinampPlayer() {
   const [showPlaylist, setShowPlaylist] = useState(false);
   const playerRef = useRef<YTPlayer | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   // Load YouTube IFrame API
   // eslint-disable-next-line react-hooks/exhaustive-deps

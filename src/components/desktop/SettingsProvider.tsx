@@ -21,7 +21,7 @@ import {
 export default function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<SettingsState>(defaultSettings);
   const [hydrated, setHydrated] = useState(false);
-  const saveTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const saveTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Hydrate from localStorage
   useEffect(() => {
