@@ -4,6 +4,12 @@ import React, { useState, useCallback } from "react";
 import { findSplitByFsId, type WhoopSplit } from "@/data/whoop/splits";
 import type { FSItem } from "@/data/fs";
 
+// ============================================================================
+// WHOOP SPLIT FILE VIEWER
+// ============================================================================
+// Opens a .whoop "file" showing the split name, description, and share link.
+// ============================================================================
+
 interface WhoopSplitAppProps {
   contentHtml?: string;
   fsItem?: FSItem;
@@ -29,6 +35,7 @@ function SplitContent({ split }: { split: WhoopSplit }) {
       }}
     >
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center gap-5">
+        {/* File icon */}
         <div
           className="w-16 h-16 rounded-2xl flex items-center justify-center"
           style={{
@@ -41,15 +48,21 @@ function SplitContent({ split }: { split: WhoopSplit }) {
             <path d="M6 12H18" /><path d="M6 7H18" /><path d="M6 17H18" />
           </svg>
         </div>
+
+        {/* Split name */}
         <div>
           <h2 className="text-lg font-bold text-white">{split.displayName}</h2>
           <p className="text-xs text-gray-400 mt-1 font-mono">{split.sillyFileName}</p>
         </div>
+
+        {/* Description */}
         <p className="text-sm text-gray-300 max-w-xs italic">
           &ldquo;{split.description}&rdquo;
         </p>
+
+        {/* Actions */}
         <div className="flex flex-col gap-2.5 w-full max-w-[220px]">
-          
+          <a
             href={split.shareUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -73,6 +86,8 @@ function SplitContent({ split }: { split: WhoopSplit }) {
           </button>
         </div>
       </div>
+
+      {/* Footer */}
       <div className="shrink-0 py-2 text-center">
         <p className="text-[9px] text-gray-600">WHOOP Strength Trainer Split</p>
       </div>
@@ -82,11 +97,21 @@ function SplitContent({ split }: { split: WhoopSplit }) {
 
 export default function WhoopSplitApp({ fsItem }: WhoopSplitAppProps) {
   if (!fsItem) {
-    return <div className="p-5 text-sm text-desktop-text-secondary">Split data not found.</div>;
+    return (
+      <div className="p-5 text-sm text-desktop-text-secondary">
+        Split data not found.
+      </div>
+    );
   }
+
   const split = findSplitByFsId(fsItem.id);
   if (!split) {
-    return <div className="p-5 text-sm text-desktop-text-secondary">Unknown split: {fsItem.id}</div>;
+    return (
+      <div className="p-5 text-sm text-desktop-text-secondary">
+        Unknown split: {fsItem.id}
+      </div>
+    );
   }
+
   return <SplitContent split={split} />;
 }
