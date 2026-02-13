@@ -7,42 +7,42 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 
 // ============================================================================
-// DESKTOP ICON (Aqua Era OS X)
+// DESKTOP ICON (ryOS Retro Mac Style)
 // ============================================================================
-// Glossy, saturated Aqua-style icons with white label text and drop shadow.
-// Double-click to open. Selected state shows blue highlight behind label.
+// Muted gradient colors, dark text labels, softer shadows. Double-click to
+// open. Selected state shows accent blue highlight behind label.
 // ============================================================================
 
 interface DesktopIconProps {
   item: FSItem;
 }
 
-// Map of icon name -> gradient colors for the Aqua glossy look
+// Muted, softer color palette for retro Mac feel
 const iconGradients: Record<string, [string, string]> = {
-  User:        ["#4facfe", "#00f2fe"],
-  Briefcase:   ["#667eea", "#764ba2"],
-  PenTool:     ["#f093fb", "#f5576c"],
-  Image:       ["#4facfe", "#00f2fe"],
-  Mail:        ["#43e97b", "#38f9d7"],
-  Sparkles:    ["#fa709a", "#fee140"],
-  Settings:    ["#a8b8d8", "#c0c0c0"],
-  Music:       ["#ff6b6b", "#ee5a24"],
-  Video:       ["#6c5ce7", "#a29bfe"],
-  Headphones:  ["#fd79a8", "#e84393"],
-  Layers:      ["#0984e3", "#74b9ff"],
-  FileText:    ["#dfe6e9", "#b2bec3"],
-  BookOpen:    ["#fdcb6e", "#e17055"],
-  Linkedin:    ["#0077b5", "#00a0dc"],
-  Github:      ["#333333", "#666666"],
-  GalleryHorizontalEnd: ["#00cec9", "#81ecec"],
-  Disc3:       ["#e84393", "#fd79a8"],
-  ListMusic:   ["#6c5ce7", "#a29bfe"],
+  User:        ["#7eb8da", "#5a9cbf"],
+  Briefcase:   ["#8b8fc7", "#6e72a8"],
+  PenTool:     ["#d4a0c0", "#b87da0"],
+  Image:       ["#7eb8da", "#5a9cbf"],
+  Mail:        ["#7bc89a", "#5aad7d"],
+  Sparkles:    ["#d4a07a", "#c08860"],
+  Settings:    ["#a8b0c0", "#8e96a8"],
+  Music:       ["#d49090", "#b87070"],
+  Video:       ["#9088c0", "#7570a0"],
+  Headphones:  ["#c890a8", "#a87090"],
+  Layers:      ["#6898c0", "#5080a8"],
+  FileText:    ["#b8c0c8", "#98a0a8"],
+  BookOpen:    ["#c8b080", "#a89068"],
+  Linkedin:    ["#5a8aaa", "#4878a0"],
+  Github:      ["#606060", "#484848"],
+  GalleryHorizontalEnd: ["#68b0b0", "#509898"],
+  Disc3:       ["#c080a0", "#a06888"],
+  ListMusic:   ["#8880b0", "#706898"],
 };
 
-const defaultGradient: [string, string] = ["#636e72", "#b2bec3"];
+const defaultGradient: [string, string] = ["#808890", "#687078"];
 
 function getIcon(name: string) {
-  const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>>)[name];
+  const IconComponent = (Icons as Record<string, React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>>)[name];
   return IconComponent || Icons.File;
 }
 
@@ -63,15 +63,15 @@ export default function DesktopIcon({ item }: DesktopIconProps) {
   const [c1, c2] = iconGradients[item.icon] || defaultGradient;
 
   // Icon sizes based on settings
-  const sizeMap = { small: 40, medium: 52, large: 64 };
-  const iconSizeMap = { small: 20, medium: 26, large: 32 };
+  const sizeMap = { small: 40, medium: 48, large: 56 };
+  const iconSizeMap = { small: 20, medium: 24, large: 28 };
   const boxSize = sizeMap[settings.iconSize];
   const iconSize = iconSizeMap[settings.iconSize];
 
   return (
     <button
       className={`
-        flex flex-col items-center gap-1 p-2 rounded w-[88px]
+        flex flex-col items-center gap-1 p-1.5 rounded w-[80px]
         focus-visible:outline-none
         transition-all duration-100 group
       `}
@@ -81,43 +81,31 @@ export default function DesktopIcon({ item }: DesktopIconProps) {
       aria-label={`Open ${item.name}`}
       title={item.description || item.name}
     >
-      {/* Aqua glossy icon */}
+      {/* Muted retro icon */}
       <div
-        className="relative flex items-center justify-center rounded-[12px] group-hover:scale-105 transition-transform duration-150"
+        className="relative flex items-center justify-center rounded-xl group-hover:scale-105 transition-transform duration-150"
         style={{
           width: boxSize,
           height: boxSize,
           background: `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`,
-          boxShadow: `
-            0 4px 12px rgba(0,0,0,0.3),
-            inset 0 1px 1px rgba(255,255,255,0.5),
-            inset 0 -1px 2px rgba(0,0,0,0.15)
-          `,
-          border: "1px solid rgba(255,255,255,0.3)",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.25)",
+          border: "1px solid rgba(255,255,255,0.2)",
         }}
       >
-        {/* Glossy highlight overlay */}
-        <div
-          className="absolute inset-x-0 top-0 rounded-t-[11px]"
-          style={{
-            height: "50%",
-            background: "linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 100%)",
-          }}
-        />
         <Icon size={iconSize} className="text-white relative z-10 drop-shadow-sm" strokeWidth={1.8} />
       </div>
 
-      {/* Label with classic OS X styling */}
+      {/* Label with dark text */}
       <span
         className={`
-          text-[11px] font-medium text-center leading-tight line-clamp-2 px-1 py-0.5 rounded
+          text-[10px] font-medium text-center leading-tight line-clamp-2 px-1 py-0.5 rounded
           ${selected
-            ? "bg-[#3b82f6] text-white"
-            : "text-white"
+            ? "bg-desktop-accent text-white"
+            : "text-desktop-text"
           }
         `}
         style={{
-          textShadow: selected ? "none" : "0 1px 3px rgba(0,0,0,0.7), 0 0px 1px rgba(0,0,0,0.5)",
+          textShadow: selected ? "none" : "0 1px 2px rgba(255,255,255,0.5)",
         }}
       >
         {item.name}
