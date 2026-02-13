@@ -5,9 +5,10 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { getIcon } from "./DesktopIcon";
 
 // ============================================================================
-// DOCK / TASKBAR
+// DOCK (Shelf-Style)
 // ============================================================================
-// Shows open and minimized windows. Click to focus/restore.
+// Centered bottom dock with opaque shelf background, soft shadow, and
+// accent blue active indicators. Inspired by ryOS retro Mac dock.
 // ============================================================================
 
 export default function Dock() {
@@ -16,12 +17,16 @@ export default function Dock() {
   if (state.windows.length === 0) return null;
 
   return (
-    <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-[9999]
-                    flex items-center gap-1 px-2 py-1.5
-                    bg-desktop-dock/80 backdrop-blur-xl
-                    border border-white/15 dark:border-white/10
-                    rounded-2xl shadow-2xl
-                    animate-fade-in">
+    <div
+      className="fixed bottom-2 left-1/2 -translate-x-1/2 z-[9999]
+                  flex items-center gap-1 px-2.5 py-1.5
+                  rounded-xl animate-fade-in"
+      style={{
+        background: "var(--desktop-dock)",
+        border: "1px solid var(--desktop-border)",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+      }}
+    >
       {state.windows.map((win) => {
         const Icon = getIcon(win.icon);
         const isFocused = state.focusedWindowId === win.id && !win.isMinimized;
@@ -39,11 +44,11 @@ export default function Dock() {
             aria-label={`${win.isMinimized ? "Restore" : "Focus"} ${win.title}`}
             title={win.title}
             className={`
-              relative flex items-center justify-center w-10 h-10 rounded-xl
+              relative flex items-center justify-center w-10 h-10 rounded-lg
               transition-all duration-150
               ${isFocused
-                ? "bg-desktop-accent/20 shadow-inner"
-                : "hover:bg-white/10 dark:hover:bg-white/10"
+                ? "bg-desktop-accent/15"
+                : "hover:bg-desktop-border/40"
               }
               ${win.isMinimized ? "opacity-50" : "opacity-100"}
             `}
@@ -53,7 +58,7 @@ export default function Dock() {
             <span
               className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2
                          w-1 h-1 rounded-full transition-colors duration-150
-                         ${isFocused ? "bg-desktop-accent" : "bg-desktop-text/30"}`}
+                         ${isFocused ? "bg-desktop-accent" : "bg-transparent"}`}
             />
           </button>
         );
