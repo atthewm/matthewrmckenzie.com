@@ -5,10 +5,10 @@ import { useDesktop, type WindowState } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 
 // ============================================================================
-// WINDOW COMPONENT (Aqua Era OS X)
+// WINDOW COMPONENT (ryOS Retro Mac Style)
 // ============================================================================
-// Brushed metal title bar, classic traffic lights, soft drop shadow,
-// rounded corners. Drag from title bar, resize from edges/corners.
+// Lighter window chrome with soft shadows, modern traffic lights,
+// subtle title bar gradient. Drag from title bar, resize from edges/corners.
 // ============================================================================
 
 interface WindowProps {
@@ -142,7 +142,14 @@ export default function Window({ windowState, children }: WindowProps) {
     se: "cursor-se-resize", sw: "cursor-sw-resize",
   };
 
-  const surfaceOpacity = settings.highContrast ? 0.98 : 0.92;
+  // Focused: lighter shadow; Unfocused: very soft
+  const focusedShadow = "0 4px 16px rgba(0,0,0,0.15), 0 1px 4px rgba(0,0,0,0.08)";
+  const unfocusedShadow = "0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)";
+
+  // Title bar gradient from CSS vars
+  const titleBarBg = isFocused
+    ? "var(--window-title-focused)"
+    : "var(--window-title-unfocused)";
 
   return (
     <div
@@ -160,10 +167,8 @@ export default function Window({ windowState, children }: WindowProps) {
         width: windowState.width,
         height: windowState.height,
         zIndex: windowState.zIndex,
-        boxShadow: isFocused
-          ? "0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.15)"
-          : "0 4px 16px rgba(0,0,0,0.2), 0 1px 4px rgba(0,0,0,0.1)",
-        border: "1px solid rgba(0,0,0,0.3)",
+        boxShadow: isFocused ? focusedShadow : unfocusedShadow,
+        border: `1px solid ${isFocused ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.1)"}`,
       }}
       onPointerDown={handleWindowPointerDown}
     >
@@ -188,25 +193,25 @@ export default function Window({ windowState, children }: WindowProps) {
         </>
       )}
 
-      {/* AQUA TITLE BAR */}
+      {/* TITLE BAR */}
       <div
         className={`
           flex items-center h-[26px] px-2 shrink-0
           ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}
         `}
         style={{
-          background: isFocused
-            ? "linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 45%, #b8b8b8 50%, #c8c8c8 55%, #c0c0c0 100%)"
-            : "linear-gradient(180deg, #f0f0f0 0%, #e0e0e0 45%, #d8d8d8 50%, #e0e0e0 55%, #dcdcdc 100%)",
-          borderBottom: "1px solid rgba(0,0,0,0.25)",
+          background: titleBarBg,
+          borderBottom: "1px solid rgba(0,0,0,0.12)",
         }}
         onPointerDown={handleDragStart}
         onPointerMove={handleDragMove}
         onPointerUp={handleDragEnd}
         onDoubleClick={handleTitleDoubleClick}
       >
-        {/* Aqua traffic lights */}
-        <div className="flex items-center gap-[7px] mr-3 z-20 aqua-buttons">
+        {/* Traffic lights */}
+        <div
+          className={`flex items-center gap-[7px] mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
+        >
           <button onClick={handleClose} aria-label="Close window" className="aqua-btn aqua-close" />
           <button onClick={() => minimizeWindow(windowState.id)} aria-label="Minimize window" className="aqua-btn aqua-minimize" />
           <button onClick={() => toggleMaximize(windowState.id)} aria-label={windowState.isMaximized ? "Restore window" : "Maximize window"} className="aqua-btn aqua-zoom" />
@@ -214,8 +219,8 @@ export default function Window({ windowState, children }: WindowProps) {
 
         {/* Title */}
         <div
-          className="flex-1 text-center text-[11px] font-bold truncate pointer-events-none"
-          style={{ color: isFocused ? "#222" : "#888", textShadow: "0 1px 0 rgba(255,255,255,0.6)" }}
+          className="flex-1 text-center text-[11px] font-medium truncate pointer-events-none"
+          style={{ color: isFocused ? "#333" : "#999" }}
         >
           {windowState.title}
         </div>
@@ -227,7 +232,7 @@ export default function Window({ windowState, children }: WindowProps) {
       <div
         className="flex-1 overflow-auto scrollbar-thin"
         style={{
-          backgroundColor: `rgba(255,255,255,${surfaceOpacity})`,
+          backgroundColor: "#ffffff",
           fontFamily: "var(--user-font-family, inherit)",
           fontSize: "var(--user-font-size, 14px)",
           lineHeight: "var(--user-line-height, 1.6)",
