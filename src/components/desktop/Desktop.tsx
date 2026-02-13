@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { getRootItems } from "@/data/fs";
-import DesktopIcon from "./DesktopIcon";
 import WindowManager from "./WindowManager";
 import Dock from "./Dock";
 import MenuBar from "./MenuBar";
@@ -13,7 +11,8 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 // ============================================================================
 // DESKTOP
 // ============================================================================
-// Main desktop view: wallpaper, right-side icons, menu bar, windows, dock.
+// Main desktop view: wallpaper, menu bar, windows, and bottom dock.
+// Icons are now in the Dock; the desktop surface is clean.
 // ============================================================================
 
 interface DesktopProps {
@@ -23,7 +22,6 @@ interface DesktopProps {
 export default function Desktop({ contentMap }: DesktopProps) {
   useKeyboardShortcuts();
   const { dispatch } = useDesktop();
-  const rootItems = getRootItems();
 
   return (
     <div className="fixed inset-0 overflow-hidden">
@@ -33,25 +31,9 @@ export default function Desktop({ contentMap }: DesktopProps) {
       {/* Menu bar */}
       <MenuBar />
 
-      {/* Desktop icons - right-side vertical column */}
-      <div
-        className="absolute top-[26px] right-0 bottom-14 w-[88px] p-1 overflow-hidden"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            dispatch({ type: "FOCUS_WINDOW", payload: { id: "" } });
-          }
-        }}
-      >
-        <div className="flex flex-col gap-0.5">
-          {rootItems.map((item) => (
-            <DesktopIcon key={item.id} item={item} />
-          ))}
-        </div>
-      </div>
-
       {/* Click on empty desktop to unfocus */}
       <div
-        className="absolute top-[26px] left-0 right-[88px] bottom-14"
+        className="absolute top-[26px] left-0 right-0 bottom-0"
         onClick={(e) => {
           if (e.target === e.currentTarget) {
             dispatch({ type: "FOCUS_WINDOW", payload: { id: "" } });

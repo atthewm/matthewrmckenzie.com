@@ -77,3 +77,25 @@ export function getStaticRouteItems(): FSItem[] {
 export function getRootItems(): FSItem[] {
   return fileSystem;
 }
+
+// ---------------------------------------------------------------------------
+// Dock items - defines what appears in the bottom dock and in what order.
+// Each entry is an fsItem id. A "|" string represents a visual separator.
+// ---------------------------------------------------------------------------
+
+export const dockItemIds: (string | "|")[] = [
+  "start-here",
+  "about",
+  "|",
+  "work",
+  "writing",
+  "photos",
+  "|",
+  "music",
+  "videos",
+  "apple-music",
+  "|",
+  "contact",
+  "health",
+  "settings",
+];
