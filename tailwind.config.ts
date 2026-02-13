@@ -36,6 +36,10 @@ const config: Config = {
           accent: "var(--desktop-accent)",
           dock: "var(--desktop-dock)",
         },
+        menubar: {
+          bg: "var(--menubar-bg)",
+          border: "var(--menubar-border)",
+        },
       },
       backdropBlur: {
         xs: "2px",
