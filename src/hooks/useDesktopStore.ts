@@ -64,6 +64,7 @@ export type DesktopAction =
   | { type: "RESIZE_WINDOW"; payload: { id: string; width: number; height: number; x?: number; y?: number } }
   | { type: "SET_THEME"; payload: { theme: Theme } }
   | { type: "SET_RESOLVED_THEME"; payload: { resolvedTheme: "light" | "dark" } }
+  | { type: "CLOSE_ALL_WINDOWS" }
   | { type: "HYDRATE"; payload: DesktopState };
 
 // ---------------------------------------------------------------------------
@@ -249,6 +250,10 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
             : w
         ),
       };
+    }
+
+    case "CLOSE_ALL_WINDOWS": {
+      return { ...state, windows: [], focusedWindowId: null };
     }
 
     case "SET_THEME": {

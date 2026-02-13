@@ -6,58 +6,46 @@ import { useSettings } from "@/hooks/useSettingsStore";
 // ============================================================================
 // DESKTOP WALLPAPER
 // ============================================================================
-// Static pale blue background with faint abstract SVG blob shapes,
-// inspired by the ryOS retro Mac aesthetic. Supports dim/blur overlays.
+// Classic Mac-inspired wallpaper with smooth gradient and subtle texture.
+// Supports dim/blur overlays from settings.
 // ============================================================================
 
 export default function ZenBackground() {
   const { settings } = useSettings();
 
   return (
-    <div className="absolute inset-0 bg-desktop-bg">
-      {/* Abstract blob shapes */}
-      <svg
-        className="absolute inset-0 w-full h-full"
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="xMidYMid slice"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Large soft circle - top left */}
-        <ellipse
-          cx="280"
-          cy="220"
-          rx="320"
-          ry="280"
-          fill="white"
-          opacity="0.07"
-        />
-        {/* Mid blob - center right */}
-        <ellipse
-          cx="1100"
-          cy="400"
-          rx="260"
-          ry="240"
-          fill="white"
-          opacity="0.05"
-        />
-        {/* Small accent - bottom left */}
-        <circle
-          cx="500"
-          cy="700"
-          r="180"
-          fill="white"
-          opacity="0.06"
-        />
-        {/* Tall soft shape - right edge */}
-        <ellipse
-          cx="1350"
-          cy="650"
-          rx="200"
-          ry="300"
-          fill="white"
-          opacity="0.04"
-        />
+    <div className="absolute inset-0">
+      {/* Base gradient - classic Mac blue/teal inspired */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(ellipse at 20% 20%, rgba(140, 180, 220, 0.6) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(120, 160, 190, 0.4) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(160, 195, 215, 0.3) 0%, transparent 70%),
+            var(--desktop-bg)
+          `,
+        }}
+      />
+
+      {/* Subtle linen / noise texture overlay */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+        </defs>
+        <rect width="100%" height="100%" filter="url(#noise)" />
       </svg>
+
+      {/* Soft vignette edges */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.08) 100%)",
+        }}
+      />
 
       {/* Dim overlay */}
       {settings.backgroundDim > 0 && (

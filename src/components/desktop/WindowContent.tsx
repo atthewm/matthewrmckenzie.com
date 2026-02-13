@@ -53,7 +53,7 @@ export default function WindowContent({ windowState, contentMap }: WindowContent
   if (fsItem.type === "document") {
     const html = contentMap[fsItem.id];
     if (html) {
-      return <MarkdownViewer html={html} />;
+      return <MarkdownViewer html={html} title={fsItem.name} />;
     }
     return (
       <div className="p-5 text-sm text-desktop-text-secondary">

@@ -232,11 +232,11 @@ export default function Window({ windowState, children }: WindowProps) {
       <div
         className="flex-1 overflow-auto scrollbar-thin"
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: "var(--desktop-surface)",
           fontFamily: "var(--user-font-family, inherit)",
           fontSize: "var(--user-font-size, 14px)",
           lineHeight: "var(--user-line-height, 1.6)",
-          color: settings.highContrast ? "#000" : "#1d1d1f",
+          color: "var(--desktop-text)",
         }}
       >
         {children}

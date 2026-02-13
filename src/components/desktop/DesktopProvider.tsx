@@ -109,7 +109,7 @@ export default function DesktopProvider({ children }: { children: React.ReactNod
   // Don't render until hydrated to prevent flash
   if (!hydrated) {
     return (
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950" />
+      <div className="fixed inset-0" style={{ background: "#e8e8e8" }} />
     );
   }
 
