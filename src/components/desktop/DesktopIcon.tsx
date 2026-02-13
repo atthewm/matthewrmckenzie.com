@@ -41,9 +41,10 @@ const iconGradients: Record<string, [string, string]> = {
 
 const defaultGradient: [string, string] = ["#808890", "#687078"];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getIcon(name: string): React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }> {
-  return (Icons as any)[name] || Icons.File;
+function getIcon(name: string) {
+  const lib = Icons as Record<string, unknown>;
+  const IconComponent = lib[name] as React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }> | undefined;
+  return IconComponent || Icons.File;
 }
 
 export default function DesktopIcon({ item }: DesktopIconProps) {
