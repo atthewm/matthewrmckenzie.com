@@ -1,49 +1,17 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import * as Icons from "lucide-react";
 import { dockItemIds, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
+import { getOS9Icon } from "./RetroIcons";
 
 // ============================================================================
-// DOCK - Retro Mac Launcher
+// DOCK - Mac OS 9 Style Launcher
 // ============================================================================
 // Primary navigation dock fixed to bottom center. Shows all main app/folder
-// icons with retro styling: bevels, drop shadows, pixel-ish edges.
-// Single click to open/focus. Hover magnification. Active dot indicators.
+// icons rendered as classic Mac OS 9 pixel-art SVGs. Single click to
+// open/focus. Hover magnification. Active dot indicators.
 // ============================================================================
-
-// ---------------------------------------------------------------------------
-// Icon helpers
-// ---------------------------------------------------------------------------
-
-function getIcon(name: string) {
-  const lib = Icons as Record<string, unknown>;
-  const IconComponent = lib[name] as React.ComponentType<{
-    size?: number;
-    className?: string;
-    strokeWidth?: number;
-  }> | undefined;
-  return IconComponent || Icons.File;
-}
-
-// Retro muted color palette - lower saturation, warmer tones
-const retroColors: Record<string, [string, string]> = {
-  Sparkles:    ["#c9a96e", "#a88a50"],
-  User:        ["#6da0c0", "#4d7fa0"],
-  Briefcase:   ["#7a7db0", "#5e6190"],
-  PenTool:     ["#b88aa0", "#9a6e85"],
-  Image:       ["#6da0c0", "#4d7fa0"],
-  Mail:        ["#6aad82", "#4d9068"],
-  Settings:    ["#90989e", "#78808a"],
-  Headphones:  ["#b87878", "#985858"],
-  Disc3:       ["#8078a8", "#605888"],
-  ListMusic:   ["#7870a0", "#585088"],
-  Heart:       ["#c07878", "#a06060"],
-  Activity:    ["#60a880", "#488868"],
-};
-
-const defaultRetroColor: [string, string] = ["#808080", "#606068"];
 
 // ---------------------------------------------------------------------------
 // Tooltip component
@@ -94,26 +62,25 @@ function DockIcon({
   onHover,
   onClick,
 }: DockIconProps) {
-  const Icon = getIcon(item.icon);
-  const [c1, c2] = retroColors[item.icon] || defaultRetroColor;
+  const OS9Icon = getOS9Icon(item.id);
 
   // Magnification: full scale at hovered, slightly less for neighbors
   let scale = 1;
   if (hoveredIndex !== null) {
     const distance = Math.abs(hoveredIndex - myIndex);
-    if (distance === 0) scale = 1.35;
-    else if (distance === 1) scale = 1.15;
-    else if (distance === 2) scale = 1.05;
+    if (distance === 0) scale = 1.4;
+    else if (distance === 1) scale = 1.18;
+    else if (distance === 2) scale = 1.06;
   }
 
   const isHovered = hoveredIndex === myIndex;
 
   return (
     <button
-      className="relative flex flex-col items-center focus-visible:outline-none dock-icon-btn"
+      className="relative flex flex-col items-center focus-visible:outline-none"
       style={{
         transition: "transform 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        transform: `scale(${scale}) translateY(${scale > 1 ? -(scale - 1) * 20 : 0}px)`,
+        transform: `scale(${scale}) translateY(${scale > 1 ? -(scale - 1) * 22 : 0}px)`,
         transformOrigin: "bottom center",
       }}
       onMouseEnter={() => onHover(myIndex)}
@@ -123,40 +90,31 @@ function DockIcon({
     >
       <DockTooltip label={item.name} visible={isHovered} />
 
-      {/* Retro icon tile */}
+      {/* OS 9 Icon */}
       <div
         className="relative flex items-center justify-center"
         style={{
-          width: 44,
-          height: 44,
-          borderRadius: 10,
-          background: `linear-gradient(145deg, ${c1} 0%, ${c2} 100%)`,
-          boxShadow: `
-            0 3px 8px rgba(0,0,0,0.3),
-            0 1px 2px rgba(0,0,0,0.2),
-            inset 0 1px 0 rgba(255,255,255,0.35),
-            inset 0 -1px 0 rgba(0,0,0,0.15)
-          `,
-          border: "1px solid rgba(0,0,0,0.18)",
-          imageRendering: "auto",
+          width: 42,
+          height: 42,
+          filter: isHovered
+            ? "drop-shadow(0 2px 6px rgba(0,0,0,0.35))"
+            : "drop-shadow(0 1px 3px rgba(0,0,0,0.2))",
+          transition: "filter 150ms ease",
         }}
       >
-        {/* Inner bevel highlight */}
-        <div
-          className="absolute inset-0 rounded-[9px]"
-          style={{
-            background: "linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.08) 100%)",
-            pointerEvents: "none",
-          }}
-        />
-        <Icon
-          size={22}
-          className="text-white relative z-10"
-          strokeWidth={1.6}
-          style={{
-            filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.3))",
-          }}
-        />
+        {OS9Icon ? (
+          <OS9Icon size={36} />
+        ) : (
+          /* Fallback: generic document icon */
+          <svg width={36} height={36} viewBox="0 0 32 32" fill="none">
+            <rect x="6" y="3" width="20" height="26" rx="2" fill="#F5F5F0" stroke="#333" strokeWidth="1.5" />
+            <path d="M6 5a2 2 0 012-2h10l8 8v18a2 2 0 01-2 2H8a2 2 0 01-2-2V5z" fill="#F5F5F0" stroke="#333" strokeWidth="1.5" />
+            <path d="M18 3v8h8" fill="#E8E8E0" stroke="#333" strokeWidth="1.5" strokeLinejoin="round" />
+            <line x1="10" y1="15" x2="22" y2="15" stroke="#CCC" strokeWidth="1" />
+            <line x1="10" y1="18" x2="22" y2="18" stroke="#CCC" strokeWidth="1" />
+            <line x1="10" y1="21" x2="18" y2="21" stroke="#CCC" strokeWidth="1" />
+          </svg>
+        )}
       </div>
 
       {/* Active indicator dot */}
@@ -250,7 +208,7 @@ export default function Dock() {
     <div
       ref={dockRef}
       className="fixed bottom-1.5 left-1/2 -translate-x-1/2 z-[9999]
-                  flex items-end px-2 pb-1.5 pt-1
+                  flex items-end px-2.5 pb-1.5 pt-1.5
                   rounded-2xl animate-fade-in"
       style={{
         background: "var(--desktop-dock)",
