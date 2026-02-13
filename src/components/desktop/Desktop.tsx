@@ -13,7 +13,7 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 // ============================================================================
 // DESKTOP
 // ============================================================================
-// Main desktop view: wallpaper, icons, menu bar, windows, dock.
+// Main desktop view: wallpaper, right-side icons, menu bar, windows, dock.
 // ============================================================================
 
 interface DesktopProps {
@@ -27,28 +27,37 @@ export default function Desktop({ contentMap }: DesktopProps) {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
-      {/* Zen wallpaper background (video/image + ambient audio) */}
+      {/* Wallpaper background */}
       <ZenBackground />
 
       {/* Menu bar */}
       <MenuBar />
 
-      {/* Desktop icons */}
+      {/* Desktop icons - right-side vertical column */}
       <div
-        className="absolute top-10 left-0 right-0 bottom-14 p-4 overflow-hidden"
+        className="absolute top-[26px] right-0 bottom-14 w-[88px] p-1 overflow-hidden"
         onClick={(e) => {
-          // Click on empty desktop space → unfocus all windows
           if (e.target === e.currentTarget) {
             dispatch({ type: "FOCUS_WINDOW", payload: { id: "" } });
           }
         }}
       >
-        <div className="flex flex-col flex-wrap gap-1 h-full content-start">
+        <div className="flex flex-col gap-0.5">
           {rootItems.map((item) => (
             <DesktopIcon key={item.id} item={item} />
           ))}
         </div>
       </div>
+
+      {/* Click on empty desktop to unfocus */}
+      <div
+        className="absolute top-[26px] left-0 right-[88px] bottom-14"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            dispatch({ type: "FOCUS_WINDOW", payload: { id: "" } });
+          }
+        }}
+      />
 
       {/* Windows */}
       <WindowManager contentMap={contentMap} />
