@@ -5,9 +5,10 @@ import { Sun, Moon, Monitor } from "lucide-react";
 import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
 
 // ============================================================================
-// MENU BAR
+// MENU BAR (Classic Mac Style)
 // ============================================================================
-// Top bar with site name, clock, and theme toggle.
+// Opaque top bar with bold app name, classic menu items (File, Edit, View,
+// Window, Help), theme toggle, and clock.
 // ============================================================================
 
 function Clock() {
@@ -28,15 +29,16 @@ function Clock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span className="text-xs font-medium tabular-nums">{time}</span>;
+  return <span className="text-[11px] font-medium tabular-nums">{time}</span>;
 }
+
+const MENU_ITEMS = ["File", "Edit", "View", "Window", "Help"];
 
 export default function MenuBar() {
   const { state, dispatch } = useDesktop();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close menu on click outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -48,47 +50,76 @@ export default function MenuBar() {
   }, []);
 
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
-    { value: "light", label: "Light", icon: <Sun size={14} /> },
-    { value: "dark", label: "Dark", icon: <Moon size={14} /> },
-    { value: "system", label: "System", icon: <Monitor size={14} /> },
+    { value: "light", label: "Light", icon: <Sun size={13} /> },
+    { value: "dark", label: "Dark", icon: <Moon size={13} /> },
+    { value: "system", label: "System", icon: <Monitor size={13} /> },
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-7 z-[10000]
-                    flex items-center justify-between px-4
-                    bg-desktop-surface/70 backdrop-blur-xl
-                    border-b border-desktop-border/50
-                    text-desktop-text select-none">
-      {/* Left: site name */}
-      <div className="text-xs font-semibold tracking-wide">
-        matthewrmckenzie.com
+    <div
+      className="fixed top-0 left-0 right-0 h-[22px] z-[10000]
+                  flex items-center justify-between px-3
+                  border-b select-none"
+      style={{
+        background: "var(--menubar-bg)",
+        borderBottomColor: "var(--menubar-border)",
+        backdropFilter: "saturate(180%) blur(20px)",
+      }}
+    >
+      {/* Left: app name + menu items */}
+      <div className="flex items-center gap-0">
+        <span className="text-[11px] font-bold tracking-wide px-2">
+          McKenzie OS
+        </span>
+        {MENU_ITEMS.map((item) => (
+          <button
+            key={item}
+            className="text-[11px] font-normal px-2 py-0.5 rounded
+                       hover:bg-desktop-accent hover:text-white
+                       transition-colors duration-75 text-desktop-text"
+          >
+            {item}
+          </button>
+        ))}
       </div>
 
-      {/* Right: theme + clock */}
-      <div className="flex items-center gap-3">
-        {/* Theme toggle */}
+      {/* Right: theme toggle + clock */}
+      <div className="flex items-center gap-2">
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setShowThemeMenu(!showThemeMenu)}
-            className="p-1 rounded hover:bg-desktop-border/50 transition-colors"
+            className="p-0.5 rounded hover:bg-desktop-border/50 transition-colors"
             aria-label="Change theme"
           >
-            {state.resolvedTheme === "dark" ? <Moon size={13} /> : <Sun size={13} />}
+            {state.resolvedTheme === "dark" ? (
+              <Moon size={12} />
+            ) : (
+              <Sun size={12} />
+            )}
           </button>
           {showThemeMenu && (
-            <div className="absolute right-0 top-full mt-1
-                            bg-desktop-surface border border-desktop-border
-                            rounded-lg shadow-xl py-1 min-w-[120px] animate-fade-in">
+            <div
+              className="absolute right-0 top-full mt-1
+                          bg-desktop-surface border border-desktop-border
+                          rounded-lg shadow-xl py-1 min-w-[110px] animate-fade-in"
+            >
               {themes.map((t) => (
                 <button
                   key={t.value}
                   onClick={() => {
-                    dispatch({ type: "SET_THEME", payload: { theme: t.value } });
+                    dispatch({
+                      type: "SET_THEME",
+                      payload: { theme: t.value },
+                    });
                     setShowThemeMenu(false);
                   }}
-                  className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs
-                    hover:bg-desktop-border/50 transition-colors
-                    ${state.theme === t.value ? "text-desktop-accent font-medium" : "text-desktop-text"}`}
+                  className={`w-full flex items-center gap-2 px-3 py-1 text-[11px]
+                    hover:bg-desktop-accent hover:text-white transition-colors
+                    ${
+                      state.theme === t.value
+                        ? "text-desktop-accent font-medium"
+                        : "text-desktop-text"
+                    }`}
                 >
                   {t.icon}
                   {t.label}
