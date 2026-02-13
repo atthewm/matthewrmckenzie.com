@@ -3,17 +3,21 @@
 @tailwind utilities;
 
 /* ============================================================================
-   THEME VARIABLES
+   THEME VARIABLES - ryOS Retro Mac Desktop
    ============================================================================ */
 
 :root {
-  --desktop-bg: #f5f5f7;
-  --desktop-surface: #ffffff;
-  --desktop-border: #e5e5e7;
-  --desktop-text: #1d1d1f;
-  --desktop-text-secondary: #86868b;
-  --desktop-accent: #0071e3;
-  --desktop-dock: rgba(255, 255, 255, 0.7);
+  --desktop-bg: #c1d5e0;
+  --desktop-surface: #f6f6f6;
+  --desktop-border: #c0c0c0;
+  --desktop-text: #333333;
+  --desktop-text-secondary: #808080;
+  --desktop-accent: #0066cc;
+  --desktop-dock: rgba(245, 245, 247, 0.92);
+  --menubar-bg: rgba(241, 241, 241, 0.88);
+  --menubar-border: #b8b8b8;
+  --window-title-focused: linear-gradient(180deg, #e8e8e8 0%, #d8d8d8 100%);
+  --window-title-unfocused: linear-gradient(180deg, #f5f5f5 0%, #ececec 100%);
 
   /* User-configurable typography (defaults, overridden by SettingsProvider) */
   --user-font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont,
@@ -23,13 +27,15 @@
 }
 
 .dark {
-  --desktop-bg: #1d1d1f;
-  --desktop-surface: #2d2d2f;
-  --desktop-border: #3d3d3f;
-  --desktop-text: #f5f5f7;
-  --desktop-text-secondary: #86868b;
-  --desktop-accent: #2997ff;
-  --desktop-dock: rgba(45, 45, 47, 0.7);
+  --desktop-bg: #2a2a2e;
+  --desktop-surface: #3a3a3e;
+  --desktop-border: #505054;
+  --desktop-text: #f0f0f0;
+  --desktop-text-secondary: #a0a0a4;
+  --desktop-accent: #5ba3ff;
+  --desktop-dock: rgba(50, 50, 54, 0.92);
+  --menubar-bg: rgba(50, 50, 54, 0.88);
+  --menubar-border: #555558;
 }
 
 /* ============================================================================
@@ -85,75 +91,48 @@
 }
 
 /* ============================================================================
-   AQUA ERA OS X - TRAFFIC LIGHT BUTTONS
-   ============================================================================
-   Classic Aqua-style window buttons: red close, yellow minimize, green zoom.
-   Each button has a glossy gradient, inner shadow, and subtle border.
+   TRAFFIC LIGHT BUTTONS (Modern macOS style)
    ============================================================================ */
 
 .aqua-btn {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 0.5px solid rgba(0, 0, 0, 0.35);
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
   position: relative;
   cursor: default;
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.5),
-    0 0.5px 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
   transition: filter 0.1s ease;
 }
 
 .aqua-btn:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
 }
 
 .aqua-btn:active {
-  filter: brightness(0.9);
+  filter: brightness(0.92);
 }
 
 /* Close button (red) */
 .aqua-close {
-  background: linear-gradient(
-    180deg,
-    #ff7f6e 0%,
-    #fd4a31 40%,
-    #e52a12 60%,
-    #f04830 100%
-  );
+  background: linear-gradient(180deg, #ff8a80 0%, #ff5f57 100%);
 }
 
-/* Minimize button (yellow/amber) */
+/* Minimize button (yellow) */
 .aqua-minimize {
-  background: linear-gradient(
-    180deg,
-    #ffd76e 0%,
-    #f5c11e 40%,
-    #dfaa0c 60%,
-    #f0c830 100%
-  );
+  background: linear-gradient(180deg, #ffd573 0%, #ffbd2e 100%);
 }
 
 /* Zoom/Maximize button (green) */
 .aqua-zoom {
-  background: linear-gradient(
-    180deg,
-    #8ee070 0%,
-    #52c22a 40%,
-    #3da616 60%,
-    #5ec040 100%
-  );
+  background: linear-gradient(180deg, #69f0ae 0%, #28c940 100%);
 }
 
-/* Unfocused state: all buttons become gray */
+/* Unfocused state: all buttons become neutral gray */
 .aqua-buttons-unfocused .aqua-btn {
-  background: linear-gradient(
-    180deg,
-    #d8d8d8 0%,
-    #c0c0c0 40%,
-    #b0b0b0 60%,
-    #c0c0c0 100%
-  );
+  background: #d4d4d4;
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: none;
 }
 
 /* ============================================================================
