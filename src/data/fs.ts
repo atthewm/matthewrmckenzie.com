@@ -51,6 +51,7 @@ export const fileSystem: FSItem[] = [
     { id: "parmesan-crusted-baked-chicken-tenders", name: "Parmesan Crusted Baked Chicken Tenders", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/parmesan-crusted-baked-chicken-tenders.md", description: "Higher-protein baked tenders with Parmesan crust", defaultSize: { width: 600, height: 640 } },
   ]},
   { id: "settings", name: "Settings", type: "app", icon: "Settings", appComponent: "SettingsApp", description: "Appearance, sound, and typography settings.", defaultSize: { width: 420, height: 540 } },
+  { id: "browser", name: "Browser", type: "app", icon: "Globe", appComponent: "BrowserApp", description: "In-OS web browser.", defaultSize: { width: 800, height: 600 } },
   { id: "start-here", name: "Start Here", type: "folder", icon: "Sparkles", description: "Welcome! Start here to explore.", children: [
     { id: "readme", name: "README", type: "document", icon: "FileText", contentPath: "readme.md", description: "Welcome to matthewrmckenzie.com", defaultSize: { width: 560, height: 480 } },
     { id: "linkedin", name: "LinkedIn", type: "link", icon: "Linkedin", href: "https://www.linkedin.com/in/mrmckenzie/", description: "Connect on LinkedIn." },

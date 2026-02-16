@@ -16,6 +16,7 @@ import AppleMusicFolder from "@/components/apps/AppleMusicFolder";
 import ResumeApp from "@/components/apps/ResumeApp";
 import RecipeViewer from "@/components/apps/RecipeViewer";
 import InstagramApp from "@/components/apps/InstagramApp";
+import BrowserApp from "@/components/apps/BrowserApp";
 import WhoopDashboardApp from "@/components/apps/whoop/WhoopDashboardApp";
 import WhoopSplitApp from "@/components/apps/whoop/WhoopSplitApp";
 import GetWhoopApp from "@/components/apps/whoop/GetWhoopApp";
@@ -37,6 +38,7 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   ResumeApp,
   RecipeViewer,
   InstagramApp,
+  BrowserApp,
   WhoopDashboardApp,
   WhoopSplitApp,
   GetWhoopApp,
