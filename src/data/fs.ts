@@ -24,9 +24,7 @@ export const fileSystem: FSItem[] = [
   { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", description: "Essays, notes, and long-form writing.", children: [
     { id: "essays", name: "Essays", type: "document", icon: "BookOpen", contentPath: "essays.md", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
   ]},
-  { id: "photos", name: "Photos", type: "folder", icon: "Image", description: "Photography and visual work.", children: [
-    { id: "gallery", name: "Gallery", type: "app", icon: "GalleryHorizontalEnd", appComponent: "GalleryApp", description: "Photo gallery.", defaultSize: { width: 800, height: 600 } },
-  ]},
+  { id: "photos", name: "Photos", type: "app", icon: "Image", appComponent: "InstagramApp", description: "Photos currently mirror Instagram.", defaultSize: { width: 480, height: 560 } },
   { id: "music", name: "Music", type: "app", icon: "Headphones", appComponent: "SoundCloudPlayer", description: "SoundCloud player.", defaultSize: { width: 420, height: 500 } },
   { id: "videos", name: "Videos", type: "app", icon: "Disc3", appComponent: "YouTubeWinampPlayer", description: "YouTube playlist player.", defaultSize: { width: 320, height: 360 } },
   { id: "apple-music", name: "Apple Music", type: "app", icon: "ListMusic", appComponent: "AppleMusicFolder", description: "Apple Music playlists.", defaultSize: { width: 480, height: 420 } },
@@ -43,11 +41,14 @@ export const fileSystem: FSItem[] = [
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
   { id: "recipes", name: "Recipes", type: "folder", icon: "UtensilsCrossed", description: "Tried and true recipes from the kitchen.", children: [
-    { id: "umami-black-beans", name: "Umami Black Beans", type: "document", icon: "FileText", contentPath: "umami-black-beans.md", description: "Rich, savory black beans with layers of umami.", defaultSize: { width: 560, height: 500 } },
-    { id: "master-city-loaf", name: "Master City Loaf", type: "document", icon: "FileText", contentPath: "master-city-loaf.md", description: "No-knead artisan bread.", defaultSize: { width: 560, height: 500 } },
-    { id: "brownies", name: "Brownies", type: "document", icon: "FileText", contentPath: "brownies.md", description: "Dense, fudgy brownies.", defaultSize: { width: 560, height: 500 } },
-    { id: "overnight-oats", name: "Cinnamon Protein Overnight Oats", type: "document", icon: "FileText", contentPath: "cinnamon-protein-overnight-oats.md", description: "High-protein overnight oats.", defaultSize: { width: 560, height: 500 } },
-    { id: "homemade-tortillas", name: "Homemade Tortillas", type: "document", icon: "FileText", contentPath: "homemade-tortillas.md", description: "Soft, warm flour tortillas.", defaultSize: { width: 560, height: 500 } },
+    { id: "rye-starter", name: "Rye Starter", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/rye-starter.md", description: "6-day rye starter build plus a low-waste daily maintenance plan", defaultSize: { width: 600, height: 640 } },
+    { id: "city-loaf-master-recipe", name: "City Loaf Master Recipe", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/city-loaf-master-recipe.md", description: "Two 950 g loaves baked in a Dutch oven", defaultSize: { width: 600, height: 640 } },
+    { id: "strawberry-jam-honey", name: "Strawberry Jam with Honey", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/strawberry-jam-honey.md", description: "No refined sugar, thickened naturally (optional chia)", defaultSize: { width: 600, height: 640 } },
+    { id: "cinnamon-protein-overnight-oats", name: "Cinnamon Protein Overnight Oats", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/cinnamon-protein-overnight-oats.md", description: "1 serving, thicker texture, revised liquid ratio", defaultSize: { width: 600, height: 640 } },
+    { id: "brownies-9x13", name: "Brownies (9x13)", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/brownies-9x13.md", description: "Recipe card version, English walnuts", defaultSize: { width: 600, height: 640 } },
+    { id: "high-protein-heirloom-blue-corn-tortillas", name: "High-Protein Blue Corn Tortillas", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/high-protein-heirloom-blue-corn-tortillas.md", description: "High-protein tortillas using blue corn masa and vital wheat gluten", defaultSize: { width: 600, height: 640 } },
+    { id: "mamas-healthy-meatballs", name: "Mama's Healthy Meatballs", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/mamas-healthy-meatballs.md", description: "Lean, high-protein meatballs with beef, lamb, and venison", defaultSize: { width: 600, height: 640 } },
+    { id: "parmesan-crusted-baked-chicken-tenders", name: "Parmesan Crusted Baked Chicken Tenders", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/parmesan-crusted-baked-chicken-tenders.md", description: "Higher-protein baked tenders with Parmesan crust", defaultSize: { width: 600, height: 640 } },
   ]},
   { id: "settings", name: "Settings", type: "app", icon: "Settings", appComponent: "SettingsApp", description: "Appearance, sound, and typography settings.", defaultSize: { width: 420, height: 540 } },
   { id: "start-here", name: "Start Here", type: "folder", icon: "Sparkles", description: "Welcome! Start here to explore.", children: [

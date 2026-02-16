@@ -1,16 +1,19 @@
 "use client";
 
 import React from "react";
+import { ExternalLink } from "lucide-react";
 import type { FSItem } from "@/data/fs";
 import { getRootItems } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { getIcon } from "@/components/desktop/DesktopIcon";
+import { recipes as recipeIndex } from "@/content/recipes/index";
+import { siteConfig } from "@/lib/config";
 
 // ============================================================================
 // FOLDER VIEW (Mac OS X 10.3 Panther Finder-Style)
 // ============================================================================
 // Left sidebar with "Favorites" listing root folders, main area with icon
-// grid, footer bar with item count. Panther Aqua styling.
+// grid (default) or list view (recipes). Panther Aqua styling.
 // ============================================================================
 
 interface FolderViewProps {
@@ -58,9 +61,115 @@ function Sidebar({ currentId }: { currentId: string }) {
   );
 }
 
-export default function FolderView({ item }: FolderViewProps) {
+/** Recipe list view: icon + title + one-line subtitle */
+function RecipeListView({ children }: { children: FSItem[] }) {
+  const { openItem } = useDesktop();
+  const recipeMap = new Map(recipeIndex.map((r) => [r.slug, r]));
+
+  return (
+    <div className="flex flex-col">
+      {children.map((child) => {
+        const Icon = getIcon(child.icon);
+        const meta = recipeMap.get(child.id);
+        return (
+          <button
+            key={child.id}
+            className="flex items-center gap-3 px-3 py-2.5 text-left border-b
+                       hover:bg-desktop-border/30 transition-colors duration-75
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
+            style={{ borderColor: "var(--desktop-border)" }}
+            onDoubleClick={() => openItem(child)}
+            aria-label={`Open ${child.name}`}
+            title={child.description}
+          >
+            <div className="w-8 h-8 flex items-center justify-center shrink-0
+                            bg-desktop-accent/10 rounded-lg">
+              <Icon size={16} className="text-desktop-accent" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[12px] font-medium text-desktop-text truncate">
+                {child.name}
+              </p>
+              {meta && (
+                <p className="text-[10px] text-desktop-text-secondary truncate">
+                  {meta.subtitle}
+                </p>
+              )}
+            </div>
+          </button>
+        );
+      })}
+
+      {/* Notion Recipe Library link */}
+      <div
+        className="mx-3 my-3 px-3 py-2.5 rounded-lg border flex items-center justify-between"
+        style={{
+          borderColor: "var(--desktop-border)",
+          background: "rgba(0,0,0,0.02)",
+        }}
+      >
+        <div>
+          <p className="text-[11px] font-medium text-desktop-text">
+            Notion Recipe Library
+          </p>
+          <p className="text-[10px] text-desktop-text-secondary">
+            Downloads and updates
+          </p>
+        </div>
+        <a
+          href={siteConfig.notionRecipesUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium
+                     bg-desktop-accent text-white hover:opacity-90 transition-opacity"
+        >
+          <ExternalLink size={10} />
+          Open
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/** Default icon grid view */
+function IconGridView({ children }: { children: FSItem[] }) {
   const { openItem } = useDesktop();
 
+  return (
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(90px,1fr))] gap-1">
+      {children.map((child) => {
+        const Icon = getIcon(child.icon);
+        return (
+          <button
+            key={child.id}
+            className="flex flex-col items-center gap-1 p-2 rounded-lg
+                       hover:bg-desktop-border/40 transition-colors duration-100
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
+            onDoubleClick={() => {
+              if (child.type === "link" && child.href) {
+                window.open(child.href, "_blank", "noopener,noreferrer");
+                return;
+              }
+              openItem(child);
+            }}
+            aria-label={`Open ${child.name}`}
+            title={child.description}
+          >
+            <div className="w-10 h-10 flex items-center justify-center
+                            bg-desktop-accent/10 rounded-xl">
+              <Icon size={20} className="text-desktop-accent" />
+            </div>
+            <span className="text-[10px] font-medium text-desktop-text text-center leading-tight line-clamp-2">
+              {child.name}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function FolderView({ item }: FolderViewProps) {
   if (!item.children || item.children.length === 0) {
     return (
       <div className="flex h-full">
@@ -72,44 +181,21 @@ export default function FolderView({ item }: FolderViewProps) {
     );
   }
 
+  const isRecipes = item.id === "recipes";
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-1 min-h-0">
         {/* Sidebar */}
         <Sidebar currentId={item.id} />
 
-        {/* Main icon grid */}
+        {/* Main content */}
         <div className="flex-1 overflow-auto p-3">
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(90px,1fr))] gap-1">
-            {item.children.map((child) => {
-              const Icon = getIcon(child.icon);
-              return (
-                <button
-                  key={child.id}
-                  className="flex flex-col items-center gap-1 p-2 rounded-lg
-                             hover:bg-desktop-border/40 transition-colors duration-100
-                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
-                  onDoubleClick={() => {
-                    if (child.type === "link" && child.href) {
-                      window.open(child.href, "_blank", "noopener,noreferrer");
-                      return;
-                    }
-                    openItem(child);
-                  }}
-                  aria-label={`Open ${child.name}`}
-                  title={child.description}
-                >
-                  <div className="w-10 h-10 flex items-center justify-center
-                                  bg-desktop-accent/10 rounded-xl">
-                    <Icon size={20} className="text-desktop-accent" />
-                  </div>
-                  <span className="text-[10px] font-medium text-desktop-text text-center leading-tight line-clamp-2">
-                    {child.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {isRecipes ? (
+            <RecipeListView>{item.children}</RecipeListView>
+          ) : (
+            <IconGridView>{item.children}</IconGridView>
+          )}
         </div>
       </div>
 
