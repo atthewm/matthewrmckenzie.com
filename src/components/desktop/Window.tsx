@@ -3,6 +3,7 @@
 import React, { useCallback, useRef, useEffect, useState } from "react";
 import { useDesktop, type WindowState } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 // ============================================================================
 // WINDOW COMPONENT (Mac OS X 10.3 Panther Aqua)
@@ -31,6 +32,7 @@ export default function Window({ windowState, children }: WindowProps) {
   const { settings } = useSettings();
   const windowRef = useRef<HTMLDivElement>(null);
   const isFocused = state.focusedWindowId === windowState.id;
+  const isMobile = useIsMobile();
 
   // Drag state
   const isDragging = useRef(false);
@@ -163,10 +165,18 @@ export default function Window({ windowState, children }: WindowProps) {
         ${isClosing ? "animate-window-close" : "animate-window-open"}
       `}
       style={{
-        left: windowState.x,
-        top: windowState.y,
-        width: windowState.width,
-        height: windowState.height,
+        left: isMobile && !windowState.isMaximized
+          ? Math.max(0, Math.min(windowState.x, window.innerWidth - Math.min(windowState.width, window.innerWidth - 8)))
+          : windowState.x,
+        top: isMobile && !windowState.isMaximized
+          ? Math.max(22, Math.min(windowState.y, window.innerHeight - 100))
+          : windowState.y,
+        width: isMobile && !windowState.isMaximized
+          ? Math.min(windowState.width, window.innerWidth - 8)
+          : windowState.width,
+        height: isMobile && !windowState.isMaximized
+          ? Math.min(windowState.height, window.innerHeight - 90)
+          : windowState.height,
         zIndex: windowState.zIndex,
         borderRadius: windowState.isMaximized ? 0 : 10,
         boxShadow: isFocused ? focusedShadow : unfocusedShadow,
@@ -174,8 +184,8 @@ export default function Window({ windowState, children }: WindowProps) {
       }}
       onPointerDown={handleWindowPointerDown}
     >
-      {/* RESIZE HANDLES */}
-      {!windowState.isMaximized && (
+      {/* RESIZE HANDLES (hidden on mobile) */}
+      {!windowState.isMaximized && !isMobile && (
         <>
           {(["n","s","e","w","ne","nw","se","sw"] as ResizeDirection[]).map((dir) => {
             if (!dir) return null;

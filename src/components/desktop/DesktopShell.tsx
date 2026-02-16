@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
-import MobileView from "./MobileView";
 
 // ============================================================================
 // BOOT SEQUENCE (Retro Mac Startup)
@@ -130,28 +129,19 @@ interface DesktopShellProps {
   contentMap: Record<string, string>;
 }
 
-const MOBILE_BREAKPOINT = 768;
 const BOOT_SESSION_KEY = "mmck-booted";
 
 export default function DesktopShell({ contentMap }: DesktopShellProps) {
-  const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [booting, setBooting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    function check() {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    }
-    check();
-    window.addEventListener("resize", check);
 
     // Only show boot sequence once per browser session
     if (!sessionStorage.getItem(BOOT_SESSION_KEY)) {
       setBooting(true);
     }
-
-    return () => window.removeEventListener("resize", check);
   }, []);
 
   const handleBootComplete = useCallback(() => {
@@ -169,11 +159,7 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
     <DesktopProvider>
       <SettingsProvider>
         {booting && <BootSequence onComplete={handleBootComplete} />}
-        {isMobile ? (
-          <MobileView contentMap={contentMap} />
-        ) : (
-          <Desktop contentMap={contentMap} />
-        )}
+        <Desktop contentMap={contentMap} />
       </SettingsProvider>
     </DesktopProvider>
   );

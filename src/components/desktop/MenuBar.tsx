@@ -3,7 +3,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Sun, Moon, Monitor } from "lucide-react";
 import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
-import { getRootItems, type FSItem } from "@/data/fs";
+import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
+import { useOpenInBrowser } from "@/lib/browserStore";
 
 // ============================================================================
 // MENU BAR (Classic Mac Style) - Functional Dropdowns
@@ -192,6 +193,7 @@ export default function MenuBar() {
   const barRef = useRef<HTMLDivElement>(null);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const themeRef = useRef<HTMLDivElement>(null);
+  const openInBrowser = useOpenInBrowser();
 
   // Close menus on outside click
   useEffect(() => {
@@ -359,8 +361,89 @@ export default function MenuBar() {
       },
     ];
 
-    return { File: fileItems, Edit: editItems, View: viewItems, Window: windowItems, Help: helpItems };
-  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems]);
+    const osItems: MenuItem[] = [
+      {
+        type: "action",
+        label: "About McKenzie OS",
+        action: () => {
+          const about = findFSItem("about");
+          if (about) openItem(about);
+        },
+      },
+      { type: "separator" },
+      {
+        type: "action",
+        label: "Start Here",
+        action: () => {
+          const sh = findFSItem("start-here");
+          if (sh) openItem(sh);
+        },
+      },
+      {
+        type: "action",
+        label: "Now",
+        action: () => {
+          const now = findFSItem("now");
+          if (now) openItem(now);
+        },
+      },
+      {
+        type: "action",
+        label: "Guestbook",
+        action: () => {
+          const gb = findFSItem("guestbook");
+          if (gb) openItem(gb);
+        },
+      },
+      {
+        type: "action",
+        label: "Contact",
+        action: () => {
+          const c = findFSItem("contact");
+          if (c) openItem(c);
+        },
+      },
+      { type: "separator" },
+      {
+        type: "action",
+        label: "Recipes",
+        action: () => {
+          const r = findFSItem("recipes");
+          if (r) openItem(r);
+        },
+      },
+      {
+        type: "action",
+        label: "Photos",
+        action: () => {
+          const p = findFSItem("photos");
+          if (p) openItem(p);
+        },
+      },
+      {
+        type: "action",
+        label: "Linktree",
+        action: () => openInBrowser("https://mckm.at/", "Linktree"),
+      },
+      { type: "separator" },
+      {
+        type: "action",
+        label: "Close All Windows",
+        action: () => dispatch({ type: "CLOSE_ALL_WINDOWS" }),
+        disabled: !hasWindows,
+      },
+      {
+        type: "action",
+        label: "Reload OS",
+        action: () => {
+          sessionStorage.removeItem("mmck-booted");
+          window.location.reload();
+        },
+      },
+    ];
+
+    return { "\uF8FF": osItems, File: fileItems, Edit: editItems, View: viewItems, Window: windowItems, Help: helpItems };
+  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems, openInBrowser]);
 
   const menus = buildMenus();
 
@@ -387,20 +470,17 @@ export default function MenuBar() {
     >
       {/* Left: app name + menu items */}
       <div className="flex items-center gap-0">
-        <span className="text-[11px] font-bold tracking-wide px-2">
-          McKenzie OS
-        </span>
-
         {Object.keys(menus).map((name) => (
           <div key={name} className="relative">
             <button
-              className={`text-[11px] font-normal px-2 py-0.5 rounded
+              className={`text-[11px] px-2 py-0.5 rounded
                          transition-colors duration-75 text-desktop-text
+                         ${name === "\uF8FF" ? "font-bold tracking-wide" : "font-normal"}
                          ${activeMenu === name ? "bg-desktop-accent text-white" : "hover:bg-desktop-accent/20"}`}
               onMouseDown={() => setActiveMenu(activeMenu === name ? null : name)}
               onMouseEnter={() => { if (activeMenu) setActiveMenu(name); }}
             >
-              {name}
+              {name === "\uF8FF" ? "McKenzie OS" : name}
             </button>
             {activeMenu === name && (
               <MenuDropdown

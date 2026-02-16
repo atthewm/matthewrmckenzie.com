@@ -4,7 +4,6 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 export default function GatePage() {
-  const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -125,49 +124,14 @@ export default function GatePage() {
           <div style={{ width: "240px", height: "18px", borderRadius: "9px", overflow: "hidden", background: "#333", border: "1px solid #555", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.5)" }}>
             <div className="mck-progress" style={{ width: "100%", height: "100%", borderRadius: "9px" }} />
           </div>
-          <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>Updating...</p>
-          {/* Guest Login Button */}
-          <button
-            onClick={async () => {
-              setLoading(true);
-              setError("");
-              try {
-                const res = await fetch("/api/auth", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ username: "guest", password: "urawesome2026" }),
-                });
-                if (res.ok) {
-                  router.push("/");
-                  router.refresh();
-                } else {
-                  setError("Access denied");
-                  setLoading(false);
-                }
-              } catch {
-                setError("Connection error");
-                setLoading(false);
-              }
-            }}
-            disabled={loading}
-            className="mck-btn"
-            style={{ padding: "8px 28px", fontSize: "13px", fontWeight: 500, marginTop: "16px" }}
-          >
-            {loading ? "Entering..." : "Enter as Guest"}
-          </button>
-          {error && !showLogin && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: "8px 0 0" }}>{error}</p>}
-          <div style={{ marginTop: "48px", minHeight: "140px" }}>
-            {!showLogin ? (
-              <button onClick={() => setShowLogin(true)} style={{ background: "none", border: "none", color: "#444", fontSize: "10px", letterSpacing: "3px", textTransform: "uppercase", cursor: "pointer", padding: "8px 16px", transition: "color 0.2s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#888")} onMouseLeave={(e) => (e.currentTarget.style.color = "#444")}>Admin</button>
-            ) : (
-              <form onSubmit={handleLogin} className="mck-fade" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "200px", padding: "6px 10px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "200px", padding: "6px 10px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
-                {error && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: 0 }}>{error}</p>}
-                <button type="submit" disabled={loading} className="mck-btn" style={{ width: "200px", padding: "6px 0", fontSize: "13px", fontWeight: 500, marginTop: "2px" }}>{loading ? "Authenticating..." : "Log In"}</button>
-              </form>
-            )}
-          </div>
+          <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>System locked</p>
+          {/* Login form -- requires credentials for all users */}
+          <form onSubmit={handleLogin} className="mck-fade" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginTop: "24px" }}>
+            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
+            {error && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: 0 }}>{error}</p>}
+            <button type="submit" disabled={loading} className="mck-btn" style={{ width: "220px", padding: "8px 0", fontSize: "13px", fontWeight: 500, marginTop: "4px" }}>{loading ? "Authenticating..." : "Log In"}</button>
+          </form>
         </div>
         <p style={{ position: "absolute", bottom: "20px", fontSize: "9px", color: "#333", letterSpacing: "1px" }}>&copy; 2026 McKENZIE_OS</p>
       </div>

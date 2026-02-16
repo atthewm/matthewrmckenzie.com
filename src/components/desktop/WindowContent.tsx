@@ -20,6 +20,12 @@ import BrowserApp from "@/components/apps/BrowserApp";
 import WhoopDashboardApp from "@/components/apps/whoop/WhoopDashboardApp";
 import WhoopSplitApp from "@/components/apps/whoop/WhoopSplitApp";
 import GetWhoopApp from "@/components/apps/whoop/GetWhoopApp";
+import StartHereApp from "@/components/apps/StartHereApp";
+import TerminalApp from "@/components/apps/TerminalApp";
+import StickiesApp from "@/components/apps/StickiesApp";
+import GuestbookApp from "@/components/apps/GuestbookApp";
+import LinktreeApp from "@/components/apps/LinktreeApp";
+import ScheduleApp from "@/components/apps/ScheduleApp";
 
 interface WindowContentProps {
   windowState: WindowState;
@@ -42,6 +48,12 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   WhoopDashboardApp,
   WhoopSplitApp,
   GetWhoopApp,
+  StartHereApp,
+  TerminalApp,
+  StickiesApp,
+  GuestbookApp,
+  LinktreeApp,
+  ScheduleApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {

@@ -83,7 +83,17 @@ export const initialDesktopState: DesktopState = {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getDefaultWindowPosition(index: number) {
+function getDefaultWindowPosition(index: number, width?: number, height?: number) {
+  if (typeof window !== "undefined" && window.innerWidth < 768) {
+    // Mobile: center windows with a small cascade offset
+    const winW = Math.min(width ?? 600, window.innerWidth - 8);
+    const winH = Math.min(height ?? 450, window.innerHeight - 90);
+    const cascadeOffset = (index % 3) * 16;
+    return {
+      x: Math.max(4, (window.innerWidth - winW) / 2 + cascadeOffset),
+      y: Math.max(26, 30 + cascadeOffset),
+    };
+  }
   const base = 80;
   const offset = index * 30;
   return {
@@ -108,7 +118,9 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
           payload: { id: existing.id },
         });
       }
-      const pos = getDefaultWindowPosition(state.windows.length);
+      const winWidth = fsItem.defaultSize?.width ?? 600;
+      const winHeight = fsItem.defaultSize?.height ?? 450;
+      const pos = getDefaultWindowPosition(state.windows.length, winWidth, winHeight);
       const newWindow: WindowState = {
         id: `win-${fsItem.id}-${Date.now()}`,
         fsItemId: fsItem.id,
@@ -116,8 +128,8 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
         icon: fsItem.icon,
         x: pos.x,
         y: pos.y,
-        width: fsItem.defaultSize?.width ?? 600,
-        height: fsItem.defaultSize?.height ?? 450,
+        width: winWidth,
+        height: winHeight,
         zIndex: state.nextZIndex,
         isMinimized: false,
         isMaximized: false,

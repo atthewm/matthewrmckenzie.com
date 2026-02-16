@@ -1,17 +1,23 @@
+---
+title: About
+---
+
 # About
 
-I'm Matthew McKenzie - a builder, thinker, and maker.
-
-*This is a placeholder. Replace this content with your real bio, background, interests, and whatever you want people to know about you.*
+I'm Matthew McKenzie. I build things at the intersection of technology, design, and human experience.
 
 ## Background
 
-Tell your story here. Where you're from, what drives you, what you've been up to.
+I've spent my career working across startups and technology companies, shipping products that people actually use. I care deeply about craft -- the details that make software feel alive. This site is a reflection of that: a personal OS built from scratch as a love letter to the Mac OS X era that shaped how I think about interfaces.
+
+## What I Do
+
+I'm a product builder. I work across the full stack -- from design systems and front-end architecture to backend infrastructure and deployment. I'm particularly drawn to projects where technology meets creativity.
 
 ## Interests
 
-What excites you right now - technology, design, music, running, travel, etc.
+Design, architecture, music production, fitness, cooking, and the endless pursuit of the perfect sourdough loaf. I track my health obsessively with WHOOP and believe that how you take care of your body directly impacts the quality of your work.
 
-## Now
+## This Site
 
-What are you working on currently? This is a great section to keep updated.
+matthewrmckenzie.com is a Next.js 15 app styled after Mac OS X 10.3 Panther. Every window, menu, and animation is hand-built. The source is on [GitHub](https://github.com/atthewm/matthewrmckenzie.com).

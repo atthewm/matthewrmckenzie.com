@@ -1,85 +1,214 @@
 "use client";
 
-import React from "react";
-import { Mail, Linkedin, Github, ExternalLink } from "lucide-react";
+import React, { useState } from "react";
+import { Send, Calendar, Mail, Link2 } from "lucide-react";
+import { useOpenInBrowser } from "@/lib/browserStore";
 
 // ============================================================================
-// CONTACT APP (ryOS Address Book Style)
+// CONTACT APP (Mac OS X 10.3 Panther Style)
 // ============================================================================
+// Form + quick action buttons. Posts to /api/contact (Supabase).
+// ============================================================================
+
+const CATEGORIES = ["Investor", "Collaboration", "Press", "Speaking", "Other"];
 
 export default function ContactApp() {
-  const links = [
-    { icon: Mail, label: "Email", href: "mailto:matthew.mckenzie@mac.com", display: "matthew.mckenzie@mac.com" },
-    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/mrmckenzie/", display: "linkedin.com/in/mrmckenzie" },
-    { icon: Github, label: "GitHub", href: "https://github.com/atthewm", display: "github.com/atthewm" },
-  ];
+  const openInBrowser = useOpenInBrowser();
+  const [category, setCategory] = useState("Other");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !message.trim()) return;
+
+    setStatus("sending");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category,
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+        }),
+      });
+
+      if (res.ok) {
+        setStatus("sent");
+        setName("");
+        setEmail("");
+        setMessage("");
+      } else {
+        const data = await res.json();
+        setErrorMsg(data.error || "Something went wrong");
+        setStatus("error");
+      }
+    } catch {
+      setErrorMsg("Connection error");
+      setStatus("error");
+    }
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText("matthew.mckenzie@mac.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header card */}
+      {/* Toolbar */}
       <div
-        className="shrink-0 px-5 pt-5 pb-4 flex items-center gap-4 border-b"
-        style={{ borderColor: "var(--desktop-border)" }}
+        className="shrink-0 h-[28px] flex items-center px-3 border-b text-[10px]"
+        style={{
+          borderColor: "var(--desktop-border)",
+          background: "rgba(0,0,0,0.02)",
+        }}
       >
-        <div
-          className="w-14 h-14 rounded-full flex items-center justify-center text-white text-lg font-bold shrink-0"
-          style={{
-            background: "linear-gradient(135deg, #7bc89a 0%, #5aad7d 100%)",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.25)",
-            border: "1.5px solid rgba(255,255,255,0.2)",
-          }}
-        >
-          MM
-        </div>
-        <div>
-          <h1 className="text-sm font-semibold text-desktop-text">Matthew McKenzie</h1>
-          <p className="text-[11px] text-desktop-text-secondary mt-0.5">
-            The best way to reach me is by email.
-          </p>
-        </div>
+        <span className="text-desktop-text-secondary font-medium uppercase tracking-wider">
+          Contact
+        </span>
       </div>
 
-      {/* Contact list */}
-      <div className="flex-1 overflow-auto">
-        {links.map((link, i) => (
-          <a
-            key={link.label}
-            href={link.href}
-            target={link.href.startsWith("mailto:") ? undefined : "_blank"}
-            rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-            className="flex items-center gap-3 px-5 py-3 transition-colors duration-100
-                       hover:bg-desktop-accent/5 group"
-            style={{
-              borderBottom: i < links.length - 1 ? "1px solid var(--desktop-border)" : undefined,
-            }}
-          >
+      {/* Content */}
+      <div className="flex-1 overflow-auto px-5 py-4">
+        {status === "sent" ? (
+          <div className="flex flex-col items-center justify-center h-full text-center">
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-              style={{
-                background: "rgba(0,0,0,0.04)",
-                border: "1px solid var(--desktop-border)",
-              }}
+              className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
+              style={{ background: "var(--desktop-accent)", color: "white" }}
             >
-              <link.icon size={16} className="text-desktop-text-secondary" />
+              <Send size={20} />
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[12px] font-medium text-desktop-text">{link.label}</div>
-              <div className="text-[11px] text-desktop-accent truncate">{link.display}</div>
+            <p className="text-[14px] font-semibold text-desktop-text">Message sent</p>
+            <p className="text-[11px] text-desktop-text-secondary mt-1">
+              Thanks for reaching out. I will get back to you soon.
+            </p>
+            <button
+              onClick={() => setStatus("idle")}
+              className="mt-4 text-[11px] font-medium"
+              style={{ color: "var(--desktop-accent)" }}
+            >
+              Send another
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            {/* Category */}
+            <div>
+              <label className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                           bg-desktop-surface border outline-none
+                           focus:border-desktop-accent transition-colors"
+                style={{ borderColor: "var(--desktop-border)" }}
+              >
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
-            <ExternalLink
-              size={12}
-              className="text-desktop-text-secondary/0 group-hover:text-desktop-text-secondary/60 transition-all shrink-0"
+
+            {/* Name */}
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              maxLength={100}
+              className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                         bg-desktop-surface border outline-none
+                         focus:border-desktop-accent transition-colors"
+              style={{ borderColor: "var(--desktop-border)" }}
             />
-          </a>
-        ))}
+
+            {/* Email */}
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your email"
+              maxLength={200}
+              className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                         bg-desktop-surface border outline-none
+                         focus:border-desktop-accent transition-colors"
+              style={{ borderColor: "var(--desktop-border)" }}
+            />
+
+            {/* Message */}
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Your message..."
+              maxLength={2000}
+              rows={4}
+              className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                         bg-desktop-surface border outline-none resize-none
+                         focus:border-desktop-accent transition-colors"
+              style={{ borderColor: "var(--desktop-border)" }}
+            />
+
+            {errorMsg && (
+              <p className="text-[10px] text-red-500">{errorMsg}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === "sending" || !name.trim() || !email.trim() || !message.trim()}
+              className="w-full py-2 rounded text-[12px] font-medium
+                         bg-desktop-accent text-white hover:opacity-90
+                         disabled:opacity-50 transition-opacity"
+            >
+              {status === "sending" ? "Sending..." : "Send Message"}
+            </button>
+          </form>
+        )}
       </div>
 
-      {/* Footer */}
+      {/* Action bar */}
       <div
-        className="shrink-0 h-[22px] flex items-center justify-center border-t text-[10px] text-desktop-text-secondary"
+        className="shrink-0 border-t px-3 py-2 flex gap-2"
         style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}
       >
-        {links.length} contact{links.length !== 1 ? "s" : ""}
+        <button
+          onClick={() => openInBrowser("https://cal.com/mattmck/site", "Schedule")}
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-medium
+                     text-desktop-text hover:bg-desktop-border/50 transition-colors"
+          style={{ border: "1px solid var(--desktop-border)" }}
+        >
+          <Calendar size={11} />
+          Schedule
+        </button>
+        <button
+          onClick={handleCopyEmail}
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-medium
+                     text-desktop-text hover:bg-desktop-border/50 transition-colors"
+          style={{ border: "1px solid var(--desktop-border)" }}
+        >
+          <Mail size={11} />
+          {copied ? "Copied!" : "Email"}
+        </button>
+        <button
+          onClick={() => openInBrowser("https://mckm.at/", "Linktree")}
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-medium
+                     text-desktop-text hover:bg-desktop-border/50 transition-colors"
+          style={{ border: "1px solid var(--desktop-border)" }}
+        >
+          <Link2 size={11} />
+          Linktree
+        </button>
       </div>
     </div>
   );

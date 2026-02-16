@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { dockItemIds, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { getPantherIcon } from "./PantherIcons";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 // ============================================================================
 // DOCK - Mac OS X 10.3 Panther Style Launcher
@@ -159,13 +160,15 @@ export default function Dock() {
   const { state, openItem, focusWindow, restoreWindow } = useDesktop();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // Build resolved dock items (skip separators for indexing purposes)
   const dockEntries: { type: "item" | "separator"; item?: FSItem; itemIndex?: number }[] = [];
   let itemCounter = 0;
   for (const entry of dockItemIds) {
     if (entry === "|") {
-      dockEntries.push({ type: "separator" });
+      // Skip separators on mobile to save space
+      if (!isMobile) dockEntries.push({ type: "separator" });
     } else {
       const fsItem = findFSItem(entry);
       if (fsItem) {
@@ -207,9 +210,13 @@ export default function Dock() {
   return (
     <div
       ref={dockRef}
-      className="fixed bottom-1.5 left-1/2 -translate-x-1/2 z-[9999]
-                  flex items-end px-2.5 pb-1.5 pt-1.5
-                  rounded-2xl animate-fade-in"
+      className={`fixed left-1/2 -translate-x-1/2 z-[9999]
+                  flex items-end px-2.5 pt-1.5
+                  rounded-2xl animate-fade-in
+                  ${isMobile
+                    ? "bottom-0 pb-[calc(6px+env(safe-area-inset-bottom))] max-w-full overflow-x-auto scrollbar-none"
+                    : "bottom-1.5 pb-1.5"
+                  }`}
       style={{
         background: "var(--desktop-dock)",
         border: "1px solid rgba(255,255,255,0.35)",
@@ -220,6 +227,7 @@ export default function Dock() {
         `,
         backdropFilter: "blur(28px)",
         WebkitBackdropFilter: "blur(28px)",
+        ...(isMobile ? { borderRadius: "16px 16px 0 0", borderBottom: "none" } : {}),
       }}
       onMouseLeave={handleDockLeave}
     >
@@ -240,9 +248,9 @@ export default function Dock() {
             item={item}
             isOpen={isOpen}
             isFocused={isFocused}
-            hoveredIndex={hoveredIndex}
+            hoveredIndex={isMobile ? null : hoveredIndex}
             myIndex={entry.itemIndex!}
-            onHover={handleHover}
+            onHover={isMobile ? () => {} : handleHover}
             onClick={() => handleClick(item)}
           />
         );

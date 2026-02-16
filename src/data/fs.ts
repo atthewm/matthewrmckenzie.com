@@ -13,6 +13,7 @@ export interface FSItem {
   description?: string;
   staticRoute?: string;
   defaultSize?: { width: number; height: number };
+  hidden?: boolean;
 }
 
 export const fileSystem: FSItem[] = [
@@ -24,11 +25,13 @@ export const fileSystem: FSItem[] = [
   { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", description: "Essays, notes, and long-form writing.", children: [
     { id: "essays", name: "Essays", type: "document", icon: "BookOpen", contentPath: "essays.md", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
   ]},
+  { id: "now", name: "Now", type: "document", icon: "Zap", contentPath: "now.md", description: "What I am up to right now.", defaultSize: { width: 520, height: 440 } },
   { id: "photos", name: "Photos", type: "app", icon: "Image", appComponent: "InstagramApp", description: "Photos currently mirror Instagram.", defaultSize: { width: 480, height: 560 } },
   { id: "music", name: "Music", type: "app", icon: "Headphones", appComponent: "SoundCloudPlayer", description: "SoundCloud player.", defaultSize: { width: 420, height: 500 } },
   { id: "videos", name: "Videos", type: "app", icon: "Disc3", appComponent: "YouTubeWinampPlayer", description: "YouTube playlist player.", defaultSize: { width: 320, height: 360 } },
   { id: "apple-music", name: "Apple Music", type: "app", icon: "ListMusic", appComponent: "AppleMusicFolder", description: "Apple Music playlists.", defaultSize: { width: 480, height: 420 } },
-  { id: "contact", name: "Contact", type: "app", icon: "Mail", appComponent: "ContactApp", contentPath: "contact.md", staticRoute: "/contact", description: "Get in touch.", defaultSize: { width: 480, height: 400 } },
+  { id: "contact", name: "Contact", type: "app", icon: "Mail", appComponent: "ContactApp", staticRoute: "/contact", description: "Get in touch.", defaultSize: { width: 480, height: 500 } },
+  { id: "guestbook", name: "Guestbook", type: "app", icon: "BookOpen", appComponent: "GuestbookApp", description: "Sign the guestbook.", defaultSize: { width: 560, height: 500 } },
   { id: "health", name: "Health", type: "folder", icon: "Heart", description: "WHOOP health metrics, workout splits, and fitness data.", children: [
     { id: "whoop-dashboard", name: "WHOOP Dashboard", type: "app", icon: "Activity", appComponent: "WhoopDashboardApp", description: "Health and fitness dashboard powered by WHOOP.", defaultSize: { width: 520, height: 640 } },
     { id: "whoop-splits", name: "WHOOP Splits", type: "folder", icon: "FolderHeart", description: "Strength Trainer workout splits.", children: [
@@ -50,12 +53,20 @@ export const fileSystem: FSItem[] = [
     { id: "mamas-healthy-meatballs", name: "Mama's Healthy Meatballs", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/mamas-healthy-meatballs.md", description: "Lean, high-protein meatballs with beef, lamb, and venison", defaultSize: { width: 600, height: 640 } },
     { id: "parmesan-crusted-baked-chicken-tenders", name: "Parmesan Crusted Baked Chicken Tenders", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/parmesan-crusted-baked-chicken-tenders.md", description: "Higher-protein baked tenders with Parmesan crust", defaultSize: { width: 600, height: 640 } },
   ]},
+  { id: "terminal", name: "Terminal", type: "app", icon: "Terminal", appComponent: "TerminalApp", description: "Command-line interface.", defaultSize: { width: 640, height: 420 } },
+  { id: "stickies", name: "Stickies", type: "app", icon: "StickyNote", appComponent: "StickiesApp", description: "Sticky notes for quick thoughts.", defaultSize: { width: 520, height: 400 } },
   { id: "settings", name: "Settings", type: "app", icon: "Settings", appComponent: "SettingsApp", description: "Appearance, sound, and typography settings.", defaultSize: { width: 420, height: 540 } },
   { id: "browser", name: "Browser", type: "app", icon: "Globe", appComponent: "BrowserApp", description: "In-OS web browser.", defaultSize: { width: 800, height: 600 } },
-  { id: "start-here", name: "Start Here", type: "folder", icon: "Sparkles", description: "Welcome! Start here to explore.", children: [
+  { id: "start-here", name: "Start Here", type: "app", icon: "Sparkles", appComponent: "StartHereApp", description: "Welcome! Start here to explore.", defaultSize: { width: 420, height: 400 }, children: [
     { id: "readme", name: "README", type: "document", icon: "FileText", contentPath: "readme.md", description: "Welcome to matthewrmckenzie.com", defaultSize: { width: 560, height: 480 } },
     { id: "linkedin", name: "LinkedIn", type: "link", icon: "Linkedin", href: "https://www.linkedin.com/in/mrmckenzie/", description: "Connect on LinkedIn." },
     { id: "github", name: "GitHub", type: "link", icon: "Github", href: "https://github.com/atthewm", description: "View code on GitHub." },
+  ]},
+  { id: "linktree", name: "Linktree", type: "app", icon: "Link", appComponent: "LinktreeApp", description: "All links in one place.", defaultSize: { width: 800, height: 600 } },
+  { id: "schedule", name: "Schedule", type: "app", icon: "Calendar", appComponent: "ScheduleApp", description: "Book a meeting.", defaultSize: { width: 800, height: 600 } },
+  // Hidden items - revealed by easter eggs
+  { id: "secrets", name: "Secrets", type: "folder", icon: "Lock", hidden: true, description: "You found the hidden folder.", children: [
+    { id: "secrets-readme", name: "README", type: "document", icon: "FileText", contentPath: "secrets-readme.md", description: "Secrets of McKenzie OS.", defaultSize: { width: 480, height: 400 } },
   ]},
 ];
 
@@ -83,8 +94,9 @@ export function getStaticRouteItems(): FSItem[] {
   return flattenFS().filter((item) => item.staticRoute);
 }
 
-export function getRootItems(): FSItem[] {
-  return fileSystem;
+export function getRootItems(showHidden = false): FSItem[] {
+  if (showHidden) return fileSystem;
+  return fileSystem.filter((item) => !item.hidden);
 }
 
 // ---------------------------------------------------------------------------
@@ -98,6 +110,7 @@ export const dockItemIds: (string | "|")[] = [
   "|",
   "work",
   "writing",
+  "now",
   "photos",
   "|",
   "music",
@@ -105,7 +118,11 @@ export const dockItemIds: (string | "|")[] = [
   "apple-music",
   "|",
   "contact",
+  "guestbook",
   "health",
   "recipes",
+  "|",
+  "terminal",
+  "stickies",
   "settings",
 ];

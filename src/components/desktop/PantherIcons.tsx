@@ -359,6 +359,128 @@ function RecipesIcon({ size = 32 }: IconProps) {
 }
 
 // ---------------------------------------------------------------------------
+// Terminal - glossy black screen with green cursor
+// ---------------------------------------------------------------------------
+function TerminalIcon({ size = 32 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tm-body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#333" />
+          <stop offset="100%" stopColor="#1a1a1a" />
+        </linearGradient>
+      </defs>
+      <rect x="3" y="4" width="26" height="22" rx="3" fill="url(#tm-body)" stroke="#555" strokeWidth="1" />
+      <rect x="5" y="6" width="22" height="16" rx="1.5" fill="#0a0a0a" />
+      {/* Prompt */}
+      <text x="8" y="15" fill="#33ff33" fontSize="7" fontFamily="monospace" fontWeight="bold">&gt;_</text>
+      {/* Gloss */}
+      <rect x="5" y="6" width="22" height="5" rx="1.5" fill="rgba(255,255,255,0.06)" />
+      {/* Base */}
+      <rect x="8" y="26" width="16" height="2" rx="1" fill="#444" stroke="#333" strokeWidth="0.5" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Stickies - stack of colored sticky notes
+// ---------------------------------------------------------------------------
+function StickiesIcon({ size = 32 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Back note (blue) */}
+      <rect x="8" y="3" width="18" height="18" rx="2" fill="#E3F2FD" stroke="#42A5F5" strokeWidth="0.8" transform="rotate(5, 17, 12)" />
+      {/* Middle note (pink) */}
+      <rect x="6" y="5" width="18" height="18" rx="2" fill="#FCE4EC" stroke="#EC407A" strokeWidth="0.8" transform="rotate(-3, 15, 14)" />
+      {/* Front note (yellow) */}
+      <rect x="4" y="7" width="18" height="18" rx="2" fill="#FFF9C4" stroke="#F9A825" strokeWidth="0.8" />
+      {/* Lines on front note */}
+      <line x1="7" y1="13" x2="18" y2="13" stroke="#E8D88A" strokeWidth="0.5" />
+      <line x1="7" y1="16" x2="16" y2="16" stroke="#E8D88A" strokeWidth="0.5" />
+      <line x1="7" y1="19" x2="14" y2="19" stroke="#E8D88A" strokeWidth="0.5" />
+      {/* Gloss */}
+      <rect x="4.5" y="7.5" width="10" height="4" rx="1" fill="rgba(255,255,255,0.35)" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Guestbook - open book with pen
+// ---------------------------------------------------------------------------
+function GuestbookIcon({ size = 32 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gb-page" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FFFFF5" />
+          <stop offset="100%" stopColor="#F5F0D8" />
+        </linearGradient>
+      </defs>
+      {/* Left page */}
+      <path d="M4 5h12v22H4a2 2 0 01-2-2V7a2 2 0 012-2z" fill="url(#gb-page)" stroke="#C0B080" strokeWidth="0.8" />
+      {/* Right page */}
+      <path d="M16 5h12a2 2 0 012 2v18a2 2 0 01-2 2H16V5z" fill="url(#gb-page)" stroke="#C0B080" strokeWidth="0.8" />
+      {/* Spine */}
+      <line x1="16" y1="5" x2="16" y2="27" stroke="#A09060" strokeWidth="1.5" />
+      {/* Lines */}
+      <line x1="6" y1="11" x2="13" y2="11" stroke="#D0C8A0" strokeWidth="0.5" />
+      <line x1="6" y1="14" x2="12" y2="14" stroke="#D0C8A0" strokeWidth="0.5" />
+      <line x1="6" y1="17" x2="11" y2="17" stroke="#D0C8A0" strokeWidth="0.5" />
+      <line x1="19" y1="11" x2="28" y2="11" stroke="#D0C8A0" strokeWidth="0.5" />
+      <line x1="19" y1="14" x2="27" y2="14" stroke="#D0C8A0" strokeWidth="0.5" />
+      {/* Pen */}
+      <line x1="24" y1="18" x2="20" y2="24" stroke="#4A90D9" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="20" cy="24" r="0.8" fill="#333" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Now - lightning bolt / zap
+// ---------------------------------------------------------------------------
+function NowIcon({ size = 32 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="nw-bolt" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FFD54F" />
+          <stop offset="100%" stopColor="#FF9800" />
+        </linearGradient>
+      </defs>
+      <circle cx="16" cy="16" r="13" fill="#FFF8E1" stroke="#FFB300" strokeWidth="1" />
+      <path d="M17.5 4.5L11 17h5l-1.5 10.5L21 15h-5l1.5-10.5z" fill="url(#nw-bolt)" stroke="#E65100" strokeWidth="0.8" strokeLinejoin="round" />
+      {/* Gloss */}
+      <path d="M5 10a13 13 0 0122 0" fill="rgba(255,255,255,0.2)" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Secrets - glossy padlock
+// ---------------------------------------------------------------------------
+function SecretsIcon({ size = 32 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sc-body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#C0C0CC" />
+          <stop offset="100%" stopColor="#78787F" />
+        </linearGradient>
+      </defs>
+      {/* Shackle */}
+      <path d="M10 14V10a6 6 0 0112 0v4" stroke="#666" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      {/* Body */}
+      <rect x="7" y="14" width="18" height="14" rx="3" fill="url(#sc-body)" stroke="#555" strokeWidth="1" />
+      {/* Keyhole */}
+      <circle cx="16" cy="20" r="2.5" fill="#444" />
+      <rect x="15" y="20" width="2" height="4" rx="0.5" fill="#444" />
+      {/* Gloss */}
+      <rect x="8" y="15" width="10" height="4" rx="1.5" fill="rgba(255,255,255,0.25)" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // ICON REGISTRY
 // ---------------------------------------------------------------------------
 
@@ -375,6 +497,11 @@ const pantherIcons: Record<string, React.FC<IconProps>> = {
   "health":       HealthIcon,
   "settings":     SettingsIcon,
   "recipes":      RecipesIcon,
+  "terminal":     TerminalIcon,
+  "stickies":     StickiesIcon,
+  "guestbook":    GuestbookIcon,
+  "now":          NowIcon,
+  "secrets":      SecretsIcon,
 };
 
 export function getPantherIcon(fsItemId: string): React.FC<IconProps> | null {

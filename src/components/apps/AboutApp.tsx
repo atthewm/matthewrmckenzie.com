@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 // ============================================================================
 // ABOUT APP (ryOS "About This Mac" Style)
@@ -10,7 +11,16 @@ interface AboutAppProps {
   contentHtml?: string;
 }
 
+const systemInfo = [
+  { label: "Build", value: "Next.js 15 + TypeScript" },
+  { label: "Host", value: "Vercel Edge Network" },
+  { label: "UI", value: "Panther Aqua (hand-built)" },
+  { label: "Source", value: "GitHub", href: "https://github.com/atthewm/matthewrmckenzie.com" },
+];
+
 export default function AboutApp({ contentHtml }: AboutAppProps) {
+  const [showSystemInfo, setShowSystemInfo] = useState(false);
+
   return (
     <div className="flex flex-col h-full">
       {/* System info header */}
@@ -54,6 +64,39 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
             <span className="text-desktop-text-secondary">Status</span>
             <span className="font-medium" style={{ color: "var(--desktop-accent)" }}>Online</span>
           </div>
+
+          {/* System Info toggle */}
+          <button
+            onClick={() => setShowSystemInfo(!showSystemInfo)}
+            className="flex items-center gap-1 mt-2 text-[10px] font-medium transition-colors"
+            style={{ color: "var(--desktop-accent)" }}
+          >
+            {showSystemInfo ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+            System Info
+          </button>
+
+          {showSystemInfo && (
+            <div className="mt-1.5 pt-1.5 border-t" style={{ borderColor: "var(--desktop-border)" }}>
+              {systemInfo.map((info) => (
+                <div key={info.label} className="flex justify-between mt-1 first:mt-0">
+                  <span className="text-desktop-text-secondary">{info.label}</span>
+                  {info.href ? (
+                    <a
+                      href={info.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium underline"
+                      style={{ color: "var(--desktop-accent)" }}
+                    >
+                      {info.value}
+                    </a>
+                  ) : (
+                    <span className="text-desktop-text font-medium">{info.value}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
