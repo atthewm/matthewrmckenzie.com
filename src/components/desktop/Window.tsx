@@ -5,10 +5,11 @@ import { useDesktop, type WindowState } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 
 // ============================================================================
-// WINDOW COMPONENT (ryOS Retro Mac Style)
+// WINDOW COMPONENT (Mac OS X 10.3 Panther Aqua)
 // ============================================================================
-// Lighter window chrome with soft shadows, modern traffic lights,
-// subtle title bar gradient. Drag from title bar, resize from edges/corners.
+// Brushed metal title bar with glossy gradient, rounded 10px corners,
+// Aqua traffic lights with gloss highlight, soft drop shadow.
+// Drag from title bar, resize from edges/corners.
 // ============================================================================
 
 interface WindowProps {
@@ -142,9 +143,9 @@ export default function Window({ windowState, children }: WindowProps) {
     se: "cursor-se-resize", sw: "cursor-sw-resize",
   };
 
-  // Focused: lighter shadow; Unfocused: very soft
-  const focusedShadow = "0 4px 16px rgba(0,0,0,0.15), 0 1px 4px rgba(0,0,0,0.08)";
-  const unfocusedShadow = "0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)";
+  // Panther Aqua shadows
+  const focusedShadow = "0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)";
+  const unfocusedShadow = "0 2px 12px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)";
 
   // Title bar gradient from CSS vars
   const titleBarBg = isFocused
@@ -158,7 +159,7 @@ export default function Window({ windowState, children }: WindowProps) {
       aria-label={windowState.title}
       className={`
         fixed select-none flex flex-col overflow-hidden
-        ${windowState.isMaximized ? "rounded-none" : "rounded-lg"}
+        ${windowState.isMaximized ? "rounded-none" : ""}
         ${isClosing ? "animate-window-close" : "animate-window-open"}
       `}
       style={{
@@ -167,8 +168,9 @@ export default function Window({ windowState, children }: WindowProps) {
         width: windowState.width,
         height: windowState.height,
         zIndex: windowState.zIndex,
+        borderRadius: windowState.isMaximized ? 0 : 10,
         boxShadow: isFocused ? focusedShadow : unfocusedShadow,
-        border: `1px solid ${isFocused ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.1)"}`,
+        border: `0.5px solid ${isFocused ? "rgba(0,0,0,0.35)" : "rgba(0,0,0,0.15)"}`,
       }}
       onPointerDown={handleWindowPointerDown}
     >
@@ -193,15 +195,15 @@ export default function Window({ windowState, children }: WindowProps) {
         </>
       )}
 
-      {/* TITLE BAR */}
+      {/* TITLE BAR - Panther Aqua brushed metal */}
       <div
         className={`
-          flex items-center h-[26px] px-2 shrink-0
+          flex items-center h-[22px] px-2 shrink-0
           ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}
         `}
         style={{
           background: titleBarBg,
-          borderBottom: "1px solid rgba(0,0,0,0.12)",
+          borderBottom: `0.5px solid ${isFocused ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.08)"}`,
         }}
         onPointerDown={handleDragStart}
         onPointerMove={handleDragMove}
@@ -210,7 +212,7 @@ export default function Window({ windowState, children }: WindowProps) {
       >
         {/* Traffic lights */}
         <div
-          className={`flex items-center gap-[7px] mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
+          className={`flex items-center gap-[8px] mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
         >
           <button onClick={handleClose} aria-label="Close window" className="aqua-btn aqua-close" />
           <button onClick={() => minimizeWindow(windowState.id)} aria-label="Minimize window" className="aqua-btn aqua-minimize" />
@@ -219,8 +221,11 @@ export default function Window({ windowState, children }: WindowProps) {
 
         {/* Title */}
         <div
-          className="flex-1 text-center text-[11px] font-medium truncate pointer-events-none"
-          style={{ color: isFocused ? "#333" : "#999" }}
+          className="flex-1 text-center text-[13px] font-semibold truncate pointer-events-none"
+          style={{
+            color: isFocused ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0.35)",
+            textShadow: isFocused ? "0 1px 0 rgba(255,255,255,0.5)" : "none",
+          }}
         >
           {windowState.title}
         </div>
@@ -234,8 +239,8 @@ export default function Window({ windowState, children }: WindowProps) {
         style={{
           backgroundColor: "var(--desktop-surface)",
           fontFamily: "var(--user-font-family, inherit)",
-          fontSize: "var(--user-font-size, 14px)",
-          lineHeight: "var(--user-line-height, 1.6)",
+          fontSize: "var(--user-font-size, 13px)",
+          lineHeight: "var(--user-line-height, 1.5)",
           color: "var(--desktop-text)",
         }}
       >

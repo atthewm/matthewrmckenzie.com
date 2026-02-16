@@ -3,14 +3,14 @@
 import React, { useState, useCallback, useRef } from "react";
 import { dockItemIds, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { getOS9Icon } from "./RetroIcons";
+import { getPantherIcon } from "./PantherIcons";
 
 // ============================================================================
-// DOCK - Mac OS 9 Style Launcher
+// DOCK - Mac OS X 10.3 Panther Style Launcher
 // ============================================================================
-// Primary navigation dock fixed to bottom center. Shows all main app/folder
-// icons rendered as classic Mac OS 9 pixel-art SVGs. Single click to
-// open/focus. Hover magnification. Active dot indicators.
+// Primary navigation dock fixed to bottom center. Glossy Aqua icons,
+// glassy translucent shelf. Single click to open/focus. Hover magnification.
+// Active dot indicators.
 // ============================================================================
 
 // ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ function DockIcon({
   onHover,
   onClick,
 }: DockIconProps) {
-  const OS9Icon = getOS9Icon(item.id);
+  const PantherIcon = getPantherIcon(item.id);
 
   // Magnification: full scale at hovered, slightly less for neighbors
   let scale = 1;
@@ -90,29 +90,29 @@ function DockIcon({
     >
       <DockTooltip label={item.name} visible={isHovered} />
 
-      {/* OS 9 Icon */}
+      {/* Panther Aqua Icon */}
       <div
         className="relative flex items-center justify-center"
         style={{
-          width: 42,
-          height: 42,
+          width: 44,
+          height: 44,
           filter: isHovered
-            ? "drop-shadow(0 2px 6px rgba(0,0,0,0.35))"
-            : "drop-shadow(0 1px 3px rgba(0,0,0,0.2))",
+            ? "drop-shadow(0 3px 8px rgba(0,0,0,0.35))"
+            : "drop-shadow(0 1px 4px rgba(0,0,0,0.2))",
           transition: "filter 150ms ease",
         }}
       >
-        {OS9Icon ? (
-          <OS9Icon size={36} />
+        {PantherIcon ? (
+          <PantherIcon size={38} />
         ) : (
           /* Fallback: generic document icon */
-          <svg width={36} height={36} viewBox="0 0 32 32" fill="none">
-            <rect x="6" y="3" width="20" height="26" rx="2" fill="#F5F5F0" stroke="#333" strokeWidth="1.5" />
-            <path d="M6 5a2 2 0 012-2h10l8 8v18a2 2 0 01-2 2H8a2 2 0 01-2-2V5z" fill="#F5F5F0" stroke="#333" strokeWidth="1.5" />
-            <path d="M18 3v8h8" fill="#E8E8E0" stroke="#333" strokeWidth="1.5" strokeLinejoin="round" />
-            <line x1="10" y1="15" x2="22" y2="15" stroke="#CCC" strokeWidth="1" />
-            <line x1="10" y1="18" x2="22" y2="18" stroke="#CCC" strokeWidth="1" />
-            <line x1="10" y1="21" x2="18" y2="21" stroke="#CCC" strokeWidth="1" />
+          <svg width={38} height={38} viewBox="0 0 32 32" fill="none">
+            <rect x="5" y="3" width="22" height="26" rx="3" fill="#F8F8F5" stroke="#AAA" strokeWidth="1" />
+            <path d="M5 6a3 3 0 013-3h12l7 7v19a3 3 0 01-3 3H8a3 3 0 01-3-3V6z" fill="#F8F8F5" stroke="#AAA" strokeWidth="1" />
+            <path d="M20 3v7h7" fill="#EEEEE5" stroke="#AAA" strokeWidth="1" strokeLinejoin="round" />
+            <line x1="9" y1="15" x2="23" y2="15" stroke="#DDD" strokeWidth="0.8" />
+            <line x1="9" y1="18" x2="23" y2="18" stroke="#DDD" strokeWidth="0.8" />
+            <line x1="9" y1="21" x2="18" y2="21" stroke="#DDD" strokeWidth="0.8" />
           </svg>
         )}
       </div>
@@ -212,14 +212,14 @@ export default function Dock() {
                   rounded-2xl animate-fade-in"
       style={{
         background: "var(--desktop-dock)",
-        border: "1px solid var(--desktop-border)",
+        border: "1px solid rgba(255,255,255,0.35)",
         boxShadow: `
-          0 4px 20px rgba(0,0,0,0.15),
-          0 1px 4px rgba(0,0,0,0.1),
-          inset 0 1px 0 rgba(255,255,255,0.15)
+          0 4px 24px rgba(0,0,0,0.18),
+          0 1px 6px rgba(0,0,0,0.12),
+          inset 0 1px 0 rgba(255,255,255,0.45)
         `,
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
+        backdropFilter: "blur(28px)",
+        WebkitBackdropFilter: "blur(28px)",
       }}
       onMouseLeave={handleDockLeave}
     >

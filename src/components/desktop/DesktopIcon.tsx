@@ -7,39 +7,41 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 
 // ============================================================================
-// DESKTOP ICON (ryOS Retro Mac Style)
+// DESKTOP ICON (Mac OS X 10.3 Panther Aqua)
 // ============================================================================
-// Muted gradient colors, dark text labels, softer shadows. Double-click to
-// open. Selected state shows accent blue highlight behind label.
+// Glossy gradient icon backgrounds, Aqua-toned palette, soft shadows.
+// Double-click to open. Selected state shows accent blue highlight.
 // ============================================================================
 
 interface DesktopIconProps {
   item: FSItem;
 }
 
-// Muted, softer color palette for retro Mac feel
+// Glossy Aqua color palette
 const iconGradients: Record<string, [string, string]> = {
-  User:        ["#7eb8da", "#5a9cbf"],
-  Briefcase:   ["#8b8fc7", "#6e72a8"],
-  PenTool:     ["#d4a0c0", "#b87da0"],
-  Image:       ["#7eb8da", "#5a9cbf"],
-  Mail:        ["#7bc89a", "#5aad7d"],
-  Sparkles:    ["#d4a07a", "#c08860"],
-  Settings:    ["#a8b0c0", "#8e96a8"],
-  Music:       ["#d49090", "#b87070"],
-  Video:       ["#9088c0", "#7570a0"],
-  Headphones:  ["#c890a8", "#a87090"],
-  Layers:      ["#6898c0", "#5080a8"],
-  FileText:    ["#b8c0c8", "#98a0a8"],
-  BookOpen:    ["#c8b080", "#a89068"],
-  Linkedin:    ["#5a8aaa", "#4878a0"],
-  Github:      ["#606060", "#484848"],
-  GalleryHorizontalEnd: ["#68b0b0", "#509898"],
-  Disc3:       ["#c080a0", "#a06888"],
-  ListMusic:   ["#8880b0", "#706898"],
+  User:        ["#6CB4E8", "#3A8AD0"],
+  Briefcase:   ["#8890D0", "#5A62B0"],
+  PenTool:     ["#D090B8", "#B06898"],
+  Image:       ["#6CB4E8", "#3A8AD0"],
+  Mail:        ["#68C890", "#40A868"],
+  Sparkles:    ["#E8A860", "#D08840"],
+  Settings:    ["#A0AAC0", "#7880A0"],
+  Music:       ["#E08080", "#C05050"],
+  Video:       ["#9888C8", "#7060A8"],
+  Headphones:  ["#D088A8", "#B06888"],
+  Layers:      ["#58A0D0", "#3878B0"],
+  FileText:    ["#B0B8C8", "#8890A0"],
+  BookOpen:    ["#D0B078", "#B09058"],
+  Linkedin:    ["#4A8AD0", "#2868B0"],
+  Github:      ["#585858", "#383838"],
+  GalleryHorizontalEnd: ["#58B8B8", "#389898"],
+  Disc3:       ["#D078A0", "#B05880"],
+  ListMusic:   ["#8878C0", "#6058A0"],
+  Heart:       ["#E06060", "#C03838"],
+  UtensilsCrossed: ["#E89050", "#D07030"],
 };
 
-const defaultGradient: [string, string] = ["#808890", "#687078"];
+const defaultGradient: [string, string] = ["#7888A0", "#586880"];
 
 function getIcon(name: string) {
   const lib = Icons as Record<string, unknown>;

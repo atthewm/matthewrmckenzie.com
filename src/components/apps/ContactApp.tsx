@@ -10,8 +10,8 @@ import { Mail, Linkedin, Github, ExternalLink } from "lucide-react";
 export default function ContactApp() {
   const links = [
     { icon: Mail, label: "Email", href: "mailto:matthew.mckenzie@mac.com", display: "matthew.mckenzie@mac.com" },
-    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/matthewrmckenzie/", display: "linkedin.com/in/matthewrmckenzie" },
-    { icon: Github, label: "GitHub", href: "https://github.com/matthewrmckenzie", display: "github.com/matthewrmckenzie" },
+    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/mrmckenzie/", display: "linkedin.com/in/mrmckenzie" },
+    { icon: Github, label: "GitHub", href: "https://github.com/atthewm", display: "github.com/atthewm" },
   ];
 
   return (

@@ -1,6 +1,6 @@
 # matthewrmckenzie.com
 
-Personal website built as a web-based desktop OS experience. Draggable/resizable windows, folder structures, desktop icons, dock, and theme switching — all running on Next.js.
+Personal website built as a web-based desktop OS experience. Draggable/resizable windows, folder structures, desktop icons, dock, and theme switching - all running on Next.js.
 
 ## Quick Start
 
@@ -123,7 +123,7 @@ Add an entry in `src/data/fs.ts` with `type: "link"` and an `href` URL.
 
 ### Change wallpaper
 
-Edit the gradient in `src/components/desktop/Desktop.tsx` — look for the "Wallpaper background" comment. You can use any CSS gradient, image, or combination.
+Edit the gradient in `src/components/desktop/Desktop.tsx` - look for the "Wallpaper background" comment. You can use any CSS gradient, image, or combination.
 
 ### Change theme colors
 

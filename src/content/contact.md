@@ -6,8 +6,8 @@ The best way to reach me is by email.
 
 ## Elsewhere
 
-- [LinkedIn](https://www.linkedin.com/in/matthewrmckenzie/)
-- [GitHub](https://github.com/matthewrmckenzie)
+- [LinkedIn](https://www.linkedin.com/in/mrmckenzie/)
+- [GitHub](https://github.com/atthewm)
 
 ---
 

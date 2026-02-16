@@ -7,10 +7,10 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { getIcon } from "@/components/desktop/DesktopIcon";
 
 // ============================================================================
-// FOLDER VIEW (Finder-Style)
+// FOLDER VIEW (Mac OS X 10.3 Panther Finder-Style)
 // ============================================================================
 // Left sidebar with "Favorites" listing root folders, main area with icon
-// grid, footer bar with item count. Inspired by classic Mac Finder.
+// grid, footer bar with item count. Panther Aqua styling.
 // ============================================================================
 
 interface FolderViewProps {

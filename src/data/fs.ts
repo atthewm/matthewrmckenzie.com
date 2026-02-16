@@ -19,7 +19,7 @@ export const fileSystem: FSItem[] = [
   { id: "about", name: "About", type: "app", icon: "User", appComponent: "AboutApp", contentPath: "about.md", staticRoute: "/about", description: "About Matthew McKenzie.", defaultSize: { width: 640, height: 520 } },
   { id: "work", name: "Work", type: "folder", icon: "Briefcase", staticRoute: "/work", description: "Professional work, projects, and case studies.", children: [
     { id: "projects", name: "Projects", type: "app", icon: "Layers", appComponent: "ProjectsApp", contentPath: "projects.md", staticRoute: "/projects", description: "Selected projects and case studies.", defaultSize: { width: 720, height: 560 } },
-    { id: "resume", name: "Resume", type: "document", icon: "FileText", contentPath: "resume.md", description: "Professional resume and experience.", defaultSize: { width: 600, height: 700 } },
+    { id: "resume", name: "Resume", type: "app", icon: "FileText", appComponent: "ResumeApp", description: "Professional resume and experience.", defaultSize: { width: 560, height: 640 } },
   ]},
   { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", description: "Essays, notes, and long-form writing.", children: [
     { id: "essays", name: "Essays", type: "document", icon: "BookOpen", contentPath: "essays.md", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
@@ -42,11 +42,18 @@ export const fileSystem: FSItem[] = [
     ]},
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
+  { id: "recipes", name: "Recipes", type: "folder", icon: "UtensilsCrossed", description: "Tried and true recipes from the kitchen.", children: [
+    { id: "umami-black-beans", name: "Umami Black Beans", type: "document", icon: "FileText", contentPath: "umami-black-beans.md", description: "Rich, savory black beans with layers of umami.", defaultSize: { width: 560, height: 500 } },
+    { id: "master-city-loaf", name: "Master City Loaf", type: "document", icon: "FileText", contentPath: "master-city-loaf.md", description: "No-knead artisan bread.", defaultSize: { width: 560, height: 500 } },
+    { id: "brownies", name: "Brownies", type: "document", icon: "FileText", contentPath: "brownies.md", description: "Dense, fudgy brownies.", defaultSize: { width: 560, height: 500 } },
+    { id: "overnight-oats", name: "Cinnamon Protein Overnight Oats", type: "document", icon: "FileText", contentPath: "cinnamon-protein-overnight-oats.md", description: "High-protein overnight oats.", defaultSize: { width: 560, height: 500 } },
+    { id: "homemade-tortillas", name: "Homemade Tortillas", type: "document", icon: "FileText", contentPath: "homemade-tortillas.md", description: "Soft, warm flour tortillas.", defaultSize: { width: 560, height: 500 } },
+  ]},
   { id: "settings", name: "Settings", type: "app", icon: "Settings", appComponent: "SettingsApp", description: "Appearance, sound, and typography settings.", defaultSize: { width: 420, height: 540 } },
   { id: "start-here", name: "Start Here", type: "folder", icon: "Sparkles", description: "Welcome! Start here to explore.", children: [
     { id: "readme", name: "README", type: "document", icon: "FileText", contentPath: "readme.md", description: "Welcome to matthewrmckenzie.com", defaultSize: { width: 560, height: 480 } },
-    { id: "linkedin", name: "LinkedIn", type: "link", icon: "Linkedin", href: "https://www.linkedin.com/in/matthewrmckenzie/", description: "Connect on LinkedIn." },
-    { id: "github", name: "GitHub", type: "link", icon: "Github", href: "https://github.com/matthewrmckenzie", description: "View code on GitHub." },
+    { id: "linkedin", name: "LinkedIn", type: "link", icon: "Linkedin", href: "https://www.linkedin.com/in/mrmckenzie/", description: "Connect on LinkedIn." },
+    { id: "github", name: "GitHub", type: "link", icon: "Github", href: "https://github.com/atthewm", description: "View code on GitHub." },
   ]},
 ];
 
@@ -97,5 +104,6 @@ export const dockItemIds: (string | "|")[] = [
   "|",
   "contact",
   "health",
+  "recipes",
   "settings",
 ];

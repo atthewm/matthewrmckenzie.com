@@ -126,6 +126,36 @@ export default function GatePage() {
             <div className="mck-progress" style={{ width: "100%", height: "100%", borderRadius: "9px" }} />
           </div>
           <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>Updating...</p>
+          {/* Guest Login Button */}
+          <button
+            onClick={async () => {
+              setLoading(true);
+              setError("");
+              try {
+                const res = await fetch("/api/auth", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ username: "guest", password: "urawesome2026" }),
+                });
+                if (res.ok) {
+                  router.push("/");
+                  router.refresh();
+                } else {
+                  setError("Access denied");
+                  setLoading(false);
+                }
+              } catch {
+                setError("Connection error");
+                setLoading(false);
+              }
+            }}
+            disabled={loading}
+            className="mck-btn"
+            style={{ padding: "8px 28px", fontSize: "13px", fontWeight: 500, marginTop: "16px" }}
+          >
+            {loading ? "Entering..." : "Enter as Guest"}
+          </button>
+          {error && !showLogin && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: "8px 0 0" }}>{error}</p>}
           <div style={{ marginTop: "48px", minHeight: "140px" }}>
             {!showLogin ? (
               <button onClick={() => setShowLogin(true)} style={{ background: "none", border: "none", color: "#444", fontSize: "10px", letterSpacing: "3px", textTransform: "uppercase", cursor: "pointer", padding: "8px 16px", transition: "color 0.2s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#888")} onMouseLeave={(e) => (e.currentTarget.style.color = "#444")}>Admin</button>
