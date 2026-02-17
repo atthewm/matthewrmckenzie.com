@@ -166,6 +166,30 @@
   opacity: 0.3;
 }
 
+/* Mobile: larger touch targets for traffic light buttons */
+.aqua-btn-mobile {
+  width: 16px;
+  height: 16px;
+  /* Invisible touch area expansion */
+  position: relative;
+}
+
+.aqua-btn-mobile::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+}
+
+.aqua-btn-mobile::after {
+  top: 2px;
+  left: 3.5px;
+  width: 8px;
+  height: 5px;
+}
+
 /* ============================================================================
    WINAMP MARQUEE ANIMATION
    ============================================================================ */

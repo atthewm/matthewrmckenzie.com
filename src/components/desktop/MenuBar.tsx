@@ -5,6 +5,7 @@ import { Sun, Moon, Monitor } from "lucide-react";
 import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
 import { useOpenInBrowser } from "@/lib/browserStore";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 // ============================================================================
 // MENU BAR (Classic Mac Style) - Functional Dropdowns
@@ -123,27 +124,32 @@ function SubmenuItem({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // On mobile, toggle on click instead of hover
+  const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+
   return (
     <div
       ref={ref}
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={() => { if (!isMobileView) setOpen(true); }}
+      onMouseLeave={() => { if (!isMobileView) setOpen(false); }}
     >
       <div
         className="w-full flex items-center justify-between px-4 py-1 text-[11px]
                    text-desktop-text hover:bg-desktop-accent hover:text-white
                    transition-colors duration-75 cursor-default"
+        onClick={() => { if (isMobileView) setOpen(!open); }}
       >
         <span>{item.label}</span>
-        <span className="text-[10px]">&#9656;</span>
+        <span className="text-[10px]">{open ? "&#9662;" : "&#9656;"}</span>
       </div>
       {open && (
         <div
-          className="absolute left-full top-0 min-w-[160px] py-1 rounded-md shadow-lg z-[10002]"
+          className={`${isMobileView ? "relative w-full" : "absolute left-full top-0"} min-w-[160px] py-1 rounded-md shadow-lg z-[10002]`}
           style={{
             background: "var(--desktop-surface)",
-            border: "1px solid var(--desktop-border)",
+            border: isMobileView ? "none" : "1px solid var(--desktop-border)",
+            borderTop: isMobileView ? "1px solid var(--desktop-border)" : undefined,
           }}
         >
           {item.children.map((child, j) => {
@@ -164,9 +170,9 @@ function SubmenuItem({
                     child.action();
                     onClose();
                   }}
-                  className="w-full flex items-center justify-between px-4 py-1 text-[11px] text-left
+                  className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-[11px] text-left
                              text-desktop-text hover:bg-desktop-accent hover:text-white
-                             transition-colors duration-75"
+                             transition-colors duration-75`}
                 >
                   <span>{child.label}</span>
                   {child.shortcut && (
@@ -194,6 +200,7 @@ export default function MenuBar() {
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const themeRef = useRef<HTMLDivElement>(null);
   const openInBrowser = useOpenInBrowser();
+  const isMobile = useIsMobile();
 
   // Close menus on outside click
   useEffect(() => {
@@ -447,6 +454,11 @@ export default function MenuBar() {
 
   const menus = buildMenus();
 
+  // On mobile, only show OS menu + Window menu to save space
+  const visibleMenuKeys = isMobile
+    ? ["\uF8FF", "Window"]
+    : Object.keys(menus);
+
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
     { value: "light", label: "Light", icon: <Sun size={13} /> },
     { value: "dark", label: "Dark", icon: <Moon size={13} /> },
@@ -469,9 +481,9 @@ export default function MenuBar() {
       }}
     >
       {/* Left: app name + menu items */}
-      <div className="flex items-center gap-0">
-        {Object.keys(menus).map((name) => (
-          <div key={name} className="relative">
+      <div className="flex items-center gap-0 min-w-0">
+        {visibleMenuKeys.map((name) => (
+          <div key={name} className="relative shrink-0">
             <button
               className={`text-[11px] px-2 py-0.5 rounded
                          transition-colors duration-75 text-desktop-text
@@ -480,7 +492,7 @@ export default function MenuBar() {
               onMouseDown={() => setActiveMenu(activeMenu === name ? null : name)}
               onMouseEnter={() => { if (activeMenu) setActiveMenu(name); }}
             >
-              {name === "\uF8FF" ? "McKenzie OS" : name}
+              {name === "\uF8FF" ? (isMobile ? "MCK_OS" : "McKenzie OS") : name}
             </button>
             {activeMenu === name && (
               <MenuDropdown
@@ -491,8 +503,8 @@ export default function MenuBar() {
           </div>
         ))}
 
-        {/* Active window title (subtle, like classic Mac) */}
-        {activeTitle && (
+        {/* Active window title (subtle, like classic Mac) - hidden on mobile */}
+        {activeTitle && !isMobile && (
           <span className="text-[11px] text-desktop-text-secondary ml-4 truncate max-w-[200px]">
             {activeTitle}
           </span>

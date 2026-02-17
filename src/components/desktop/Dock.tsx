@@ -62,8 +62,12 @@ function DockIcon({
   myIndex,
   onHover,
   onClick,
-}: DockIconProps) {
+  compact,
+}: DockIconProps & { compact?: boolean }) {
   const PantherIcon = getPantherIcon(item.id);
+
+  const iconBox = compact ? 34 : 44;
+  const iconSize = compact ? 28 : 38;
 
   // Magnification: full scale at hovered, slightly less for neighbors
   let scale = 1;
@@ -89,14 +93,14 @@ function DockIcon({
       onClick={onClick}
       aria-label={`Open ${item.name}`}
     >
-      <DockTooltip label={item.name} visible={isHovered} />
+      {!compact && <DockTooltip label={item.name} visible={isHovered} />}
 
       {/* Panther Aqua Icon */}
       <div
         className="relative flex items-center justify-center"
         style={{
-          width: 44,
-          height: 44,
+          width: iconBox,
+          height: iconBox,
           filter: isHovered
             ? "drop-shadow(0 3px 8px rgba(0,0,0,0.35))"
             : "drop-shadow(0 1px 4px rgba(0,0,0,0.2))",
@@ -104,10 +108,10 @@ function DockIcon({
         }}
       >
         {PantherIcon ? (
-          <PantherIcon size={38} />
+          <PantherIcon size={iconSize} />
         ) : (
           /* Fallback: generic document icon */
-          <svg width={38} height={38} viewBox="0 0 32 32" fill="none">
+          <svg width={iconSize} height={iconSize} viewBox="0 0 32 32" fill="none">
             <rect x="5" y="3" width="22" height="26" rx="3" fill="#F8F8F5" stroke="#AAA" strokeWidth="1" />
             <path d="M5 6a3 3 0 013-3h12l7 7v19a3 3 0 01-3 3H8a3 3 0 01-3-3V6z" fill="#F8F8F5" stroke="#AAA" strokeWidth="1" />
             <path d="M20 3v7h7" fill="#EEEEE5" stroke="#AAA" strokeWidth="1" strokeLinejoin="round" />
@@ -211,11 +215,11 @@ export default function Dock() {
     <div
       ref={dockRef}
       className={`fixed left-1/2 -translate-x-1/2 z-[9999]
-                  flex items-end px-2.5 pt-1.5
+                  flex items-end
                   rounded-2xl animate-fade-in
                   ${isMobile
-                    ? "bottom-0 pb-[calc(6px+env(safe-area-inset-bottom))] max-w-full overflow-x-auto scrollbar-none"
-                    : "bottom-1.5 pb-1.5"
+                    ? "bottom-0 px-1.5 pt-1 pb-[calc(4px+env(safe-area-inset-bottom))] max-w-[calc(100%-8px)] overflow-x-auto scrollbar-none"
+                    : "bottom-1.5 px-2.5 pt-1.5 pb-1.5"
                   }`}
       style={{
         background: "var(--desktop-dock)",
@@ -252,6 +256,7 @@ export default function Dock() {
             myIndex={entry.itemIndex!}
             onHover={isMobile ? () => {} : handleHover}
             onClick={() => handleClick(item)}
+            compact={isMobile}
           />
         );
       })}

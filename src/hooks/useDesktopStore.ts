@@ -85,13 +85,15 @@ export const initialDesktopState: DesktopState = {
 
 function getDefaultWindowPosition(index: number, width?: number, height?: number) {
   if (typeof window !== "undefined" && window.innerWidth < 768) {
-    // Mobile: center windows with a small cascade offset
-    const winW = Math.min(width ?? 600, window.innerWidth - 8);
-    const winH = Math.min(height ?? 450, window.innerHeight - 90);
-    const cascadeOffset = (index % 3) * 16;
+    // Mobile: center windows with a small cascade offset, leave room for dock
+    const winW = Math.min(width ?? 600, window.innerWidth - 4);
+    const winH = Math.min(height ?? 450, window.innerHeight - 94);
+    const cascadeOffset = (index % 3) * 12;
     return {
-      x: Math.max(4, (window.innerWidth - winW) / 2 + cascadeOffset),
-      y: Math.max(26, 30 + cascadeOffset),
+      x: Math.max(2, (window.innerWidth - winW) / 2 + cascadeOffset),
+      y: Math.max(24, 26 + cascadeOffset),
+      width: winW,
+      height: winH,
     };
   }
   const base = 80;
@@ -128,8 +130,8 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
         icon: fsItem.icon,
         x: pos.x,
         y: pos.y,
-        width: winWidth,
-        height: winHeight,
+        width: (pos as { width?: number }).width ?? winWidth,
+        height: (pos as { height?: number }).height ?? winHeight,
         zIndex: state.nextZIndex,
         isMinimized: false,
         isMaximized: false,
@@ -194,6 +196,10 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
     }
 
     case "MAXIMIZE_WINDOW": {
+      const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+      // On mobile: fit between menu bar (22px) and dock (~64px + safe area)
+      const maxY = isMobileView ? 22 : 0;
+      const dockAllowance = isMobileView ? 72 : 48;
       return {
         ...state,
         windows: state.windows.map((w) =>
@@ -203,9 +209,9 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
                 isMaximized: true,
                 preMaximize: { x: w.x, y: w.y, width: w.width, height: w.height },
                 x: 0,
-                y: 0,
+                y: maxY,
                 width: typeof window !== "undefined" ? window.innerWidth : 1200,
-                height: typeof window !== "undefined" ? window.innerHeight - 48 : 700,
+                height: typeof window !== "undefined" ? window.innerHeight - maxY - dockAllowance : 700,
                 zIndex: state.nextZIndex,
               }
             : w

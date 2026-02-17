@@ -166,16 +166,16 @@ export default function Window({ windowState, children }: WindowProps) {
       `}
       style={{
         left: isMobile && !windowState.isMaximized
-          ? Math.max(0, Math.min(windowState.x, window.innerWidth - Math.min(windowState.width, window.innerWidth - 8)))
+          ? Math.max(0, Math.min(windowState.x, window.innerWidth - Math.min(windowState.width, window.innerWidth - 4)))
           : windowState.x,
         top: isMobile && !windowState.isMaximized
-          ? Math.max(22, Math.min(windowState.y, window.innerHeight - 100))
+          ? Math.max(22, Math.min(windowState.y, window.innerHeight - 120))
           : windowState.y,
         width: isMobile && !windowState.isMaximized
-          ? Math.min(windowState.width, window.innerWidth - 8)
+          ? Math.min(windowState.width, window.innerWidth - 4)
           : windowState.width,
         height: isMobile && !windowState.isMaximized
-          ? Math.min(windowState.height, window.innerHeight - 90)
+          ? Math.min(windowState.height, window.innerHeight - 94)
           : windowState.height,
         zIndex: windowState.zIndex,
         borderRadius: windowState.isMaximized ? 0 : 10,
@@ -208,7 +208,7 @@ export default function Window({ windowState, children }: WindowProps) {
       {/* TITLE BAR - Panther Aqua brushed metal */}
       <div
         className={`
-          flex items-center h-[22px] px-2 shrink-0
+          flex items-center ${isMobile ? "h-[32px]" : "h-[22px]"} px-2 shrink-0
           ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}
         `}
         style={{
@@ -220,13 +220,13 @@ export default function Window({ windowState, children }: WindowProps) {
         onPointerUp={handleDragEnd}
         onDoubleClick={handleTitleDoubleClick}
       >
-        {/* Traffic lights */}
+        {/* Traffic lights - larger touch targets on mobile */}
         <div
-          className={`flex items-center gap-[8px] mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
+          className={`flex items-center ${isMobile ? "gap-[10px]" : "gap-[8px]"} mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
         >
-          <button onClick={handleClose} aria-label="Close window" className="aqua-btn aqua-close" />
-          <button onClick={() => minimizeWindow(windowState.id)} aria-label="Minimize window" className="aqua-btn aqua-minimize" />
-          <button onClick={() => toggleMaximize(windowState.id)} aria-label={windowState.isMaximized ? "Restore window" : "Maximize window"} className="aqua-btn aqua-zoom" />
+          <button onClick={handleClose} aria-label="Close window" className={`aqua-btn aqua-close ${isMobile ? "aqua-btn-mobile" : ""}`} />
+          <button onClick={() => minimizeWindow(windowState.id)} aria-label="Minimize window" className={`aqua-btn aqua-minimize ${isMobile ? "aqua-btn-mobile" : ""}`} />
+          <button onClick={() => toggleMaximize(windowState.id)} aria-label={windowState.isMaximized ? "Restore window" : "Maximize window"} className={`aqua-btn aqua-zoom ${isMobile ? "aqua-btn-mobile" : ""}`} />
         </div>
 
         {/* Title */}
