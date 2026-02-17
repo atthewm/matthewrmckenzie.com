@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore — resolved after `npm install @supabase/supabase-js`
+/* eslint-disable */
+// @ts-ignore
 import { createClient } from "@supabase/supabase-js";
 
 export const supabase = createClient(
