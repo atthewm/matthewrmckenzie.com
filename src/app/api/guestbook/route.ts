@@ -5,6 +5,10 @@ import { supabase } from "@/lib/supabase";
 // GET: Return approved guestbook entries (or all if admin)
 // ---------------------------------------------------------------------------
 export async function GET(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
+
   const cookieHeader = request.headers.get("cookie") ?? "";
   const isAdmin = cookieHeader.includes("mckenzie_auth=");
 
@@ -31,6 +35,10 @@ export async function GET(request: Request) {
 // POST: Submit a new guestbook entry (unapproved by default)
 // ---------------------------------------------------------------------------
 export async function POST(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
+
   try {
     const body = await request.json();
     const { name, message, website } = body;
@@ -83,6 +91,10 @@ export async function POST(request: Request) {
 // PATCH: Admin approve/reject an entry
 // ---------------------------------------------------------------------------
 export async function PATCH(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
+
   const cookieHeader = request.headers.get("cookie") ?? "";
   const authValue = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
   if (!cookieHeader.includes(`mckenzie_auth=${authValue}`)) {

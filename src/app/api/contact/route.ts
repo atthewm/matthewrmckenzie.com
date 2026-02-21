@@ -5,6 +5,10 @@ import { supabase } from "@/lib/supabase";
 // POST: Submit a contact form
 // ---------------------------------------------------------------------------
 export async function POST(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
+
   try {
     const body = await request.json();
     const { category, name, email, message } = body;

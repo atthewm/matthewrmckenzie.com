@@ -17,8 +17,6 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/work", label: "Work" },
-  { href: "/projects", label: "Projects" },
-  { href: "/writing", label: "Writing" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -57,11 +55,15 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
       <footer className="border-t border-desktop-border mt-16">
         <div className="max-w-2xl mx-auto px-5 py-6 text-xs text-desktop-text-secondary">
           <p>&copy; {new Date().getFullYear()} Matthew McKenzie. All rights reserved.</p>
-          <p className="mt-1">
+          <div className="mt-1 flex items-center gap-3">
             <Link href="/" className="hover:text-desktop-accent transition-colors">
-              Back to desktop view →
+              Back to desktop view
             </Link>
-          </p>
+            <span className="text-desktop-border">|</span>
+            <Link href="/privacy" className="hover:text-desktop-accent transition-colors">
+              Privacy
+            </Link>
+          </div>
         </div>
       </footer>
     </div>

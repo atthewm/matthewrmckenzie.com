@@ -1,8 +1,13 @@
 /* eslint-disable */
 // @ts-ignore
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// Guard: do not crash build when env vars are missing.
+// Supabase-dependent features will degrade gracefully at runtime.
+export const supabase: SupabaseClient | null =
+  supabaseUrl && supabaseKey
+    ? createClient(supabaseUrl, supabaseKey)
+    : null;

@@ -1,9 +1,20 @@
-# Work
-
-This is where my professional work lives - projects, case studies, and my resume.
-
-Browse the folders below to explore specific projects or view my resume.
-
+---
+title: Work
 ---
 
-*Select a project to see details, or open my resume for a full overview of my experience.*
+# Work
+
+## Focus
+
+Capital formation, growth strategy, and real asset backed consumer platforms. I work across both debt and equity, partnering with family offices, UHNW investors, and institutional groups to structure investments and build durable businesses.
+
+## Principles
+
+- Thoughtful underwriting over speed
+- Alignment between capital partners and operators
+- Durable business models built for long-term ownership
+- Clarity in communication, especially when stakes are high
+
+## Selected Work
+
+Work samples and case studies are available on request. Reach out via the [Contact](/contact) page or connect on [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).

@@ -4,20 +4,17 @@ title: About
 
 # About
 
-I'm Matthew McKenzie. I build things at the intersection of technology, design, and human experience.
+Matthew operates at the intersection of capital formation, growth strategy, and real asset backed consumer platforms. He structures capital and investor partnerships that support disciplined growth and long-term ownership.
 
-## Background
+He has experience working with family offices, UHNW investors, and institutional groups globally across both debt and equity. His background spans real estate, operating businesses, and platform development, with an emphasis on thoughtful underwriting and durable business models.
 
-I've spent my career working across startups and technology companies, shipping products that people actually use. I care deeply about craft -- the details that make software feel alive. This site is a reflection of that: a personal OS built from scratch as a love letter to the Mac OS X era that shaped how I think about interfaces.
+Outside of work, Matthew is an investor and mentor. He is a hybrid athlete focused on health and performance, and he enjoys cooking and sourdough baking, photography and videography, travel, and spending time outdoors.
 
-## What I Do
+## Now
 
-I'm a product builder. I work across the full stack -- from design systems and front-end architecture to backend infrastructure and deployment. I'm particularly drawn to projects where technology meets creativity.
+What I am working on and thinking about right now:
 
-## Interests
-
-Design, architecture, music production, fitness, cooking, and the endless pursuit of the perfect sourdough loaf. I track my health obsessively with WHOOP and believe that how you take care of your body directly impacts the quality of your work.
-
-## This Site
-
-matthewrmckenzie.com is a Next.js 15 app styled after Mac OS X 10.3 Panther. Every window, menu, and animation is hand-built. The source is on [GitHub](https://github.com/atthewm/matthewrmckenzie.com).
+- A small daily-use product in the prayer and wellness space
+- Health and performance tooling and personal tracking systems
+- Data-driven projects in a regulated domain
+- An early-stage community concept involving dogs and local gathering

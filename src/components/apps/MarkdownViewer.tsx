@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 // ============================================================================
 // MARKDOWN VIEWER (ryOS Document Viewer)
 // ============================================================================
 // Renders pre-processed HTML from markdown content inside windows.
 // Includes a subtle toolbar and footer bar like classic Mac document apps.
+// On mobile, all links open in a new tab to prevent navigation traps.
 // ============================================================================
 
 interface MarkdownViewerProps {
@@ -16,6 +17,26 @@ interface MarkdownViewerProps {
 }
 
 export default function MarkdownViewer({ html, className = "", title }: MarkdownViewerProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // On mobile: rewrite all links to open in new tabs so they don't trap navigation
+  useEffect(() => {
+    if (!contentRef.current) return;
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) return;
+
+    const links = contentRef.current.querySelectorAll("a[href]");
+    links.forEach((link) => {
+      const el = link as HTMLAnchorElement;
+      const href = el.getAttribute("href") ?? "";
+      // External links and markdown downloads: open in new tab
+      if (href.startsWith("http") || href.endsWith(".md")) {
+        el.setAttribute("target", "_blank");
+        el.setAttribute("rel", "noopener noreferrer");
+      }
+    });
+  }, [html]);
+
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
@@ -34,6 +55,7 @@ export default function MarkdownViewer({ html, className = "", title }: Markdown
       {/* Content */}
       <div className="flex-1 overflow-auto">
         <div
+          ref={contentRef}
           className={`
             prose prose-sm dark:prose-invert max-w-none
             prose-headings:font-semibold

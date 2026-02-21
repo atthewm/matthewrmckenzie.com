@@ -1,7 +1,7 @@
-# Writing
-
-Essays, notes, and longer-form thinking. This is where I write about ideas that take more than a tweet to express.
-
+---
+title: Writing
 ---
 
-*Open the Essays document to read what's here so far.*
+# Writing
+
+Essays and long-form thinking. Coming soon.

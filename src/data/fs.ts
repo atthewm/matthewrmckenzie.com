@@ -22,8 +22,8 @@ export const fileSystem: FSItem[] = [
     { id: "projects", name: "Projects", type: "app", icon: "Layers", appComponent: "ProjectsApp", contentPath: "projects.md", staticRoute: "/projects", description: "Selected projects and case studies.", defaultSize: { width: 720, height: 560 } },
     { id: "resume", name: "Resume", type: "app", icon: "FileText", appComponent: "ResumeApp", description: "Professional resume and experience.", defaultSize: { width: 560, height: 640 } },
   ]},
-  { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", description: "Essays, notes, and long-form writing.", children: [
-    { id: "essays", name: "Essays", type: "document", icon: "BookOpen", contentPath: "essays.md", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
+  { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", hidden: true, description: "Essays, notes, and long-form writing.", children: [
+    { id: "essays", name: "Essays", type: "document", icon: "BookOpen", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
   ]},
   { id: "now", name: "Now", type: "document", icon: "Zap", contentPath: "now.md", description: "What I am up to right now.", defaultSize: { width: 520, height: 440 } },
   { id: "photos", name: "Photos", type: "app", icon: "Image", appComponent: "InstagramApp", description: "Photos currently mirror Instagram.", defaultSize: { width: 480, height: 560 } },
@@ -62,7 +62,7 @@ export const fileSystem: FSItem[] = [
     { id: "linkedin", name: "LinkedIn", type: "link", icon: "Linkedin", href: "https://www.linkedin.com/in/mrmckenzie/", description: "Connect on LinkedIn." },
     { id: "github", name: "GitHub", type: "link", icon: "Github", href: "https://github.com/atthewm", description: "View code on GitHub." },
   ]},
-  { id: "linktree", name: "Linktree", type: "app", icon: "Link", appComponent: "LinktreeApp", description: "All links in one place.", defaultSize: { width: 800, height: 600 } },
+  { id: "linktree", name: "Links", type: "app", icon: "Link", appComponent: "LinktreeApp", description: "All links in one place.", defaultSize: { width: 400, height: 520 } },
   { id: "schedule", name: "Schedule", type: "app", icon: "Calendar", appComponent: "ScheduleApp", description: "Book a meeting.", defaultSize: { width: 800, height: 600 } },
   // Hidden items - revealed by easter eggs
   { id: "secrets", name: "Secrets", type: "folder", icon: "Lock", hidden: true, description: "You found the hidden folder.", children: [
@@ -109,7 +109,6 @@ export const dockItemIds: (string | "|")[] = [
   "about",
   "|",
   "work",
-  "writing",
   "now",
   "photos",
   "|",

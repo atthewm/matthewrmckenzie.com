@@ -136,6 +136,31 @@ export default function Window({ windowState, children }: WindowProps) {
     toggleMaximize(windowState.id);
   }, [toggleMaximize, windowState.id]);
 
+  // Mobile fullscreen: push history state when maximized, pop to exit
+  useEffect(() => {
+    if (!isMobile || !windowState.isMaximized) return;
+
+    // Push a state so the browser back button can exit fullscreen
+    const stateKey = { ui: "fullscreen", windowId: windowState.id };
+    history.pushState(stateKey, "");
+
+    const onPopState = () => {
+      // Exit fullscreen on back
+      dispatch({ type: "UNMAXIMIZE_WINDOW", payload: { id: windowState.id } });
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+    };
+  }, [isMobile, windowState.isMaximized, windowState.id, dispatch]);
+
+  const handleExitFullscreen = useCallback(() => {
+    dispatch({ type: "UNMAXIMIZE_WINDOW", payload: { id: windowState.id } });
+    // Also go back in history to clean up the pushed state
+    if (isMobile) history.back();
+  }, [dispatch, windowState.id, isMobile]);
+
   if (windowState.isMinimized) return null;
 
   const cursorMap: Record<string, string> = {
@@ -240,7 +265,19 @@ export default function Window({ windowState, children }: WindowProps) {
           {windowState.title}
         </div>
 
-        <div className="w-[54px]" />
+        {/* Exit fullscreen button on mobile */}
+        {isMobile && windowState.isMaximized ? (
+          <button
+            onClick={handleExitFullscreen}
+            className="shrink-0 text-[10px] font-medium px-2 py-0.5 rounded z-20
+                       hover:bg-black/5 active:bg-black/10 transition-colors"
+            style={{ color: isFocused ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.3)" }}
+          >
+            Exit
+          </button>
+        ) : (
+          <div className="w-[54px]" />
+        )}
       </div>
 
       {/* WINDOW BODY */}
