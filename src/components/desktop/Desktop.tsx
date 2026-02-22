@@ -33,10 +33,28 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const { revealed, reveal } = useSecrets();
   const [toast, setToast] = useState<string | null>(null);
 
-  // On mobile first load, auto-open the README window
+  // Auto-open window from ?open= query param (e.g. /?open=about)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const openId = params.get("open");
+    if (openId) {
+      const item = findFSItem(openId);
+      if (item) {
+        dispatch({ type: "OPEN_WINDOW", payload: { fsItem: item } });
+      }
+      // Clean URL without reload
+      window.history.replaceState({}, "", "/");
+    }
+  }, [dispatch]);
+
+  // On mobile first load (no ?open param), auto-open the README window
   useEffect(() => {
     if (!isMobile || didOpenRef.current) return;
     if (sessionStorage.getItem(MOBILE_WELCOME_KEY)) return;
+    // Skip if we just opened something via ?open=
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("open")) return;
+
     didOpenRef.current = true;
     sessionStorage.setItem(MOBILE_WELCOME_KEY, "1");
 
