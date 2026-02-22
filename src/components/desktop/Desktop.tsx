@@ -5,6 +5,7 @@ import WindowManager from "./WindowManager";
 import Dock from "./Dock";
 import MenuBar from "./MenuBar";
 import ZenBackground from "./ZenBackground";
+import FloatingStickies from "./FloatingStickies";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -32,6 +33,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const didOpenRef = useRef(false);
   const { revealed, reveal } = useSecrets();
   const [toast, setToast] = useState<string | null>(null);
+  const [stickiesVisible, setStickiesVisible] = useState(false);
 
   // Auto-open window from ?open= query param (e.g. /?open=about)
   useEffect(() => {
@@ -128,8 +130,11 @@ export default function Desktop({ contentMap }: DesktopProps) {
       {/* Windows */}
       <WindowManager contentMap={contentMap} />
 
+      {/* Floating Stickies */}
+      <FloatingStickies visible={stickiesVisible} />
+
       {/* Dock */}
-      <Dock />
+      <Dock onStickiesToggle={() => setStickiesVisible((v) => !v)} stickiesActive={stickiesVisible} />
 
       {/* Toast notification */}
       {toast && (

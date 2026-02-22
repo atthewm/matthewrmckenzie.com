@@ -6,4 +6,4 @@ title: Projects
 
 Selected projects and case studies are available on request.
 
-See the [Work](/work) page for an overview of focus areas, or reach out via [Contact](/contact).
+Reach out via [Contact](/contact) or connect on [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).

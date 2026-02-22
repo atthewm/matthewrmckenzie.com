@@ -32,7 +32,7 @@ const iconMap: Record<string, string> = {
 
   // Media
   "photos":         "iphoto.png",
-  "music":          "itunes-2.png",
+  "music":          "dvd-player.png",
   "videos":         "quicktime-player.png",
   "apple-music":    "itunes-3.png",
 
@@ -55,7 +55,7 @@ const iconMap: Record<string, string> = {
   "get-whoop":      "external-link.png",
 
   // Recipes
-  "recipes":                "home-folder.png",
+  "recipes":                "library-folder.png",
   "rye-starter":            "documents.png",
   "city-loaf-master-recipe":"documents.png",
   "strawberry-jam-honey":   "documents.png",

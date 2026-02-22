@@ -78,19 +78,6 @@ export default function LinktreeApp() {
             ))}
           </div>
 
-          {/* External link hub fallback */}
-          <div className="mt-6 pt-4 border-t" style={{ borderColor: "var(--desktop-border)" }}>
-            <a
-              href="https://mckm.at/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded text-[12px] font-medium
-                         bg-desktop-accent text-white hover:opacity-90 transition-opacity"
-            >
-              <ExternalLink size={12} />
-              Open Link Hub
-            </a>
-          </div>
         </div>
       </div>
 

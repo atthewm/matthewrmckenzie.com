@@ -160,7 +160,12 @@ function DockSeparator() {
 // Main Dock
 // ---------------------------------------------------------------------------
 
-export default function Dock() {
+interface DockProps {
+  onStickiesToggle?: () => void;
+  stickiesActive?: boolean;
+}
+
+export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {}) {
   const { state, openItem, focusWindow, restoreWindow } = useDesktop();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
@@ -192,6 +197,11 @@ export default function Dock() {
   }, []);
 
   const handleClick = useCallback((item: FSItem) => {
+    // Stickies: toggle floating stickies instead of opening a window
+    if (item.id === "stickies" && onStickiesToggle) {
+      onStickiesToggle();
+      return;
+    }
     // If link, open externally
     if (item.type === "link" && item.href) {
       window.open(item.href, "_blank", "noopener,noreferrer");
@@ -209,7 +219,7 @@ export default function Dock() {
     }
     // Open new
     openItem(item);
-  }, [state.windows, openItem, focusWindow, restoreWindow]);
+  }, [state.windows, openItem, focusWindow, restoreWindow, onStickiesToggle]);
 
   return (
     <div
@@ -241,8 +251,8 @@ export default function Dock() {
         }
 
         const item = entry.item!;
-        const isOpen = state.windows.some((w) => w.fsItemId === item.id);
-        const isFocused = state.windows.some(
+        const isOpen = item.id === "stickies" ? !!stickiesActive : state.windows.some((w) => w.fsItemId === item.id);
+        const isFocused = item.id === "stickies" ? !!stickiesActive : state.windows.some(
           (w) => w.fsItemId === item.id && state.focusedWindowId === w.id && !w.isMinimized
         );
 

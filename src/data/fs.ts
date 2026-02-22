@@ -18,8 +18,7 @@ export interface FSItem {
 
 export const fileSystem: FSItem[] = [
   { id: "about", name: "About", type: "app", icon: "User", appComponent: "AboutApp", contentPath: "about.md", staticRoute: "/about", description: "About Matthew McKenzie.", defaultSize: { width: 640, height: 520 } },
-  { id: "work", name: "Work", type: "folder", icon: "Briefcase", staticRoute: "/work", description: "Professional work, projects, and case studies.", children: [
-    { id: "projects", name: "Projects", type: "app", icon: "Layers", appComponent: "ProjectsApp", contentPath: "projects.md", staticRoute: "/projects", description: "Selected projects and case studies.", defaultSize: { width: 720, height: 560 } },
+  { id: "work", name: "Work", type: "app", icon: "Briefcase", appComponent: "ProjectsApp", contentPath: "work.md", staticRoute: "/work", description: "Professional work, projects, and case studies.", defaultSize: { width: 640, height: 520 }, children: [
     { id: "resume", name: "Resume", type: "app", icon: "FileText", appComponent: "ResumeApp", description: "Professional resume and experience.", defaultSize: { width: 560, height: 640 } },
   ]},
   { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", hidden: true, description: "Essays, notes, and long-form writing.", children: [
