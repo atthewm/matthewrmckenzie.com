@@ -5,7 +5,7 @@ import { ExternalLink } from "lucide-react";
 import type { FSItem } from "@/data/fs";
 import { getRootItems } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { getIcon } from "@/components/desktop/DesktopIcon";
+import { PantherIcon } from "@/components/desktop/PantherIcons";
 import { recipes as recipeIndex } from "@/content/recipes/index";
 import { siteConfig } from "@/lib/config";
 
@@ -37,7 +37,6 @@ function Sidebar({ currentId }: { currentId: string }) {
         Favorites
       </p>
       {folders.map((folder) => {
-        const Icon = getIcon(folder.icon);
         const isActive = folder.id === currentId;
         return (
           <button
@@ -52,7 +51,7 @@ function Sidebar({ currentId }: { currentId: string }) {
               }
             `}
           >
-            <Icon size={14} className={isActive ? "text-white" : "text-desktop-text-secondary"} />
+            <PantherIcon itemId={folder.id} size={16} />
             <span className="truncate">{folder.name}</span>
           </button>
         );
@@ -69,7 +68,6 @@ function RecipeListView({ children }: { children: FSItem[] }) {
   return (
     <div className="flex flex-col">
       {children.map((child) => {
-        const Icon = getIcon(child.icon);
         const meta = recipeMap.get(child.id);
         return (
           <button
@@ -82,9 +80,8 @@ function RecipeListView({ children }: { children: FSItem[] }) {
             aria-label={`Open ${child.name}`}
             title={child.description}
           >
-            <div className="w-8 h-8 flex items-center justify-center shrink-0
-                            bg-desktop-accent/10 rounded-lg">
-              <Icon size={16} className="text-desktop-accent" />
+            <div className="w-8 h-8 flex items-center justify-center shrink-0">
+              <PantherIcon itemId={child.id} size={28} />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[12px] font-medium text-desktop-text truncate">
@@ -138,7 +135,6 @@ function IconGridView({ children }: { children: FSItem[] }) {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(90px,1fr))] gap-1">
       {children.map((child) => {
-        const Icon = getIcon(child.icon);
         return (
           <button
             key={child.id}
@@ -155,9 +151,8 @@ function IconGridView({ children }: { children: FSItem[] }) {
             aria-label={`Open ${child.name}`}
             title={child.description}
           >
-            <div className="w-10 h-10 flex items-center justify-center
-                            bg-desktop-accent/10 rounded-xl">
-              <Icon size={20} className="text-desktop-accent" />
+            <div className="w-10 h-10 flex items-center justify-center">
+              <PantherIcon itemId={child.id} size={36} />
             </div>
             <span className="text-[10px] font-medium text-desktop-text text-center leading-tight line-clamp-2">
               {child.name}

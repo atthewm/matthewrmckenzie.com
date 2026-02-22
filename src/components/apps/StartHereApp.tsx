@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Briefcase, Heart, UtensilsCrossed, Mail } from "lucide-react";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { findFSItem } from "@/data/fs";
+import { PantherIcon } from "@/components/desktop/PantherIcons";
 
 // ============================================================================
 // START HERE APP (Mac OS X 10.3 Panther Style)
@@ -12,10 +12,10 @@ import { findFSItem } from "@/data/fs";
 // ============================================================================
 
 const cards = [
-  { id: "work", label: "Work", desc: "Projects and case studies", icon: Briefcase, color: "#8B5E34" },
-  { id: "health", label: "Health", desc: "WHOOP metrics and workouts", icon: Heart, color: "#D32F2F" },
-  { id: "recipes", label: "Recipes", desc: "Tried and true from the kitchen", icon: UtensilsCrossed, color: "#E65100" },
-  { id: "contact", label: "Contact", desc: "Get in touch", icon: Mail, color: "#2A6FA8" },
+  { id: "work", label: "Work", desc: "Projects and case studies" },
+  { id: "health", label: "Health", desc: "WHOOP metrics and workouts" },
+  { id: "recipes", label: "Recipes", desc: "Tried and true from the kitchen" },
+  { id: "contact", label: "Contact", desc: "Get in touch" },
 ];
 
 export default function StartHereApp() {
@@ -40,7 +40,6 @@ export default function StartHereApp() {
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="grid grid-cols-2 gap-4 max-w-[360px] w-full">
           {cards.map((card) => {
-            const Icon = card.icon;
             return (
               <button
                 key={card.id}
@@ -56,12 +55,7 @@ export default function StartHereApp() {
                   border: "1px solid var(--desktop-border)",
                 }}
               >
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center"
-                  style={{ background: card.color }}
-                >
-                  <Icon size={20} color="white" />
-                </div>
+                <PantherIcon itemId={card.id} size={48} />
                 <span className="text-[13px] font-semibold">{card.label}</span>
                 <span className="text-[10px] text-desktop-text-secondary text-center leading-tight">
                   {card.desc}

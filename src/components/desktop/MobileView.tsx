@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { getRootItems, type FSItem } from "@/data/fs";
-import { getIcon } from "./DesktopIcon";
+import { PantherIcon } from "./PantherIcons";
 import WindowContent from "./WindowContent";
 
 // ============================================================================
 // MOBILE VIEW
 // ============================================================================
-// Simplified mobile layout: home grid → full-screen card navigation.
+// Simplified mobile layout: home grid -> full-screen card navigation.
 // Uses the same fs model and content as the desktop.
 // ============================================================================
 
@@ -94,7 +94,6 @@ export default function MobileView({ contentMap }: MobileViewProps) {
         <div className="px-4 flex-1">
           <div className="grid grid-cols-4 gap-y-5 gap-x-2">
             {rootItems.map((item) => {
-              const Icon = getIcon(item.icon);
               return (
                 <button
                   key={item.id}
@@ -106,7 +105,7 @@ export default function MobileView({ contentMap }: MobileViewProps) {
                                   flex items-center justify-center
                                   border border-white/10 shadow-lg
                                   active:scale-95 transition-transform">
-                    <Icon size={26} className="text-white" />
+                    <PantherIcon itemId={item.id} size={36} />
                   </div>
                   <span className="text-[11px] text-white/90 font-medium text-center leading-tight">
                     {item.name}
@@ -134,7 +133,6 @@ function MobileFolderView({ item, onOpen }: { item: FSItem; onOpen: (item: FSIte
   return (
     <div className="p-3">
       {item.children.map((child) => {
-        const Icon = getIcon(child.icon);
         return (
           <button
             key={child.id}
@@ -143,8 +141,8 @@ function MobileFolderView({ item, onOpen }: { item: FSItem; onOpen: (item: FSIte
                        hover:bg-desktop-border/50 active:bg-desktop-border/70
                        transition-colors"
           >
-            <div className="w-10 h-10 rounded-xl bg-desktop-accent/10 flex items-center justify-center">
-              <Icon size={20} className="text-desktop-accent" />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+              <PantherIcon itemId={child.id} size={36} />
             </div>
             <div className="text-left">
               <div className="text-sm font-medium text-desktop-text">{child.name}</div>
