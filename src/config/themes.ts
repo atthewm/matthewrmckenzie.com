@@ -1,15 +1,20 @@
 // ============================================================================
 // ZEN THEMES CONFIGURATION
 // ============================================================================
-// Each theme has a video background, poster fallback, and optional ambient
-// audio loop. Swap the placeholder files in /public/zen/ with real assets.
+// Each theme defines a video background with poster fallback, mobile portrait
+// image, and optional ambient audio loop. Assets live in /public/backgrounds/.
 // ============================================================================
 
 export interface ZenTheme {
   id: string;
   name: string;
+  /** Desktop video loop (empty string = no video, use gradient) */
   video: string;
+  /** Desktop poster / reduced-motion fallback (landscape) */
   poster: string;
+  /** Mobile portrait fallback image */
+  mobilePoster: string;
+  /** Optional ambient audio loop */
   audio?: string;
   description: string;
 }
@@ -20,47 +25,48 @@ export const zenThemes: ZenTheme[] = [
     name: "Default",
     video: "",
     poster: "",
-    description: "Classic gradient background with no video.",
-  },
-  {
-    id: "forest",
-    name: "Zen Forest",
-    video: "/zen/forest.mp4",
-    poster: "/zen/forest.jpg",
-    audio: "/zen/forest.mp3",
-    description: "Peaceful forest canopy with birdsong.",
+    mobilePoster: "",
+    description: "Classic gradient background.",
   },
   {
     id: "beach",
     name: "Zen Beach",
-    video: "/zen/beach.mp4",
-    poster: "/zen/beach.jpg",
-    audio: "/zen/beach.mp3",
+    video: "/backgrounds/video/zen-beach.mp4",
+    poster: "/backgrounds/img/zen-beach-poster.jpg",
+    mobilePoster: "/backgrounds/img/zen-beach-mobile.jpg",
     description: "Gentle waves on a sandy shore.",
+  },
+  {
+    id: "forest",
+    name: "Zen Forest",
+    video: "/backgrounds/video/zen-forest.mp4",
+    poster: "/backgrounds/img/zen-forest-poster.jpg",
+    mobilePoster: "/backgrounds/img/zen-forest-mobile.jpg",
+    description: "Peaceful moonlit forest.",
   },
   {
     id: "lake",
     name: "Zen Lake",
-    video: "/zen/lake.mp4",
-    poster: "/zen/lake.jpg",
-    audio: "/zen/lake.mp3",
+    video: "/backgrounds/video/zen-lake.mp4",
+    poster: "/backgrounds/img/zen-lake-poster.jpg",
+    mobilePoster: "/backgrounds/img/zen-lake-mobile.jpg",
     description: "Still mountain lake at sunrise.",
-  },
-  {
-    id: "night",
-    name: "Zen Night",
-    video: "/zen/night.mp4",
-    poster: "/zen/night.jpg",
-    audio: "/zen/night.mp3",
-    description: "Starry night sky with crickets.",
   },
   {
     id: "rain",
     name: "Zen Rain",
-    video: "/zen/rain.mp4",
-    poster: "/zen/rain.jpg",
-    audio: "/zen/rain.mp3",
+    video: "/backgrounds/video/zen-rain.mp4",
+    poster: "/backgrounds/img/zen-rain-poster.jpg",
+    mobilePoster: "/backgrounds/img/zen-rain-mobile.jpg",
     description: "Soft rain on a window.",
+  },
+  {
+    id: "night",
+    name: "Zen Night",
+    video: "",
+    poster: "",
+    mobilePoster: "",
+    description: "Starry night sky. (Coming soon)",
   },
 ];
 

@@ -72,31 +72,34 @@ function AppearanceTab() {
   return (
     <div className="space-y-4">
       <SectionLabel>Theme</SectionLabel>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {zenThemes.map((theme) => (
           <button
             key={theme.id}
             onClick={() => updateSettings({ zenThemeId: theme.id })}
             className={`
-              p-2.5 rounded-lg border text-left transition-all text-xs
+              rounded-lg border text-left transition-all text-xs overflow-hidden
               ${settings.zenThemeId === theme.id
-                ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500"
-                : "border-gray-200 hover:border-gray-300 bg-white"
+                ? "border-blue-500 ring-2 ring-blue-500"
+                : "border-gray-200 hover:border-gray-300"
               }
             `}
           >
-            <div className="font-semibold text-gray-800">{theme.name}</div>
-            <div className="text-gray-500 mt-0.5">{theme.description}</div>
+            {/* Thumbnail */}
+            <div
+              className="w-full aspect-video bg-gradient-to-br from-blue-100 to-blue-200"
+              style={theme.poster ? {
+                backgroundImage: `url(${theme.poster})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              } : undefined}
+            />
+            <div className="px-2 py-1.5">
+              <div className="font-semibold text-gray-800 text-[10px] truncate">{theme.name}</div>
+            </div>
           </button>
         ))}
       </div>
-
-      <ToggleRow
-        label="Zen Mode"
-        description="Enable video/image background"
-        checked={settings.zenModeEnabled}
-        onChange={(v) => updateSettings({ zenModeEnabled: v })}
-      />
 
       <SliderRow
         label="Background Blur"
