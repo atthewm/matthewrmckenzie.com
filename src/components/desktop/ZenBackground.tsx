@@ -10,11 +10,12 @@ import { Volume2, VolumeX } from "lucide-react";
 // ZEN BACKGROUND
 // ============================================================================
 // Renders either a classic gradient (default) or an ambient video loop.
-// - Desktop: <video> with autoplay, muted, loop, playsInline
+// - Desktop: <video> with WebM (VP9) primary + MP4 fallback
 // - Mobile: static portrait image (no video to save data/battery)
 // - prefers-reduced-motion: uses poster image instead of video
 // - Sound toggle: muted by default, user can unmute after interaction
 // - Crossfade transitions when switching themes
+// - Only one audio source plays at a time (keyed by theme id)
 // ============================================================================
 
 const SOUND_PREF_KEY = "mmck-bg-sound";
@@ -22,13 +23,13 @@ const SOUND_PREF_KEY = "mmck-bg-sound";
 export default function ZenBackground() {
   const { settings, updateSettings } = useSettings();
   const isMobile = useIsMobile();
-  const theme = getZenTheme(settings.zenThemeId);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [fadeKey, setFadeKey] = useState(settings.zenThemeId);
   const [fading, setFading] = useState(false);
   const prevThemeRef = useRef(settings.zenThemeId);
+  const [videoError, setVideoError] = useState(false);
 
   // Detect prefers-reduced-motion
   useEffect(() => {
@@ -55,6 +56,7 @@ export default function ZenBackground() {
   useEffect(() => {
     if (prevThemeRef.current !== settings.zenThemeId) {
       setFading(true);
+      setVideoError(false);
       const timer = setTimeout(() => {
         setFadeKey(settings.zenThemeId);
         prevThemeRef.current = settings.zenThemeId;
@@ -64,19 +66,19 @@ export default function ZenBackground() {
     }
   }, [settings.zenThemeId]);
 
-  // Sync video muted state
+  // Sync video muted state & ensure only one audio source plays
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = !soundEnabled;
     }
-  }, [soundEnabled]);
+  }, [soundEnabled, fadeKey]);
 
   // Sync ambient volume
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.volume = settings.ambientVolume / 100;
     }
-  }, [settings.ambientVolume]);
+  }, [settings.ambientVolume, fadeKey]);
 
   // Toggle sound & persist
   const toggleSound = useCallback(() => {
@@ -87,7 +89,6 @@ export default function ZenBackground() {
       } catch {
         // ignore
       }
-      // Mark user interaction for autoplay policy
       if (!settings.userHasInteracted) {
         updateSettings({ userHasInteracted: true });
       }
@@ -96,9 +97,12 @@ export default function ZenBackground() {
   }, [settings.userHasInteracted, updateSettings]);
 
   const activeTheme = getZenTheme(fadeKey);
-  const isDefault = !activeTheme || activeTheme.id === "default" || !activeTheme.video;
+  const isDefault =
+    !activeTheme ||
+    activeTheme.id === "default" ||
+    (!activeTheme.videoWebm && !activeTheme.videoMp4);
   const useStatic = isMobile || prefersReducedMotion || settings.reduceMotion;
-  const hasAudio = !!activeTheme?.video; // videos have embedded audio
+  const hasVideo = !!activeTheme?.videoWebm || !!activeTheme?.videoMp4;
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -109,30 +113,41 @@ export default function ZenBackground() {
       >
         {isDefault ? (
           <DefaultGradient />
-        ) : useStatic ? (
-          /* Mobile / reduced-motion: static image */
+        ) : useStatic || videoError ? (
+          /* Mobile / reduced-motion / video-error: static image */
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url(${isMobile && activeTheme.mobilePoster ? activeTheme.mobilePoster : activeTheme.poster})`,
+              backgroundImage: `url(${
+                isMobile && activeTheme!.mobilePoster
+                  ? activeTheme!.mobilePoster
+                  : activeTheme!.poster
+              })`,
             }}
             role="img"
-            aria-label={`${activeTheme.name} background`}
+            aria-label={`${activeTheme!.name} background`}
           />
         ) : (
-          /* Desktop: video loop */
+          /* Desktop: video loop with WebM primary + MP4 fallback */
           <video
             ref={videoRef}
-            key={activeTheme.id}
+            key={activeTheme!.id}
             autoPlay
             muted
             loop
             playsInline
-            poster={activeTheme.poster}
+            preload="metadata"
+            poster={activeTheme!.poster}
             className="absolute inset-0 w-full h-full object-cover"
-            aria-label={`${activeTheme.name} ambient video background`}
+            aria-label={`${activeTheme!.name} ambient video background`}
+            onError={() => setVideoError(true)}
           >
-            <source src={activeTheme.video} type="video/mp4" />
+            {activeTheme!.videoWebm && (
+              <source src={activeTheme!.videoWebm} type="video/webm" />
+            )}
+            {activeTheme!.videoMp4 && (
+              <source src={activeTheme!.videoMp4} type="video/mp4" />
+            )}
           </video>
         )}
       </div>
@@ -153,13 +168,14 @@ export default function ZenBackground() {
         />
       )}
 
-      {/* Sound toggle button — only show when video theme is active on desktop */}
-      {!isDefault && !useStatic && hasAudio && (
+      {/* Sound toggle — only show when video theme is active on desktop */}
+      {!isDefault && !useStatic && hasVideo && !videoError && (
         <button
           onClick={toggleSound}
           className="absolute bottom-2 right-2 z-[10] p-1.5 rounded-full
                      bg-black/30 hover:bg-black/50 backdrop-blur-sm
-                     text-white/70 hover:text-white transition-all"
+                     text-white/70 hover:text-white transition-all
+                     focus:outline-none focus:ring-2 focus:ring-white/50"
           aria-label={soundEnabled ? "Mute background audio" : "Unmute background audio"}
           title={soundEnabled ? "Mute" : "Unmute"}
         >
@@ -188,7 +204,6 @@ function DefaultGradient() {
           `,
         }}
       />
-      {/* Subtle linen / noise texture overlay */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="noise">
@@ -198,7 +213,6 @@ function DefaultGradient() {
         </defs>
         <rect width="100%" height="100%" filter="url(#noise)" />
       </svg>
-      {/* Soft vignette edges */}
       <div
         className="absolute inset-0"
         style={{
