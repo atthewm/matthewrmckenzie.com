@@ -110,7 +110,7 @@ function RecipeListView({ children }: { children: FSItem[] }) {
             Notion Recipe Library
           </p>
           <p className="text-[10px] text-desktop-text-secondary">
-            Downloads and updates
+            Browse the full collection
           </p>
         </div>
         <a

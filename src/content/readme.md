@@ -1,3 +1,7 @@
+---
+title: README
+---
+
 # Welcome
 
 Hey, I'm Matthew McKenzie. This is my personal corner of the internet.

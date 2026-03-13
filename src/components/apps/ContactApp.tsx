@@ -48,11 +48,11 @@ export default function ContactApp() {
         setMessage("");
       } else {
         const data = await res.json();
-        setErrorMsg(data.error || "Something went wrong");
+        setErrorMsg(data.error || "Couldn't send your message. Please try again.");
         setStatus("error");
       }
     } catch {
-      setErrorMsg("Connection error");
+      setErrorMsg("Can't reach the server. Check your connection and try again.");
       setStatus("error");
     }
   };

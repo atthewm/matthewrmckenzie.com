@@ -89,7 +89,7 @@ export default function RecipeViewer({ contentHtml, fsItem }: RecipeViewerProps)
               Notion Recipe Library
             </p>
             <p className="text-[10px] text-desktop-text-secondary">
-              Downloads and updates
+              Browse the full collection
             </p>
           </div>
           <a
