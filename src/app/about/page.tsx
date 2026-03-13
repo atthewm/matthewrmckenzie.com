@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
+import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About — Background & Current Work",
   description: "About Matthew McKenzie — background in capital formation and growth strategy, current interests, and what I'm working on right now.",
 };
 
@@ -12,6 +13,10 @@ export default async function AboutPage() {
 
   return (
     <StaticPageLayout>
+      <JsonLd data={breadcrumbSchema([
+        { name: "Home", url: "https://matthewrmckenzie.com" },
+        { name: "About", url: "https://matthewrmckenzie.com/about" },
+      ])} />
       {content ? (
         <article
           className="prose prose-sm dark:prose-invert max-w-none

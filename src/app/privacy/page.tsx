@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
+import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -9,6 +10,10 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <StaticPageLayout>
+      <JsonLd data={breadcrumbSchema([
+        { name: "Home", url: "https://matthewrmckenzie.com" },
+        { name: "Privacy Policy", url: "https://matthewrmckenzie.com/privacy" },
+      ])} />
       <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline">
         <h1>Privacy Policy</h1>
         <p className="text-desktop-text-secondary text-sm">

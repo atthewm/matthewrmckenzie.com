@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import JsonLd, { personSchema, websiteSchema } from "@/components/ui/JsonLd";
 import "./globals.css";
 
 // ============================================================================
@@ -25,12 +26,21 @@ export const metadata: Metadata = {
     title: "Matthew McKenzie",
     description:
       "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
+    images: [
+      {
+        url: "https://matthewrmckenzie.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Matthew McKenzie — Capital Formation & Growth Strategy",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Matthew McKenzie",
     description:
       "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
+    images: ["https://matthewrmckenzie.com/og-image.png"],
   },
   robots: {
     index: true,
@@ -67,6 +77,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className="antialiased">
+        <JsonLd data={personSchema} />
+        <JsonLd data={websiteSchema} />
         {children}
         <Analytics />
       </body>
