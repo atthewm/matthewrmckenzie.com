@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
+import Screensaver from "./Screensaver";
 
 // ============================================================================
 // BOOT SEQUENCE (Retro Mac Startup)
@@ -159,6 +160,7 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
     <DesktopProvider>
       <SettingsProvider>
         {booting && <BootSequence onComplete={handleBootComplete} />}
+        <Screensaver />
         <Desktop contentMap={contentMap} />
       </SettingsProvider>
     </DesktopProvider>
