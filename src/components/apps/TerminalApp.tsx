@@ -308,6 +308,19 @@ export default function TerminalApp() {
           ]);
           break;
 
+        case "coffee":
+        case "cafe":
+        case "remote": {
+          addOutput("☕ Brewing up Remote Coffee menu...");
+          const coffeeItem = findFSItem("remote-coffee");
+          if (coffeeItem) {
+            setTimeout(() => openItem(coffeeItem), 500);
+          } else {
+            addOutput("Menu unavailable — discover the Secrets folder first!");
+          }
+          break;
+        }
+
         default:
           addOutput(`${cmd}: command not found`);
       }

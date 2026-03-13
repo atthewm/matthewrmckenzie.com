@@ -1,11 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, createContext, useContext } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
 import Screensaver from "./Screensaver";
 import { playStartupChime } from "@/lib/startupChime";
+import { playShutdown } from "@/lib/soundEffects";
+
+// ---------------------------------------------------------------------------
+// Shutdown context — lets any component trigger a shutdown sequence
+// ---------------------------------------------------------------------------
+const ShutdownContext = createContext<(() => void) | null>(null);
+export function useShutdown(): () => void {
+  const fn = useContext(ShutdownContext);
+  return fn || (() => {});
+}
 
 // ============================================================================
 // BOOT SEQUENCE (Retro Mac Startup)
@@ -127,6 +137,45 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
 }
 
 // ============================================================================
+// SHUTDOWN SEQUENCE
+// ============================================================================
+// Fades to black with "It is now safe to turn off your computer" then reboots.
+// ============================================================================
+
+function ShutdownSequence({ onComplete }: { onComplete: () => void }) {
+  const [phase, setPhase] = useState<"fadeOut" | "black" | "reboot">("fadeOut");
+
+  useEffect(() => {
+    playShutdown();
+    const t1 = setTimeout(() => setPhase("black"), 800);
+    const t2 = setTimeout(() => setPhase("reboot"), 3500);
+    const t3 = setTimeout(() => onComplete(), 4000);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [onComplete]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[999999] flex flex-col items-center justify-center"
+      style={{
+        background: phase === "fadeOut" ? "rgba(0,0,0,0)" : "#000",
+        transition: "background 0.8s ease",
+      }}
+    >
+      {phase === "black" && (
+        <div className="text-center animate-fade-in">
+          <p style={{ color: "#666", fontSize: "14px", fontWeight: 500 }}>
+            It is now safe to turn off your computer.
+          </p>
+          <p style={{ color: "#444", fontSize: "11px", marginTop: "12px" }}>
+            Restarting...
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // DESKTOP SHELL
 // ============================================================================
 // Top-level client component that decides between desktop and mobile views.
@@ -142,6 +191,7 @@ const BOOT_SESSION_KEY = "mmck-booted";
 export default function DesktopShell({ contentMap }: DesktopShellProps) {
   const [mounted, setMounted] = useState(false);
   const [booting, setBooting] = useState(false);
+  const [shuttingDown, setShuttingDown] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -158,6 +208,16 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
     setBooting(false);
   }, []);
 
+  const handleShutdown = useCallback(() => {
+    setShuttingDown(true);
+  }, []);
+
+  const handleShutdownComplete = useCallback(() => {
+    setShuttingDown(false);
+    sessionStorage.removeItem(BOOT_SESSION_KEY);
+    setBooting(true);
+  }, []);
+
   if (!mounted) {
     return (
       <div className="fixed inset-0" style={{ background: "#e8e8e8" }} />
@@ -165,12 +225,15 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
   }
 
   return (
-    <DesktopProvider>
-      <SettingsProvider>
-        {booting && <BootSequence onComplete={handleBootComplete} />}
-        <Screensaver />
-        <Desktop contentMap={contentMap} />
-      </SettingsProvider>
-    </DesktopProvider>
+    <ShutdownContext.Provider value={handleShutdown}>
+      <DesktopProvider>
+        <SettingsProvider>
+          {booting && <BootSequence onComplete={handleBootComplete} />}
+          {shuttingDown && <ShutdownSequence onComplete={handleShutdownComplete} />}
+          <Screensaver />
+          <Desktop contentMap={contentMap} />
+        </SettingsProvider>
+      </DesktopProvider>
+    </ShutdownContext.Provider>
   );
 }

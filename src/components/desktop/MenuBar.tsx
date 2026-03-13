@@ -6,6 +6,7 @@ import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
 import { useOpenInBrowser } from "@/lib/browserStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useShutdown } from "./DesktopShell";
 
 // ============================================================================
 // MENU BAR (Classic Mac Style) - Functional Dropdowns
@@ -201,6 +202,7 @@ export default function MenuBar() {
   const themeRef = useRef<HTMLDivElement>(null);
   const openInBrowser = useOpenInBrowser();
   const isMobile = useIsMobile();
+  const shutdown = useShutdown();
 
   // Close menus on outside click
   useEffect(() => {
@@ -441,16 +443,21 @@ export default function MenuBar() {
       },
       {
         type: "action",
-        label: "Reload OS",
+        label: "Restart...",
         action: () => {
           sessionStorage.removeItem("mmck-booted");
           window.location.reload();
         },
       },
+      {
+        type: "action",
+        label: "Shut Down...",
+        action: () => shutdown(),
+      },
     ];
 
     return { "\uF8FF": osItems, File: fileItems, Edit: editItems, View: viewItems, Window: windowItems, Help: helpItems };
-  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems, openInBrowser]);
+  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems, openInBrowser, shutdown]);
 
   const menus = buildMenus();
 

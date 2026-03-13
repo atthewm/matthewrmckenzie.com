@@ -42,15 +42,25 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const [exposeActive, setExposeActive] = useState(false);
   const [spotlightActive, setSpotlightActive] = useState(false);
 
-  // Desktop icons (top-right, classic Mac layout)
-  const DESKTOP_ICON_IDS = ["about", "work", "terminal", "settings"];
+  // Desktop icons (right column + second column for overflow)
+  const DESKTOP_ICON_IDS = [
+    // Right column — key items
+    "now", "recipes", "health", "apple-music",
+    // Second column — games & extras
+    "chess", "minesweeper", "photo-booth",
+  ];
   const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
 
   const getDefaultIconPositions = useCallback((): Record<string, { x: number; y: number }> => {
     const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
     const positions: Record<string, { x: number; y: number }> = {};
-    DESKTOP_ICON_IDS.forEach((id, i) => {
+    const col1 = DESKTOP_ICON_IDS.slice(0, 4); // right column
+    const col2 = DESKTOP_ICON_IDS.slice(4);     // second column
+    col1.forEach((id, i) => {
       positions[id] = { x: vw - 100, y: 36 + i * 90 };
+    });
+    col2.forEach((id, i) => {
+      positions[id] = { x: vw - 200, y: 36 + i * 90 };
     });
     return positions;
   }, []);

@@ -15,8 +15,9 @@ type Piece = { color: PieceColor; type: PieceType } | null;
 type Board = Piece[][];
 type Position = [number, number];
 
+// Use filled pieces (♛ style) for both — color via CSS
 const UNICODE_PIECES: Record<string, string> = {
-  wK: "♔", wQ: "♕", wR: "♖", wB: "♗", wN: "♘", wP: "♙",
+  wK: "♚", wQ: "♛", wR: "♜", wB: "♝", wN: "♞", wP: "♟",
   bK: "♚", bQ: "♛", bR: "♜", bB: "♝", bN: "♞", bP: "♟",
 };
 
@@ -95,7 +96,12 @@ function canPieceAttack(board: Board, fr: number, fc: number, tr: number, tc: nu
     case "K": return Math.abs(dr) <= 1 && Math.abs(dc) <= 1 && (dr !== 0 || dc !== 0);
     case "B": return Math.abs(dr) === Math.abs(dc) && dr !== 0 && isPathClear(board, fr, fc, tr, tc);
     case "R": return (dr === 0 || dc === 0) && (dr !== 0 || dc !== 0) && isPathClear(board, fr, fc, tr, tc);
-    case "Q": return ((Math.abs(dr) === Math.abs(dc) && dr !== 0) || (dr === 0 || dc === 0) && (dr !== 0 || dc !== 0)) && isPathClear(board, fr, fc, tr, tc);
+    case "Q": {
+      const isDiagonal = Math.abs(dr) === Math.abs(dc) && dr !== 0;
+      const isStraight = (dr === 0 || dc === 0) && (dr !== 0 || dc !== 0);
+      return (isDiagonal || isStraight) && isPathClear(board, fr, fc, tr, tc);
+    }
+    default: return false;
   }
 }
 
@@ -438,7 +444,18 @@ export default function ChessApp() {
                   }}
                   onClick={() => handleCellClick(r, c)}
                 >
-                  {piece && UNICODE_PIECES[`${piece.color}${piece.type}`]}
+                  {piece && (
+                    <span style={{
+                      color: piece.color === "w" ? "#fff" : "#1a1a1a",
+                      textShadow: piece.color === "w"
+                        ? "0 0 2px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.4)"
+                        : "0 0 2px rgba(255,255,255,0.3), 0 1px 1px rgba(0,0,0,0.3)",
+                      filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.2))",
+                      userSelect: "none",
+                    }}>
+                      {UNICODE_PIECES[`${piece.color}${piece.type}`]}
+                    </span>
+                  )}
                   {isLegal && !piece && (
                     <div
                       style={{

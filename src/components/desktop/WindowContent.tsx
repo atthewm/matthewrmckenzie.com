@@ -30,6 +30,7 @@ import PhotoBoothApp from "@/components/apps/PhotoBoothApp";
 import IChatApp from "@/components/apps/IChatApp";
 import ChessApp from "@/components/apps/ChessApp";
 import MinesweeperApp from "@/components/apps/MinesweeperApp";
+import RemoteCoffeeApp from "@/components/apps/RemoteCoffeeApp";
 
 interface WindowContentProps {
   windowState: WindowState;
@@ -62,6 +63,7 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   IChatApp,
   ChessApp,
   MinesweeperApp,
+  RemoteCoffeeApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {

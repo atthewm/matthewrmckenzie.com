@@ -4,6 +4,7 @@ import React, { useCallback, useRef, useEffect, useState } from "react";
 import { useDesktop, type WindowState } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { playWindowClose, playMinimize } from "@/lib/soundEffects";
 
 // ============================================================================
 // WINDOW COMPONENT (Mac OS X 10.3 Panther Aqua)
@@ -131,9 +132,10 @@ export default function Window({ windowState, children }: WindowProps) {
   }, [handleResizeMove, handleResizeEnd]);
 
   const handleClose = useCallback(() => {
+    if (settings.uiSoundsEnabled) playWindowClose();
     setIsClosing(true);
     setTimeout(() => closeWindow(windowState.id), 150);
-  }, [closeWindow, windowState.id]);
+  }, [closeWindow, windowState.id, settings.uiSoundsEnabled]);
 
   const handleTitleDoubleClick = useCallback(() => {
     toggleMaximize(windowState.id);
@@ -166,6 +168,7 @@ export default function Window({ windowState, children }: WindowProps) {
 
   // Genie minimize: animate out then hide
   const handleMinimize = useCallback(() => {
+    if (settings.uiSoundsEnabled) playMinimize();
     setIsMinimizing(true);
     setTimeout(() => {
       setIsMinimizing(false);
