@@ -29,7 +29,7 @@ export default function RecipeViewer({ contentHtml, fsItem }: RecipeViewerProps)
         className="shrink-0 h-[28px] flex items-center justify-between px-3 border-b text-[10px]"
         style={{
           borderColor: "var(--desktop-border)",
-          background: "rgba(0,0,0,0.02)",
+          background: "var(--desktop-surface-raised)",
         }}
       >
         <span className="text-desktop-text-secondary font-medium uppercase tracking-wider">
@@ -81,7 +81,7 @@ export default function RecipeViewer({ contentHtml, fsItem }: RecipeViewerProps)
           className="mx-6 mb-5 mt-2 px-4 py-3 rounded-lg border flex items-center justify-between"
           style={{
             borderColor: "var(--desktop-border)",
-            background: "rgba(0,0,0,0.02)",
+            background: "var(--desktop-surface-raised)",
           }}
         >
           <div>
@@ -108,7 +108,7 @@ export default function RecipeViewer({ contentHtml, fsItem }: RecipeViewerProps)
       {/* Footer */}
       <div
         className="shrink-0 h-[22px] flex items-center px-3 border-t text-[10px] text-desktop-text-secondary"
-        style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}
+        style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
         Recipe
       </div>

@@ -162,7 +162,7 @@ function BrowserToolbar({
       className="shrink-0 flex flex-col border-b"
       style={{
         borderColor: "var(--desktop-border)",
-        background: "rgba(0,0,0,0.02)",
+        background: "var(--desktop-surface-raised)",
       }}
     >
       {/* Title row */}
@@ -254,7 +254,7 @@ function BrowserFooter() {
       className="shrink-0 h-[22px] flex items-center px-3 border-t text-[10px] text-desktop-text-secondary"
       style={{
         borderColor: "var(--desktop-border)",
-        background: "rgba(0,0,0,0.02)",
+        background: "var(--desktop-surface-raised)",
       }}
     >
       Browser

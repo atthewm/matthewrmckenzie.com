@@ -64,7 +64,7 @@ export default function GetWhoopApp() {
           border: "1px solid rgba(255,255,255,0.08)",
         }}
       >
-        <p className="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Community Code</p>
+        <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-1">Community Code</p>
         <button
           onClick={handleCopyCode}
           className="text-sm font-mono font-bold text-[#00f19b] hover:text-[#00f19b]/80 transition-colors"

@@ -70,7 +70,7 @@ export default function ContactApp() {
         className="shrink-0 h-[28px] flex items-center px-3 border-b text-[10px]"
         style={{
           borderColor: "var(--desktop-border)",
-          background: "rgba(0,0,0,0.02)",
+          background: "var(--desktop-surface-raised)",
         }}
       >
         <span className="text-desktop-text-secondary font-medium uppercase tracking-wider">
@@ -127,6 +127,7 @@ export default function ContactApp() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
+              aria-label="Your name"
               maxLength={100}
               className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
                          bg-desktop-surface border outline-none
@@ -140,6 +141,7 @@ export default function ContactApp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email"
+              aria-label="Your email"
               maxLength={200}
               className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
                          bg-desktop-surface border outline-none
@@ -152,6 +154,7 @@ export default function ContactApp() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Your message..."
+              aria-label="Your message"
               maxLength={2000}
               rows={4}
               className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
@@ -180,7 +183,7 @@ export default function ContactApp() {
       {/* Action bar */}
       <div
         className="shrink-0 border-t px-3 py-2 flex gap-2"
-        style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}
+        style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
         <button
           onClick={() => openInBrowser("https://cal.com/mattmck/site", "Schedule")}

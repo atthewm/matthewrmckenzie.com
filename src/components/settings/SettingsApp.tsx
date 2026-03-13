@@ -26,7 +26,7 @@ export default function SettingsApp() {
   return (
     <div className="flex flex-col h-full">
       {/* Tab bar */}
-      <div className="flex border-b shrink-0" style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}>
+      <div className="flex border-b shrink-0" style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}>
         {tabs.map((tab) => (
           <button
             key={tab.id}

@@ -82,12 +82,12 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
   const resizeRef = useRef<{ startX: number; startY: number; origW: number; origH: number } | null>(null);
   const colors = COLOR_MAP[sticky.color];
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+  const handlePointerDown = useCallback(() => {
     onFocus(sticky.id);
   }, [sticky.id, onFocus]);
 
   // Drag header
-  const startDrag = useCallback((e: React.MouseEvent) => {
+  const startDrag = useCallback((e: React.PointerEvent) => {
     e.preventDefault();
     onFocus(sticky.id);
     dragRef.current = {
@@ -97,7 +97,7 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
       origY: sticky.y,
     };
 
-    const onMove = (ev: MouseEvent) => {
+    const onMove = (ev: PointerEvent) => {
       if (!dragRef.current) return;
       const dx = ev.clientX - dragRef.current.startX;
       const dy = ev.clientY - dragRef.current.startY;
@@ -108,15 +108,15 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
     };
     const onUp = () => {
       dragRef.current = null;
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
     };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
   }, [sticky.id, sticky.x, sticky.y, onUpdate, onFocus]);
 
   // Resize handle
-  const startResize = useCallback((e: React.MouseEvent) => {
+  const startResize = useCallback((e: React.PointerEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onFocus(sticky.id);
@@ -127,7 +127,7 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
       origH: sticky.height,
     };
 
-    const onMove = (ev: MouseEvent) => {
+    const onMove = (ev: PointerEvent) => {
       if (!resizeRef.current) return;
       const dx = ev.clientX - resizeRef.current.startX;
       const dy = ev.clientY - resizeRef.current.startY;
@@ -138,11 +138,11 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
     };
     const onUp = () => {
       resizeRef.current = null;
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
     };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
   }, [sticky.id, sticky.width, sticky.height, onUpdate, onFocus]);
 
   // Cycle color
@@ -164,19 +164,20 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
         background: colors.bg,
         border: `1px solid ${colors.border}`,
       }}
-      onMouseDown={handleMouseDown}
+      onPointerDown={handlePointerDown}
     >
       {/* Header bar - draggable */}
       <div
         className="shrink-0 h-[20px] flex items-center justify-between px-1.5 cursor-move rounded-t"
         style={{ background: colors.header, borderBottom: `1px solid ${colors.border}` }}
-        onMouseDown={startDrag}
+        onPointerDown={startDrag}
       >
         <div className="flex items-center gap-1">
           <button
             onClick={() => onDelete(sticky.id)}
             className="w-3 h-3 rounded-full flex items-center justify-center hover:brightness-90 transition-all"
             style={{ background: "#FF5F57", border: "1px solid #E03E36" }}
+            aria-label="Close note"
             title="Close note"
           >
             <X size={7} color="#7A0000" strokeWidth={3} />
@@ -185,6 +186,7 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
             onClick={cycleColor}
             className="w-3 h-3 rounded-full hover:brightness-90 transition-all"
             style={{ background: "#FFBD2E", border: "1px solid #DFA020" }}
+            aria-label="Change color"
             title="Change color"
           />
         </div>
@@ -213,7 +215,7 @@ function StickyNote({ sticky, onUpdate, onDelete, onFocus }: StickyNoteProps) {
       {/* Resize handle */}
       <div
         className="absolute bottom-0 right-0 w-3 h-3 cursor-se-resize"
-        onMouseDown={startResize}
+        onPointerDown={startResize}
         style={{ opacity: 0.4 }}
       >
         <svg width="12" height="12" viewBox="0 0 12 12">

@@ -371,6 +371,7 @@ export default function TerminalApp() {
             spellCheck={false}
             autoComplete="off"
             autoCapitalize="off"
+            aria-label="Terminal command input"
           />
         </div>
       </div>

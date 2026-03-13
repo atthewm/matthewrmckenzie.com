@@ -141,7 +141,7 @@ function SubmenuItem({
         onClick={() => { if (isMobileView) setOpen(!open); }}
       >
         <span>{item.label}</span>
-        <span className="text-[10px]">{open ? "&#9662;" : "&#9656;"}</span>
+        <span className="text-[10px]">{open ? "\u25BE" : "\u25B8"}</span>
       </div>
       {open && (
         <div

@@ -30,7 +30,7 @@ function Sidebar({ currentId }: { currentId: string }) {
       className="w-[150px] shrink-0 border-r overflow-y-auto py-2 px-1"
       style={{
         borderColor: "var(--desktop-border)",
-        background: "rgba(0,0,0,0.02)",
+        background: "var(--desktop-surface-raised)",
       }}
     >
       <p className="text-[9px] font-semibold uppercase tracking-wider text-desktop-text-secondary px-2 mb-1">
@@ -102,7 +102,7 @@ function RecipeListView({ children }: { children: FSItem[] }) {
         className="mx-3 my-3 px-3 py-2.5 rounded-lg border flex items-center justify-between"
         style={{
           borderColor: "var(--desktop-border)",
-          background: "rgba(0,0,0,0.02)",
+          background: "var(--desktop-surface-raised)",
         }}
       >
         <div>
@@ -197,7 +197,7 @@ export default function FolderView({ item }: FolderViewProps) {
       {/* Footer bar */}
       <div
         className="shrink-0 h-[22px] flex items-center px-3 border-t text-[10px] text-desktop-text-secondary"
-        style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}
+        style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
         {item.children.length} item{item.children.length !== 1 ? "s" : ""}
       </div>

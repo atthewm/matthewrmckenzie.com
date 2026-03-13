@@ -104,14 +104,20 @@ function PantherIconImg({ src, size = 32, alt }: { src: string; size?: number; a
 // Get a Panther icon React component for an fsItem ID (used by Dock)
 // ---------------------------------------------------------------------------
 
+const iconCache = new Map<string, React.FC<IconProps>>();
+
 export function getPantherIcon(fsItemId: string): React.FC<IconProps> | null {
   const filename = iconMap[fsItemId];
   if (!filename) return null;
+
+  const cached = iconCache.get(fsItemId);
+  if (cached) return cached;
 
   const IconComponent: React.FC<IconProps> = ({ size = 32 }) => (
     <PantherIconImg src={`/icons/panther/${filename}`} size={size} alt={fsItemId} />
   );
   IconComponent.displayName = `PantherIcon_${fsItemId}`;
+  iconCache.set(fsItemId, IconComponent);
   return IconComponent;
 }
 

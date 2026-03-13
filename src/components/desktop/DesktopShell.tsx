@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
 import Screensaver from "./Screensaver";
+import { playStartupChime } from "@/lib/startupChime";
 
 // ============================================================================
 // BOOT SEQUENCE (Retro Mac Startup)
@@ -16,8 +17,14 @@ import Screensaver from "./Screensaver";
 function BootSequence({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"chime" | "icon" | "progress" | "fade">("chime");
   const [progress, setProgress] = useState(0);
+  const chimePlayed = useRef(false);
 
   useEffect(() => {
+    // Play startup chime on first interaction or immediately if autoplay allowed
+    if (!chimePlayed.current) {
+      chimePlayed.current = true;
+      playStartupChime();
+    }
     const t1 = setTimeout(() => setPhase("icon"), 400);
     const t2 = setTimeout(() => setPhase("progress"), 1200);
     return () => { clearTimeout(t1); clearTimeout(t2); };
@@ -139,8 +146,9 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
   useEffect(() => {
     setMounted(true);
 
-    // Only show boot sequence once per browser session
-    if (!sessionStorage.getItem(BOOT_SESSION_KEY)) {
+    // Skip boot for reduced-motion preference or repeat visits
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!prefersReducedMotion && !sessionStorage.getItem(BOOT_SESSION_KEY)) {
       setBooting(true);
     }
   }, []);

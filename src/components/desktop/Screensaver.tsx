@@ -280,6 +280,7 @@ export default function Screensaver() {
 
       {/* Badge */}
       <div
+        aria-hidden="true"
         style={{
           position: "absolute",
           bottom: 20,

@@ -101,7 +101,7 @@ export default function GuestbookApp() {
         className="shrink-0 h-[28px] flex items-center justify-between px-3 border-b text-[10px]"
         style={{
           borderColor: "var(--desktop-border)",
-          background: "rgba(0,0,0,0.02)",
+          background: "var(--desktop-surface-raised)",
         }}
       >
         <span className="text-desktop-text-secondary font-medium uppercase tracking-wider">
@@ -183,7 +183,7 @@ export default function GuestbookApp() {
       {/* Form */}
       <div
         className="shrink-0 border-t px-4 py-3"
-        style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}
+        style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
         {status === "sent" ? (
           <p className="text-[11px] text-center" style={{ color: "var(--desktop-accent)" }}>
@@ -207,6 +207,7 @@ export default function GuestbookApp() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
+                aria-label="Your name"
                 maxLength={100}
                 className="flex-1 px-2.5 py-1.5 rounded text-[12px] text-desktop-text
                            bg-desktop-surface border outline-none
@@ -219,6 +220,7 @@ export default function GuestbookApp() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Leave a message..."
+                aria-label="Leave a message"
                 maxLength={500}
                 rows={2}
                 className="flex-1 px-2.5 py-1.5 rounded text-[12px] text-desktop-text

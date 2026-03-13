@@ -190,7 +190,7 @@ function StatTile({
       className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border"
       style={{
         borderColor: "var(--desktop-border)",
-        background: highlight?.bg || "rgba(0,0,0,0.02)",
+        background: highlight?.bg || "var(--desktop-surface-raised)",
       }}
     >
       <div className="shrink-0 text-desktop-text-secondary">{icon}</div>
@@ -670,7 +670,7 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
                   background:
                     i % 2 === 0
                       ? "transparent"
-                      : "rgba(0,0,0,0.02)",
+                      : "var(--desktop-surface-raised)",
                   borderBottom: "1px solid var(--desktop-border)",
                 }}
               >
@@ -854,7 +854,7 @@ export default function WhoopDashboardApp() {
         className="shrink-0 h-[28px] flex items-center justify-between px-3 border-b text-[10px]"
         style={{
           borderColor: "var(--desktop-border)",
-          background: "rgba(0,0,0,0.02)",
+          background: "var(--desktop-surface-raised)",
         }}
       >
         <span className="text-desktop-text-secondary font-medium uppercase tracking-wider">
@@ -940,7 +940,7 @@ export default function WhoopDashboardApp() {
             className="mt-4 mb-2 px-4 py-3 rounded-lg border flex items-center justify-between"
             style={{
               borderColor: "var(--desktop-border)",
-              background: "rgba(0,0,0,0.02)",
+              background: "var(--desktop-surface-raised)",
             }}
           >
             <div>
@@ -970,7 +970,7 @@ export default function WhoopDashboardApp() {
         className="shrink-0 h-[22px] flex items-center px-3 border-t text-[10px] text-desktop-text-secondary"
         style={{
           borderColor: "var(--desktop-border)",
-          background: "rgba(0,0,0,0.02)",
+          background: "var(--desktop-surface-raised)",
         }}
       >
         Health
