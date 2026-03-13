@@ -12,7 +12,7 @@ Outside of work, Matthew is an investor and mentor. He is a hybrid athlete focus
 
 ## Now
 
-What I am working on and thinking about right now:
+What I'm working on and thinking about right now:
 
 - A small daily-use product in the prayer and wellness space
 - Health and performance tooling and personal tracking systems

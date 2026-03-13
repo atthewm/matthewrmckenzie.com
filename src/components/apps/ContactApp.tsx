@@ -90,7 +90,7 @@ export default function ContactApp() {
             </div>
             <p className="text-[14px] font-semibold text-desktop-text">Message sent</p>
             <p className="text-[11px] text-desktop-text-secondary mt-1">
-              Thanks for reaching out. I will get back to you soon.
+              Thanks for reaching out. I&apos;ll get back to you soon.
             </p>
             <button
               onClick={() => setStatus("idle")}
