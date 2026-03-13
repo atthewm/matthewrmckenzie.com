@@ -6,6 +6,7 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 export const metadata: Metadata = {
   title: "Writing — Essays & Notes",
   description: "Essays, notes, and long-form writing by Matthew McKenzie on capital formation, growth strategy, health, and building things that last.",
+  alternates: { canonical: "/writing" },
 };
 
 export default async function WritingPage() {

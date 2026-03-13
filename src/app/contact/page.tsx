@@ -6,6 +6,7 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 export const metadata: Metadata = {
   title: "Contact — Get in Touch",
   description: "Get in touch with Matthew McKenzie — reach out for investor relations, collaboration, press, speaking, or to schedule a call.",
+  alternates: { canonical: "/contact" },
 };
 
 export default async function ContactPage() {

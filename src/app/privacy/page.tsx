@@ -3,8 +3,9 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
+  title: "Privacy Policy — Your Data & Rights",
   description: "Privacy policy for matthewrmckenzie.com — how data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPolicyPage() {

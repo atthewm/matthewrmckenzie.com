@@ -6,6 +6,7 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 export const metadata: Metadata = {
   title: "About — Background & Current Work",
   description: "About Matthew McKenzie — background in capital formation and growth strategy, current interests, and what I'm working on right now.",
+  alternates: { canonical: "/about" },
 };
 
 export default async function AboutPage() {

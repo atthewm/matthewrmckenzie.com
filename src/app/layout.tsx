@@ -42,6 +42,9 @@ export const metadata: Metadata = {
       "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
     images: ["https://matthewrmckenzie.com/og-image.png"],
   },
+  alternates: {
+    canonical: "https://matthewrmckenzie.com",
+  },
   robots: {
     index: true,
     follow: true,
