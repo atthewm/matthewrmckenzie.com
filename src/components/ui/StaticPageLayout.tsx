@@ -55,9 +55,17 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
       <footer className="border-t border-desktop-border mt-16 bg-desktop-surface">
         <div className="max-w-2xl mx-auto px-5 py-6 text-xs text-desktop-text-secondary">
           <p>&copy; {new Date().getFullYear()} Matthew McKenzie. All rights reserved.</p>
-          <div className="mt-1 flex items-center gap-3">
+          <div className="mt-1 flex items-center gap-3 flex-wrap">
             <Link href="/" className="hover:text-desktop-accent transition-colors">
               Back to desktop view
+            </Link>
+            <span className="text-desktop-border">|</span>
+            <Link href="/writing" className="hover:text-desktop-accent transition-colors">
+              Writing
+            </Link>
+            <span className="text-desktop-border">|</span>
+            <Link href="/projects" className="hover:text-desktop-accent transition-colors">
+              Projects
             </Link>
             <span className="text-desktop-border">|</span>
             <Link href="/privacy" className="hover:text-desktop-accent transition-colors">
