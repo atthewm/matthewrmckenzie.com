@@ -29,6 +29,8 @@ const iconMap: Record<string, string> = {
   "guestbook":      "address-book.png",
   "linktree":       "internet-connection.png",
   "schedule":       "ical.png",
+  "ichat":          "ichat.png",
+  "photo-booth":    "image-capture.png",
 
   // Media
   "photos":         "iphoto.png",
