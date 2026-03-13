@@ -15,4 +15,4 @@ The best way to reach me is by email.
 
 ---
 
-*I try to respond within a few days. For urgent things, email is best.*
+*I try to respond within a few days.*

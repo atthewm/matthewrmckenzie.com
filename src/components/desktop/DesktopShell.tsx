@@ -112,7 +112,7 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
           />
         </div>
         <p style={{ fontSize: "9px", textAlign: "center", marginTop: "6px", color: "#888" }}>
-          {progress < 30 ? "Loading system..." : progress < 70 ? "Preparing desktop..." : "Welcome"}
+          {progress < 30 ? "Loading system..." : progress < 70 ? "Preparing desktop..." : "Welcome to McKenzie OS"}
         </p>
       </div>
     </div>

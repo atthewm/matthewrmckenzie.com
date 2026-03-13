@@ -64,11 +64,11 @@ export default function GuestbookApp() {
         // Don't reload - entry is unapproved
       } else {
         const data = await res.json();
-        setErrorMsg(data.error || "Something went wrong");
+        setErrorMsg(data.error || "Couldn't submit your entry. Please try again.");
         setStatus("error");
       }
     } catch {
-      setErrorMsg("Connection error");
+      setErrorMsg("Can't reach the server. Check your connection and try again.");
       setStatus("error");
     }
   };
@@ -234,6 +234,7 @@ export default function GuestbookApp() {
                            disabled:opacity-50 transition-opacity"
               >
                 <Send size={12} />
+                <span className="sr-only">Sign guestbook</span>
               </button>
             </div>
             {errorMsg && (

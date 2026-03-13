@@ -43,7 +43,7 @@ export default function RecipeViewer({ contentHtml, fsItem }: RecipeViewerProps)
           title={`Download ${slug}.md`}
         >
           <Download size={11} />
-          <span>Download .md</span>
+          <span>Download recipe</span>
         </a>
       </div>
 

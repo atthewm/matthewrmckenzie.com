@@ -216,7 +216,7 @@ function SoundTab() {
 
       {!settings.userHasInteracted && (
         <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 p-2 rounded">
-          Click or press a key anywhere first to enable audio playback (browser autoplay policy).
+          Tap or click anywhere on the page first to unlock audio playback.
         </p>
       )}
     </div>

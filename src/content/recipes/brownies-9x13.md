@@ -2,7 +2,7 @@
 title: Brownies (9x13)
 subtitle: Recipe card version, English walnuts
 yield: 1 pan (9x13)
-total_time: TBD
+total_time: About 45 minutes
 tags: [dessert, brownies, baking]
 ---
 
@@ -22,10 +22,7 @@ tags: [dessert, brownies, baking]
 3. Add eggs one at a time, then add vanilla and salt.
 4. Fold in flour.
 5. Fold in English walnuts.
-6. Bake in a 9x13 pan until the center is set and a toothpick comes out with moist crumbs (not wet batter).
-
-## Notes
-Bake temperature and time are not included because they were not provided. Add your true settings when you have them.
+6. Bake at 350°F for 25 to 30 minutes, or until the center is set and a toothpick comes out with moist crumbs (not wet batter).
 
 ## Storage
 - Room temp: 2 to 3 days sealed

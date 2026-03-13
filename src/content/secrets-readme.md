@@ -14,4 +14,4 @@ There are a few ways to unlock this folder. You found one of them. Can you find 
 
 ---
 
-*More coming soon.*
+*Keep exploring.*

@@ -30,7 +30,7 @@ matthew.mckenzie@mac.com
 
 LOCATION:   Texas, USA
 FOCUS:      Capital formation, growth strategy,
-            real asset backed consumer platforms
+            real-asset-backed consumer platforms
 
 ----------------------------------------------------------
 EXPERIENCE

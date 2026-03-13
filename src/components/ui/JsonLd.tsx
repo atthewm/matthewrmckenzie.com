@@ -43,7 +43,7 @@ export const websiteSchema = {
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
   description:
-    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
+    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
 };
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {

@@ -299,7 +299,7 @@ export default function TerminalApp() {
           addOutput([
             "        .:'         matt@mckenzie",
             "    __ :'__         ---------------",
-            " .'`  `-'  `.       OS: McKenzie OS 2.0 Panther",
+            " .'`  `-'  `.       OS: McKenzie OS 2.0 (Panther)",
             ":          .-'      Host: Vercel Edge Network",
             ":          :        Kernel: Next.js 15",
             " :        `-;       Shell: Terminal.app",

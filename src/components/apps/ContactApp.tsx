@@ -207,7 +207,7 @@ export default function ContactApp() {
           style={{ border: "1px solid var(--desktop-border)" }}
         >
           <Link2 size={11} />
-          Linktree
+          Links
         </button>
       </div>
     </div>

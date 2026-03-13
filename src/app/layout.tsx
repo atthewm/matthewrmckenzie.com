@@ -10,11 +10,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://matthewrmckenzie.com"),
   title: {
-    default: "Matthew McKenzie",
+    default: "Matthew McKenzie — Capital Formation & Growth Strategy",
     template: "%s - Matthew McKenzie",
   },
   description:
-    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms. Explore projects, writing, recipes, and more.",
+    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms. Explore projects, writing, recipes, and more.",
   keywords: ["Matthew McKenzie", "personal site", "portfolio", "projects", "writing"],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://matthewrmckenzie.com",
     siteName: "Matthew McKenzie",
-    title: "Matthew McKenzie",
+    title: "Matthew McKenzie — Capital Formation & Growth Strategy",
     description:
-      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
+      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
     images: [
       {
         url: "https://matthewrmckenzie.com/og-image.png",
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Matthew McKenzie",
+    title: "Matthew McKenzie — Capital Formation & Growth Strategy",
     description:
-      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
+      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
     images: ["https://matthewrmckenzie.com/og-image.png"],
   },
   alternates: {

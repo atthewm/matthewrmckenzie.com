@@ -9,9 +9,6 @@ tags: [bread, sourdough, city loaf, dutch oven]
 ## Overview
 A two-loaf sourdough formula with a fed starter, autolyse, two folds, warm bulk fermentation, then shaping and an optional overnight cold retard before baking in a Dutch oven.
 
-## Yield
-Makes two 950 g loaves
-
 ## Timing
 ### Day 1 (morning)
 Feed starter, autolyse and mix dough, bulk ferment, preshape, final shape.

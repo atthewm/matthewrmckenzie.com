@@ -121,7 +121,7 @@ function RecipeListView({ children }: { children: FSItem[] }) {
                      bg-desktop-accent text-white hover:opacity-90 transition-opacity"
         >
           <ExternalLink size={10} />
-          Open
+          Open in Notion
         </a>
       </div>
     </div>

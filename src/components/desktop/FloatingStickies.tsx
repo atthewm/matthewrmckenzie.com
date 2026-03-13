@@ -55,7 +55,7 @@ function loadStickies(): Sticky[] {
   return [
     {
       id: generateId(),
-      text: "Welcome to Stickies!\n\nClick the + to add a new note.\nDrag the header to move.",
+      text: "Welcome to Stickies!\n\nClick the + to add a new note.\nDrag the header to move it.",
       color: "yellow",
       x: 80,
       y: 60,

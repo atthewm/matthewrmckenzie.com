@@ -56,7 +56,7 @@ export default function SoundCloudPlayer() {
       >
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
-          <span className="text-[9px] text-gray-600">QuickTime Player</span>
+          <span className="text-[9px] text-gray-600">Music</span>
         </div>
       </div>
     </div>

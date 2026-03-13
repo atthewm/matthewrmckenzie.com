@@ -59,7 +59,7 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {
   const fsItem = findFSItem(windowState.fsItemId);
   if (!fsItem) {
-    return <div className="p-5 text-sm text-desktop-text-secondary">Item not found: {windowState.fsItemId}</div>;
+    return <div className="p-5 text-sm text-desktop-text-secondary">Item not found.</div>;
   }
   if (fsItem.type === "folder") {
     return <FolderView item={fsItem} />;
@@ -78,9 +78,6 @@ export default function WindowContent({ windowState, contentMap }: WindowContent
     return (
       <div className="p-5 text-sm text-desktop-text-secondary">
         No content found for &ldquo;{fsItem.name}&rdquo;.
-        {fsItem.contentPath && (
-          <span> Create <code className="text-xs bg-desktop-border/50 px-1 py-0.5 rounded">src/content/{fsItem.contentPath}</code> to add content.</span>
-        )}
       </div>
     );
   }

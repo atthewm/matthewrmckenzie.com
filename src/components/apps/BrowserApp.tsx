@@ -91,7 +91,7 @@ export default function BrowserApp() {
               No page loaded
             </p>
             <p className="text-[11px] text-desktop-text-secondary/60 mt-1">
-              Open a link from another app to browse here.
+              Click a link in another app to open it here.
             </p>
           </div>
         </div>
