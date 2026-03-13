@@ -31,6 +31,8 @@ const iconMap: Record<string, string> = {
   "schedule":       "ical.png",
   "ichat":          "ichat.png",
   "photo-booth":    "image-capture.png",
+  "chess":          "generic-application.png",
+  "minesweeper":    "calculator.png",
 
   // Media
   "photos":         "iphoto.png",

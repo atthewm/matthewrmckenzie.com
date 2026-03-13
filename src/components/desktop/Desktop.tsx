@@ -7,6 +7,9 @@ import MenuBar from "./MenuBar";
 import ZenBackground from "./ZenBackground";
 import FloatingStickies from "./FloatingStickies";
 import ContextMenu, { type ContextMenuItem } from "./ContextMenu";
+import Expose from "./Expose";
+import Spotlight from "./Spotlight";
+import DesktopIcon from "./DesktopIcon";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -36,6 +39,40 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [stickiesVisible, setStickiesVisible] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; items: ContextMenuItem[] } | null>(null);
+  const [exposeActive, setExposeActive] = useState(false);
+  const [spotlightActive, setSpotlightActive] = useState(false);
+
+  // Desktop icons (top-right, classic Mac layout)
+  const DESKTOP_ICON_IDS = ["about", "work", "terminal", "settings"];
+  const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
+
+  const getDefaultIconPositions = useCallback((): Record<string, { x: number; y: number }> => {
+    const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const positions: Record<string, { x: number; y: number }> = {};
+    DESKTOP_ICON_IDS.forEach((id, i) => {
+      positions[id] = { x: vw - 100, y: 36 + i * 90 };
+    });
+    return positions;
+  }, []);
+
+  const [iconPositions, setIconPositions] = useState<Record<string, { x: number; y: number }>>(() => {
+    if (typeof window === "undefined") return {};
+    try {
+      const saved = localStorage.getItem(ICON_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch { /* empty */ }
+    return {};
+  });
+
+  const resolvedPositions = { ...getDefaultIconPositions(), ...iconPositions };
+
+  const handleIconDragEnd = useCallback((id: string, x: number, y: number) => {
+    setIconPositions((prev) => {
+      const next = { ...prev, [id]: { x, y } };
+      try { localStorage.setItem(ICON_STORAGE_KEY, JSON.stringify(next)); } catch { /* empty */ }
+      return next;
+    });
+  }, []);
 
   // Auto-open window from ?open= query param (e.g. /?open=about)
   useEffect(() => {
@@ -81,6 +118,28 @@ export default function Desktop({ contentMap }: DesktopProps) {
       setToast("You found the Secrets folder!");
     }
   }, [revealed, reveal]);
+
+  // Exposé & Spotlight keyboard shortcuts
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      // F9 → toggle Exposé
+      if (e.key === "F9") {
+        e.preventDefault();
+        setSpotlightActive(false);
+        setExposeActive((v) => !v);
+        return;
+      }
+      // Cmd/Ctrl + Space → toggle Spotlight
+      if ((e.metaKey || e.ctrlKey) && e.code === "Space") {
+        e.preventDefault();
+        setExposeActive(false);
+        setSpotlightActive((v) => !v);
+        return;
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // Konami code listener
   useEffect(() => {
@@ -175,6 +234,22 @@ export default function Desktop({ contentMap }: DesktopProps) {
         onContextMenu={handleContextMenu}
       />
 
+      {/* Desktop icons (draggable, hidden on mobile) */}
+      {!isMobile && DESKTOP_ICON_IDS.map((id) => {
+        const item = findFSItem(id);
+        if (!item) return null;
+        const pos = resolvedPositions[id] || { x: 0, y: 40 };
+        return (
+          <DesktopIcon
+            key={id}
+            item={item}
+            x={pos.x}
+            y={pos.y}
+            onDragEnd={handleIconDragEnd}
+          />
+        );
+      })}
+
       {/* Windows */}
       <WindowManager contentMap={contentMap} />
 
@@ -183,6 +258,12 @@ export default function Desktop({ contentMap }: DesktopProps) {
 
       {/* Dock */}
       <Dock onStickiesToggle={() => setStickiesVisible((v) => !v)} stickiesActive={stickiesVisible} />
+
+      {/* Exposé overlay */}
+      <Expose active={exposeActive} onClose={() => setExposeActive(false)} />
+
+      {/* Spotlight search */}
+      <Spotlight active={spotlightActive} onClose={() => setSpotlightActive(false)} />
 
       {/* Right-click context menu */}
       {contextMenu && (

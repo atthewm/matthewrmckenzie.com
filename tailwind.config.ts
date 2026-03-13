@@ -47,6 +47,8 @@ const config: Config = {
       animation: {
         "window-open": "windowOpen 0.2s ease-out",
         "window-close": "windowClose 0.15s ease-in forwards",
+        "window-minimize": "windowMinimize 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+        "window-restore": "windowRestore 0.3s cubic-bezier(0, 0, 0.2, 1)",
         "fade-in": "fadeIn 0.2s ease-out",
         "slide-up": "slideUp 0.25s ease-out",
         "dock-bounce": "dockBounce 0.3s ease-out",
@@ -59,6 +61,14 @@ const config: Config = {
         windowClose: {
           "0%": { opacity: "1", transform: "scale(1)" },
           "100%": { opacity: "0", transform: "scale(0.95)" },
+        },
+        windowMinimize: {
+          "0%": { opacity: "1", transform: "scale(1) translateY(0)" },
+          "100%": { opacity: "0", transform: "scale(0.3) translateY(80vh)" },
+        },
+        windowRestore: {
+          "0%": { opacity: "0", transform: "scale(0.3) translateY(80vh)" },
+          "100%": { opacity: "1", transform: "scale(1) translateY(0)" },
         },
         fadeIn: {
           "0%": { opacity: "0" },

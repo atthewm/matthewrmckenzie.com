@@ -43,8 +43,11 @@ export default function Window({ windowState, children }: WindowProps) {
   const resizeDir = useRef<ResizeDirection>(null);
   const resizeStart = useRef({ x: 0, y: 0, winX: 0, winY: 0, winW: 0, winH: 0 });
 
-  // Closing animation
+  // Closing & minimizing animations
   const [isClosing, setIsClosing] = useState(false);
+  const [isMinimizing, setIsMinimizing] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
+  const prevMinimized = useRef(windowState.isMinimized);
 
   const handleWindowPointerDown = useCallback(() => {
     if (!isFocused) focusWindow(windowState.id);
@@ -161,7 +164,26 @@ export default function Window({ windowState, children }: WindowProps) {
     if (isMobile) history.back();
   }, [dispatch, windowState.id, isMobile]);
 
-  if (windowState.isMinimized) return null;
+  // Genie minimize: animate out then hide
+  const handleMinimize = useCallback(() => {
+    setIsMinimizing(true);
+    setTimeout(() => {
+      setIsMinimizing(false);
+      minimizeWindow(windowState.id);
+    }, 350);
+  }, [minimizeWindow, windowState.id]);
+
+  // Detect restore (was minimized, now isn't)
+  useEffect(() => {
+    if (prevMinimized.current && !windowState.isMinimized) {
+      setIsRestoring(true);
+      const t = setTimeout(() => setIsRestoring(false), 300);
+      return () => clearTimeout(t);
+    }
+    prevMinimized.current = windowState.isMinimized;
+  }, [windowState.isMinimized]);
+
+  if (windowState.isMinimized && !isMinimizing) return null;
 
   const cursorMap: Record<string, string> = {
     n: "cursor-n-resize", s: "cursor-s-resize",
@@ -187,7 +209,7 @@ export default function Window({ windowState, children }: WindowProps) {
       className={`
         fixed select-none flex flex-col overflow-hidden
         ${windowState.isMaximized ? "rounded-none" : ""}
-        ${isClosing ? "animate-window-close" : "animate-window-open"}
+        ${isClosing ? "animate-window-close" : isMinimizing ? "animate-window-minimize" : isRestoring ? "animate-window-restore" : "animate-window-open"}
       `}
       style={{
         left: isMobile && !windowState.isMaximized
@@ -250,7 +272,7 @@ export default function Window({ windowState, children }: WindowProps) {
           className={`flex items-center ${isMobile ? "gap-[10px]" : "gap-[8px]"} mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
         >
           <button onClick={handleClose} aria-label="Close window" className={`aqua-btn aqua-close ${isMobile ? "aqua-btn-mobile" : ""}`} />
-          <button onClick={() => minimizeWindow(windowState.id)} aria-label="Minimize window" className={`aqua-btn aqua-minimize ${isMobile ? "aqua-btn-mobile" : ""}`} />
+          <button onClick={handleMinimize} aria-label="Minimize window" className={`aqua-btn aqua-minimize ${isMobile ? "aqua-btn-mobile" : ""}`} />
           <button onClick={() => toggleMaximize(windowState.id)} aria-label={windowState.isMaximized ? "Restore window" : "Maximize window"} className={`aqua-btn aqua-zoom ${isMobile ? "aqua-btn-mobile" : ""}`} />
         </div>
 
