@@ -119,7 +119,7 @@ export default function GuestbookApp() {
             No entries yet. Be the first to sign the guestbook!
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: "var(--desktop-border)" }}>
+          <div className="divide-y divide-desktop-border">
             {entries.map((entry) => (
               <div
                 key={entry.id}
@@ -145,7 +145,7 @@ export default function GuestbookApp() {
                       {formatDate(entry.created_at)}
                     </span>
                     {!entry.approved && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-800">
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
                         Pending
                       </span>
                     )}
@@ -160,14 +160,14 @@ export default function GuestbookApp() {
                       <button
                         onClick={() => handleModerate(entry.id, true)}
                         className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded
-                                   bg-green-100 text-green-700 hover:bg-green-200 transition-colors"
+                                   bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 transition-colors"
                       >
                         <Check size={10} /> Approve
                       </button>
                       <button
                         onClick={() => handleModerate(entry.id, false)}
                         className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded
-                                   bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                                   bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 transition-colors"
                       >
                         <XIcon size={10} /> Reject
                       </button>

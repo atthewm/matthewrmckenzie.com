@@ -258,7 +258,7 @@ export default function Window({ windowState, children }: WindowProps) {
         <div
           className="flex-1 text-center text-[13px] font-semibold truncate pointer-events-none"
           style={{
-            color: isFocused ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0.35)",
+            color: isFocused ? "var(--window-title-text, rgba(0,0,0,0.85))" : "var(--window-title-text-inactive, rgba(0,0,0,0.35))",
             textShadow: isFocused ? "0 1px 0 rgba(255,255,255,0.5)" : "none",
           }}
         >

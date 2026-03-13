@@ -195,7 +195,7 @@ export default function YouTubeWinampPlayer() {
           <div
             className="text-[11px] font-mono text-green-400 inline-block"
             style={{
-              animation: isPlaying ? "marquee 8s linear infinite" : "none",
+              animation: isPlaying ? "winamp-marquee 8s linear infinite" : "none",
             }}
           >
             {currentTrack?.title || "No track loaded"}

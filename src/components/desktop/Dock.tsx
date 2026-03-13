@@ -82,7 +82,7 @@ function DockIcon({
 
   return (
     <button
-      className="relative flex flex-col items-center focus-visible:outline-none"
+      className="relative flex flex-col items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1 rounded"
       style={{
         transition: "transform 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         transform: `scale(${scale}) translateY(${scale > 1 ? -(scale - 1) * 22 : 0}px)`,

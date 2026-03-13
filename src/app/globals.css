@@ -18,6 +18,8 @@
   --menubar-border: #B0B0B0;
   --window-title-focused: linear-gradient(180deg, #E8E8E8 0%, #CFCFCF 45%, #B8B8B8 55%, #C8C8C8 100%);
   --window-title-unfocused: linear-gradient(180deg, #F0F0F0 0%, #E8E8E8 100%);
+  --window-title-text: rgba(0,0,0,0.85);
+  --window-title-text-inactive: rgba(0,0,0,0.35);
 
   /* User-configurable typography (defaults, overridden by SettingsProvider) */
   --user-font-family: "Lucida Grande", "Lucida Sans Unicode", "Helvetica Neue",
@@ -36,6 +38,10 @@
   --desktop-dock: rgba(40,40,44,0.35);
   --menubar-bg: rgba(40,40,44,0.92);
   --menubar-border: #444448;
+  --window-title-focused: linear-gradient(180deg, #4A4A4E 0%, #3A3A3E 45%, #323236 55%, #3E3E42 100%);
+  --window-title-unfocused: linear-gradient(180deg, #3A3A3E 0%, #323236 100%);
+  --window-title-text: rgba(255,255,255,0.85);
+  --window-title-text-inactive: rgba(255,255,255,0.35);
 }
 
 /* ============================================================================

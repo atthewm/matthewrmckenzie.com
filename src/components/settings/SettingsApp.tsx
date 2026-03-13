@@ -26,7 +26,7 @@ export default function SettingsApp() {
   return (
     <div className="flex flex-col h-full">
       {/* Tab bar */}
-      <div className="flex border-b border-gray-200 bg-gray-50 shrink-0">
+      <div className="flex border-b shrink-0" style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}>
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -34,8 +34,8 @@ export default function SettingsApp() {
             className={`
               flex-1 py-2 text-xs font-semibold text-center transition-colors
               ${activeTab === tab.id
-                ? "text-blue-600 border-b-2 border-blue-600 bg-white"
-                : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                ? "text-desktop-accent border-b-2 border-desktop-accent bg-desktop-surface"
+                : "text-desktop-text-secondary hover:text-desktop-text hover:bg-desktop-border/30"
               }
             `}
           >
@@ -51,7 +51,7 @@ export default function SettingsApp() {
         {activeTab === "typography" && <TypographyTab />}
 
         {/* Reset */}
-        <div className="pt-4 border-t border-gray-200">
+        <div className="pt-4 border-t" style={{ borderColor: "var(--desktop-border)" }}>
           <button
             onClick={resetSettings}
             className="text-xs text-red-500 hover:text-red-700 transition-colors"
@@ -80,22 +80,25 @@ function AppearanceTab() {
             className={`
               rounded-lg border text-left transition-all text-xs overflow-hidden
               ${settings.zenThemeId === theme.id
-                ? "border-blue-500 ring-2 ring-blue-500"
-                : "border-gray-200 hover:border-gray-300"
+                ? "border-desktop-accent ring-2 ring-desktop-accent"
+                : "hover:border-desktop-text-secondary"
               }
             `}
+            style={{ borderColor: settings.zenThemeId === theme.id ? undefined : "var(--desktop-border)" }}
           >
             {/* Thumbnail */}
             <div
-              className="w-full aspect-video bg-gradient-to-br from-blue-100 to-blue-200"
+              className="w-full aspect-video"
               style={theme.poster ? {
                 backgroundImage: `url(${theme.poster})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-              } : undefined}
+              } : {
+                background: "linear-gradient(135deg, var(--desktop-accent), var(--desktop-bg))",
+              }}
             />
             <div className="px-2 py-1.5">
-              <div className="font-semibold text-gray-800 text-[10px] truncate">{theme.name}</div>
+              <div className="font-semibold text-desktop-text text-[10px] truncate">{theme.name}</div>
             </div>
           </button>
         ))}
@@ -133,10 +136,11 @@ function AppearanceTab() {
             className={`
               px-3 py-1.5 rounded text-xs font-medium capitalize transition-all
               ${settings.iconSize === size
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-desktop-accent text-white"
+                : "text-desktop-text-secondary hover:text-desktop-text hover:bg-desktop-border/40"
               }
             `}
+            style={settings.iconSize !== size ? { background: "rgba(0,0,0,0.04)" } : undefined}
           >
             {size}
           </button>
@@ -177,7 +181,7 @@ function SoundTab() {
       />
 
       {!settings.userHasInteracted && (
-        <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
+        <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 p-2 rounded">
           Click or press a key anywhere first to enable audio playback (browser autoplay policy).
         </p>
       )}
@@ -205,7 +209,8 @@ function TypographyTab() {
       <select
         value={settings.fontFamily}
         onChange={(e) => updateSettings({ fontFamily: e.target.value as FontFamily })}
-        className="w-full text-xs border border-gray-200 rounded-lg p-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full text-xs border rounded-lg p-2 bg-desktop-surface text-desktop-text focus:outline-none focus:ring-2 focus:ring-desktop-accent"
+        style={{ borderColor: "var(--desktop-border)" }}
       >
         {fontOptions.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -235,10 +240,10 @@ function TypographyTab() {
       />
 
       {/* Preview */}
-      <div className="p-3 rounded-lg border border-gray-200 bg-white">
+      <div className="p-3 rounded-lg border bg-desktop-surface" style={{ borderColor: "var(--desktop-border)" }}>
         <SectionLabel>Preview</SectionLabel>
         <p
-          className="text-gray-700 mt-1"
+          className="text-desktop-text mt-1"
           style={{
             fontFamily: "var(--user-font-family)",
             fontSize: "var(--user-font-size)",
@@ -255,7 +260,7 @@ function TypographyTab() {
 // ---------- SHARED COMPONENTS ----------
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{children}</div>;
+  return <div className="text-[10px] font-bold uppercase tracking-wider text-desktop-text-secondary">{children}</div>;
 }
 
 function ToggleRow({
@@ -266,8 +271,8 @@ function ToggleRow({
   return (
     <div className="flex items-center justify-between gap-3">
       <div>
-        <div className="text-xs font-semibold text-gray-700">{label}</div>
-        {description && <div className="text-[10px] text-gray-400 mt-0.5">{description}</div>}
+        <div className="text-xs font-semibold text-desktop-text">{label}</div>
+        {description && <div className="text-[10px] text-desktop-text-secondary mt-0.5">{description}</div>}
       </div>
       <button
         role="switch"
@@ -275,8 +280,9 @@ function ToggleRow({
         onClick={() => onChange(!checked)}
         className={`
           relative w-9 h-5 rounded-full transition-colors shrink-0
-          ${checked ? "bg-blue-500" : "bg-gray-300"}
+          ${checked ? "bg-desktop-accent" : ""}
         `}
+        style={!checked ? { background: "var(--desktop-border)" } : undefined}
       >
         <span
           className={`
@@ -298,8 +304,8 @@ function SliderRow({
   return (
     <div className={disabled ? "opacity-40 pointer-events-none" : ""}>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold text-gray-700">{label}</span>
-        <span className="text-[10px] text-gray-400 tabular-nums">
+        <span className="text-xs font-semibold text-desktop-text">{label}</span>
+        <span className="text-[10px] text-desktop-text-secondary tabular-nums">
           {Number.isInteger(step) ? value : value.toFixed(1)}{unit || ""}
         </span>
       </div>
@@ -308,7 +314,8 @@ function SliderRow({
         min={min} max={max} step={step}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-blue-500"
+        className="w-full h-1 rounded-full appearance-none cursor-pointer accent-desktop-accent"
+        style={{ background: "var(--desktop-border)" }}
       />
     </div>
   );
