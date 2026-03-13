@@ -429,8 +429,8 @@ export default function MenuBar() {
       },
       {
         type: "action",
-        label: "Linktree",
-        action: () => openInBrowser("https://mckm.at/", "Linktree"),
+        label: "Links",
+        action: () => openInBrowser("https://mckm.at/", "Links"),
       },
       { type: "separator" },
       {

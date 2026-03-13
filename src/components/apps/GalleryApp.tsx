@@ -4,7 +4,7 @@ import React from "react";
 import { ImageIcon } from "lucide-react";
 
 // ============================================================================
-// GALLERY APP (ryOS iPhoto-Inspired)
+// GALLERY APP (McKenzie OS iPhoto-Inspired)
 // ============================================================================
 
 export default function GalleryApp() {
@@ -52,7 +52,7 @@ export default function GalleryApp() {
         className="shrink-0 h-[22px] flex items-center justify-center border-t text-[10px] text-desktop-text-secondary"
         style={{ borderColor: "var(--desktop-border)", background: "rgba(0,0,0,0.02)" }}
       >
-        Add photos to populate the gallery
+        Photos
       </div>
     </div>
   );

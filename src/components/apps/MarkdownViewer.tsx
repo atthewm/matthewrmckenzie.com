@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 
 // ============================================================================
-// MARKDOWN VIEWER (ryOS Document Viewer)
+// MARKDOWN VIEWER (McKenzie OS Document Viewer)
 // ============================================================================
 // Renders pre-processed HTML from markdown content inside windows.
 // Includes a subtle toolbar and footer bar like classic Mac document apps.

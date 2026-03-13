@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 // ============================================================================
-// ABOUT APP (ryOS "About This Mac" Style)
+// ABOUT APP (McKenzie OS "About This Mac" Style)
 // ============================================================================
 
 interface AboutAppProps {

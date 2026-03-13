@@ -5,7 +5,7 @@ import { soundcloudConfig } from "@/config/playlists";
 import { Volume2 } from "lucide-react";
 
 // ============================================================================
-// SOUNDCLOUD PLAYER (ryOS QuickTime-Inspired)
+// SOUNDCLOUD PLAYER (McKenzie OS QuickTime-Inspired)
 // ============================================================================
 
 export default function SoundCloudPlayer() {
@@ -27,7 +27,7 @@ export default function SoundCloudPlayer() {
       >
         <Volume2 size={11} className="text-gray-500 mr-1.5" />
         <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">
-          SoundCloud
+          Music
         </span>
       </div>
 

@@ -3,7 +3,7 @@
 import React from "react";
 
 // ============================================================================
-// PROJECTS APP (ryOS Retro Mac Style)
+// PROJECTS APP (McKenzie OS Panther Style)
 // ============================================================================
 // Clean document viewer with subtle toolbar and well-styled prose.
 // ============================================================================
@@ -24,7 +24,7 @@ export default function ProjectsApp({ contentHtml }: ProjectsAppProps) {
         }}
       >
         <span className="text-desktop-text-secondary font-medium uppercase tracking-wider">
-          Projects
+          Work
         </span>
       </div>
 
@@ -46,10 +46,7 @@ export default function ProjectsApp({ contentHtml }: ProjectsAppProps) {
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-desktop-text-secondary">
-            <p className="text-sm">No projects yet.</p>
-            <p className="text-[11px] mt-1 opacity-60">
-              Edit <code className="text-[10px] bg-desktop-border/30 px-1 py-0.5 rounded">src/content/projects.md</code> to add content.
-            </p>
+            <p className="text-sm">Content coming soon.</p>
           </div>
         )}
       </div>

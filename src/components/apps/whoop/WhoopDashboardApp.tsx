@@ -858,7 +858,7 @@ export default function WhoopDashboardApp() {
         }}
       >
         <span className="text-desktop-text-secondary font-medium uppercase tracking-wider">
-          WHOOP Health Monitor
+          WHOOP Dashboard
         </span>
         <div className="flex items-center gap-2">
           {!loading && isConnected && (
@@ -909,7 +909,7 @@ export default function WhoopDashboardApp() {
             </div>
             <div>
               <h1 className="text-[14px] font-semibold text-desktop-text leading-tight">
-                WHOOP Health Monitor
+                WHOOP Dashboard
               </h1>
               <p className="text-[11px] text-desktop-text-secondary">
                 {isConnected &&
