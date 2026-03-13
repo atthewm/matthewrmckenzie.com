@@ -93,6 +93,10 @@ export default function GatePage() {
               box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
             }
             .mck-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+            .mck-btn:focus-visible {
+              outline: none;
+              box-shadow: 0 0 0 3px rgba(0,113,227,0.5), 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.25);
+            }
           `,
         }}
       />
@@ -121,16 +125,16 @@ export default function GatePage() {
               Admin Login
             </p>
           </div>
-          <div style={{ width: "240px", height: "18px", borderRadius: "9px", overflow: "hidden", background: "#333", border: "1px solid #555", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.5)" }}>
+          <div style={{ width: "100%", maxWidth: "240px", height: "18px", borderRadius: "9px", overflow: "hidden", background: "#333", border: "1px solid #555", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.5)" }}>
             <div className="mck-progress" style={{ width: "100%", height: "100%", borderRadius: "9px" }} />
           </div>
           <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>Authentication required</p>
           {/* Login form -- requires credentials for all users */}
           <form onSubmit={handleLogin} className="mck-fade" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginTop: "24px" }}>
-            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
+            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
             {error && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: 0 }}>{error}</p>}
-            <button type="submit" disabled={loading} className="mck-btn" style={{ width: "220px", padding: "8px 0", fontSize: "13px", fontWeight: 500, marginTop: "4px" }}>{loading ? "Authenticating..." : "Log In"}</button>
+            <button type="submit" disabled={loading} className="mck-btn" style={{ width: "100%", maxWidth: "220px", padding: "8px 0", fontSize: "13px", fontWeight: 500, marginTop: "4px" }}>{loading ? "Authenticating..." : "Log In"}</button>
           </form>
         </div>
         <p style={{ position: "absolute", bottom: "20px", fontSize: "9px", color: "#333", letterSpacing: "1px" }}>&copy; 2026 McKENZIE_OS</p>
