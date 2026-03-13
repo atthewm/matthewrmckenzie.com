@@ -19,10 +19,18 @@ export default async function HomePage() {
       const slug = item.contentPath.replace(/\.md$/, "");
       const content = await getContent(slug);
       if (content) {
-        contentMap[item.id] = content.html;
+        // Downgrade h1→h2 so the homepage has a single sr-only H1
+        contentMap[item.id] = content.html
+          .replace(/<h1(\s|>)/g, "<h2$1")
+          .replace(/<\/h1>/g, "</h2>");
       }
     }
   }
 
-  return <DesktopShell contentMap={contentMap} />;
+  return (
+    <>
+      <h1 className="sr-only">Matthew McKenzie — Capital Formation & Growth Strategy</h1>
+      <DesktopShell contentMap={contentMap} />
+    </>
+  );
 }

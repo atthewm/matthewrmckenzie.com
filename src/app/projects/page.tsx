@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: "Projects — Selected Work & Case Studies",
   description: "Selected projects and case studies by Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
   alternates: { canonical: "/projects" },
+  openGraph: {
+    title: "Projects — Selected Work & Case Studies",
+    description: "Selected projects and case studies by Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
+  },
 };
 
 export default async function ProjectsPage() {

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s - Matthew McKenzie",
   },
   description:
-    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms. Explore projects, writing, recipes, and more.",
+    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms. Explore projects, writing, and recipes.",
   keywords: ["Matthew McKenzie", "personal site", "portfolio", "projects", "writing"],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
@@ -26,21 +26,14 @@ export const metadata: Metadata = {
     title: "Matthew McKenzie — Capital Formation & Growth Strategy",
     description:
       "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
-    images: [
-      {
-        url: "https://matthewrmckenzie.com/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Matthew McKenzie — Capital Formation & Growth Strategy",
-      },
-    ],
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Matthew McKenzie — Capital Formation & Growth Strategy",
     description:
       "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
-    images: ["https://matthewrmckenzie.com/og-image.png"],
+    images: ["/opengraph-image"],
   },
   alternates: {
     canonical: "https://matthewrmckenzie.com",
@@ -77,7 +70,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className="antialiased">
         <JsonLd data={personSchema} />
