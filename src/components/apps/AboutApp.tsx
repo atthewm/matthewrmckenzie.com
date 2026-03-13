@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { useDesktop } from "@/hooks/useDesktopStore";
 
 // ============================================================================
 // ABOUT APP (McKenzie OS "About This Mac" Style)
@@ -18,8 +19,39 @@ const systemInfo = [
   { label: "Source", value: "GitHub", href: "https://github.com/atthewm/matthewrmckenzie.com" },
 ];
 
+function useUptime() {
+  const startRef = useRef(Date.now());
+  const [uptime, setUptime] = useState("0s");
+
+  useEffect(() => {
+    function tick() {
+      const elapsed = Math.floor((Date.now() - startRef.current) / 1000);
+      if (elapsed < 60) {
+        setUptime(`${elapsed}s`);
+      } else if (elapsed < 3600) {
+        const m = Math.floor(elapsed / 60);
+        const s = elapsed % 60;
+        setUptime(`${m}m ${s}s`);
+      } else {
+        const h = Math.floor(elapsed / 3600);
+        const m = Math.floor((elapsed % 3600) / 60);
+        setUptime(`${h}h ${m}m`);
+      }
+    }
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return uptime;
+}
+
 export default function AboutApp({ contentHtml }: AboutAppProps) {
   const [showSystemInfo, setShowSystemInfo] = useState(false);
+  const { state } = useDesktop();
+  const uptime = useUptime();
+
+  const windowCount = Object.keys(state.windows).length;
 
   return (
     <div className="flex flex-col h-full">
@@ -59,6 +91,14 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
           <div className="flex justify-between mt-1">
             <span className="text-desktop-text-secondary">Stack</span>
             <span className="text-desktop-text font-medium">Next.js &middot; TypeScript</span>
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-desktop-text-secondary">Uptime</span>
+            <span className="text-desktop-text font-medium tabular-nums">{uptime}</span>
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-desktop-text-secondary">Windows Open</span>
+            <span className="text-desktop-text font-medium tabular-nums">{windowCount}</span>
           </div>
           <div className="flex justify-between mt-1">
             <span className="text-desktop-text-secondary">Status</span>

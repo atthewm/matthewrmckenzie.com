@@ -6,6 +6,7 @@ import Dock from "./Dock";
 import MenuBar from "./MenuBar";
 import ZenBackground from "./ZenBackground";
 import FloatingStickies from "./FloatingStickies";
+import ContextMenu, { type ContextMenuItem } from "./ContextMenu";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -34,6 +35,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const { revealed, reveal } = useSecrets();
   const [toast, setToast] = useState<string | null>(null);
   const [stickiesVisible, setStickiesVisible] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; items: ContextMenuItem[] } | null>(null);
 
   // Auto-open window from ?open= query param (e.g. /?open=about)
   useEffect(() => {
@@ -113,6 +115,51 @@ export default function Desktop({ contentMap }: DesktopProps) {
     }
   }, [dispatch, showSecretToast]);
 
+  // Right-click context menu on desktop
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    // Only on the desktop surface itself
+    if (e.target !== e.currentTarget) return;
+    e.preventDefault();
+
+    const items: ContextMenuItem[] = [
+      {
+        label: "New Sticky Note",
+        action: () => setStickiesVisible(true),
+      },
+      { label: "", separator: true },
+      {
+        label: "Change Background...",
+        shortcut: "⌘,",
+        action: () => {
+          const s = findFSItem("settings");
+          if (s) dispatch({ type: "OPEN_WINDOW", payload: { fsItem: s } });
+        },
+      },
+      {
+        label: "About This Mac",
+        action: () => {
+          const a = findFSItem("about");
+          if (a) dispatch({ type: "OPEN_WINDOW", payload: { fsItem: a } });
+        },
+      },
+      { label: "", separator: true },
+      {
+        label: "Close All Windows",
+        shortcut: "⌘H",
+        action: () => dispatch({ type: "CLOSE_ALL_WINDOWS" }),
+      },
+      {
+        label: "Open Terminal",
+        action: () => {
+          const t = findFSItem("terminal");
+          if (t) dispatch({ type: "OPEN_WINDOW", payload: { fsItem: t } });
+        },
+      },
+    ];
+
+    setContextMenu({ x: e.clientX, y: e.clientY, items });
+  }, [dispatch]);
+
   return (
     <div className="fixed inset-0 overflow-hidden">
       {/* Wallpaper background */}
@@ -121,10 +168,11 @@ export default function Desktop({ contentMap }: DesktopProps) {
       {/* Menu bar */}
       <MenuBar />
 
-      {/* Click on empty desktop to unfocus + easter egg */}
+      {/* Click on empty desktop to unfocus + easter egg + right-click */}
       <div
         className="absolute top-[26px] left-0 right-0 bottom-0"
         onClick={handleDesktopClick}
+        onContextMenu={handleContextMenu}
       />
 
       {/* Windows */}
@@ -135,6 +183,16 @@ export default function Desktop({ contentMap }: DesktopProps) {
 
       {/* Dock */}
       <Dock onStickiesToggle={() => setStickiesVisible((v) => !v)} stickiesActive={stickiesVisible} />
+
+      {/* Right-click context menu */}
+      {contextMenu && (
+        <ContextMenu
+          items={contextMenu.items}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+        />
+      )}
 
       {/* Toast notification */}
       {toast && (

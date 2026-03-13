@@ -26,6 +26,8 @@ import StickiesApp from "@/components/apps/StickiesApp";
 import GuestbookApp from "@/components/apps/GuestbookApp";
 import LinktreeApp from "@/components/apps/LinktreeApp";
 import ScheduleApp from "@/components/apps/ScheduleApp";
+import PhotoBoothApp from "@/components/apps/PhotoBoothApp";
+import IChatApp from "@/components/apps/IChatApp";
 
 interface WindowContentProps {
   windowState: WindowState;
@@ -54,6 +56,8 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   GuestbookApp,
   LinktreeApp,
   ScheduleApp,
+  PhotoBoothApp,
+  IChatApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {
