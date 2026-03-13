@@ -4,7 +4,7 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 
 export const metadata: Metadata = {
   title: "Writing",
-  description: "Essays, notes, and long-form writing by Matthew McKenzie.",
+  description: "Essays, notes, and long-form writing by Matthew McKenzie on capital formation, growth strategy, health, and building things that last.",
 };
 
 export default async function WritingPage() {

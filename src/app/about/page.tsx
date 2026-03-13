@@ -4,7 +4,7 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "About Matthew McKenzie - background, interests, and what I'm working on.",
+  description: "About Matthew McKenzie — background in capital formation and growth strategy, current interests, and what I'm working on right now.",
 };
 
 export default async function AboutPage() {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy policy for matthewrmckenzie.com",
+  description: "Privacy policy for matthewrmckenzie.com — how data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -42,9 +42,11 @@ export default function PrivacyPolicyPage() {
           Data Collected
         </h2>
         <p>
-          This site does not collect personal information from visitors. There
-          are no analytics trackers, advertising pixels, or third-party data
-          collection scripts. No cookies are set for visitor tracking.
+          This site uses Vercel Analytics to collect anonymized, aggregate
+          usage data such as page views and visitor counts. No personally
+          identifiable information is collected through analytics. There are no
+          advertising pixels or third-party data collection scripts. No cookies
+          are set for visitor tracking.
         </p>
       </section>
 
@@ -88,8 +90,9 @@ export default function PrivacyPolicyPage() {
           Third-Party Services
         </h2>
         <p>
-          This site is hosted on Vercel. Vercel may collect standard server logs
-          (IP addresses, request timestamps) as part of normal web hosting
+          This site is hosted on Vercel and uses Vercel Analytics for anonymized
+          usage metrics. Vercel may also collect standard server logs (IP
+          addresses, request timestamps) as part of normal web hosting
           operations. Refer to{" "}
           <a
             href="https://vercel.com/legal/privacy-policy"

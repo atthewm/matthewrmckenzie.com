@@ -4,7 +4,7 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Selected projects and case studies by Matthew McKenzie.",
+  description: "Selected projects and case studies by Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
 };
 
 export default async function ProjectsPage() {

@@ -4,7 +4,7 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with Matthew McKenzie.",
+  description: "Get in touch with Matthew McKenzie — reach out for investor relations, collaboration, press, speaking, or to schedule a call.",
 };
 
 export default async function ContactPage() {

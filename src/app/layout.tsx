@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: "%s - Matthew McKenzie",
   },
   description:
-    "Personal site of Matthew McKenzie - builder, thinker, maker. Explore projects, writing, and more.",
+    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms. Explore projects, writing, recipes, and more.",
   keywords: ["Matthew McKenzie", "personal site", "portfolio", "projects", "writing"],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
@@ -24,13 +24,13 @@ export const metadata: Metadata = {
     siteName: "Matthew McKenzie",
     title: "Matthew McKenzie",
     description:
-      "Personal site of Matthew McKenzie - builder, thinker, maker.",
+      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Matthew McKenzie",
     description:
-      "Personal site of Matthew McKenzie - builder, thinker, maker.",
+      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real asset backed consumer platforms.",
   },
   robots: {
     index: true,
