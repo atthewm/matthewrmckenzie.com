@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSettings, type FontFamily } from "@/hooks/useSettingsStore";
+import { useSettings, type FontFamily, type ScreensaverType } from "@/hooks/useSettingsStore";
 import { zenThemes } from "@/config/themes";
 
 // ============================================================================
@@ -146,6 +146,40 @@ function AppearanceTab() {
           </button>
         ))}
       </div>
+
+      <SectionLabel>Screensaver</SectionLabel>
+      <div className="grid grid-cols-3 gap-2">
+        {([
+          { id: "flurry" as ScreensaverType, label: "Flurry", desc: "Mac OS X classic" },
+          { id: "flying-toasters" as ScreensaverType, label: "Flying Toasters", desc: "After Dark" },
+          { id: "none" as ScreensaverType, label: "None", desc: "Disabled" },
+        ]).map((saver) => (
+          <button
+            key={saver.id}
+            onClick={() => updateSettings({ screensaverType: saver.id })}
+            className={`
+              rounded-lg border p-2 text-left transition-all text-xs
+              ${settings.screensaverType === saver.id
+                ? "border-desktop-accent ring-2 ring-desktop-accent"
+                : "hover:border-desktop-text-secondary"
+              }
+            `}
+            style={{ borderColor: settings.screensaverType === saver.id ? undefined : "var(--desktop-border)" }}
+          >
+            <div className="font-semibold text-desktop-text text-[10px]">{saver.label}</div>
+            <div className="text-[9px] text-desktop-text-secondary mt-0.5">{saver.desc}</div>
+          </button>
+        ))}
+      </div>
+
+      <SliderRow
+        label="Idle Timeout"
+        value={settings.screensaverTimeout}
+        min={1} max={10} step={1}
+        unit=" min"
+        onChange={(v) => updateSettings({ screensaverTimeout: v })}
+        disabled={settings.screensaverType === "none"}
+      />
     </div>
   );
 }

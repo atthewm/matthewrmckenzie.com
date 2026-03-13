@@ -14,6 +14,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef } f
 // ---------------------------------------------------------------------------
 
 export type FontFamily = "system" | "Georgia" | "Times" | "Verdana" | "Trebuchet" | "Courier";
+export type ScreensaverType = "flying-toasters" | "flurry" | "none";
 
 export interface SettingsState {
   // Appearance
@@ -35,6 +36,10 @@ export interface SettingsState {
   lineHeight: number;       // 1.4 to 1.8
   highContrast: boolean;
 
+  // Screensaver
+  screensaverType: ScreensaverType;
+  screensaverTimeout: number; // minutes
+
   // Internal
   userHasInteracted: boolean;
 }
@@ -55,6 +60,9 @@ export const defaultSettings: SettingsState = {
   fontSize: 14,
   lineHeight: 1.6,
   highContrast: false,
+
+  screensaverType: "flurry",
+  screensaverTimeout: 3,
 
   userHasInteracted: false,
 };
