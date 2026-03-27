@@ -46,8 +46,8 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const DESKTOP_ICON_IDS = [
     // Right column — key items
     "now", "recipes", "health", "apple-music",
-    // Second column — games & extras
-    "chess", "minesweeper", "photo-booth",
+    // Second column — projects & extras
+    "github-projects", "chess", "minesweeper", "photo-booth",
   ];
   const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
 

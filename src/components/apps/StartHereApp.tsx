@@ -23,6 +23,7 @@ const exploreLinks = [
   { id: "music", label: "Music" },
   { id: "recipes", label: "Recipes" },
   { id: "health", label: "Health" },
+  { id: "github-projects", label: "GitHub" },
   { id: "ichat", label: "iChat" },
   { id: "chess", label: "Chess" },
 ];
