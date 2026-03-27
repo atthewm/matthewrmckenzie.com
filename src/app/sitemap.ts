@@ -2,48 +2,48 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://matthewrmckenzie.com";
-  const updated = "2026-03-13";
+  const now = new Date().toISOString().split("T")[0];
 
   return [
     {
       url: baseUrl,
-      lastModified: updated,
-      changeFrequency: "monthly",
+      lastModified: now,
+      changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: updated,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/work`,
-      lastModified: updated,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: updated,
+      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.5,
     },
     {
       url: `${baseUrl}/writing`,
-      lastModified: updated,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/projects`,
-      lastModified: updated,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: updated,
+      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,
     },

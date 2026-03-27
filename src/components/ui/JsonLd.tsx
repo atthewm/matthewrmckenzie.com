@@ -26,11 +26,23 @@ export const personSchema = {
   "@type": "Person",
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
+  image: "https://matthewrmckenzie.com/opengraph-image",
   jobTitle: "Vice President, Investor Relations",
   worksFor: {
     "@type": "Organization",
     name: "Civitas Capital Group",
+    url: "https://civitascapital.com",
   },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Southern Methodist University",
+  },
+  knowsAbout: [
+    "Capital Formation",
+    "Investor Relations",
+    "Growth Strategy",
+    "Real Estate Investment",
+  ],
   sameAs: [
     "https://www.linkedin.com/in/mrmckenzie/",
     "https://github.com/atthewm",
@@ -43,7 +55,25 @@ export const websiteSchema = {
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
   description:
-    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
+    "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
+  publisher: {
+    "@type": "Person",
+    name: "Matthew McKenzie",
+    url: "https://matthewrmckenzie.com",
+  },
+};
+
+export const profilePageSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  mainEntity: {
+    "@type": "Person",
+    name: "Matthew McKenzie",
+    url: "https://matthewrmckenzie.com",
+    jobTitle: "Vice President, Investor Relations",
+  },
+  dateCreated: "2026-01-01",
+  dateModified: "2026-03-26",
 };
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {

@@ -25,6 +25,14 @@ const navLinks = [
 export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
   return (
     <div className="min-h-screen bg-desktop-bg text-desktop-text">
+      {/* Skip to content link for keyboard/screen reader users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-desktop-accent focus:text-white focus:px-4 focus:py-2 focus:rounded focus:text-sm"
+      >
+        Skip to content
+      </a>
+
       {/* Nav */}
       <header className="border-b border-desktop-border bg-desktop-surface">
         <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
@@ -34,7 +42,7 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
           >
             Matthew McKenzie
           </Link>
-          <nav className="flex items-center gap-4">
+          <nav aria-label="Main navigation" className="flex items-center gap-4">
             {navLinks.slice(1).map((link) => (
               <Link
                 key={link.href}
@@ -49,7 +57,7 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
       </header>
 
       {/* Content */}
-      <main className="max-w-2xl mx-auto px-5 py-10 bg-desktop-surface rounded-b-lg min-h-[60vh]">
+      <main id="main-content" className="max-w-2xl mx-auto px-5 py-10 bg-desktop-surface rounded-b-lg min-h-[60vh]">
         {children}
       </main>
 
@@ -57,7 +65,7 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
       <footer className="border-t border-desktop-border mt-16 bg-desktop-surface">
         <div className="max-w-2xl mx-auto px-5 py-6 text-xs text-desktop-text-secondary">
           <p>&copy; {new Date().getFullYear()} Matthew McKenzie. All rights reserved.</p>
-          <div className="mt-1 flex items-center gap-3 flex-wrap">
+          <nav aria-label="Footer navigation" className="mt-1 flex items-center gap-3 flex-wrap">
             <Link href="/" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
               Back to desktop view
             </Link>
@@ -73,7 +81,7 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
             <Link href="/privacy" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
               Privacy
             </Link>
-          </div>
+          </nav>
         </div>
       </footer>
     </div>

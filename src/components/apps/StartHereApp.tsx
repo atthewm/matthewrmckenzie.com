@@ -28,8 +28,8 @@ const exploreLinks = [
 ];
 
 const tips = [
-  "⌘+Space — Spotlight search to find anything",
-  "F9 — Exposé to see all open windows",
+  "⌘+Space: Spotlight search to find anything",
+  "F9: Exposé to see all open windows",
   "Right-click the desktop for quick actions",
   "Drag the desktop icons to rearrange them",
   "Try typing \"coffee\" in Terminal",

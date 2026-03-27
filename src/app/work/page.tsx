@@ -4,12 +4,12 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Work — Capital Formation & Growth Strategy",
-  description: "Professional work by Matthew McKenzie — capital formation, investor relations, growth strategy, and selected projects in real estate and consumer platforms.",
+  title: "Work | Capital Formation & Growth Strategy",
+  description: "Professional work by Matthew McKenzie. Capital formation, investor relations, growth strategy, and selected projects in real estate and consumer platforms.",
   alternates: { canonical: "/work" },
   openGraph: {
-    title: "Work — Capital Formation & Growth Strategy",
-    description: "Professional work by Matthew McKenzie — capital formation, investor relations, growth strategy, and selected projects in real estate and consumer platforms.",
+    title: "Work | Capital Formation & Growth Strategy",
+    description: "Professional work by Matthew McKenzie. Capital formation, investor relations, growth strategy, and selected projects in real estate and consumer platforms.",
   },
 };
 

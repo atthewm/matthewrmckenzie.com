@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
-import JsonLd, { personSchema, websiteSchema } from "@/components/ui/JsonLd";
+import JsonLd, { personSchema, websiteSchema, profilePageSchema } from "@/components/ui/JsonLd";
 import "./globals.css";
 
 // ============================================================================
@@ -10,12 +10,20 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://matthewrmckenzie.com"),
   title: {
-    default: "Matthew McKenzie — Capital Formation & Growth Strategy",
-    template: "%s - Matthew McKenzie",
+    default: "Matthew McKenzie | Capital Formation & Growth Strategy",
+    template: "%s | Matthew McKenzie",
   },
   description:
-    "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms. Explore projects, writing, and recipes.",
-  keywords: ["Matthew McKenzie", "personal site", "portfolio", "projects", "writing"],
+    "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms. Explore projects, writing, and recipes.",
+  keywords: [
+    "Matthew McKenzie",
+    "capital formation",
+    "growth strategy",
+    "investor relations",
+    "real estate",
+    "Civitas Capital Group",
+    "Remote Coffee",
+  ],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
   openGraph: {
@@ -23,16 +31,16 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://matthewrmckenzie.com",
     siteName: "Matthew McKenzie",
-    title: "Matthew McKenzie — Capital Formation & Growth Strategy",
+    title: "Matthew McKenzie | Capital Formation & Growth Strategy",
     description:
-      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
+      "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
     images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Matthew McKenzie — Capital Formation & Growth Strategy",
+    title: "Matthew McKenzie | Capital Formation & Growth Strategy",
     description:
-      "Personal site of Matthew McKenzie — capital formation, growth strategy, and real-asset-backed consumer platforms.",
+      "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
     images: ["/opengraph-image"],
   },
   alternates: {
@@ -71,10 +79,20 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="antialiased">
         <JsonLd data={personSchema} />
         <JsonLd data={websiteSchema} />
+        <JsonLd data={profilePageSchema} />
         {children}
         <Analytics />
       </body>

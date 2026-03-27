@@ -66,6 +66,7 @@ export const fileSystem: FSItem[] = [
     { id: "github", name: "GitHub", type: "link", icon: "Github", href: "https://github.com/atthewm", description: "View code on GitHub." },
   ]},
   { id: "linktree", name: "Links", type: "app", icon: "Link", appComponent: "LinktreeApp", description: "All links in one place.", defaultSize: { width: 400, height: 520 } },
+  { id: "url-shortener", name: "URL Shortener", type: "app", icon: "Link2", appComponent: "UrlShortenerApp", description: "Create and manage short links at mckm.at.", defaultSize: { width: 440, height: 520 } },
   { id: "schedule", name: "Schedule", type: "app", icon: "Calendar", appComponent: "ScheduleApp", description: "Book a meeting.", defaultSize: { width: 800, height: 600 } },
   // Hidden items - revealed by easter eggs
   { id: "secrets", name: "Secrets", type: "folder", icon: "Lock", hidden: true, description: "You found the hidden folder.", children: [

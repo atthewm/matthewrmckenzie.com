@@ -6,7 +6,7 @@ title: Secrets
 
 Congrats on discovering the Secrets folder. Not many people make it here.
 
-This is a hidden corner of McKenzie OS. More secrets will appear over time — keep exploring.
+This is a hidden corner of McKenzie OS. More secrets will appear over time. Keep exploring.
 
 ## How to get here
 

@@ -131,8 +131,8 @@ export default function GatePage() {
           <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>Authentication required</p>
           {/* Login form -- requires credentials for all users */}
           <form onSubmit={handleLogin} className="mck-fade" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginTop: "24px" }}>
-            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
+            <input type="text" placeholder="Username" aria-label="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
+            <input type="password" placeholder="Password" aria-label="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
             {error && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: 0 }}>{error}</p>}
             <button type="submit" disabled={loading} className="mck-btn" style={{ width: "100%", maxWidth: "220px", padding: "8px 0", fontSize: "13px", fontWeight: 500, marginTop: "4px" }}>{loading ? "Authenticating..." : "Log In"}</button>
           </form>

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Matthew McKenzie — Capital Formation & Growth Strategy";
+export const alt = "Matthew McKenzie | Capital Formation & Growth Strategy";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -46,9 +46,19 @@ export default function OGImage() {
         </div>
         <div
           style={{
-            fontSize: 14,
-            color: "#555",
-            marginTop: 40,
+            fontSize: 16,
+            color: "#666",
+            marginTop: 32,
+            letterSpacing: "1px",
+          }}
+        >
+          Matthew McKenzie
+        </div>
+        <div
+          style={{
+            fontSize: 12,
+            color: "#444",
+            marginTop: 8,
             letterSpacing: "3px",
             textTransform: "uppercase",
           }}

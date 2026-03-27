@@ -316,7 +316,7 @@ export default function TerminalApp() {
           if (coffeeItem) {
             setTimeout(() => openItem(coffeeItem), 500);
           } else {
-            addOutput("Menu unavailable — discover the Secrets folder first!");
+            addOutput("Menu unavailable. Discover the Secrets folder first!");
           }
           break;
         }

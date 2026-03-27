@@ -4,12 +4,12 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 
 export const metadata: Metadata = {
-  title: "About — Background & Current Work",
-  description: "About Matthew McKenzie — background in capital formation and growth strategy, current interests, and what I'm working on right now.",
+  title: "About | Background & Current Work",
+  description: "About Matthew McKenzie. Background in capital formation and growth strategy, current interests, and what he is working on right now.",
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About — Background & Current Work",
-    description: "About Matthew McKenzie — background in capital formation and growth strategy, current interests, and what I'm working on right now.",
+    title: "About | Background & Current Work",
+    description: "About Matthew McKenzie. Background in capital formation and growth strategy, current interests, and what he is working on right now.",
   },
 };
 
