@@ -5,6 +5,7 @@ import { dockItemIds, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { getPantherIcon } from "./PantherIcons";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
 // DOCK - Mac OS X 10.3 Panther Style Launcher
@@ -197,6 +198,7 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
   }, []);
 
   const handleClick = useCallback((item: FSItem) => {
+    trackEvent("app_opened", { app: item.id, source: "dock" });
     // Stickies: toggle floating stickies instead of opening a window
     if (item.id === "stickies" && onStickiesToggle) {
       onStickiesToggle();

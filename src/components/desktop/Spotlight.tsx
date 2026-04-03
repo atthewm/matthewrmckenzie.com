@@ -4,6 +4,7 @@ import React, { useState, useCallback, useEffect, useRef, useMemo } from "react"
 import { flattenFS, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { getPantherIconPath } from "./PantherIcons";
+import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
 // SPOTLIGHT SEARCH (Mac OS X 10.4 style, brought to Panther)
@@ -58,6 +59,7 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
   }, [results.length]);
 
   const openItem = useCallback((item: FSItem) => {
+    trackEvent("app_opened", { app: item.id, source: "spotlight" });
     if (item.type === "link" && item.href) {
       window.open(item.href, "_blank", "noopener,noreferrer");
     } else {

@@ -5,6 +5,7 @@ import type { FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 import { PantherIcon } from "./PantherIcons";
+import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
 // DESKTOP ICON (Mac OS X 10.3 Panther) - Draggable
@@ -31,6 +32,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
 
   const handleOpen = useCallback(() => {
     if (didDrag.current) return; // Ignore if we just finished dragging
+    trackEvent("app_opened", { app: item.id, source: "desktop_icon" });
     if (item.type === "link" && item.href) {
       window.open(item.href, "_blank", "noopener,noreferrer");
       return;

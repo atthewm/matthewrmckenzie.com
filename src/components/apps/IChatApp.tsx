@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
 // iCHAT APP — Classic iChat/AIM-Styled AI Chatbot
@@ -61,6 +62,7 @@ export default function IChatApp() {
     setInput("");
     setLoading(true);
     setError(null);
+    trackEvent("ichat_message_sent");
 
     try {
       const res = await fetch("/api/chat", {

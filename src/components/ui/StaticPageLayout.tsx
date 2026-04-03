@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import CtaBlock from "./CtaBlock";
 
 // ============================================================================
 // STATIC PAGE LAYOUT
@@ -61,13 +62,24 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
         {children}
       </main>
 
+      {/* CTA Block (client component for analytics tracking) */}
+      <CtaBlock />
+
       {/* Footer */}
-      <footer className="border-t border-desktop-border mt-16 bg-desktop-surface">
+      <footer className="border-t border-desktop-border mt-10 bg-desktop-surface">
         <div className="max-w-2xl mx-auto px-5 py-6 text-xs text-desktop-text-secondary">
           <p>&copy; {new Date().getFullYear()} Matthew McKenzie. All rights reserved.</p>
           <nav aria-label="Footer navigation" className="mt-1 flex items-center gap-3 flex-wrap">
             <Link href="/" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
               Back to desktop view
+            </Link>
+            <span className="text-desktop-border">|</span>
+            <Link href="/about" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
+              About
+            </Link>
+            <span className="text-desktop-border">|</span>
+            <Link href="/work" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
+              Work
             </Link>
             <span className="text-desktop-border">|</span>
             <Link href="/writing" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">

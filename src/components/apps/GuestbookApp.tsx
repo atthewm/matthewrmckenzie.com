@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Send, Check, X as XIcon } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
 // GUESTBOOK APP (Mac OS X 10.3 Panther Style)
@@ -59,6 +60,7 @@ export default function GuestbookApp() {
 
       if (res.ok) {
         setStatus("sent");
+        trackEvent("guestbook_signed");
         setName("");
         setMessage("");
         // Don't reload - entry is unapproved
