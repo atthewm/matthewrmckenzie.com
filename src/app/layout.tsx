@@ -14,15 +14,20 @@ export const metadata: Metadata = {
     template: "%s | Matthew McKenzie",
   },
   description:
-    "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms. Explore projects, writing, and recipes.",
+    "Matthew McKenzie structures capital partnerships and growth strategy for real asset backed businesses. Vice President of Investor Relations at Civitas Capital Group. Head of Capital Formation at Remote Coffee.",
   keywords: [
     "Matthew McKenzie",
     "capital formation",
     "growth strategy",
     "investor relations",
     "real estate",
+    "alternative investments",
     "Civitas Capital Group",
     "Remote Coffee",
+    "family office",
+    "UHNW investors",
+    "AI operations",
+    "MCP server",
   ],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
@@ -33,14 +38,14 @@ export const metadata: Metadata = {
     siteName: "Matthew McKenzie",
     title: "Matthew McKenzie | Capital Formation & Growth Strategy",
     description:
-      "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
+      "Matthew McKenzie structures capital partnerships and growth strategy for real asset backed businesses. Civitas Capital Group. Remote Coffee.",
     images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Matthew McKenzie | Capital Formation & Growth Strategy",
     description:
-      "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
+      "Matthew McKenzie structures capital partnerships and growth strategy for real asset backed businesses. Civitas Capital Group. Remote Coffee.",
     images: ["/opengraph-image"],
   },
   alternates: {
@@ -80,6 +85,8 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="alternate" type="application/rss+xml" title="Matthew McKenzie" href="/feed.xml" />
+        <link rel="alternate" type="text/plain" title="LLM Context" href="/llms.txt" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="preload"

@@ -1,0 +1,44 @@
+# Matthew McKenzie
+
+> Capital formation, growth strategy, and AI operations tooling for real asset backed businesses.
+
+## Who is Matthew McKenzie?
+
+Matthew McKenzie is Vice President of Investor Relations at Civitas Capital Group and Head of Capital Formation and Strategy at Remote Coffee. He structures capital partnerships and growth strategy for real asset backed businesses, working across both debt and equity with family offices, UHNW investors, and institutional groups globally.
+
+He also builds production AI tooling that connects natural language interfaces to restaurant and hospitality operations platforms.
+
+## Professional Background
+
+- Over nine years at Civitas Capital Group in capital formation and investor relations
+- Manages investor relationships across North America, the Middle East, and Asia
+- Leads capital formation and growth strategy at Remote Coffee (Austin, Texas)
+- Builds MCP servers and Microsoft Teams bots for restaurant operations (Toast, MarginEdge)
+- BSc/BA from Southern Methodist University (Economics, Public Policy, Political Science, Photography)
+
+## Key Pages
+
+- About: https://matthewrmckenzie.com/about
+- Work: https://matthewrmckenzie.com/work
+- Projects: https://matthewrmckenzie.com/projects
+- Writing: https://matthewrmckenzie.com/writing
+- Contact: https://matthewrmckenzie.com/contact
+
+## Open Source Projects
+
+- Toast MCP Server: https://github.com/atthewm/toast-mcp-server
+- Toast Teams Bot: https://github.com/atthewm/toast-teams-bot
+- MarginEdge MCP Server: https://github.com/atthewm/marginedge-mcp-server
+- MarginEdge Teams Bot: https://github.com/atthewm/marginedge-teams-bot
+- Cosmos Collector: https://github.com/atthewm/cosmos-collector
+
+## Social
+
+- LinkedIn: https://www.linkedin.com/in/mrmckenzie/
+- GitHub: https://github.com/atthewm
+- Instagram: https://www.instagram.com/mrem/
+
+## Contact
+
+- Email: matthew.mckenzie@mac.com
+- Schedule a call: https://cal.com/mattmck/site

@@ -87,7 +87,7 @@ export default function MobileView({ contentMap }: MobileViewProps) {
         {/* Header */}
         <div className="px-5 pt-8 pb-4">
           <h1 className="text-white text-xl font-semibold">Matthew McKenzie</h1>
-          <p className="text-white/60 text-sm mt-0.5">Explore</p>
+          <p className="text-white/60 text-sm mt-0.5">Capital Formation &amp; Growth Strategy</p>
         </div>
 
         {/* Grid */}

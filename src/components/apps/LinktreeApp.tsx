@@ -113,16 +113,17 @@ export default function LinktreeApp() {
         <div className="max-w-[380px] mx-auto">
           {/* Profile header */}
           <div className="text-center mb-5">
-            <div
-              className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-white text-lg font-bold"
+            <img
+              src="/headshot.jpg"
+              alt="Matthew McKenzie"
+              width={64}
+              height={64}
+              className="w-16 h-16 mx-auto rounded-full object-cover"
               style={{
-                background: "linear-gradient(135deg, #7eb8da 0%, #5080a8 100%)",
                 boxShadow: "0 3px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)",
                 border: "2px solid rgba(255,255,255,0.2)",
               }}
-            >
-              MM
-            </div>
+            />
             <h2
               className="text-[15px] font-semibold mt-2.5"
               style={{ color: "var(--desktop-text)" }}

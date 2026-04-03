@@ -4,6 +4,6 @@ title: Essays
 
 # Essays
 
-Longer pieces on capital markets, consumer platforms, and the things I spend time thinking about.
+Longer pieces on capital formation, growth strategy, AI operations, and building durable businesses.
 
-New essays are in the works. Check back soon.
+New essays are in the works. In the meantime, shorter observations are on [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).

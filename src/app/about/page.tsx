@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
+import AffiliationRow from "@/components/ui/AffiliationRow";
 
 export const metadata: Metadata = {
-  title: "About | Background & Current Work",
-  description: "About Matthew McKenzie. Background in capital formation and growth strategy, current interests, and what he is working on right now.",
+  title: "About | Capital Formation, Growth Strategy, AI Operations",
+  description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. Growth strategy at Remote Coffee. AI operations tooling for restaurant teams.",
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About | Background & Current Work",
-    description: "About Matthew McKenzie. Background in capital formation and growth strategy, current interests, and what he is working on right now.",
+    title: "About | Capital Formation, Growth Strategy, AI Operations",
+    description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. Growth strategy at Remote Coffee. AI operations tooling for restaurant teams.",
   },
 };
 
@@ -32,6 +33,7 @@ export default async function AboutPage() {
       ) : (
         <p className="text-desktop-text-secondary">Content coming soon.</p>
       )}
+      <AffiliationRow />
     </StaticPageLayout>
   );
 }

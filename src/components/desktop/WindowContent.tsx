@@ -33,6 +33,7 @@ import MinesweeperApp from "@/components/apps/MinesweeperApp";
 import RemoteCoffeeApp from "@/components/apps/RemoteCoffeeApp";
 import UrlShortenerApp from "@/components/apps/UrlShortenerApp";
 import GitHubApp from "@/components/apps/GitHubApp";
+import WhatsNewApp from "@/components/apps/WhatsNewApp";
 
 interface WindowContentProps {
   windowState: WindowState;
@@ -68,6 +69,7 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   RemoteCoffeeApp,
   UrlShortenerApp,
   GitHubApp,
+  WhatsNewApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {

@@ -34,6 +34,7 @@ const iconMap: Record<string, string> = {
   "chess":          "generic-application.png",
   "minesweeper":    "calculator.png",
   "github-projects":"terminal.png",
+  "whats-new":      "sherlock.png",
 
   // Media
   "photos":         "iphoto.png",

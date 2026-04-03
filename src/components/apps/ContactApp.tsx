@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Send, Calendar, Mail, Link2 } from "lucide-react";
 import { useOpenInBrowser } from "@/lib/browserStore";
+import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
 // CONTACT APP (Mac OS X 10.3 Panther Style)
@@ -10,11 +11,11 @@ import { useOpenInBrowser } from "@/lib/browserStore";
 // Form + quick action buttons. Posts to /api/contact (Supabase).
 // ============================================================================
 
-const CATEGORIES = ["Investor", "Collaboration", "Press", "Speaking", "Other"];
+const CATEGORIES = ["Investor or Allocator", "Founder or Operator", "AI and Operations", "Press or Speaking", "General"];
 
 export default function ContactApp() {
   const openInBrowser = useOpenInBrowser();
-  const [category, setCategory] = useState("Other");
+  const [category, setCategory] = useState("General");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -43,6 +44,7 @@ export default function ContactApp() {
 
       if (res.ok) {
         setStatus("sent");
+        trackEvent("contact_form_submitted", { category });
         setName("");
         setEmail("");
         setMessage("");
@@ -186,7 +188,10 @@ export default function ContactApp() {
         style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
         <button
-          onClick={() => openInBrowser("https://cal.com/mattmck/site", "Schedule")}
+          onClick={() => {
+            trackEvent("contact_schedule_clicked");
+            openInBrowser("https://cal.com/mattmck/site", "Schedule");
+          }}
           className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-medium
                      text-desktop-text hover:bg-desktop-border/50 transition-colors"
           style={{ border: "1px solid var(--desktop-border)" }}
@@ -195,7 +200,10 @@ export default function ContactApp() {
           Schedule
         </button>
         <button
-          onClick={handleCopyEmail}
+          onClick={() => {
+            handleCopyEmail();
+            trackEvent("contact_email_copied");
+          }}
           className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-medium
                      text-desktop-text hover:bg-desktop-border/50 transition-colors"
           style={{ border: "1px solid var(--desktop-border)" }}

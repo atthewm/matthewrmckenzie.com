@@ -4,12 +4,12 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Writing | Essays & Notes",
-  description: "Essays, notes, and longer form writing by Matthew McKenzie on capital formation, growth strategy, health, and building things that last.",
+  title: "Writing | Capital Formation, Growth Strategy, AI Operations",
+  description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, AI operations, and building durable businesses.",
   alternates: { canonical: "/writing" },
   openGraph: {
-    title: "Writing | Essays & Notes",
-    description: "Essays, notes, and longer form writing by Matthew McKenzie on capital formation, growth strategy, health, and building things that last.",
+    title: "Writing | Capital Formation, Growth Strategy, AI Operations",
+    description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, AI operations, and building durable businesses.",
   },
 };
 

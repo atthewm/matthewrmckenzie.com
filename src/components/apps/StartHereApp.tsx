@@ -24,6 +24,7 @@ const exploreLinks = [
   { id: "recipes", label: "Recipes" },
   { id: "health", label: "Health" },
   { id: "github-projects", label: "GitHub" },
+  { id: "whats-new", label: "What's New" },
   { id: "ichat", label: "iChat" },
   { id: "chess", label: "Chess" },
 ];

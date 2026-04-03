@@ -6,19 +6,19 @@ title: Resume
 
 ## Matthew McKenzie
 
-Capital Formation and Growth Strategy
+Capital Formation, Growth Strategy, and AI Operations
 
 ### Experience
-
-**Remote Coffee** | Head of Capital Formation and Strategy
-*October 2025 to Present*
-
-Growth strategy and capital formation for an early stage consumer platform.
 
 **Civitas Capital Group** | Vice President, Investor Relations
 *December 2022 to Present*
 
-Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Manage relationships with family offices, UHNW investors, and institutional groups across both debt and equity.
+Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Manage relationships with family offices, UHNW investors, and institutional groups globally across both debt and equity.
+
+**Remote Coffee** | Head of Capital Formation and Strategy
+*October 2025 to Present*
+
+Growth strategy and capital formation for an early stage consumer platform in Austin, Texas.
 
 **Civitas Capital Group** | Investor Relations Associate
 *January 2019 to December 2022*
@@ -38,8 +38,6 @@ Mechanical Engineering, Economics
 
 ### Skills
 
-Capital Formation, Investor Relations, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting
-
----
+Capital Formation, Investor Relations, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting, AI Operations, Platform Development
 
 *For a full overview, visit [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).*

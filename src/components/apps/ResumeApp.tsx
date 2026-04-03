@@ -30,59 +30,59 @@ matthew.mckenzie@mac.com
 
 LOCATION:   Texas, USA
 FOCUS:      Capital formation, growth strategy,
-            real-asset-backed consumer platforms
+            real asset backed businesses
 
-----------------------------------------------------------
+==========================================================
 EXPERIENCE
-----------------------------------------------------------
+==========================================================
 
 Vice President, Investor Relations
 Civitas Capital Group
-December 2022 - Present
-- Capital formation for an alternative investment
-  manager focused on U.S. real estate
-- Manage relationships with family offices, UHNW
-  investors, and institutional groups globally
-- Work across both debt and equity structures
+December 2022 to Present
+  Capital formation for an alternative investment
+  manager focused on niche U.S. real estate.
+  Manage relationships with family offices, UHNW
+  investors, and institutional groups globally.
+  Work across both debt and equity structures.
 
 Investor Relations Associate
 Civitas Capital Group
-January 2019 - December 2022
+January 2019 to December 2022
 
 Investor Relations Analyst
 Civitas Capital Group
-May 2016 - December 2018
+May 2016 to December 2018
 
 Head of Capital Formation & Strategy
-Remote Coffee (Part-time)
-October 2025 - Present
-- Growth strategy and capital formation for an
-  early-stage consumer platform
+Remote Coffee
+October 2025 to Present
+  Growth strategy and capital formation for an
+  early stage consumer platform in Austin, Texas.
 
-----------------------------------------------------------
+==========================================================
 EDUCATION
-----------------------------------------------------------
+==========================================================
 
 Southern Methodist University (SMU)
-BSc, BA - Economics, Public Policy, Political Science,
+BSc, BA: Economics, Public Policy, Political Science,
 Photography
-2008 - 2012
+2008 to 2012
 
 Villanova University
 Mechanical Engineering, Economics
-2006 - 2008
+2006 to 2008
 
-----------------------------------------------------------
+==========================================================
 SKILLS
-----------------------------------------------------------
+==========================================================
 
 Capital Formation, Investor Relations, Real Estate,
 Deal Structuring, Business Development, Growth Strategy,
-Underwriting, Platform Development
+Underwriting, AI Operations, Platform Development
 
-----------------------------------------------------------
+==========================================================
 LINKS
-----------------------------------------------------------
+==========================================================
 
 LinkedIn:  linkedin.com/in/mrmckenzie
 GitHub:    github.com/atthewm

@@ -321,6 +321,31 @@ export default function TerminalApp() {
           break;
         }
 
+        case "github":
+        case "gh":
+        case "repos": {
+          addOutput("Opening GitHub projects...");
+          const ghItem = findFSItem("github-projects");
+          if (ghItem) setTimeout(() => openItem(ghItem), 300);
+          break;
+        }
+
+        case "links":
+        case "bio": {
+          addOutput("Opening link bio...");
+          const linksItem = findFSItem("linktree");
+          if (linksItem) setTimeout(() => openItem(linksItem), 300);
+          break;
+        }
+
+        case "changelog":
+        case "whatsnew": {
+          addOutput("Opening changelog...");
+          const wnItem = findFSItem("whats-new");
+          if (wnItem) setTimeout(() => openItem(wnItem), 300);
+          break;
+        }
+
         default:
           addOutput(`${cmd}: command not found`);
       }

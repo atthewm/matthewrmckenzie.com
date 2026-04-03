@@ -31,22 +31,42 @@ export default async function HomePage() {
     <>
       <h1 className="sr-only">Matthew McKenzie | Capital Formation & Growth Strategy</h1>
       <DesktopShell contentMap={contentMap} />
-      {/* Crawler / noscript fallback: visible text for search engines and users without JS */}
+      {/* Crawler / noscript fallback: structured content for search engines and users without JS */}
       <noscript>
         <div style={{ maxWidth: 640, margin: "0 auto", padding: "48px 24px", fontFamily: "system-ui, sans-serif", color: "#1a1a1a" }}>
-          <p style={{ fontSize: 14, lineHeight: 1.7 }}>
-            Matthew McKenzie operates at the intersection of capital formation, growth strategy, and
-            real asset backed consumer platforms. He structures capital and investor partnerships that
-            support disciplined growth and long term ownership.
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Matthew McKenzie</h2>
+          <p style={{ fontSize: 15, color: "#636366", marginBottom: 24 }}>Capital Formation &amp; Growth Strategy</p>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+            Matthew McKenzie structures capital partnerships and growth strategy for real asset backed
+            businesses. He works across both debt and equity, partnering with family offices, UHNW investors,
+            and institutional groups to build companies with disciplined underwriting and long term
+            ownership at the center.
           </p>
-          <nav style={{ marginTop: 32, display: "flex", gap: 24, fontSize: 14 }}>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+            Over nine years at Civitas Capital Group, he has helped raise and deploy capital across
+            niche U.S. real estate strategies. He also leads capital formation and growth strategy
+            at Remote Coffee, an early stage consumer platform in Austin, Texas.
+          </p>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
+            Matthew builds production AI tooling that connects natural language interfaces to restaurant
+            and hospitality operations platforms, including MCP servers and Microsoft Teams bots for
+            Toast and MarginEdge.
+          </p>
+          <nav style={{ display: "flex", gap: 24, fontSize: 14, flexWrap: "wrap" as const }}>
             <a href="/about">About</a>
             <a href="/work">Work</a>
-            <a href="/writing">Writing</a>
             <a href="/projects">Projects</a>
+            <a href="/writing">Writing</a>
             <a href="/contact">Contact</a>
             <a href="/privacy">Privacy</a>
           </nav>
+          <p style={{ fontSize: 13, marginTop: 32, color: "#636366" }}>
+            <a href="mailto:matthew.mckenzie@mac.com">matthew.mckenzie@mac.com</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://www.linkedin.com/in/mrmckenzie/">LinkedIn</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://cal.com/mattmck/site">Schedule a Call</a>
+          </p>
         </div>
       </noscript>
     </>

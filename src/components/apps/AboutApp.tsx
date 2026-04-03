@@ -60,16 +60,17 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
         className="shrink-0 px-6 pt-6 pb-4 text-center border-b"
         style={{ borderColor: "var(--desktop-border)" }}
       >
-        <div
-          className="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-white text-2xl font-bold"
+        <img
+          src="/headshot.jpg"
+          alt="Matthew McKenzie"
+          width={80}
+          height={80}
+          className="w-20 h-20 mx-auto rounded-full object-cover"
           style={{
-            background: "linear-gradient(135deg, #7eb8da 0%, #5080a8 100%)",
             boxShadow: "0 3px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)",
             border: "2px solid rgba(255,255,255,0.2)",
           }}
-        >
-          MM
-        </div>
+        />
 
         <h1 className="text-base font-semibold text-desktop-text mt-3">McKenzie OS</h1>
         <p className="text-[11px] text-desktop-text-secondary mt-0.5">

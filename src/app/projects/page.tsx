@@ -4,12 +4,12 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Projects | Selected Work & Case Studies",
-  description: "Selected projects and case studies by Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
+  title: "Projects | AI Operations Tooling, Platforms, Open Source",
+  description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie. Open source on GitHub.",
   alternates: { canonical: "/projects" },
   openGraph: {
-    title: "Projects | Selected Work & Case Studies",
-    description: "Selected projects and case studies by Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
+    title: "Projects | AI Operations Tooling, Platforms, Open Source",
+    description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie.",
   },
 };
 

@@ -11,6 +11,7 @@ import {
   type DesktopContextValue,
 } from "@/hooks/useDesktopStore";
 import type { FSItem } from "@/data/fs";
+import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
 // DESKTOP PROVIDER
@@ -50,6 +51,7 @@ export default function DesktopProvider({ children }: { children: React.ReactNod
   // Action helpers
   const openItem = useCallback(
     (fsItem: FSItem) => {
+      trackEvent("app_opened", { app: fsItem.id, name: fsItem.name, type: fsItem.type });
       dispatch({ type: "OPEN_WINDOW", payload: { fsItem } });
     },
     [dispatch]

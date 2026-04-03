@@ -46,19 +46,21 @@ export default function OGImage() {
         </div>
         <div
           style={{
-            fontSize: 16,
-            color: "#666",
-            marginTop: 32,
+            fontSize: 14,
+            color: "#777",
+            marginTop: 24,
             letterSpacing: "1px",
+            lineHeight: 1.5,
+            textAlign: "center",
           }}
         >
-          Matthew McKenzie
+          Civitas Capital Group · Remote Coffee
         </div>
         <div
           style={{
             fontSize: 12,
             color: "#444",
-            marginTop: 8,
+            marginTop: 12,
             letterSpacing: "3px",
             textTransform: "uppercase",
           }}

@@ -26,26 +26,44 @@ export const personSchema = {
   "@type": "Person",
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
-  image: "https://matthewrmckenzie.com/opengraph-image",
+  image: "https://matthewrmckenzie.com/headshot.jpg",
   jobTitle: "Vice President, Investor Relations",
-  worksFor: {
-    "@type": "Organization",
-    name: "Civitas Capital Group",
-    url: "https://civitascapital.com",
-  },
-  alumniOf: {
-    "@type": "CollegeOrUniversity",
-    name: "Southern Methodist University",
-  },
+  worksFor: [
+    {
+      "@type": "Organization",
+      name: "Civitas Capital Group",
+      url: "https://civitascapital.com",
+    },
+    {
+      "@type": "Organization",
+      name: "Remote Coffee",
+      url: "https://www.remotecoffee.com",
+    },
+  ],
+  alumniOf: [
+    {
+      "@type": "CollegeOrUniversity",
+      name: "Southern Methodist University",
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      name: "Villanova University",
+    },
+  ],
   knowsAbout: [
     "Capital Formation",
     "Investor Relations",
     "Growth Strategy",
     "Real Estate Investment",
+    "Alternative Investments",
+    "AI Operations",
+    "MCP Servers",
+    "Restaurant Technology",
   ],
   sameAs: [
     "https://www.linkedin.com/in/mrmckenzie/",
     "https://github.com/atthewm",
+    "https://www.instagram.com/mrem/",
   ],
 };
 
@@ -71,9 +89,10 @@ export const profilePageSchema = {
     name: "Matthew McKenzie",
     url: "https://matthewrmckenzie.com",
     jobTitle: "Vice President, Investor Relations",
+    description: "Capital formation, growth strategy, and AI operations tooling. Structures investor partnerships for real asset backed businesses.",
   },
   dateCreated: "2026-01-01",
-  dateModified: "2026-03-26",
+  dateModified: "2026-04-01",
 };
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {

@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Input too long" }, { status: 400 });
     }
 
-    const validCategories = ["Investor", "Collaboration", "Press", "Speaking", "Other"];
+    const validCategories = ["Investor or Allocator", "Founder or Operator", "AI and Operations", "Press or Speaking", "General"];
     if (!validCategories.includes(category)) {
       return NextResponse.json({ error: "Invalid category" }, { status: 400 });
     }
