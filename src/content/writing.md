@@ -4,14 +4,14 @@ title: Writing
 
 # Writing
 
-Longer form thinking on capital formation, growth strategy, AI operations, and building durable businesses.
+Longer form thinking on capital formation, growth strategy, and building durable businesses.
 
-I am working on several pieces right now. In the meantime, I share shorter observations and updates on [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).
+## Essays
 
-Topics I write about:
+**[How Capital Formation Actually Works](/writing/how-capital-formation-actually-works)**
+Most people think capital formation is sales. It is not. It is conviction transfer. On the mechanics of raising real money from sophisticated investors, and why most people get it wrong.
 
-- How capital formation actually works from the inside
-- Building investor partnerships that outlast any single deal
-- AI tooling for restaurant and hospitality operations
-- The intersection of real assets and technology platforms
-- Lessons from building things with long time horizons
+**[Building Investor Partnerships That Outlast Any Single Deal](/writing/building-investor-partnerships-that-outlast-any-single-deal)**
+The worst thing you can do in capital formation is close a deal and disappear until you need money again. On stewardship, trust, and the compounding value of deep LP relationships.
+
+Shorter observations are on [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).
