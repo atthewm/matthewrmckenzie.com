@@ -107,3 +107,36 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
     })),
   };
 }
+
+export function blogPostingSchema(opts: {
+  title: string;
+  description: string;
+  slug: string;
+  datePublished: string;
+  dateModified?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: opts.title,
+    description: opts.description,
+    url: `https://matthewrmckenzie.com/writing/${opts.slug}`,
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified || opts.datePublished,
+    author: {
+      "@type": "Person",
+      name: "Matthew McKenzie",
+      url: "https://matthewrmckenzie.com",
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Matthew McKenzie",
+      url: "https://matthewrmckenzie.com",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://matthewrmckenzie.com/writing/${opts.slug}`,
+    },
+    image: "https://matthewrmckenzie.com/headshot.jpg",
+  };
+}

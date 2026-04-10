@@ -1,9 +1,12 @@
 // ============================================================================
 // RSS FEED
 // ============================================================================
-// Generates an RSS 2.0 feed. Currently includes the site's static pages.
-// As writing/essays are published, add them here as individual <item> entries.
+// Generates an RSS 2.0 feed with static pages and essays.
 // ============================================================================
+
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
 
 const SITE_URL = "https://matthewrmckenzie.com";
 
@@ -16,10 +19,36 @@ function escapeXml(str: string): string {
     .replace(/'/g, "&apos;");
 }
 
+function getEssayItems() {
+  const essaysDir = path.join(process.cwd(), "src/content/essays");
+  try {
+    return fs
+      .readdirSync(essaysDir)
+      .filter((f) => f.endsWith(".md"))
+      .map((f) => {
+        const raw = fs.readFileSync(path.join(essaysDir, f), "utf8");
+        const { data } = matter(raw);
+        const slug = f.replace(/\.md$/, "");
+        return {
+          title: (data.title as string) || slug,
+          link: `${SITE_URL}/writing/${slug}`,
+          description: (data.description as string) || "",
+          pubDate: data.date
+            ? new Date(data.date as string).toUTCString()
+            : new Date().toUTCString(),
+        };
+      })
+      .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+  } catch {
+    return [];
+  }
+}
+
 export async function GET() {
   const now = new Date().toUTCString();
 
   const items = [
+    ...getEssayItems(),
     {
       title: "About Matthew McKenzie",
       link: `${SITE_URL}/about`,

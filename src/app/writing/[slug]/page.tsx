@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
-import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
+import JsonLd, { breadcrumbSchema, blogPostingSchema } from "@/components/ui/JsonLd";
 
 const essaysDir = path.join(process.cwd(), "src/content/essays");
 
@@ -82,6 +83,14 @@ export default async function EssayPage({
           { name: title, url: `https://matthewrmckenzie.com/writing/${slug}` },
         ])}
       />
+      <JsonLd
+        data={blogPostingSchema({
+          title,
+          description: (essay.frontmatter.description as string) || "",
+          slug,
+          datePublished: essay.frontmatter.date as string,
+        })}
+      />
       <article
         className="prose prose-sm dark:prose-invert max-w-none
                    prose-headings:font-semibold
@@ -93,7 +102,7 @@ export default async function EssayPage({
         <div dangerouslySetInnerHTML={{ __html: essay.html }} />
         <hr className="my-8" />
         <p className="text-desktop-text-secondary text-sm">
-          <a href="/writing">&larr; Back to Writing</a>
+          <Link href="/writing">&larr; Back to Writing</Link>
         </p>
       </article>
     </StaticPageLayout>
