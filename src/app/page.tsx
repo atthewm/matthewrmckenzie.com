@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { flattenFS } from "@/data/fs";
 import { getContent } from "@/lib/content";
 import DesktopShell from "@/components/desktop/DesktopShell";
@@ -53,12 +54,12 @@ export default async function HomePage() {
             Toast and MarginEdge.
           </p>
           <nav style={{ display: "flex", gap: 24, fontSize: 14, flexWrap: "wrap" as const }}>
-            <a href="/about">About</a>
-            <a href="/work">Work</a>
-            <a href="/projects">Projects</a>
-            <a href="/writing">Writing</a>
-            <a href="/contact">Contact</a>
-            <a href="/privacy">Privacy</a>
+            <Link href="/about">About</Link>
+            <Link href="/work">Work</Link>
+            <Link href="/projects">Projects</Link>
+            <Link href="/writing">Writing</Link>
+            <Link href="/contact">Contact</Link>
+            <Link href="/privacy">Privacy</Link>
           </nav>
           <p style={{ fontSize: 13, marginTop: 32, color: "#636366" }}>
             <a href="mailto:matthew.mckenzie@mac.com">matthew.mckenzie@mac.com</a>
