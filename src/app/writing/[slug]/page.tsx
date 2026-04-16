@@ -48,11 +48,28 @@ export async function generateMetadata({
   if (!essay) return {};
   const title = (essay.frontmatter.title as string) || slug;
   const description = (essay.frontmatter.description as string) || "";
+  const datePublished = essay.frontmatter.date as string | undefined;
+  const dateModified = (essay.frontmatter.dateModified as string | undefined) ?? datePublished;
+  const url = `https://matthewrmckenzie.com/writing/${slug}`;
   return {
     title: `${title} | Matthew McKenzie`,
     description,
-    alternates: { canonical: `/writing/${slug}` },
-    openGraph: { title, description },
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title,
+      description,
+      images: ["/opengraph-image"],
+      publishedTime: datePublished,
+      modifiedTime: dateModified,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/opengraph-image"],
+    },
   };
 }
 
@@ -89,6 +106,9 @@ export default async function EssayPage({
           description: (essay.frontmatter.description as string) || "",
           slug,
           datePublished: essay.frontmatter.date as string,
+          dateModified:
+            (essay.frontmatter.dateModified as string | undefined) ??
+            (essay.frontmatter.date as string),
         })}
       />
       <article

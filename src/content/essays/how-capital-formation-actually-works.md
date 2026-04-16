@@ -1,6 +1,7 @@
 ---
 title: How Capital Formation Actually Works
 date: 2026-04-05
+dateModified: 2026-04-05
 description: Most people think capital formation is sales. It is not. It is conviction transfer.
 ---
 
