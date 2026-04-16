@@ -28,10 +28,22 @@ async function getEssay(slug: string) {
     const raw = fs.readFileSync(filePath, "utf8");
     const { data, content } = matter(raw);
     const processed = await remark().use(html).process(content);
-    return { frontmatter: data, html: processed.toString() };
+    return { frontmatter: data, html: processed.toString(), raw: content };
   } catch {
     return null;
   }
+}
+
+function toPlainText(markdown: string): string {
+  return markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/[*_~>]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export async function generateStaticParams() {
@@ -60,7 +72,7 @@ export async function generateMetadata({
       url,
       title,
       description,
-      images: ["/opengraph-image"],
+      images: [`/writing/${slug}/opengraph-image`],
       publishedTime: datePublished,
       modifiedTime: dateModified,
     },
@@ -68,7 +80,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["/opengraph-image"],
+      images: [`/writing/${slug}/opengraph-image`],
     },
   };
 }
@@ -109,6 +121,7 @@ export default async function EssayPage({
           dateModified:
             (essay.frontmatter.dateModified as string | undefined) ??
             (essay.frontmatter.date as string),
+          articleBody: toPlainText(essay.raw),
         })}
       />
       <article
