@@ -7,7 +7,7 @@ import CalEmbed from "@/components/ui/CalEmbed";
 export const metadata: Metadata = {
   title: "Contact | Investor Relations, Capital Formation, Collaboration",
   description: "Reach Matthew McKenzie about capital formation, investor partnerships, growth strategy, or AI operations tooling. Schedule a call or send a message.",
-  alternates: { canonical: "/contact" },
+  alternates: { canonical: "https://matthewrmckenzie.com/contact" },
   openGraph: {
     title: "Contact | Investor Relations, Capital Formation, Collaboration",
     description: "Reach Matthew McKenzie about capital formation, investor partnerships, growth strategy, or AI operations tooling. Schedule a call or send a message.",

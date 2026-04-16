@@ -7,7 +7,7 @@ import AffiliationRow from "@/components/ui/AffiliationRow";
 export const metadata: Metadata = {
   title: "About | Capital Formation, Growth Strategy, AI Operations",
   description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. Growth strategy at Remote Coffee. AI operations tooling for restaurant teams.",
-  alternates: { canonical: "/about" },
+  alternates: { canonical: "https://matthewrmckenzie.com/about" },
   openGraph: {
     title: "About | Capital Formation, Growth Strategy, AI Operations",
     description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. Growth strategy at Remote Coffee. AI operations tooling for restaurant teams.",
