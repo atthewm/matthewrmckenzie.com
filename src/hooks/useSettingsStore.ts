@@ -120,7 +120,7 @@ export function loadSettings(): SettingsState | null {
 export function getFontFamilyCSS(family: FontFamily): string {
   switch (family) {
     case "system":
-      return '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      return 'var(--font-inter), "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     case "Georgia":
       return "Georgia, 'Times New Roman', serif";
     case "Times":
