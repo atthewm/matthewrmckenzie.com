@@ -25,8 +25,19 @@ function getEssayEntries(): MetadataRoute.Sitemap {
   }
 }
 
+function resolveBaseUrl(): string {
+  const production = "https://matthewrmckenzie.com";
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+  const vercel = process.env.VERCEL_URL;
+  if (vercel && process.env.VERCEL_ENV !== "production") {
+    return `https://${vercel}`;
+  }
+  return production;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://matthewrmckenzie.com";
+  const baseUrl = resolveBaseUrl();
   const now = new Date().toISOString().split("T")[0];
 
   return [
