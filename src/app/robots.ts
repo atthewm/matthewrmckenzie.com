@@ -30,6 +30,26 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/gate", "/api/"],
       },
+      {
+        userAgent: "CCBot",
+        allow: "/",
+        disallow: ["/gate", "/api/"],
+      },
+      {
+        userAgent: "Google-Extended",
+        allow: "/",
+        disallow: ["/gate", "/api/"],
+      },
+      {
+        userAgent: "Applebot-Extended",
+        allow: "/",
+        disallow: ["/gate", "/api/"],
+      },
+      {
+        userAgent: "Bingbot",
+        allow: "/",
+        disallow: ["/gate", "/api/"],
+      },
     ],
     sitemap: "https://matthewrmckenzie.com/sitemap.xml",
   };
