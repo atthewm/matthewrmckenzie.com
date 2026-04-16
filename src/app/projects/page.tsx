@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
+import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Projects | AI Operations Tooling, Platforms, Open Source",
@@ -30,7 +31,7 @@ export default async function ProjectsPage() {
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (
-        <p className="text-desktop-text-secondary">Content coming soon.</p>
+        <EmptyContent />
       )}
     </StaticPageLayout>
   );

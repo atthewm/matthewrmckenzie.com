@@ -52,8 +52,7 @@ export default function CalEmbed() {
   return (
     <div
       ref={containerRef}
-      className="rounded-lg border border-desktop-border overflow-hidden"
-      style={{ minHeight: 450 }}
+      className="rounded-lg border border-desktop-border overflow-hidden min-h-[520px] sm:min-h-[560px] lg:min-h-[640px]"
     />
   );
 }

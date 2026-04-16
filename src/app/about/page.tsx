@@ -3,6 +3,7 @@ import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import AffiliationRow from "@/components/ui/AffiliationRow";
+import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "About | Capital Formation, Growth Strategy, AI Operations",
@@ -31,7 +32,7 @@ export default async function AboutPage() {
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (
-        <p className="text-desktop-text-secondary">Content coming soon.</p>
+        <EmptyContent />
       )}
       <AffiliationRow />
     </StaticPageLayout>

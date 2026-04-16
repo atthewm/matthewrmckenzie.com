@@ -3,6 +3,7 @@ import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import CalEmbed from "@/components/ui/CalEmbed";
+import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Contact | Investor Relations, Capital Formation, Collaboration",
@@ -31,7 +32,7 @@ export default async function ContactPage() {
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (
-        <p className="text-desktop-text-secondary">Content coming soon.</p>
+        <EmptyContent />
       )}
       {/* Inline Cal.com scheduling embed */}
       <div className="mt-8">
