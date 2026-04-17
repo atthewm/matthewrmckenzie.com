@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   ExternalLink,
   Linkedin,
@@ -113,7 +114,7 @@ export default function LinktreeApp() {
         <div className="max-w-[380px] mx-auto">
           {/* Profile header */}
           <div className="text-center mb-5">
-            <img
+            <Image
               src="/headshot.jpg"
               alt="Matthew McKenzie"
               width={64}
