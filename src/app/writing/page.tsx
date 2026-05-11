@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
+import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Writing | Capital Formation, Growth Strategy, AI Operations",
   description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, AI operations, and building durable businesses.",
-  alternates: { canonical: "/writing" },
+  alternates: { canonical: "https://matthewrmckenzie.com/writing" },
   openGraph: {
     title: "Writing | Capital Formation, Growth Strategy, AI Operations",
     description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, AI operations, and building durable businesses.",
@@ -30,7 +31,7 @@ export default async function WritingPage() {
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (
-        <p className="text-desktop-text-secondary">Content coming soon.</p>
+        <EmptyContent />
       )}
     </StaticPageLayout>
   );

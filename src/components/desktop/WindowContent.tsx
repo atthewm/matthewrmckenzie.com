@@ -30,7 +30,6 @@ import PhotoBoothApp from "@/components/apps/PhotoBoothApp";
 import IChatApp from "@/components/apps/IChatApp";
 import ChessApp from "@/components/apps/ChessApp";
 import MinesweeperApp from "@/components/apps/MinesweeperApp";
-import RemoteCoffeeApp from "@/components/apps/RemoteCoffeeApp";
 import UrlShortenerApp from "@/components/apps/UrlShortenerApp";
 import GitHubApp from "@/components/apps/GitHubApp";
 import WhatsNewApp from "@/components/apps/WhatsNewApp";
@@ -66,7 +65,6 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   IChatApp,
   ChessApp,
   MinesweeperApp,
-  RemoteCoffeeApp,
   UrlShortenerApp,
   GitHubApp,
   WhatsNewApp,

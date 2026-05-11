@@ -53,11 +53,12 @@ Investor Relations Analyst
 Civitas Capital Group
 May 2016 to December 2018
 
-Head of Capital Formation & Strategy
-Remote Coffee
-October 2025 to Present
-  Growth strategy and capital formation for an
-  early stage consumer platform in Austin, Texas.
+AI Operations Tooling (Independent)
+2025 to Present
+  MCP servers and Microsoft Teams bots for
+  restaurant operations platforms (Toast,
+  MarginEdge). Consumer health integrations
+  (Eight Sleep). Open source on GitHub.
 
 ==========================================================
 EDUCATION

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useDesktop } from "@/hooks/useDesktopStore";
 
@@ -60,11 +61,12 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
         className="shrink-0 px-6 pt-6 pb-4 text-center border-b"
         style={{ borderColor: "var(--desktop-border)" }}
       >
-        <img
+        <Image
           src="/headshot.jpg"
           alt="Matthew McKenzie"
           width={80}
           height={80}
+          priority
           className="w-20 h-20 mx-auto rounded-full object-cover"
           style={{
             boxShadow: "0 3px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)",

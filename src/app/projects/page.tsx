@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
+import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Projects | AI Operations Tooling, Platforms, Open Source",
   description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie. Open source on GitHub.",
-  alternates: { canonical: "/projects" },
+  alternates: { canonical: "https://matthewrmckenzie.com/projects" },
   openGraph: {
     title: "Projects | AI Operations Tooling, Platforms, Open Source",
     description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie.",
@@ -30,7 +31,7 @@ export default async function ProjectsPage() {
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (
-        <p className="text-desktop-text-secondary">Content coming soon.</p>
+        <EmptyContent />
       )}
     </StaticPageLayout>
   );

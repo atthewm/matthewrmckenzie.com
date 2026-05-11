@@ -33,11 +33,9 @@ export const personSchema = {
       "@type": "Organization",
       name: "Civitas Capital Group",
       url: "https://civitascapital.com",
-    },
-    {
-      "@type": "Organization",
-      name: "Remote Coffee",
-      url: "https://www.remotecoffee.com",
+      sameAs: [
+        "https://www.linkedin.com/company/civitas-capital-group/",
+      ],
     },
   ],
   alumniOf: [
@@ -114,8 +112,9 @@ export function blogPostingSchema(opts: {
   slug: string;
   datePublished: string;
   dateModified?: string;
+  articleBody?: string;
 }) {
-  return {
+  const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: opts.title,
@@ -127,6 +126,12 @@ export function blogPostingSchema(opts: {
       "@type": "Person",
       name: "Matthew McKenzie",
       url: "https://matthewrmckenzie.com",
+      jobTitle: "Vice President, Investor Relations",
+      worksFor: {
+        "@type": "Organization",
+        name: "Civitas Capital Group",
+        url: "https://civitascapital.com",
+      },
     },
     publisher: {
       "@type": "Person",
@@ -137,6 +142,10 @@ export function blogPostingSchema(opts: {
       "@type": "WebPage",
       "@id": `https://matthewrmckenzie.com/writing/${opts.slug}`,
     },
-    image: "https://matthewrmckenzie.com/headshot.jpg",
+    image: `https://matthewrmckenzie.com/writing/${opts.slug}/opengraph-image`,
   };
+  if (opts.articleBody) {
+    schema.articleBody = opts.articleBody;
+  }
+  return schema;
 }

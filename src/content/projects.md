@@ -16,6 +16,12 @@ A selection of things I have built or am actively building.
 
 **MarginEdge Teams Bot.** Teams bot for querying invoice data, vendor information, and food costs through natural language. [GitHub](https://github.com/atthewm/marginedge-teams-bot).
 
+## Consumer Health Data
+
+**Eight Sleep Consumer.** Pipeline that pulls nightly sleep data from Eight Sleep into a personal health stack. Powers training readiness signals and recovery analytics. [GitHub](https://github.com/atthewm/eightsleep-consumer).
+
+**Eight Sleep Client.** TypeScript client for the Eight Sleep API. Reusable library that the consumer pipeline and other tooling depend on. [GitHub](https://github.com/atthewm/eightsleep-client).
+
 ## Platforms and Tools
 
 **McKenzie OS.** This site. A custom desktop operating system built from scratch with Next.js, React, and TypeScript. Includes a window manager, dock, Spotlight search, terminal, and over 20 interactive apps. [Source](https://github.com/atthewm/matthewrmckenzie.com).

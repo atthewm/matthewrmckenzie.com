@@ -1,6 +1,7 @@
 ---
 title: Building Investor Partnerships That Outlast Any Single Deal
 date: 2026-04-05
+dateModified: 2026-04-05
 description: The best investor relationships are not transactional. They are built on a simple premise: this person makes me smarter about where to put my capital.
 ---
 

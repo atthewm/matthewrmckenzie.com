@@ -28,10 +28,22 @@ async function getEssay(slug: string) {
     const raw = fs.readFileSync(filePath, "utf8");
     const { data, content } = matter(raw);
     const processed = await remark().use(html).process(content);
-    return { frontmatter: data, html: processed.toString() };
+    return { frontmatter: data, html: processed.toString(), raw: content };
   } catch {
     return null;
   }
+}
+
+function toPlainText(markdown: string): string {
+  return markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/[*_~>]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export async function generateStaticParams() {
@@ -48,11 +60,28 @@ export async function generateMetadata({
   if (!essay) return {};
   const title = (essay.frontmatter.title as string) || slug;
   const description = (essay.frontmatter.description as string) || "";
+  const datePublished = essay.frontmatter.date as string | undefined;
+  const dateModified = (essay.frontmatter.dateModified as string | undefined) ?? datePublished;
+  const url = `https://matthewrmckenzie.com/writing/${slug}`;
   return {
     title: `${title} | Matthew McKenzie`,
     description,
-    alternates: { canonical: `/writing/${slug}` },
-    openGraph: { title, description },
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title,
+      description,
+      images: [`/writing/${slug}/opengraph-image`],
+      publishedTime: datePublished,
+      modifiedTime: dateModified,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`/writing/${slug}/opengraph-image`],
+    },
   };
 }
 
@@ -89,6 +118,10 @@ export default async function EssayPage({
           description: (essay.frontmatter.description as string) || "",
           slug,
           datePublished: essay.frontmatter.date as string,
+          dateModified:
+            (essay.frontmatter.dateModified as string | undefined) ??
+            (essay.frontmatter.date as string),
+          articleBody: toPlainText(essay.raw),
         })}
       />
       <article

@@ -54,6 +54,49 @@ export default function Window({ windowState, children }: WindowProps) {
     if (!isFocused) focusWindow(windowState.id);
   }, [isFocused, focusWindow, windowState.id]);
 
+  // -- CLOSE (defined early so focus trap can reference it) --
+  const handleClose = useCallback(() => {
+    if (settings.uiSoundsEnabled) playWindowClose();
+    setIsClosing(true);
+    setTimeout(() => closeWindow(windowState.id), 150);
+  }, [closeWindow, windowState.id, settings.uiSoundsEnabled]);
+
+  // -- FOCUS MANAGEMENT --
+  // Move DOM focus into the window when it becomes the focused window
+  useEffect(() => {
+    if (isFocused && windowRef.current) {
+      if (!windowRef.current.contains(document.activeElement)) {
+        windowRef.current.focus({ preventScroll: true });
+      }
+    }
+  }, [isFocused]);
+
+  // Trap Tab focus within the focused dialog window; Escape closes
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        handleClose();
+        return;
+      }
+      if (e.key !== "Tab" || !windowRef.current) return;
+      const focusable = windowRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    },
+    [handleClose]
+  );
+
   // -- DRAG --
   const handleDragStart = useCallback(
     (e: React.PointerEvent) => {
@@ -131,12 +174,6 @@ export default function Window({ windowState, children }: WindowProps) {
     };
   }, [handleResizeMove, handleResizeEnd]);
 
-  const handleClose = useCallback(() => {
-    if (settings.uiSoundsEnabled) playWindowClose();
-    setIsClosing(true);
-    setTimeout(() => closeWindow(windowState.id), 150);
-  }, [closeWindow, windowState.id, settings.uiSoundsEnabled]);
-
   const handleTitleDoubleClick = useCallback(() => {
     toggleMaximize(windowState.id);
   }, [toggleMaximize, windowState.id]);
@@ -209,8 +246,11 @@ export default function Window({ windowState, children }: WindowProps) {
       ref={windowRef}
       role="dialog"
       aria-label={windowState.title}
+      aria-modal={isFocused}
+      tabIndex={-1}
+      onKeyDown={handleKeyDown}
       className={`
-        fixed select-none flex flex-col overflow-hidden
+        fixed select-none flex flex-col overflow-hidden outline-none
         ${windowState.isMaximized ? "rounded-none" : ""}
         ${isClosing ? "animate-window-close" : isMinimizing ? "animate-window-minimize" : isRestoring ? "animate-window-restore" : "animate-window-open"}
       `}

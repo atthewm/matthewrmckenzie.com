@@ -11,7 +11,7 @@
   --desktop-surface: #FFFFFF;
   --desktop-border: #D2D2D7;
   --desktop-text: #1A1A1A;
-  --desktop-text-secondary: #636366;
+  --desktop-text-secondary: #4A4A50;
   --desktop-accent: #2F6AE5;
   --desktop-dock: rgba(255,255,255,0.25);
   --menubar-bg: rgba(241,241,241,0.92);
@@ -269,16 +269,10 @@
 
 /* ============================================================================
    FONT LOADING
+   Inter is loaded via next/font/google in src/app/layout.tsx.
+   The --font-inter CSS variable is exposed on <html> for any component that
+   opts in via var(--font-inter).
    ============================================================================ */
-
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2")
-    format("woff2");
-}
 
 /* ============================================================================
    REDUCED MOTION

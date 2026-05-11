@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   ExternalLink,
   Linkedin,
@@ -12,7 +13,7 @@ import {
   Server,
   Bot,
   Link2,
-  Coffee,
+  Moon,
 } from "lucide-react";
 
 // ============================================================================
@@ -39,14 +40,15 @@ const projectLinks: LinkItem[] = [
   { label: "Toast Teams Bot", href: "https://github.com/atthewm/toast-teams-bot", icon: Bot, description: "Teams bot for restaurant operations" },
   { label: "MarginEdge MCP Server", href: "https://github.com/atthewm/marginedge-mcp-server", icon: Server, description: "AI access to MarginEdge back-office" },
   { label: "MarginEdge Teams Bot", href: "https://github.com/atthewm/marginedge-teams-bot", icon: Bot, description: "Teams bot for invoices and food costs" },
+  { label: "Eight Sleep Consumer", href: "https://github.com/atthewm/eightsleep-consumer", icon: Moon, description: "Sleep data pipeline and integrations" },
+  { label: "Eight Sleep Client", href: "https://github.com/atthewm/eightsleep-client", icon: Moon, description: "TypeScript client for the Eight Sleep API" },
   { label: "Cosmos Collector", href: "https://github.com/atthewm/cosmos-collector", icon: Globe, description: "Download cosmos.so boards headlessly" },
 ];
 
 const actionLinks: LinkItem[] = [
   { label: "Schedule a Call", href: "https://cal.com/mattmck/site", icon: Calendar, description: "Book a meeting with me" },
   { label: "Email", href: "mailto:matthew.mckenzie@mac.com", icon: Mail, description: "matthew.mckenzie@mac.com" },
-  { label: "URL Shortener", href: "https://mckm.at", icon: Link2, description: "mckm.at — my link shortener" },
-  { label: "Remote Coffee", href: "https://www.remotecoffee.com", icon: Coffee, description: "The best coffee in Austin" },
+  { label: "URL Shortener", href: "https://mckm.at", icon: Link2, description: "mckm.at, my link shortener" },
 ];
 
 function LinkSection({ title, links }: { title: string; links: LinkItem[] }) {
@@ -113,7 +115,7 @@ export default function LinktreeApp() {
         <div className="max-w-[380px] mx-auto">
           {/* Profile header */}
           <div className="text-center mb-5">
-            <img
+            <Image
               src="/headshot.jpg"
               alt="Matthew McKenzie"
               width={64}

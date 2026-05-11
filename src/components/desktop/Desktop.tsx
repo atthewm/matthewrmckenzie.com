@@ -231,6 +231,14 @@ export default function Desktop({ contentMap }: DesktopProps) {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
+      {/* Skip to content for keyboard / screen reader users */}
+      <a
+        href="#desktop-workspace"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-1 focus:left-2 focus:z-[99999] focus:bg-white focus:text-black focus:px-3 focus:py-1.5 focus:rounded focus:text-sm focus:shadow-lg"
+      >
+        Skip to desktop workspace
+      </a>
+
       {/* Wallpaper background */}
       <ZenBackground />
 
@@ -238,7 +246,10 @@ export default function Desktop({ contentMap }: DesktopProps) {
       <MenuBar />
 
       {/* Click on empty desktop to unfocus + easter egg + right-click */}
-      <div
+      <main
+        id="desktop-workspace"
+        role="main"
+        aria-label="Desktop workspace"
         className="absolute top-[26px] left-0 right-0 bottom-0"
         onClick={handleDesktopClick}
         onContextMenu={handleContextMenu}

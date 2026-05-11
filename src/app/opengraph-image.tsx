@@ -42,7 +42,7 @@ export default function OGImage() {
             letterSpacing: "2px",
           }}
         >
-          Capital Formation & Growth Strategy
+          Capital Formation & AI Operations
         </div>
         <div
           style={{
@@ -54,7 +54,7 @@ export default function OGImage() {
             textAlign: "center",
           }}
         >
-          Civitas Capital Group · Remote Coffee
+          Civitas Capital Group · MCP Servers · Teams Bots
         </div>
         <div
           style={{

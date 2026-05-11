@@ -308,19 +308,6 @@ export default function TerminalApp() {
           ]);
           break;
 
-        case "coffee":
-        case "cafe":
-        case "remote": {
-          addOutput("☕ Brewing up Remote Coffee menu...");
-          const coffeeItem = findFSItem("remote-coffee");
-          if (coffeeItem) {
-            setTimeout(() => openItem(coffeeItem), 500);
-          } else {
-            addOutput("Menu unavailable. Discover the Secrets folder first!");
-          }
-          break;
-        }
-
         case "github":
         case "gh":
         case "repos": {
