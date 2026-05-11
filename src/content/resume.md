@@ -15,10 +15,10 @@ Capital Formation, Growth Strategy, and AI Operations
 
 Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Manage relationships with family offices, UHNW investors, and institutional groups globally across both debt and equity.
 
-**Remote Coffee** | Head of Capital Formation and Strategy
-*October 2025 to Present*
+**Independent** | AI Operations Tooling
+*2025 to Present*
 
-Growth strategy and capital formation for an early stage consumer platform in Austin, Texas.
+Production MCP servers and Microsoft Teams bots for restaurant operations (Toast, MarginEdge). Consumer health data integrations (Eight Sleep). Open source on GitHub.
 
 **Civitas Capital Group** | Investor Relations Associate
 *January 2019 to December 2022*

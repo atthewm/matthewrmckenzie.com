@@ -45,13 +45,13 @@ export default async function HomePage() {
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
             Over nine years at Civitas Capital Group, he has helped raise and deploy capital across
-            niche U.S. real estate strategies. He also leads capital formation and growth strategy
-            at Remote Coffee, an early stage consumer platform in Austin, Texas.
+            niche U.S. real estate strategies, managing investor relationships across North America,
+            the Middle East, and Asia.
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
-            Matthew builds production AI tooling that connects natural language interfaces to restaurant
-            and hospitality operations platforms, including MCP servers and Microsoft Teams bots for
-            Toast and MarginEdge.
+            Matthew also builds production AI tooling: MCP servers and Microsoft Teams bots that connect
+            natural language interfaces to restaurant operations platforms (Toast, MarginEdge), plus
+            integrations with Eight Sleep and other consumer health data.
           </p>
           <nav style={{ display: "flex", gap: 24, fontSize: 14, flexWrap: "wrap" as const }}>
             <Link href="/about">About</Link>

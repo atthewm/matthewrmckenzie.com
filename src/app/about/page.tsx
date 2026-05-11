@@ -6,12 +6,12 @@ import AffiliationRow from "@/components/ui/AffiliationRow";
 import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
-  title: "About | Capital Formation, Growth Strategy, AI Operations",
-  description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. Growth strategy at Remote Coffee. AI operations tooling for restaurant teams.",
+  title: "About | Capital Formation and AI Operations",
+  description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. AI operations tooling for restaurant teams and consumer health platforms.",
   alternates: { canonical: "https://matthewrmckenzie.com/about" },
   openGraph: {
-    title: "About | Capital Formation, Growth Strategy, AI Operations",
-    description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. Growth strategy at Remote Coffee. AI operations tooling for restaurant teams.",
+    title: "About | Capital Formation and AI Operations",
+    description: "Nine years in capital formation at Civitas Capital Group. Investor partnerships with family offices and institutional groups. AI operations tooling for restaurant teams and consumer health platforms.",
   },
 };
 

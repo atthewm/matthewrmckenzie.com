@@ -10,7 +10,7 @@ Matthew McKenzie structures capital partnerships and growth strategy for real as
 
 Over nine years at Civitas Capital Group, Matthew has helped raise and deploy capital across niche U.S. real estate strategies, managing relationships with investors across North America, the Middle East, and Asia. He now serves as Vice President of Investor Relations, overseeing capital formation across both fund and direct investment vehicles.
 
-In parallel, he leads capital formation and growth strategy at Remote Coffee, an early stage consumer platform based in Austin, Texas.
+In parallel, he builds production AI tooling: MCP servers and Microsoft Teams bots for restaurant operations platforms, plus integrations with consumer health data sources like Eight Sleep.
 
 ## What Sets Matthew Apart
 
@@ -27,7 +27,7 @@ Most capital formation professionals stay in one lane. Matthew operates across t
 What I'm focused on right now:
 
 - Capital formation and investor relations at Civitas Capital Group
-- Growth strategy for Remote Coffee
-- Shipping AI operations tools for restaurant and hospitality teams
+- Shipping AI operations tools for restaurant and hospitality teams (Toast, MarginEdge)
+- Consumer health data integrations and sleep optimization (Eight Sleep, WHOOP)
 - Health and performance: hybrid athlete focused on strength and endurance
 - Sourdough baking, recipe development, and cooking

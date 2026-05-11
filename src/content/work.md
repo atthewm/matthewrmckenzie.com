@@ -25,8 +25,8 @@ I structure capital, build investor partnerships, and develop growth strategy fo
 **Civitas Capital Group** | Vice President, Investor Relations
 Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Nine years of progressive responsibility from analyst through VP.
 
-**Remote Coffee** | Head of Capital Formation and Strategy
-Growth strategy and capital formation for an early stage consumer platform in Austin, Texas.
+**Independent** | AI Operations Tooling
+MCP servers and Microsoft Teams bots for restaurant operations platforms (Toast, MarginEdge), plus consumer health data integrations (Eight Sleep). Open source on GitHub.
 
 ## What Others Say
 

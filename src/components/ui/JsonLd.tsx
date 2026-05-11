@@ -37,11 +37,6 @@ export const personSchema = {
         "https://www.linkedin.com/company/civitas-capital-group/",
       ],
     },
-    {
-      "@type": "Organization",
-      name: "Remote Coffee",
-      url: "https://www.remotecoffee.com",
-    },
   ],
   alumniOf: [
     {

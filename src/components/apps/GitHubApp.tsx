@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ExternalLink, GitFork, Star, Code2, Bot, Server, Coffee, Gamepad2, Globe } from "lucide-react";
+import { ExternalLink, GitFork, Code2, Bot, Server, Moon, Gamepad2, Globe } from "lucide-react";
 
 // ============================================================================
 // GITHUB APP - Public Repositories Showcase
@@ -64,6 +64,26 @@ const repos: Repo[] = [
     category: ["bots"],
     icon: <Bot size={14} />,
     updated: "Mar 2026",
+  },
+  {
+    name: "eightsleep-consumer",
+    description: "Eight Sleep data pipeline. Pulls nightly sleep metrics into a personal health stack for training readiness and recovery analytics.",
+    url: "https://github.com/atthewm/eightsleep-consumer",
+    language: "TypeScript",
+    languageColor: "#3178c6",
+    category: ["projects"],
+    icon: <Moon size={14} />,
+    updated: "May 2026",
+  },
+  {
+    name: "eightsleep-client",
+    description: "TypeScript client for the Eight Sleep API. Reusable library underpinning the consumer pipeline and related tooling.",
+    url: "https://github.com/atthewm/eightsleep-client",
+    language: "TypeScript",
+    languageColor: "#3178c6",
+    category: ["projects"],
+    icon: <Moon size={14} />,
+    updated: "May 2026",
   },
   {
     name: "matthewrmckenzie.com",

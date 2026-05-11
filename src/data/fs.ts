@@ -73,7 +73,6 @@ export const fileSystem: FSItem[] = [
   // Hidden items - revealed by easter eggs
   { id: "secrets", name: "Secrets", type: "folder", icon: "Lock", hidden: true, description: "You found the hidden folder.", children: [
     { id: "secrets-readme", name: "README", type: "document", icon: "FileText", contentPath: "secrets-readme.md", description: "Secrets of McKenzie OS.", defaultSize: { width: 480, height: 400 } },
-    { id: "remote-coffee", name: "Remote Coffee", type: "app", icon: "Coffee", appComponent: "RemoteCoffeeApp", description: "The best coffee shop in Austin.", defaultSize: { width: 440, height: 560 } },
   ]},
 ];
 

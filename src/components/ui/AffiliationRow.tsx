@@ -7,7 +7,6 @@
 
 const affiliations = [
   { name: "Civitas Capital Group", href: "https://civitascapital.com" },
-  { name: "Remote Coffee", href: "https://www.remotecoffee.com" },
   { name: "SMU", href: "https://www.smu.edu" },
   { name: "Villanova", href: "https://www1.villanova.edu" },
 ];

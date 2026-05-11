@@ -53,7 +53,7 @@ export async function GET() {
       title: "About Matthew McKenzie",
       link: `${SITE_URL}/about`,
       description:
-        "Capital formation, growth strategy, and AI operations. Nine years at Civitas Capital Group. Head of Capital Formation at Remote Coffee.",
+        "Capital formation, investor relations, and AI operations tooling. Nine years at Civitas Capital Group.",
       pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
     },
     {

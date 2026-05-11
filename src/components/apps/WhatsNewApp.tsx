@@ -63,7 +63,6 @@ const releases: Release[] = [
       { text: "Sound effects via Web Audio — close, minimize sounds (toggleable)", type: "feature" },
       { text: "Shut Down in Apple menu with fadeout animation and auto-reboot", type: "feature" },
       { text: "Start Here redesigned with quick-access grid and keyboard shortcut tips", type: "polish" },
-      { text: "Remote Coffee — hidden menu in Secrets folder, discoverable via Terminal", type: "feature" },
       { text: "Chess Queen movement bug and missing default return fixed", type: "fix" },
     ],
   },
