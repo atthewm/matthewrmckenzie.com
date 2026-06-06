@@ -5,6 +5,7 @@ import { dockItemIds, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { getPantherIcon } from "./PantherIcons";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
@@ -64,15 +65,17 @@ function DockIcon({
   onHover,
   onClick,
   compact,
-}: DockIconProps & { compact?: boolean }) {
+  reduceMotion,
+}: DockIconProps & { compact?: boolean; reduceMotion?: boolean }) {
   const PantherIcon = getPantherIcon(item.id);
 
   const iconBox = compact ? 34 : 44;
   const iconSize = compact ? 28 : 38;
 
-  // Magnification: full scale at hovered, slightly less for neighbors
+  // Magnification: full scale at hovered, slightly less for neighbors.
+  // Disabled when the user prefers reduced motion.
   let scale = 1;
-  if (hoveredIndex !== null) {
+  if (!reduceMotion && hoveredIndex !== null) {
     const distance = Math.abs(hoveredIndex - myIndex);
     if (distance === 0) scale = 1.4;
     else if (distance === 1) scale = 1.18;
@@ -171,6 +174,7 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const reduceMotion = useReducedMotion();
 
   // Build resolved dock items (skip separators for indexing purposes)
   const dockEntries: { type: "item" | "separator"; item?: FSItem; itemIndex?: number }[] = [];
@@ -269,6 +273,7 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
             onHover={isMobile ? () => {} : handleHover}
             onClick={() => handleClick(item)}
             compact={isMobile}
+            reduceMotion={reduceMotion}
           />
         );
       })}
