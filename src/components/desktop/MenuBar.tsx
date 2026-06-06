@@ -6,7 +6,7 @@ import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
 import { useOpenInBrowser } from "@/lib/browserStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { useShutdown } from "./DesktopShell";
+import { useShutdown } from "./ShutdownContext";
 
 // ============================================================================
 // MENU BAR (Classic Mac Style) - Functional Dropdowns

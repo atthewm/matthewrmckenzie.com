@@ -1,21 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef, createContext, useContext } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
 import Screensaver from "./Screensaver";
 import { playStartupChime } from "@/lib/startupChime";
 import { playShutdown } from "@/lib/soundEffects";
-
-// ---------------------------------------------------------------------------
-// Shutdown context — lets any component trigger a shutdown sequence
-// ---------------------------------------------------------------------------
-const ShutdownContext = createContext<(() => void) | null>(null);
-export function useShutdown(): () => void {
-  const fn = useContext(ShutdownContext);
-  return fn || (() => {});
-}
+import { ShutdownProvider } from "./ShutdownContext";
 
 // ============================================================================
 // BOOT SEQUENCE (Retro Mac Startup)
@@ -225,7 +217,7 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
   }
 
   return (
-    <ShutdownContext.Provider value={handleShutdown}>
+    <ShutdownProvider value={handleShutdown}>
       <DesktopProvider>
         <SettingsProvider>
           {booting && <BootSequence onComplete={handleBootComplete} />}
@@ -234,6 +226,6 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
           <Desktop contentMap={contentMap} />
         </SettingsProvider>
       </DesktopProvider>
-    </ShutdownContext.Provider>
+    </ShutdownProvider>
   );
 }
