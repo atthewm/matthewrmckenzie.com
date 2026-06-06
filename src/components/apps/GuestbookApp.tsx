@@ -203,43 +203,51 @@ export default function GuestbookApp() {
               style={{ position: "absolute", left: "-9999px", opacity: 0 }}
             />
 
-            <div className="flex gap-2">
+            <div>
+              <label htmlFor="guestbook-name" className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
+                Name
+              </label>
               <input
+                id="guestbook-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
-                aria-label="Your name"
                 maxLength={100}
-                className="flex-1 px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                className="w-full px-2.5 py-1.5 rounded text-[12px] text-desktop-text
                            bg-desktop-surface border outline-none
                            focus:border-desktop-accent transition-colors"
                 style={{ borderColor: "var(--desktop-border)" }}
               />
             </div>
-            <div className="flex gap-2">
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Leave a message..."
-                aria-label="Leave a message"
-                maxLength={500}
-                rows={2}
-                className="flex-1 px-2.5 py-1.5 rounded text-[12px] text-desktop-text
-                           bg-desktop-surface border outline-none resize-none
-                           focus:border-desktop-accent transition-colors"
-                style={{ borderColor: "var(--desktop-border)" }}
-              />
-              <button
-                type="submit"
-                disabled={status === "sending" || !name.trim() || !message.trim()}
-                className="self-end px-3 py-1.5 rounded text-[11px] font-medium
-                           bg-desktop-accent text-white hover:opacity-90
-                           disabled:opacity-50 transition-opacity"
-              >
-                <Send size={12} />
-                <span className="sr-only">Sign guestbook</span>
-              </button>
+            <div>
+              <label htmlFor="guestbook-message" className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
+                Message
+              </label>
+              <div className="flex gap-2">
+                <textarea
+                  id="guestbook-message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Leave a message..."
+                  maxLength={500}
+                  rows={2}
+                  className="flex-1 px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                             bg-desktop-surface border outline-none resize-none
+                             focus:border-desktop-accent transition-colors"
+                  style={{ borderColor: "var(--desktop-border)" }}
+                />
+                <button
+                  type="submit"
+                  disabled={status === "sending" || !name.trim() || !message.trim()}
+                  className="self-end px-3 py-1.5 rounded text-[11px] font-medium
+                             bg-desktop-accent text-white hover:opacity-90
+                             disabled:opacity-50 transition-opacity"
+                >
+                  <Send size={12} />
+                  <span className="sr-only">Sign guestbook</span>
+                </button>
+              </div>
             </div>
             {errorMsg && (
               <p className="text-[10px] text-red-500">{errorMsg}</p>
