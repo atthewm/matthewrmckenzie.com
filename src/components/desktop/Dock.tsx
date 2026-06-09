@@ -54,6 +54,12 @@ interface DockIconProps {
   myIndex: number;
   onHover: (index: number | null) => void;
   onClick: () => void;
+  /** Roving tabindex: only the active item is a tab stop. */
+  tabIndex: number;
+  /** Toggle state for window-backed items; undefined for plain links. */
+  pressed?: boolean;
+  onFocus: () => void;
+  buttonRef: (el: HTMLButtonElement | null) => void;
 }
 
 function DockIcon({
@@ -64,6 +70,10 @@ function DockIcon({
   myIndex,
   onHover,
   onClick,
+  tabIndex,
+  pressed,
+  onFocus,
+  buttonRef,
   compact,
   reduceMotion,
 }: DockIconProps & { compact?: boolean; reduceMotion?: boolean }) {
@@ -86,6 +96,7 @@ function DockIcon({
 
   return (
     <button
+      ref={buttonRef}
       className="relative flex flex-col items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1 rounded"
       style={{
         transition: "transform 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
@@ -95,6 +106,9 @@ function DockIcon({
       onMouseEnter={() => onHover(myIndex)}
       onMouseLeave={() => onHover(null)}
       onClick={onClick}
+      onFocus={onFocus}
+      tabIndex={tabIndex}
+      aria-pressed={pressed}
       aria-label={`Open ${item.name}`}
     >
       {!compact && <DockTooltip label={item.name} visible={isHovered} />}
@@ -176,6 +190,11 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
   const isMobile = useIsMobile();
   const reduceMotion = useReducedMotion();
 
+  // Roving tabindex (WAI-ARIA toolbar pattern): one item is the tab stop,
+  // arrow keys move focus between items.
+  const [rovingIndex, setRovingIndex] = useState(0);
+  const itemButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
   // Build resolved dock items (skip separators for indexing purposes)
   const dockEntries: { type: "item" | "separator"; item?: FSItem; itemIndex?: number }[] = [];
   let itemCounter = 0;
@@ -200,6 +219,40 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
   const handleDockLeave = useCallback(() => {
     setHoveredIndex(null);
   }, []);
+
+  const itemCount = itemCounter;
+  // Keep the tab stop valid when the item list shrinks (mobile layout).
+  const activeRovingIndex = Math.min(rovingIndex, Math.max(0, itemCount - 1));
+
+  const focusItemAt = useCallback((index: number) => {
+    setRovingIndex(index);
+    itemButtonRefs.current[index]?.focus();
+  }, []);
+
+  const handleToolbarKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (itemCount === 0) return;
+      switch (e.key) {
+        case "ArrowRight":
+          e.preventDefault();
+          focusItemAt((activeRovingIndex + 1) % itemCount);
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          focusItemAt((activeRovingIndex - 1 + itemCount) % itemCount);
+          break;
+        case "Home":
+          e.preventDefault();
+          focusItemAt(0);
+          break;
+        case "End":
+          e.preventDefault();
+          focusItemAt(itemCount - 1);
+          break;
+      }
+    },
+    [itemCount, activeRovingIndex, focusItemAt]
+  );
 
   const handleClick = useCallback((item: FSItem) => {
     trackEvent("app_opened", { app: item.id, source: "dock" });
@@ -230,6 +283,10 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
   return (
     <div
       ref={dockRef}
+      role="toolbar"
+      aria-label="Dock"
+      aria-orientation="horizontal"
+      onKeyDown={handleToolbarKeyDown}
       className={`fixed left-1/2 -translate-x-1/2 z-dock
                   flex items-end
                   rounded-2xl animate-fade-in
@@ -262,6 +319,7 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
           (w) => w.fsItemId === item.id && state.focusedWindowId === w.id && !w.isMinimized
         );
 
+        const itemIndex = entry.itemIndex!;
         return (
           <DockIcon
             key={item.id}
@@ -269,9 +327,13 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
             isOpen={isOpen}
             isFocused={isFocused}
             hoveredIndex={isMobile ? null : hoveredIndex}
-            myIndex={entry.itemIndex!}
+            myIndex={itemIndex}
             onHover={isMobile ? () => {} : handleHover}
             onClick={() => handleClick(item)}
+            tabIndex={itemIndex === activeRovingIndex ? 0 : -1}
+            pressed={item.type === "link" ? undefined : isFocused}
+            onFocus={() => setRovingIndex(itemIndex)}
+            buttonRef={(el) => { itemButtonRefs.current[itemIndex] = el; }}
             compact={isMobile}
             reduceMotion={reduceMotion}
           />
