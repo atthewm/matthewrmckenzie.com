@@ -14,7 +14,7 @@ const affiliations = [
 export default function AffiliationRow() {
   return (
     <div className="mt-10 pt-6 border-t border-desktop-border">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-desktop-text-secondary mb-3">
+      <p className="text-3xs font-semibold uppercase tracking-wider text-desktop-text-secondary mb-3">
         Affiliations
       </p>
       <div className="flex items-center gap-6 flex-wrap">

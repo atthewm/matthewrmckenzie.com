@@ -122,7 +122,7 @@ export default function Expose({ active, onClose }: ExposeProps) {
     >
       {/* "Exposé" label */}
       <div
-        className="absolute top-3 left-1/2 -translate-x-1/2 text-white/70 text-[11px] font-medium tracking-wide"
+        className="absolute top-3 left-1/2 -translate-x-1/2 text-white/70 text-2xs font-medium tracking-wide"
         style={{ textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}
       >
         {visibleWindows.length === 0 ? "No open windows" : "Click a window to focus • Esc to exit"}

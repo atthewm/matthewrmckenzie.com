@@ -38,7 +38,7 @@ function Clock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span className="text-[11px] font-medium tabular-nums">{time}</span>;
+  return <span className="text-2xs font-medium tabular-nums">{time}</span>;
 }
 
 // ---------------------------------------------------------------------------
@@ -98,7 +98,7 @@ function MenuDropdown({
             }}
             disabled={item.disabled}
             className={`
-              w-full flex items-center justify-between px-4 py-1 text-[11px] text-left
+              w-full flex items-center justify-between px-4 py-1 text-2xs text-left
               transition-colors duration-75
               ${item.disabled
                 ? "text-desktop-text-secondary/50 cursor-default"
@@ -108,7 +108,7 @@ function MenuDropdown({
           >
             <span>{item.label}</span>
             {item.shortcut && (
-              <span className="ml-6 text-[10px] opacity-50">{item.shortcut}</span>
+              <span className="ml-6 text-3xs opacity-50">{item.shortcut}</span>
             )}
           </button>
         );
@@ -138,13 +138,13 @@ function SubmenuItem({
       onMouseLeave={() => { if (!isMobileView) setOpen(false); }}
     >
       <div
-        className="w-full flex items-center justify-between px-4 py-1 text-[11px]
+        className="w-full flex items-center justify-between px-4 py-1 text-2xs
                    text-desktop-text hover:bg-desktop-accent hover:text-white
                    transition-colors duration-75 cursor-default"
         onClick={() => { if (isMobileView) setOpen(!open); }}
       >
         <span>{item.label}</span>
-        <span className="text-[10px]">{open ? "\u25BE" : "\u25B8"}</span>
+        <span className="text-3xs">{open ? "\u25BE" : "\u25B8"}</span>
       </div>
       {open && (
         <div
@@ -173,13 +173,13 @@ function SubmenuItem({
                     child.action();
                     onClose();
                   }}
-                  className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-[11px] text-left
+                  className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-2xs text-left
                              text-desktop-text hover:bg-desktop-accent hover:text-white
                              transition-colors duration-75`}
                 >
                   <span>{child.label}</span>
                   {child.shortcut && (
-                    <span className="ml-4 text-[10px] opacity-50">{child.shortcut}</span>
+                    <span className="ml-4 text-3xs opacity-50">{child.shortcut}</span>
                   )}
                 </button>
               );
@@ -480,7 +480,7 @@ export default function MenuBar() {
   return (
     <div
       ref={barRef}
-      className="fixed top-0 left-0 right-0 h-[22px] z-menubar
+      className="fixed top-0 left-0 right-0 h-menubar z-menubar
                   flex items-center justify-between px-3
                   border-b select-none"
       style={{
@@ -494,7 +494,7 @@ export default function MenuBar() {
         {visibleMenuKeys.map((name) => (
           <div key={name} className="relative shrink-0">
             <button
-              className={`text-[11px] px-2 py-0.5 rounded
+              className={`text-2xs px-2 py-0.5 rounded
                          transition-colors duration-75 text-desktop-text
                          ${name === "\uF8FF" ? "font-bold tracking-wide" : "font-normal"}
                          ${activeMenu === name ? "bg-desktop-accent text-white" : "hover:bg-desktop-accent/20"}`}
@@ -514,7 +514,7 @@ export default function MenuBar() {
 
         {/* Active window title (subtle, like classic Mac) - hidden on mobile */}
         {activeTitle && !isMobile && (
-          <span className="text-[11px] text-desktop-text-secondary ml-4 truncate max-w-[200px]">
+          <span className="text-2xs text-desktop-text-secondary ml-4 truncate max-w-[200px]">
             {activeTitle}
           </span>
         )}
@@ -550,7 +550,7 @@ export default function MenuBar() {
                     });
                     setShowThemeMenu(false);
                   }}
-                  className={`w-full flex items-center gap-2 px-3 py-1 text-[11px]
+                  className={`w-full flex items-center gap-2 px-3 py-1 text-2xs
                     hover:bg-desktop-accent hover:text-white transition-colors
                     ${
                       state.theme === t.value

@@ -301,7 +301,7 @@ export default function Window({ windowState, children }: WindowProps) {
       {/* TITLE BAR - Panther Aqua brushed metal */}
       <div
         className={`
-          flex items-center ${isMobile ? "h-[32px]" : "h-[22px]"} px-2 shrink-0
+          flex items-center ${isMobile ? "h-titlebar-mobile" : "h-titlebar"} px-2 shrink-0
           ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}
         `}
         style={{
@@ -324,7 +324,7 @@ export default function Window({ windowState, children }: WindowProps) {
 
         {/* Title */}
         <div
-          className="flex-1 text-center text-[13px] font-semibold truncate pointer-events-none"
+          className="flex-1 text-center text-title font-semibold truncate pointer-events-none"
           style={{
             color: isFocused ? "var(--window-title-text, rgba(0,0,0,0.85))" : "var(--window-title-text-inactive, rgba(0,0,0,0.35))",
             textShadow: isFocused ? "0 1px 0 rgba(255,255,255,0.5)" : "none",
@@ -337,7 +337,7 @@ export default function Window({ windowState, children }: WindowProps) {
         {isMobile && windowState.isMaximized ? (
           <button
             onClick={handleExitFullscreen}
-            className="shrink-0 text-[10px] font-medium px-2 py-0.5 rounded z-20
+            className="shrink-0 text-3xs font-medium px-2 py-0.5 rounded z-20
                        hover:bg-black/5 active:bg-black/10 transition-colors"
             style={{ color: isFocused ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.3)" }}
           >

@@ -26,7 +26,7 @@ function DockTooltip({ label, visible }: { label: string; visible: boolean }) {
       className={`
         absolute -top-8 left-1/2 -translate-x-1/2
         px-2 py-0.5 rounded
-        text-[11px] font-medium text-white whitespace-nowrap
+        text-2xs font-medium text-white whitespace-nowrap
         pointer-events-none transition-all duration-150
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"}
       `}

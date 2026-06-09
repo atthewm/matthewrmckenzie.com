@@ -118,7 +118,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
       {/* Label */}
       <span
         className={`
-          text-[10px] font-medium text-center leading-tight line-clamp-2 px-1 py-0.5 rounded
+          text-3xs font-medium text-center leading-tight line-clamp-2 px-1 py-0.5 rounded
           ${selected
             ? "bg-desktop-accent text-white"
             : "text-desktop-text"
