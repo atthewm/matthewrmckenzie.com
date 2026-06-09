@@ -33,6 +33,7 @@ export const fileSystem: FSItem[] = [
   { id: "guestbook", name: "Guestbook", type: "app", icon: "BookOpen", appComponent: "GuestbookApp", description: "Sign the guestbook.", defaultSize: { width: 560, height: 500 } },
   { id: "health", name: "Health", type: "folder", icon: "Heart", description: "WHOOP health metrics, workout splits, and fitness data.", children: [
     { id: "whoop-dashboard", name: "WHOOP Dashboard", type: "app", icon: "Activity", appComponent: "WhoopDashboardApp", description: "Health and fitness dashboard powered by WHOOP.", defaultSize: { width: 520, height: 640 } },
+    { id: "nutrition", name: "Nutrition", type: "app", icon: "Activity", appComponent: "NutritionApp", description: "Daily macros, targets, and streaks (private, synced from Notion).", defaultSize: { width: 560, height: 680 } },
     { id: "whoop-splits", name: "WHOOP Splits", type: "folder", icon: "FolderHeart", description: "Strength Trainer workout splits.", children: [
       { id: "whoop-split-arms-abs", name: "GunsAndGuts.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Arms & Abs split.", defaultSize: { width: 380, height: 480 } },
       { id: "whoop-split-back", name: "BatCaveBack.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Back split.", defaultSize: { width: 380, height: 480 } },
@@ -51,6 +52,11 @@ export const fileSystem: FSItem[] = [
     { id: "high-protein-heirloom-blue-corn-tortillas", name: "High-Protein Blue Corn Tortillas", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/high-protein-heirloom-blue-corn-tortillas.md", description: "High-protein tortillas using blue corn masa and vital wheat gluten.", defaultSize: { width: 600, height: 640 } },
     { id: "mamas-healthy-meatballs", name: "Mama's Healthy Meatballs", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/mamas-healthy-meatballs.md", description: "Lean, high-protein meatballs with beef, lamb, and venison.", defaultSize: { width: 600, height: 640 } },
     { id: "parmesan-crusted-baked-chicken-tenders", name: "Parmesan Crusted Baked Chicken Tenders", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/parmesan-crusted-baked-chicken-tenders.md", description: "Higher-protein baked tenders with a Parmesan crust.", defaultSize: { width: 600, height: 640 } },
+  ]},
+  { id: "media", name: "Media", type: "folder", icon: "Image", description: "Films, TV, and audiobooks synced from my Notion Media Library.", children: [
+    { id: "media-movies", name: "Movies", type: "app", icon: "Disc3", appComponent: "MediaShelfApp", description: "Films I've watched, rated, and queued.", defaultSize: { width: 660, height: 600 } },
+    { id: "media-tv", name: "TV Shows", type: "app", icon: "Image", appComponent: "MediaShelfApp", description: "TV I'm watching and recommend.", defaultSize: { width: 660, height: 600 } },
+    { id: "media-audiobooks", name: "Audiobooks", type: "app", icon: "Headphones", appComponent: "MediaShelfApp", description: "Recent Audible listens and ratings.", defaultSize: { width: 660, height: 600 } },
   ]},
   { id: "ichat", name: "iChat", type: "app", icon: "MessageSquare", appComponent: "IChatApp", description: "Chat with an AI assistant.", defaultSize: { width: 400, height: 500 } },
   { id: "photo-booth", name: "Photo Booth", type: "app", icon: "Camera", appComponent: "PhotoBoothApp", description: "Take retro photos with effects.", defaultSize: { width: 520, height: 480 } },

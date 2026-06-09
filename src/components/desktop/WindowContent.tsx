@@ -33,6 +33,8 @@ import MinesweeperApp from "@/components/apps/MinesweeperApp";
 import UrlShortenerApp from "@/components/apps/UrlShortenerApp";
 import GitHubApp from "@/components/apps/GitHubApp";
 import WhatsNewApp from "@/components/apps/WhatsNewApp";
+import NutritionApp from "@/components/apps/NutritionApp";
+import MediaShelfApp from "@/components/apps/MediaShelfApp";
 
 interface WindowContentProps {
   windowState: WindowState;
@@ -68,6 +70,8 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   UrlShortenerApp,
   GitHubApp,
   WhatsNewApp,
+  NutritionApp,
+  MediaShelfApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {
