@@ -137,4 +137,10 @@ export const appleMusicPlaylists: AppleMusicPlaylist[] = [
     description: "Sun, salt, and sound from the Texas coast.",
     appleMusicUrl: "https://music.apple.com/us/playlist/surf-city-t-x/pl.u-a340FDyX4G",
   },
+  {
+    id: "am-cumbias",
+    title: "Cumbias",
+    description: "Cumbia rhythms from across Latin America.",
+    appleMusicUrl: "https://music.apple.com/us/playlist/cumbias/pl.u-3W3gC6da5A",
+  },
 ];
