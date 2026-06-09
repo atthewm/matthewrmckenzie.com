@@ -54,17 +54,118 @@ type MenuItem =
 // Dropdown component
 // ---------------------------------------------------------------------------
 
+/** Items that can take focus while arrowing through a menu. */
+function canFocusItem(item: MenuItem): boolean {
+  return item.type === "submenu" || (item.type === "action" && !item.disabled);
+}
+
 function MenuDropdown({
   items,
+  label,
   onClose,
+  initialFocus,
+  onNavigate,
+  onEscape,
 }: {
   items: MenuItem[];
+  label: string;
   onClose: () => void;
+  /** "first"/"last" focus that item on open (keyboard); null keeps focus on the trigger (mouse). */
+  initialFocus: "first" | "last" | null;
+  /** Move to the adjacent top-level menu (ArrowLeft/ArrowRight inside the menu). */
+  onNavigate: (direction: 1 | -1) => void;
+  /** Close this menu and return focus to its menubar trigger (Escape). */
+  onEscape: () => void;
 }) {
+  const itemRefs = useRef<(HTMLElement | null)[]>([]);
+
+  const focusableEls = useCallback(() => {
+    return items
+      .map((item, i) => (canFocusItem(item) ? itemRefs.current[i] : null))
+      .filter((el): el is HTMLElement => el !== null);
+  }, [items]);
+
+  const moveFocus = useCallback(
+    (delta: 1 | -1) => {
+      const els = focusableEls();
+      if (els.length === 0) return;
+      const current = els.indexOf(document.activeElement as HTMLElement);
+      const next =
+        current === -1
+          ? delta === 1 ? 0 : els.length - 1
+          : (current + delta + els.length) % els.length;
+      els[next].focus();
+    },
+    [focusableEls]
+  );
+
+  // Keyboard-opened menus focus their first/last item; mouse-opened menus
+  // leave focus on the trigger so hover browsing feels unchanged. Apply only
+  // when the directive changes: parent re-renders rebuild the items array,
+  // and re-running on identity churn would snap focus back to the first item.
+  const lastAppliedFocus = useRef<"first" | "last" | null>(null);
+  useEffect(() => {
+    if (!initialFocus || lastAppliedFocus.current === initialFocus) return;
+    lastAppliedFocus.current = initialFocus;
+    const els = focusableEls();
+    (initialFocus === "first" ? els[0] : els[els.length - 1])?.focus();
+  }, [initialFocus, focusableEls]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        e.stopPropagation();
+        moveFocus(1);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        e.stopPropagation();
+        moveFocus(-1);
+        break;
+      case "Home":
+        e.preventDefault();
+        e.stopPropagation();
+        focusableEls()[0]?.focus();
+        break;
+      case "End": {
+        e.preventDefault();
+        e.stopPropagation();
+        const els = focusableEls();
+        els[els.length - 1]?.focus();
+        break;
+      }
+      case "Escape":
+        e.preventDefault();
+        e.stopPropagation();
+        onEscape();
+        break;
+      // ArrowRight on a closed submenu trigger is handled (and stopped) by
+      // SubmenuItem; reaching here means move on to the adjacent menu.
+      case "ArrowRight":
+        e.preventDefault();
+        e.stopPropagation();
+        onNavigate(1);
+        break;
+      case "ArrowLeft":
+        e.preventDefault();
+        e.stopPropagation();
+        onNavigate(-1);
+        break;
+      case "Tab":
+        // Close and let the browser move focus out of the menubar.
+        onClose();
+        break;
+    }
+  };
+
   return (
     // The menubar root (fixed + z-menubar) establishes a stacking context, so
     // dropdown and submenu layering is local: standard z-10/z-20 suffice.
     <div
+      role="menu"
+      aria-label={label}
+      onKeyDown={handleKeyDown}
       className="absolute left-0 top-full mt-0 min-w-[180px] py-1 rounded-b-md shadow-lg animate-fade-in z-10"
       style={{
         background: "var(--desktop-surface)",
@@ -77,6 +178,7 @@ function MenuDropdown({
           return (
             <div
               key={`sep-${i}`}
+              role="separator"
               className="my-1 mx-2 border-t"
               style={{ borderColor: "var(--desktop-border)" }}
             />
@@ -84,12 +186,22 @@ function MenuDropdown({
         }
 
         if (item.type === "submenu") {
-          return <SubmenuItem key={item.label} item={item} onClose={onClose} />;
+          return (
+            <SubmenuItem
+              key={item.label}
+              item={item}
+              onClose={onClose}
+              registerRef={(el) => { itemRefs.current[i] = el; }}
+            />
+          );
         }
 
         return (
           <button
             key={item.label}
+            ref={(el) => { itemRefs.current[i] = el; }}
+            role="menuitem"
+            tabIndex={-1}
             onClick={() => {
               if (!item.disabled) {
                 item.action();
@@ -102,7 +214,7 @@ function MenuDropdown({
               transition-colors duration-75
               ${item.disabled
                 ? "text-desktop-text-secondary/50 cursor-default"
-                : "text-desktop-text hover:bg-desktop-accent hover:text-white"
+                : "text-desktop-text hover:bg-desktop-accent hover:text-white focus:bg-desktop-accent focus:text-white focus:outline-none"
               }
             `}
           >
@@ -120,15 +232,80 @@ function MenuDropdown({
 function SubmenuItem({
   item,
   onClose,
+  registerRef,
 }: {
   item: Extract<MenuItem, { type: "submenu" }>;
   onClose: () => void;
+  /** Registers the submenu trigger with the parent menu's roving focus list. */
+  registerRef: (el: HTMLElement | null) => void;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement | null>(null);
+  const childRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const focusFirstOnOpen = useRef(false);
 
   // On mobile, toggle on click instead of hover
   const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+
+  useEffect(() => {
+    if (open && focusFirstOnOpen.current) {
+      focusFirstOnOpen.current = false;
+      childRefs.current.find((el) => el !== null)?.focus();
+    }
+  }, [open]);
+
+  const openWithKeyboard = () => {
+    focusFirstOnOpen.current = true;
+    setOpen(true);
+  };
+
+  const closeAndRefocusTrigger = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const handleTriggerKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.stopPropagation();
+      openWithKeyboard();
+    }
+  };
+
+  const moveChildFocus = (delta: 1 | -1) => {
+    const els = childRefs.current.filter((el): el is HTMLButtonElement => el !== null);
+    if (els.length === 0) return;
+    const current = els.indexOf(document.activeElement as HTMLButtonElement);
+    const next =
+      current === -1
+        ? delta === 1 ? 0 : els.length - 1
+        : (current + delta + els.length) % els.length;
+    els[next].focus();
+  };
+
+  const handleSubmenuKeyDown = (e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        e.stopPropagation();
+        moveChildFocus(1);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        e.stopPropagation();
+        moveChildFocus(-1);
+        break;
+      // Close just the submenu and put focus back on its parent item.
+      case "ArrowLeft":
+      case "Escape":
+        e.preventDefault();
+        e.stopPropagation();
+        closeAndRefocusTrigger();
+        break;
+      // ArrowRight and Tab bubble to the parent menu (next menu / exit).
+    }
+  };
 
   return (
     <div
@@ -138,16 +315,26 @@ function SubmenuItem({
       onMouseLeave={() => { if (!isMobileView) setOpen(false); }}
     >
       <div
+        ref={(el) => { triggerRef.current = el; registerRef(el); }}
+        role="menuitem"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        tabIndex={-1}
+        onKeyDown={handleTriggerKeyDown}
         className="w-full flex items-center justify-between px-4 py-1 text-2xs
                    text-desktop-text hover:bg-desktop-accent hover:text-white
+                   focus:bg-desktop-accent focus:text-white focus:outline-none
                    transition-colors duration-75 cursor-default"
         onClick={() => { if (isMobileView) setOpen(!open); }}
       >
         <span>{item.label}</span>
-        <span className="text-3xs">{open ? "\u25BE" : "\u25B8"}</span>
+        <span className="text-3xs" aria-hidden="true">{open ? "\u25BE" : "\u25B8"}</span>
       </div>
       {open && (
         <div
+          role="menu"
+          aria-label={item.label}
+          onKeyDown={handleSubmenuKeyDown}
           className={`${isMobileView ? "relative w-full" : "absolute left-full top-0"} min-w-[160px] py-1 rounded-md shadow-lg z-20`}
           style={{
             background: "var(--desktop-surface)",
@@ -160,6 +347,7 @@ function SubmenuItem({
               return (
                 <div
                   key={`sub-sep-${j}`}
+                  role="separator"
                   className="my-1 mx-2 border-t"
                   style={{ borderColor: "var(--desktop-border)" }}
                 />
@@ -169,12 +357,16 @@ function SubmenuItem({
               return (
                 <button
                   key={child.label}
+                  ref={(el) => { childRefs.current[j] = el; }}
+                  role="menuitem"
+                  tabIndex={-1}
                   onClick={() => {
                     child.action();
                     onClose();
                   }}
                   className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-2xs text-left
                              text-desktop-text hover:bg-desktop-accent hover:text-white
+                             focus:bg-desktop-accent focus:text-white focus:outline-none
                              transition-colors duration-75`}
                 >
                   <span>{child.label}</span>
@@ -202,6 +394,11 @@ export default function MenuBar() {
   const barRef = useRef<HTMLDivElement>(null);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const themeRef = useRef<HTMLDivElement>(null);
+  // Roving tab stop across the menubar triggers, plus whether an opening
+  // dropdown should grab focus (keyboard) or leave it on the trigger (mouse).
+  const [focusTopIndex, setFocusTopIndex] = useState(0);
+  const [dropdownFocus, setDropdownFocus] = useState<"first" | "last" | null>(null);
+  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const openInBrowser = useOpenInBrowser();
   const isMobile = useIsMobile();
   const shutdown = useShutdown();
@@ -468,6 +665,72 @@ export default function MenuBar() {
     ? ["\uF8FF", "Window"]
     : Object.keys(menus);
 
+  // --- Menubar keyboard navigation (WAI-ARIA menubar pattern) ---
+  const menuCount = visibleMenuKeys.length;
+  // Keep the roving tab stop valid when the menu set shrinks (mobile).
+  const activeTopIndex = Math.min(focusTopIndex, menuCount - 1);
+
+  function openMenuFromMouse(name: string | null) {
+    setDropdownFocus(null);
+    setActiveMenu(name);
+  }
+
+  function openMenuFromKeyboard(index: number, focus: "first" | "last") {
+    setFocusTopIndex(index);
+    setDropdownFocus(focus);
+    setActiveMenu(visibleMenuKeys[index]);
+  }
+
+  function navigateMenu(direction: 1 | -1) {
+    const current = activeMenu ? visibleMenuKeys.indexOf(activeMenu) : activeTopIndex;
+    openMenuFromKeyboard((current + direction + menuCount) % menuCount, "first");
+  }
+
+  function closeMenuAndRefocusTrigger() {
+    const current = activeMenu ? visibleMenuKeys.indexOf(activeMenu) : activeTopIndex;
+    setActiveMenu(null);
+    triggerRefs.current[current]?.focus();
+  }
+
+  function handleTriggerKeyDown(e: React.KeyboardEvent, index: number) {
+    switch (e.key) {
+      case "ArrowRight":
+      case "ArrowLeft": {
+        e.preventDefault();
+        const delta = e.key === "ArrowRight" ? 1 : -1;
+        const next = (index + delta + menuCount) % menuCount;
+        setFocusTopIndex(next);
+        triggerRefs.current[next]?.focus();
+        // With a menu open, browsing the menubar moves the open menu along.
+        if (activeMenu) {
+          setDropdownFocus(null);
+          setActiveMenu(visibleMenuKeys[next]);
+        }
+        break;
+      }
+      case "ArrowDown":
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        openMenuFromKeyboard(index, "first");
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        openMenuFromKeyboard(index, "last");
+        break;
+      case "Escape":
+        if (activeMenu) {
+          e.preventDefault();
+          setActiveMenu(null);
+        }
+        break;
+      case "Tab":
+        // Let the browser move focus on; just close any open menu.
+        if (activeMenu) setActiveMenu(null);
+        break;
+    }
+  }
+
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
     { value: "light", label: "Light", icon: <Sun size={13} /> },
     { value: "dark", label: "Dark", icon: <Moon size={13} /> },
@@ -491,26 +754,40 @@ export default function MenuBar() {
     >
       {/* Left: app name + menu items */}
       <div className="flex items-center gap-0 min-w-0">
-        {visibleMenuKeys.map((name) => (
-          <div key={name} className="relative shrink-0">
-            <button
-              className={`text-2xs px-2 py-0.5 rounded
-                         transition-colors duration-75 text-desktop-text
-                         ${name === "\uF8FF" ? "font-bold tracking-wide" : "font-normal"}
-                         ${activeMenu === name ? "bg-desktop-accent text-white" : "hover:bg-desktop-accent/20"}`}
-              onMouseDown={() => setActiveMenu(activeMenu === name ? null : name)}
-              onMouseEnter={() => { if (activeMenu) setActiveMenu(name); }}
-            >
-              {name === "\uF8FF" ? (isMobile ? "MCK_OS" : "McKenzie OS") : name}
-            </button>
-            {activeMenu === name && (
-              <MenuDropdown
-                items={menus[name]}
-                onClose={() => setActiveMenu(null)}
-              />
-            )}
-          </div>
-        ))}
+        <div role="menubar" aria-label="Application menus" className="flex items-center gap-0">
+          {visibleMenuKeys.map((name, index) => (
+            <div key={name} role="none" className="relative shrink-0">
+              <button
+                ref={(el) => { triggerRefs.current[index] = el; }}
+                role="menuitem"
+                aria-haspopup="menu"
+                aria-expanded={activeMenu === name}
+                tabIndex={index === activeTopIndex ? 0 : -1}
+                onFocus={() => setFocusTopIndex(index)}
+                onKeyDown={(e) => handleTriggerKeyDown(e, index)}
+                className={`text-2xs px-2 py-0.5 rounded
+                           transition-colors duration-75 text-desktop-text
+                           focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-desktop-accent
+                           ${name === "\uF8FF" ? "font-bold tracking-wide" : "font-normal"}
+                           ${activeMenu === name ? "bg-desktop-accent text-white" : "hover:bg-desktop-accent/20"}`}
+                onMouseDown={() => openMenuFromMouse(activeMenu === name ? null : name)}
+                onMouseEnter={() => { if (activeMenu) openMenuFromMouse(name); }}
+              >
+                {name === "\uF8FF" ? (isMobile ? "MCK_OS" : "McKenzie OS") : name}
+              </button>
+              {activeMenu === name && (
+                <MenuDropdown
+                  items={menus[name]}
+                  label={name === "\uF8FF" ? "McKenzie OS" : name}
+                  onClose={() => setActiveMenu(null)}
+                  initialFocus={dropdownFocus}
+                  onNavigate={navigateMenu}
+                  onEscape={closeMenuAndRefocusTrigger}
+                />
+              )}
+            </div>
+          ))}
+        </div>
 
         {/* Active window title (subtle, like classic Mac) - hidden on mobile */}
         {activeTitle && !isMobile && (
@@ -527,6 +804,8 @@ export default function MenuBar() {
             onClick={() => setShowThemeMenu(!showThemeMenu)}
             className="p-0.5 rounded hover:bg-desktop-border/50 transition-colors"
             aria-label="Change theme"
+            aria-haspopup="menu"
+            aria-expanded={showThemeMenu}
           >
             {state.resolvedTheme === "dark" ? (
               <Moon size={12} />
