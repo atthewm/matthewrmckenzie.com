@@ -230,7 +230,7 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
   return (
     <div
       ref={dockRef}
-      className={`fixed left-1/2 -translate-x-1/2 z-[9999]
+      className={`fixed left-1/2 -translate-x-1/2 z-dock
                   flex items-end
                   rounded-2xl animate-fade-in
                   ${isMobile

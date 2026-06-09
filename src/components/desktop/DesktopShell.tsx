@@ -50,7 +50,7 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div
-      className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center ${
+      className={`fixed inset-0 z-boot flex flex-col items-center justify-center ${
         phase === "fade" ? "opacity-0" : "opacity-100"
       }`}
       style={{
@@ -147,7 +147,7 @@ function ShutdownSequence({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-[999999] flex flex-col items-center justify-center"
+      className="fixed inset-0 z-shutdown flex flex-col items-center justify-center"
       style={{
         background: phase === "fadeOut" ? "rgba(0,0,0,0)" : "#000",
         transition: "background 0.8s ease",

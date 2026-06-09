@@ -62,8 +62,10 @@ function MenuDropdown({
   onClose: () => void;
 }) {
   return (
+    // The menubar root (fixed + z-menubar) establishes a stacking context, so
+    // dropdown and submenu layering is local: standard z-10/z-20 suffice.
     <div
-      className="absolute left-0 top-full mt-0 min-w-[180px] py-1 rounded-b-md shadow-lg animate-fade-in z-[10001]"
+      className="absolute left-0 top-full mt-0 min-w-[180px] py-1 rounded-b-md shadow-lg animate-fade-in z-10"
       style={{
         background: "var(--desktop-surface)",
         border: "1px solid var(--desktop-border)",
@@ -146,7 +148,7 @@ function SubmenuItem({
       </div>
       {open && (
         <div
-          className={`${isMobileView ? "relative w-full" : "absolute left-full top-0"} min-w-[160px] py-1 rounded-md shadow-lg z-[10002]`}
+          className={`${isMobileView ? "relative w-full" : "absolute left-full top-0"} min-w-[160px] py-1 rounded-md shadow-lg z-20`}
           style={{
             background: "var(--desktop-surface)",
             border: isMobileView ? "none" : "1px solid var(--desktop-border)",
@@ -478,7 +480,7 @@ export default function MenuBar() {
   return (
     <div
       ref={barRef}
-      className="fixed top-0 left-0 right-0 h-[22px] z-[10000]
+      className="fixed top-0 left-0 right-0 h-[22px] z-menubar
                   flex items-center justify-between px-3
                   border-b select-none"
       style={{

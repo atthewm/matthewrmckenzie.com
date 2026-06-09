@@ -112,7 +112,7 @@ export default function Expose({ active, onClose }: ExposeProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[99990]"
+      className="fixed inset-0 z-expose"
       style={{
         background: "rgba(0, 0, 0, 0.5)",
         backdropFilter: "blur(8px)",

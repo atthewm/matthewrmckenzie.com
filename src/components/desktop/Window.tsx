@@ -25,6 +25,9 @@ type ResizeDirection =
   | null;
 
 const RESIZE_HANDLE_SIZE = 6;
+// Local to the window's own stacking context (the window root sets a z-index),
+// so this only needs to beat in-window content, not the global z-index scale.
+const RESIZE_HANDLE_Z_INDEX = 10;
 const MIN_WIDTH = 320;
 const MIN_HEIGHT = 200;
 
@@ -279,7 +282,7 @@ export default function Window({ windowState, children }: WindowProps) {
         <>
           {(["n","s","e","w","ne","nw","se","sw"] as ResizeDirection[]).map((dir) => {
             if (!dir) return null;
-            const s: React.CSSProperties = { position: "absolute", zIndex: 10 };
+            const s: React.CSSProperties = { position: "absolute", zIndex: RESIZE_HANDLE_Z_INDEX };
             if (dir.includes("n")) { s.top = 0; s.height = RESIZE_HANDLE_SIZE; }
             if (dir.includes("s")) { s.bottom = 0; s.height = RESIZE_HANDLE_SIZE; }
             if (dir.includes("e")) { s.right = 0; s.width = RESIZE_HANDLE_SIZE; }

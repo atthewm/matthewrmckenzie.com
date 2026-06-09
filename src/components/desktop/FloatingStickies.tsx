@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Plus, X } from "lucide-react";
+import { Z_INDEX } from "@/lib/z-index";
 
 // ============================================================================
 // FLOATING STICKIES (Mac OS X 10.3 Panther Style)
@@ -34,7 +35,7 @@ const COLORS: StickyColor[] = ["yellow", "pink", "blue", "green"];
 const STORAGE_KEY = "mmck-stickies-v2";
 const DEFAULT_WIDTH = 220;
 const DEFAULT_HEIGHT = 180;
-const BASE_Z_INDEX = 100;
+const BASE_Z_INDEX: number = Z_INDEX.sticky;
 
 function generateId() {
   return Math.random().toString(36).slice(2, 9);

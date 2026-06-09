@@ -6,6 +6,7 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 import { PantherIcon } from "./PantherIcons";
 import { trackEvent } from "@/lib/analytics";
+import { Z_INDEX } from "@/lib/z-index";
 
 // ============================================================================
 // DESKTOP ICON (Mac OS X 10.3 Panther) - Draggable
@@ -88,7 +89,8 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
       style={{
         left: currentX,
         top: currentY,
-        zIndex: dragging ? 9998 : 1,
+        // While dragging, float above stickies and windows but below the dock.
+        zIndex: dragging ? Z_INDEX.dock - 1 : Z_INDEX.base,
         cursor: dragging ? "grabbing" : "default",
         touchAction: "none",
       }}

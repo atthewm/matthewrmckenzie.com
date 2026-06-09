@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { Z_INDEX } from "./src/lib/z-index";
 
 const config: Config = {
   content: [
@@ -44,6 +45,13 @@ const config: Config = {
       backdropBlur: {
         xs: "2px",
       },
+      // Desktop stacking order. Values and documentation live in
+      // src/lib/z-index.ts; this generates z-base, z-sticky, z-dock,
+      // z-menubar, z-modal, z-contextmenu, z-spotlight, z-expose,
+      // z-screensaver, z-boot, z-shutdown.
+      zIndex: Object.fromEntries(
+        Object.entries(Z_INDEX).map(([name, value]) => [name, String(value)])
+      ),
       animation: {
         "window-open": "windowOpen 0.2s ease-out",
         "window-close": "windowClose 0.15s ease-in forwards",
