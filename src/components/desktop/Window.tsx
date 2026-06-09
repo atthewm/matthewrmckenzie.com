@@ -25,6 +25,9 @@ type ResizeDirection =
   | null;
 
 const RESIZE_HANDLE_SIZE = 6;
+// Local to the window's own stacking context (the window root sets a z-index),
+// so this only needs to beat in-window content, not the global z-index scale.
+const RESIZE_HANDLE_Z_INDEX = 10;
 const MIN_WIDTH = 320;
 const MIN_HEIGHT = 200;
 
@@ -279,7 +282,7 @@ export default function Window({ windowState, children }: WindowProps) {
         <>
           {(["n","s","e","w","ne","nw","se","sw"] as ResizeDirection[]).map((dir) => {
             if (!dir) return null;
-            const s: React.CSSProperties = { position: "absolute", zIndex: 10 };
+            const s: React.CSSProperties = { position: "absolute", zIndex: RESIZE_HANDLE_Z_INDEX };
             if (dir.includes("n")) { s.top = 0; s.height = RESIZE_HANDLE_SIZE; }
             if (dir.includes("s")) { s.bottom = 0; s.height = RESIZE_HANDLE_SIZE; }
             if (dir.includes("e")) { s.right = 0; s.width = RESIZE_HANDLE_SIZE; }
@@ -298,7 +301,7 @@ export default function Window({ windowState, children }: WindowProps) {
       {/* TITLE BAR - Panther Aqua brushed metal */}
       <div
         className={`
-          flex items-center ${isMobile ? "h-[32px]" : "h-[22px]"} px-2 shrink-0
+          flex items-center ${isMobile ? "h-titlebar-mobile" : "h-titlebar"} px-2 shrink-0
           ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}
         `}
         style={{
@@ -321,7 +324,7 @@ export default function Window({ windowState, children }: WindowProps) {
 
         {/* Title */}
         <div
-          className="flex-1 text-center text-[13px] font-semibold truncate pointer-events-none"
+          className="flex-1 text-center text-title font-semibold truncate pointer-events-none"
           style={{
             color: isFocused ? "var(--window-title-text, rgba(0,0,0,0.85))" : "var(--window-title-text-inactive, rgba(0,0,0,0.35))",
             textShadow: isFocused ? "0 1px 0 rgba(255,255,255,0.5)" : "none",
@@ -334,7 +337,7 @@ export default function Window({ windowState, children }: WindowProps) {
         {isMobile && windowState.isMaximized ? (
           <button
             onClick={handleExitFullscreen}
-            className="shrink-0 text-[10px] font-medium px-2 py-0.5 rounded z-20
+            className="shrink-0 text-3xs font-medium px-2 py-0.5 rounded z-20
                        hover:bg-black/5 active:bg-black/10 transition-colors"
             style={{ color: isFocused ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.3)" }}
           >

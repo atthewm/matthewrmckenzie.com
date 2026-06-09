@@ -106,10 +106,11 @@ export default function ContactApp() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             {/* Category */}
             <div>
-              <label className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
+              <label htmlFor="contact-category" className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
                 Category
               </label>
               <select
+                id="contact-category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-2.5 py-1.5 rounded text-[12px] text-desktop-text
@@ -124,46 +125,61 @@ export default function ContactApp() {
             </div>
 
             {/* Name */}
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              aria-label="Your name"
-              maxLength={100}
-              className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
-                         bg-desktop-surface border outline-none
-                         focus:border-desktop-accent transition-colors"
-              style={{ borderColor: "var(--desktop-border)" }}
-            />
+            <div>
+              <label htmlFor="contact-name" className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
+                Name
+              </label>
+              <input
+                id="contact-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                maxLength={100}
+                className="w-full px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                           bg-desktop-surface border outline-none
+                           focus:border-desktop-accent transition-colors"
+                style={{ borderColor: "var(--desktop-border)" }}
+              />
+            </div>
 
             {/* Email */}
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email"
-              aria-label="Your email"
-              maxLength={200}
-              className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
-                         bg-desktop-surface border outline-none
-                         focus:border-desktop-accent transition-colors"
-              style={{ borderColor: "var(--desktop-border)" }}
-            />
+            <div>
+              <label htmlFor="contact-email" className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
+                Email
+              </label>
+              <input
+                id="contact-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email"
+                maxLength={200}
+                className="w-full px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                           bg-desktop-surface border outline-none
+                           focus:border-desktop-accent transition-colors"
+                style={{ borderColor: "var(--desktop-border)" }}
+              />
+            </div>
 
             {/* Message */}
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Your message..."
-              aria-label="Your message"
-              maxLength={2000}
-              rows={4}
-              className="px-2.5 py-1.5 rounded text-[12px] text-desktop-text
-                         bg-desktop-surface border outline-none resize-none
-                         focus:border-desktop-accent transition-colors"
-              style={{ borderColor: "var(--desktop-border)" }}
-            />
+            <div>
+              <label htmlFor="contact-message" className="text-[10px] text-desktop-text-secondary font-medium uppercase tracking-wider mb-1 block">
+                Message
+              </label>
+              <textarea
+                id="contact-message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Your message..."
+                maxLength={2000}
+                rows={4}
+                className="w-full px-2.5 py-1.5 rounded text-[12px] text-desktop-text
+                           bg-desktop-surface border outline-none resize-none
+                           focus:border-desktop-accent transition-colors"
+                style={{ borderColor: "var(--desktop-border)" }}
+              />
+            </div>
 
             {errorMsg && (
               <p className="text-[10px] text-red-500">{errorMsg}</p>

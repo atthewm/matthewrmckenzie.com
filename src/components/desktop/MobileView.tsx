@@ -107,7 +107,7 @@ export default function MobileView({ contentMap }: MobileViewProps) {
                                   active:scale-95 transition-transform">
                     <PantherIcon itemId={item.id} size={36} />
                   </div>
-                  <span className="text-[11px] text-white/90 font-medium text-center leading-tight">
+                  <span className="text-2xs text-white/90 font-medium text-center leading-tight">
                     {item.name}
                   </span>
                 </button>

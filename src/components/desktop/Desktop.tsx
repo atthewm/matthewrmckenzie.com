@@ -234,7 +234,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
       {/* Skip to content for keyboard / screen reader users */}
       <a
         href="#desktop-workspace"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-1 focus:left-2 focus:z-[99999] focus:bg-white focus:text-black focus:px-3 focus:py-1.5 focus:rounded focus:text-sm focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-1 focus:left-2 focus:z-boot focus:bg-white focus:text-black focus:px-3 focus:py-1.5 focus:rounded focus:text-sm focus:shadow-lg"
       >
         Skip to desktop workspace
       </a>
@@ -299,7 +299,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
       {/* Toast notification */}
       {toast && (
         <div
-          className="fixed top-10 left-1/2 -translate-x-1/2 z-[99999]
+          className="fixed top-10 left-1/2 -translate-x-1/2 z-boot
                      px-4 py-2 rounded-lg shadow-lg text-[12px] font-medium
                      animate-fade-in"
           style={{

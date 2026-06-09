@@ -36,14 +36,14 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
 
       {/* Nav */}
       <header className="border-b border-desktop-border bg-desktop-surface">
-        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between flex-wrap gap-y-2">
           <Link
             href="/"
             className="text-sm font-semibold tracking-wide hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-2"
           >
             Matthew McKenzie
           </Link>
-          <nav aria-label="Main navigation" className="flex items-center gap-4">
+          <nav aria-label="Main navigation" className="flex items-center gap-4 flex-wrap">
             {navLinks.slice(1).map((link) => (
               <Link
                 key={link.href}

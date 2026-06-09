@@ -103,7 +103,7 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[99995]"
+      className="fixed inset-0 z-spotlight"
       onClick={onClose}
     >
       {/* Backdrop */}
@@ -148,7 +148,7 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
           {query && (
             <button
               onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-              className="text-[11px] px-1.5 rounded hover:bg-black/5"
+              className="text-2xs px-1.5 rounded hover:bg-black/5"
               style={{ color: "var(--desktop-text-secondary)" }}
             >
               ✕
@@ -183,10 +183,10 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
                     style={{ objectFit: "contain" }}
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-medium truncate">{item.name}</div>
+                    <div className="text-title font-medium truncate">{item.name}</div>
                     {item.description && (
                       <div
-                        className="text-[11px] truncate"
+                        className="text-2xs truncate"
                         style={{ opacity: isSelected ? 0.85 : 0.55 }}
                       >
                         {item.description}
@@ -194,7 +194,7 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
                     )}
                   </div>
                   <span
-                    className="text-[10px] shrink-0 capitalize"
+                    className="text-3xs shrink-0 capitalize"
                     style={{ opacity: isSelected ? 0.7 : 0.35 }}
                   >
                     {item.type}
@@ -204,14 +204,14 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
             })}
           </div>
         ) : (
-          <div className="px-4 py-6 text-center text-[13px]" style={{ color: "var(--desktop-text-secondary)" }}>
+          <div className="px-4 py-6 text-center text-title" style={{ color: "var(--desktop-text-secondary)" }}>
             No results for &ldquo;{query}&rdquo;
           </div>
         )}
 
         {/* Footer hint */}
         <div
-          className="px-4 py-1.5 text-[10px] text-center"
+          className="px-4 py-1.5 text-3xs text-center"
           style={{
             borderTop: "1px solid var(--desktop-border)",
             color: "var(--desktop-text-secondary)",

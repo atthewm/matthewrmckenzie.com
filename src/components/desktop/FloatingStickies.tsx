@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Plus, X } from "lucide-react";
+import { Z_INDEX } from "@/lib/z-index";
 
 // ============================================================================
 // FLOATING STICKIES (Mac OS X 10.3 Panther Style)
@@ -34,8 +35,7 @@ const COLORS: StickyColor[] = ["yellow", "pink", "blue", "green"];
 const STORAGE_KEY = "mmck-stickies-v2";
 const DEFAULT_WIDTH = 220;
 const DEFAULT_HEIGHT = 180;
-
-let nextZ = 100;
+const BASE_Z_INDEX: number = Z_INDEX.sticky;
 
 function generateId() {
   return Math.random().toString(36).slice(2, 9);
@@ -61,7 +61,7 @@ function loadStickies(): Sticky[] {
       y: 60,
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
-      zIndex: nextZ++,
+      zIndex: BASE_Z_INDEX,
     },
   ];
 }
@@ -239,9 +239,16 @@ interface FloatingStickiesProps {
 export default function FloatingStickies({ visible }: FloatingStickiesProps) {
   const [stickies, setStickies] = useState<Sticky[]>([]);
   const [loaded, setLoaded] = useState(false);
+  // Tracks the next z-index to assign. Re-derived from the persisted stickies'
+  // max zIndex on load so stacking order survives a reload.
+  const nextZRef = useRef(BASE_Z_INDEX);
 
   useEffect(() => {
-    setStickies(loadStickies());
+    const initial = loadStickies();
+    setStickies(initial);
+    if (initial.length > 0) {
+      nextZRef.current = Math.max(BASE_Z_INDEX, ...initial.map((s) => s.zIndex ?? 0)) + 1;
+    }
     setLoaded(true);
   }, []);
 
@@ -253,6 +260,7 @@ export default function FloatingStickies({ visible }: FloatingStickiesProps) {
   const updateSticky = useCallback((id: string, patch: Partial<Sticky>) => {
     if (id === "__new__") {
       // Create new sticky note from the + button
+      const z = nextZRef.current++;
       setStickies((prev) => [
         ...prev,
         {
@@ -263,7 +271,7 @@ export default function FloatingStickies({ visible }: FloatingStickiesProps) {
           y: (patch.y as number) || 100,
           width: DEFAULT_WIDTH,
           height: DEFAULT_HEIGHT,
-          zIndex: nextZ++,
+          zIndex: z,
         },
       ]);
       return;
@@ -276,8 +284,9 @@ export default function FloatingStickies({ visible }: FloatingStickiesProps) {
   }, []);
 
   const focusSticky = useCallback((id: string) => {
+    const z = nextZRef.current++;
     setStickies((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, zIndex: nextZ++ } : s))
+      prev.map((s) => (s.id === id ? { ...s, zIndex: z } : s))
     );
   }, []);
 
@@ -313,7 +322,7 @@ export function createInitialSticky(): void {
         y: 80 + Math.random() * 150,
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
-        zIndex: nextZ++,
+        zIndex: BASE_Z_INDEX,
       }];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
     }

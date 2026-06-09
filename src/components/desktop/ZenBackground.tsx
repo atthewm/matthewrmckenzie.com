@@ -172,7 +172,7 @@ export default function ZenBackground() {
       {!isDefault && !useStatic && hasVideo && !videoError && (
         <button
           onClick={toggleSound}
-          className="absolute bottom-2 right-2 z-[10] p-1.5 rounded-full
+          className="absolute bottom-2 right-2 z-10 p-1.5 rounded-full
                      bg-black/30 hover:bg-black/50 backdrop-blur-sm
                      text-white/70 hover:text-white transition-all
                      focus:outline-none focus:ring-2 focus:ring-white/50"

@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { useIdleTimer } from "@/hooks/useIdleTimer";
 import { useSettings } from "@/hooks/useSettingsStore";
+import { Z_INDEX } from "@/lib/z-index";
 import FlurryScreensaver from "./FlurryScreensaver";
 
 // ---------------------------------------------------------------------------
@@ -261,7 +262,7 @@ export default function Screensaver() {
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 99998,
+        zIndex: Z_INDEX.screensaver,
         cursor: "none",
         opacity: fadingIn ? 1 : 0,
         transition: "opacity 0.5s ease",

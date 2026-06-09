@@ -59,7 +59,7 @@ export default function ContextMenu({ items, x, y, onClose }: ContextMenuProps) 
   return (
     <div
       ref={menuRef}
-      className="fixed z-[99990]"
+      className="fixed z-contextmenu"
       style={{
         left: adjustedX,
         top: adjustedY,
