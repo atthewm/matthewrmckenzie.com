@@ -35,6 +35,7 @@ import GitHubApp from "@/components/apps/GitHubApp";
 import WhatsNewApp from "@/components/apps/WhatsNewApp";
 import NutritionApp from "@/components/apps/NutritionApp";
 import MediaShelfApp from "@/components/apps/MediaShelfApp";
+import LifeDashboardApp from "@/components/apps/life/LifeDashboardApp";
 
 interface WindowContentProps {
   windowState: WindowState;
@@ -72,6 +73,7 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   WhatsNewApp,
   NutritionApp,
   MediaShelfApp,
+  LifeDashboardApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {

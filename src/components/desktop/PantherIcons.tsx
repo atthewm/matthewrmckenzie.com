@@ -37,6 +37,7 @@ const iconMap: Record<string, string> = {
   "whats-new":      "sherlock.png",
 
   // Media
+  "media":          "movies-folder.png",
   "photos":         "iphoto.png",
   "music":          "dvd-player.png",
   "videos":         "quicktime-player.png",
@@ -49,7 +50,8 @@ const iconMap: Record<string, string> = {
   // Writing children
   "essays":         "documents.png",
 
-  // Health
+  // Life + Health
+  "life":           "macosx.png",
   "health":         "disk-utility.png",
   "whoop-dashboard":"generic-application.png",
   "whoop-splits":   "folder.png",

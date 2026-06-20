@@ -83,11 +83,16 @@ function hitTargets(d: NutritionDay, t: NutritionTargets): boolean | null {
 // ---------------------------------------------------------------------------
 
 export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
-  // -- Nutrition (PRIVATE) ---------------------------------------------------
+  // -- Nutrition (PUBLIC) ----------------------------------------------------
+  // Public exposes only daily macro totals (calories, protein, fat, carbs,
+  // fiber, targets, and the hitTargets flag). The transform emits everything
+  // into `data` with no privateData, so nothing sensitive is served. If a
+  // body-weight, medical, or PII field is ever added here, put it in
+  // privateData so it stays admin-only behind the gate cookie.
   nutrition: {
     key: "nutrition",
     label: "Nutrition",
-    visibility: "private",
+    visibility: "public",
     databaseId: NOTION_DB.nutrition,
     transform: (page, _ctx) => {
       const date = getDate(page, "Log Date") || getTitle(page, "Date");

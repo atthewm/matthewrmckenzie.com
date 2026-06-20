@@ -21,7 +21,8 @@ export type NotionDatasetKey =
 export type Visibility = "public" | "private";
 
 // ---------------------------------------------------------------------------
-// Nutrition (private) — from Daily Logs
+// Nutrition (public): daily macro totals from Daily Logs. No body-weight,
+// medical, or PII fields belong here; if added, route them to privateData.
 // ---------------------------------------------------------------------------
 
 export interface NutritionDay {
