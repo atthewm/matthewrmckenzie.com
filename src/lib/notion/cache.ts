@@ -14,6 +14,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { CacheRow } from "./datasets";
 
 export const CACHE_TABLE = "notion_cache";
+export const RUNS_TABLE = "notion_sync_runs";
+
+/** Supabase rejects very large payloads, so upserts go up in batches. */
+const BATCH_SIZE = 500;
 
 let cached: SupabaseClient | null | undefined;
 
@@ -26,10 +30,42 @@ export function getServiceClient(): SupabaseClient | null {
   return cached;
 }
 
-/** Replace all cached rows for a dataset. Returns the number of rows written. */
+/** Number of rows currently cached for a dataset. */
+async function countDataset(supabase: SupabaseClient, dataset: string): Promise<number> {
+  const { count, error } = await supabase
+    .from(CACHE_TABLE)
+    .select("id", { count: "exact", head: true })
+    .eq("dataset", dataset);
+  if (error) throw new Error(`cache count failed: ${error.message}`);
+  return count ?? 0;
+}
+
+/**
+ * Write a dataset's rows. Returns the number of rows written.
+ *
+ * Upsert-then-prune rather than delete-then-insert. The old order left the
+ * dataset empty between the two statements, so a failed insert (or a function
+ * timeout landing in the gap) blanked the app until the next successful cron
+ * run. Here the fresh rows go in first, stamped with this run's `synced_at`,
+ * and only rows left over from an earlier run are deleted afterwards, so a
+ * partial failure degrades to stale data instead of no data.
+ */
 export async function writeDataset(dataset: string, rows: CacheRow[]): Promise<number> {
   const supabase = getServiceClient();
   if (!supabase) throw new Error("Supabase service client not configured");
+
+  // An empty pull is almost always an upstream hiccup (revoked integration
+  // access, a renamed filter property) rather than a genuine deletion of every
+  // row. Refuse to turn that into an empty app; keep serving what we have.
+  if (rows.length === 0) {
+    const existing = await countDataset(supabase, dataset);
+    if (existing > 0) {
+      throw new Error(
+        `refusing to clear ${existing} cached rows for "${dataset}": source returned 0 rows`
+      );
+    }
+    return 0;
+  }
 
   const now = new Date().toISOString();
   const records = rows.map((r) => ({
@@ -43,15 +79,90 @@ export async function writeDataset(dataset: string, rows: CacheRow[]): Promise<n
     synced_at: now,
   }));
 
-  // Replace strategy: clear the dataset, then insert the fresh set. Keeps the
-  // cache consistent with Notion (handles deletions) for these modest sizes.
-  const del = await supabase.from(CACHE_TABLE).delete().eq("dataset", dataset);
-  if (del.error) throw new Error(`cache delete failed: ${del.error.message}`);
+  for (let i = 0; i < records.length; i += BATCH_SIZE) {
+    const batch = records.slice(i, i + BATCH_SIZE);
+    const up = await supabase.from(CACHE_TABLE).upsert(batch, { onConflict: "id" });
+    if (up.error) throw new Error(`cache upsert failed: ${up.error.message}`);
+  }
 
-  if (records.length === 0) return 0;
-  const ins = await supabase.from(CACHE_TABLE).insert(records);
-  if (ins.error) throw new Error(`cache insert failed: ${ins.error.message}`);
+  // Anything still carrying an older stamp is gone from Notion.
+  const del = await supabase
+    .from(CACHE_TABLE)
+    .delete()
+    .eq("dataset", dataset)
+    .lt("synced_at", now);
+  if (del.error) throw new Error(`cache prune failed: ${del.error.message}`);
+
   return records.length;
+}
+
+// ---------------------------------------------------------------------------
+// Sync run log
+// ---------------------------------------------------------------------------
+
+export interface SyncRunRecord {
+  dataset: string;
+  ok: boolean;
+  rowCount: number;
+  ms: number;
+  error?: string | null;
+}
+
+/**
+ * Record the outcome of each dataset in a sync run.
+ *
+ * Without this a broken cron is invisible: the cache still answers, just with
+ * data that quietly stops moving. Logging failures separately from row writes
+ * means a red run is visible even though the cache kept its previous contents.
+ * Best-effort by design; a logging failure must never fail the sync itself.
+ */
+export async function recordSyncRuns(runs: SyncRunRecord[]): Promise<void> {
+  const supabase = getServiceClient();
+  if (!supabase || runs.length === 0) return;
+
+  const startedAt = new Date().toISOString();
+  const rows = runs.map((r) => ({
+    dataset: r.dataset,
+    ok: r.ok,
+    row_count: r.rowCount,
+    duration_ms: r.ms,
+    error: r.error ?? null,
+    ran_at: startedAt,
+  }));
+
+  const { error } = await supabase.from(RUNS_TABLE).insert(rows);
+  if (error) {
+    console.error(`[notion-sync] could not record run log: ${error.message}`);
+  }
+}
+
+export interface LastRun {
+  dataset: string;
+  ok: boolean;
+  rowCount: number;
+  error: string | null;
+  ranAt: string;
+}
+
+/** Most recent run per dataset, newest first. Empty when unavailable. */
+export async function readRecentRuns(limit = 50): Promise<LastRun[]> {
+  const supabase = getServiceClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from(RUNS_TABLE)
+    .select("dataset, ok, row_count, error, ran_at")
+    .order("ran_at", { ascending: false })
+    .limit(limit);
+
+  if (error) return [];
+  return ((data ?? []) as any[]).map((r) => ({
+    dataset: r.dataset,
+    ok: r.ok,
+    rowCount: r.row_count,
+    error: r.error,
+    ranAt: r.ran_at,
+  }));
 }
 
 export interface ReadResult {
@@ -86,6 +197,11 @@ export async function readDataset(
       ? { ...row.data, _private: row.private_data }
       : row.data
   );
-  const syncedAt = rows.length ? rows[0].synced_at : null;
+  // Rows are ordered by sort_key, not freshness, so scan for the newest stamp
+  // rather than trusting the first row.
+  const syncedAt = rows.reduce<string | null>(
+    (max, row) => (!max || row.synced_at > max ? row.synced_at : max),
+    null
+  );
   return { items, syncedAt };
 }

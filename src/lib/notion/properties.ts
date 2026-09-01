@@ -68,6 +68,17 @@ export function getDate(page: NotionPage, name: string): string | null {
   return p?.date?.start ?? null;
 }
 
+/**
+ * created_time / last_edited_time property -> ISO string.
+ * These are system properties, so the value sits directly on the property
+ * object rather than under `date`.
+ */
+export function getTimestamp(page: NotionPage, name: string): string | null {
+  const p = prop(page, name);
+  const v = p?.created_time ?? p?.last_edited_time ?? null;
+  return typeof v === "string" && v.length ? v : null;
+}
+
 export function getUrl(page: NotionPage, name: string): string | null {
   const p = prop(page, name);
   const v = p?.url;

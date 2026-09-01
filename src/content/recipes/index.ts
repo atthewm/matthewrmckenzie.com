@@ -12,6 +12,12 @@ export interface RecipeMeta {
   totalTime: string;
   tags: string[];
   filePath: string;
+  /**
+   * Optional photo, e.g. "/recipes/photos/city-loaf.jpg". None of the recipes
+   * are shot yet, so the index app falls back to a generated tile; set this and
+   * the card picks the photo up with no other change.
+   */
+  image?: string;
 }
 
 export const recipes: RecipeMeta[] = [
@@ -91,4 +97,27 @@ export const recipes: RecipeMeta[] = [
 
 export function getRecipeBySlug(slug: string): RecipeMeta | undefined {
   return recipes.find((r) => r.slug === slug);
+}
+
+/**
+ * Broad buckets used for filtering and for choosing a card illustration.
+ * Derived from the tags rather than stored, so adding a recipe needs no extra
+ * bookkeeping. Order matters: the first match wins.
+ */
+export const RECIPE_CATEGORIES = [
+  { id: "bread", label: "Bread", tags: ["bread", "sourdough", "starter", "rye"] },
+  { id: "breakfast", label: "Breakfast", tags: ["breakfast", "oats"] },
+  { id: "mains", label: "Mains", tags: ["dinner", "chicken", "meatballs", "tortillas"] },
+  { id: "sweets", label: "Sweets", tags: ["dessert", "brownies", "jam", "fruit"] },
+] as const;
+
+export type RecipeCategoryId = (typeof RECIPE_CATEGORIES)[number]["id"];
+
+export function getRecipeCategory(recipe: RecipeMeta): RecipeCategoryId {
+  for (const cat of RECIPE_CATEGORIES) {
+    if (recipe.tags.some((t) => (cat.tags as readonly string[]).includes(t))) {
+      return cat.id;
+    }
+  }
+  return "mains";
 }

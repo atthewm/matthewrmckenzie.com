@@ -46,7 +46,10 @@ export const fileSystem: FSItem[] = [
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
   { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Tennis, baking, and photography.", defaultSize: { width: 560, height: 640 } },
-  { id: "recipes", name: "Recipes", type: "folder", icon: "UtensilsCrossed", description: "Tried and true recipes from the kitchen.", children: [
+  { id: "top-foods", name: "Top Foods", type: "app", icon: "Trophy", appComponent: "TopFoodsApp", description: "The foods I log most, with average macros per serving.", defaultSize: { width: 620, height: 620 } },
+  // Keeps its children so each recipe still resolves for deep links and content
+  // preloading; RecipesApp renders the grid instead of the Finder list view.
+  { id: "recipes", name: "Recipes", type: "app", icon: "UtensilsCrossed", appComponent: "RecipesApp", description: "Tried and true recipes from the kitchen.", defaultSize: { width: 640, height: 620 }, children: [
     { id: "rye-starter", name: "Rye Starter", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/rye-starter.md", description: "6-day rye starter build plus a low-waste daily maintenance plan.", defaultSize: { width: 600, height: 640 } },
     { id: "city-loaf-master-recipe", name: "City Loaf Master Recipe", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/city-loaf-master-recipe.md", description: "Two 950 g loaves baked in a Dutch oven.", defaultSize: { width: 600, height: 640 } },
     { id: "strawberry-jam-honey", name: "Strawberry Jam with Honey", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/strawberry-jam-honey.md", description: "No refined sugar, thickened naturally with optional chia.", defaultSize: { width: 600, height: 640 } },
@@ -129,6 +132,7 @@ export const dockItemIds: (string | "|")[] = [
   "health",
   "hobbies",
   "recipes",
+  "top-foods",
   "media",
   "|",
   "photos",

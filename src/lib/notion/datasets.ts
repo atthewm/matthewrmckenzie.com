@@ -36,10 +36,13 @@ import type {
   NutritionTargets,
 } from "@/data/notion/types";
 import { DEFAULT_NUTRITION_TARGETS } from "@/data/notion/types";
+import { aggregateTopFoods, type MealEntryInput } from "./foods";
 
 export interface SyncContext {
   /** notion page id -> display name, used to resolve relations (people). */
   peopleById: Record<string, string>;
+  /** Daily Log page id -> ISO date, used to date a meal entry. */
+  dayById: Record<string, string>;
 }
 
 export interface CacheRow {
@@ -59,7 +62,18 @@ export interface DatasetDef {
   rowFilter?: (page: NotionPage) => boolean;
   /** Sort newest-first by sortKey when true (default true). */
   sortDescending?: boolean;
-  transform: (page: NotionPage, ctx: SyncContext) => CacheRow | null;
+  /** Row cap for this database. Defaults to the client's own limit. */
+  maxRows?: number;
+  /**
+   * Per-row mapping: one Notion page becomes one cache row. Most datasets use
+   * this. Exactly one of `transform` or `aggregate` must be set.
+   */
+  transform?: (page: NotionPage, ctx: SyncContext) => CacheRow | null;
+  /**
+   * Whole-table mapping: every page in, rollup rows out. Used when the public
+   * surface is a summary and the raw rows must never be cached (top-foods).
+   */
+  aggregate?: (pages: NotionPage[], ctx: SyncContext) => CacheRow[];
 }
 
 function resolvePeople(ids: string[], ctx: SyncContext): string[] {
@@ -261,6 +275,47 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
           notes: getRichText(page, "Notes / Highlights"),
         },
       };
+    },
+  },
+
+  // -- Top foods (PUBLIC) — anonymous rollup of the Meal Entries log --------
+  // The only dataset that aggregates. Meal Entries holds a per-meal food diary,
+  // which is exactly the "daily meal detail" that must stay off the public
+  // site, so the rows are reduced to a ranked table here, inside the sync, and
+  // only the rollup is written to the cache. There is no code path that can
+  // serve an individual meal row.
+  "top-foods": {
+    key: "top-foods",
+    label: "Top Foods",
+    visibility: "public",
+    databaseId: NOTION_DB.mealEntries,
+    // The log runs to several thousand rows and grows daily.
+    maxRows: 20000,
+    // sortKey is a zero-padded count, so lexicographic desc == most logged.
+    sortDescending: true,
+    aggregate: (pages, ctx) => {
+      const entries: MealEntryInput[] = pages.map((page) => {
+        const dayIds = getRelationIds(page, "Day");
+        const day = dayIds.map((id) => ctx.dayById[id]).find(Boolean) ?? null;
+        return {
+          item: getTitle(page, "Item"),
+          meal: getSelect(page, "Meal"),
+          day,
+          calories: getNumber(page, "Calories"),
+          protein: getNumber(page, "Protein Gross"),
+          fat: getNumber(page, "Fat"),
+          carbs: getNumber(page, "Carbs"),
+          fiber: getNumber(page, "Fiber"),
+        };
+      });
+
+      return aggregateTopFoods(entries, { limit: 100, minCount: 2 }).map((food) => ({
+        // Stable id across syncs so the row updates in place.
+        notionId: food.key,
+        title: food.name,
+        sortKey: String(food.count).padStart(6, "0"),
+        data: food,
+      }));
     },
   },
 

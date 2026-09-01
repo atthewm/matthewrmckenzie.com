@@ -11,7 +11,9 @@ const marcellus = Marcellus({
 });
 
 export const metadata: Metadata = {
-  title: `${profile.fullName} | ${profile.title}`,
+  // `absolute` opts out of the root layout's "%s | Matthew McKenzie" template,
+  // which would otherwise append the name a second time.
+  title: { absolute: `${profile.fullName} | ${profile.title}` },
   description: `${profile.title} at ${profile.company}. ${profile.tagline} Save contact, call, or email directly.`,
   alternates: {
     canonical: "https://matthewrmckenzie.com/card",

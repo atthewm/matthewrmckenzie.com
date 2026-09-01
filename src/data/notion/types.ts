@@ -16,7 +16,8 @@ export type NotionDatasetKey =
   | "films"
   | "tv"
   | "audiobooks"
-  | "favorite-foods";
+  | "favorite-foods"
+  | "top-foods";
 
 export type Visibility = "public" | "private";
 
@@ -89,6 +90,39 @@ export interface MediaItem {
   watchedDate: string | null; // Watched / Finished date (ISO)
   /** Sort hint the API uses (recently watched first). */
   sortKey: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Top foods (public) — anonymous aggregate over the Meal Entries log.
+//
+// This is deliberately a *rollup*: it says "this food was logged 78 times and a
+// typical serving looks like this," and nothing about which day anything was
+// eaten. Per-meal rows never leave the sync process, so the public app cannot
+// reconstruct a daily food diary from it.
+// ---------------------------------------------------------------------------
+
+export interface TopFood {
+  /** Normalized grouping key that merged the name variants. */
+  key: string;
+  /** Human label: the most common spelling, minus quantities. */
+  name: string;
+  rank: number;
+  /** Times this food appears in the meal log. */
+  count: number;
+  /** Distinct days it was logged on. */
+  daysLogged: number;
+  /** Meal it usually shows up at (Breakfast, Dinner, ...). */
+  topMeal: string | null;
+  /** How many differently-typed titles collapsed into this entry. */
+  variants: number;
+  /** Percent of all logged entries, 1 decimal. */
+  share: number | null;
+  /** Averages are per logged serving, not per 100g. */
+  avgCalories: number | null;
+  avgProtein: number | null;
+  avgFat: number | null;
+  avgCarbs: number | null;
+  avgFiber: number | null;
 }
 
 // ---------------------------------------------------------------------------
