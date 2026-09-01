@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:ci": "ESLINT_USE_FLAT_CONFIG=false eslint src --ext .ts,.tsx",
+    "verify": "tsc --noEmit && npm run lint:ci",
+    "unlock": "rm -f .git/index.lock .git/HEAD.lock .git/objects/maintenance.lock",
+    "ship": "npm run unlock && npm run verify && npm run build && git push origin main"
   },
   "dependencies": {
     "@vercel/analytics": "^1.4.1",
