@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import JsonLd from "@/components/ui/JsonLd";
 import { profile, phoneE164 } from "@/config/profile";
 
@@ -151,13 +152,13 @@ export default function CardPage() {
               </svg>
               LinkedIn
             </a>
-            <a className="card-chip" href="/">
+            <Link className="card-chip" href="/">
               <svg viewBox="0 0 24 24" {...icon}>
                 <rect x="3" y="4" width="18" height="12" rx="1.5" />
                 <path d="M8 20h8M12 16v4" />
               </svg>
               McKenzieOS
-            </a>
+            </Link>
           </div>
         </section>
 
