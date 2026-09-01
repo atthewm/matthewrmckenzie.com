@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const body = `# matthewrmckenzie.com
 
-> Matthew McKenzie structures capital partnerships for real asset backed businesses and builds AI operations tooling. Vice President of Investor Relations at Civitas Capital Group.
+> Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, responsible for capital formation across the firm's private wealth channel with high net worth investors, family offices, and registered investment advisors. He also builds AI operations tooling.
 
 ## About
 Personal site of Matthew McKenzie. The site covers professional background, work experience, essays, project portfolio, and contact information. Built as a custom desktop operating system with Next.js, React, and TypeScript.

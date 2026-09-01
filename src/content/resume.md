@@ -6,14 +6,19 @@ title: Resume
 
 ## Matthew McKenzie
 
-Capital Formation, Growth Strategy, and AI Operations
+Capital Formation, Private Wealth, and AI Operations
 
 ### Experience
 
-**Civitas Capital Group** | Vice President, Investor Relations
-*December 2022 to Present*
+**Menlo Equities** | Senior Vice President, Capital Formation
+*2026 to Present*
 
-Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Manage relationships with family offices, UHNW investors, and institutional groups globally across both debt and equity.
+Responsible for capital formation across Menlo's private wealth channel, developing and expanding relationships with high net worth and ultra high net worth investors, family offices, and registered investment advisors across the firm's investment platforms.
+
+**Civitas Capital Group** | Vice President, Investor Relations
+*December 2022 to 2026*
+
+Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Raised capital from private wealth investors across closed-end funds, open-end perpetual vehicles, and co-investments. Managed relationships with family offices, UHNW investors, and institutional groups globally across both debt and equity.
 
 **Independent** | AI Operations Tooling
 *2025 to Present*
@@ -38,6 +43,6 @@ Mechanical Engineering, Economics
 
 ### Skills
 
-Capital Formation, Investor Relations, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting, AI Operations, Platform Development
+Capital Formation, Private Wealth, Investor Relations, Family Offices, RIAs, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting, AI Operations, Platform Development
 
 *For a full overview, visit [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).*

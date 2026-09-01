@@ -143,4 +143,22 @@ export const appleMusicPlaylists: AppleMusicPlaylist[] = [
     description: "Cumbia rhythms from across Latin America.",
     appleMusicUrl: "https://music.apple.com/us/playlist/cumbias/pl.u-3W3gC6da5A",
   },
+  {
+    id: "am-p-funk",
+    title: "P-Funk",
+    description: "Parliament, Funkadelic, and the deep funk lineage.",
+    appleMusicUrl: "https://music.apple.com/us/playlist/p-funk/pl.u-JDPPCdEK56",
+  },
+  {
+    id: "am-makossa",
+    title: "M Makossa",
+    description: "Makossa, Afro-funk, and West African grooves.",
+    appleMusicUrl: "https://music.apple.com/us/playlist/m-makossa/pl.u-9L3LTGXAYZ",
+  },
+  {
+    id: "am-ch",
+    title: "CH",
+    description: "An ongoing selection.",
+    appleMusicUrl: "https://music.apple.com/us/playlist/ch/pl.u-JD5qtdEK56",
+  },
 ];

@@ -27,15 +27,12 @@ export const personSchema = {
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
   image: "https://matthewrmckenzie.com/headshot.jpg",
-  jobTitle: "Vice President, Investor Relations",
+  jobTitle: "Senior Vice President, Capital Formation",
   worksFor: [
     {
       "@type": "Organization",
-      name: "Civitas Capital Group",
-      url: "https://civitascapital.com",
-      sameAs: [
-        "https://www.linkedin.com/company/civitas-capital-group/",
-      ],
+      name: "Menlo Equities",
+      url: "https://www.menloequities.com",
     },
   ],
   alumniOf: [
@@ -50,13 +47,14 @@ export const personSchema = {
   ],
   knowsAbout: [
     "Capital Formation",
+    "Private Wealth",
     "Investor Relations",
-    "Growth Strategy",
+    "Family Offices",
+    "Registered Investment Advisors",
     "Real Estate Investment",
     "Alternative Investments",
     "AI Operations",
     "MCP Servers",
-    "Restaurant Technology",
   ],
   sameAs: [
     "https://www.linkedin.com/in/mrmckenzie/",
@@ -86,11 +84,12 @@ export const profilePageSchema = {
     "@type": "Person",
     name: "Matthew McKenzie",
     url: "https://matthewrmckenzie.com",
-    jobTitle: "Vice President, Investor Relations",
-    description: "Capital formation, growth strategy, and AI operations tooling. Structures investor partnerships for real asset backed businesses.",
+    jobTitle: "Senior Vice President, Capital Formation",
+    description:
+      "Capital formation across the private wealth channel at Menlo Equities, working with high net worth investors, family offices, and RIAs. Also builds AI operations tooling.",
   },
   dateCreated: "2026-01-01",
-  dateModified: "2026-04-01",
+  dateModified: "2026-09-01",
 };
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {
@@ -126,11 +125,11 @@ export function blogPostingSchema(opts: {
       "@type": "Person",
       name: "Matthew McKenzie",
       url: "https://matthewrmckenzie.com",
-      jobTitle: "Vice President, Investor Relations",
+      jobTitle: "Senior Vice President, Capital Formation",
       worksFor: {
         "@type": "Organization",
-        name: "Civitas Capital Group",
-        url: "https://civitascapital.com",
+        name: "Menlo Equities",
+        url: "https://www.menloequities.com",
       },
     },
     publisher: {

@@ -1,15 +1,15 @@
 ---
 title: Now
-date: 2026-04-01
+date: 2026-09-01
 ---
 
 # Now
 
-*Last updated: April 2026*
+*Last updated: September 2026*
 
 A snapshot of what I'm focused on right now.
 
-- Capital formation and investor relations at Civitas Capital Group
+- Capital formation across the private wealth channel at Menlo Equities
 - Shipping AI operations tools for restaurant and hospitality teams (Toast, MarginEdge)
 - Consumer health data integrations and sleep optimization (Eight Sleep, WHOOP)
 - Hybrid athlete training: strength, endurance, and recovery

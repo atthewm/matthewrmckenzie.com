@@ -22,8 +22,11 @@ I structure capital, build investor partnerships, and develop growth strategy fo
 
 ## Experience
 
+**Menlo Equities** | Senior Vice President, Capital Formation
+Capital formation across Menlo's private wealth channel, developing and expanding relationships with high net worth and ultra high net worth investors, family offices, and registered investment advisors across the firm's investment platforms.
+
 **Civitas Capital Group** | Vice President, Investor Relations
-Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Nine years of progressive responsibility from analyst through VP.
+Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Nearly a decade of progressive responsibility from analyst through VP.
 
 **Independent** | AI Operations Tooling
 MCP servers and Microsoft Teams bots for restaurant operations platforms (Toast, MarginEdge), plus consumer health data integrations (Eight Sleep). Open source on GitHub.

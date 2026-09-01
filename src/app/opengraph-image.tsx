@@ -42,7 +42,7 @@ export default function OGImage() {
             letterSpacing: "2px",
           }}
         >
-          Capital Formation & AI Operations
+          Senior Vice President, Capital Formation
         </div>
         <div
           style={{
@@ -54,7 +54,7 @@ export default function OGImage() {
             textAlign: "center",
           }}
         >
-          Civitas Capital Group · MCP Servers · Teams Bots
+          Menlo Equities · Private Wealth · AI Operations
         </div>
         <div
           style={{

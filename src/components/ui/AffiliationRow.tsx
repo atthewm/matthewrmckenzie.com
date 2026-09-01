@@ -6,6 +6,7 @@
 // ============================================================================
 
 const affiliations = [
+  { name: "Menlo Equities", href: "https://www.menloequities.com" },
   { name: "Civitas Capital Group", href: "https://civitascapital.com" },
   { name: "SMU", href: "https://www.smu.edu" },
   { name: "Villanova", href: "https://www1.villanova.edu" },

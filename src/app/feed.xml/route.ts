@@ -53,7 +53,7 @@ export async function GET() {
       title: "About Matthew McKenzie",
       link: `${SITE_URL}/about`,
       description:
-        "Capital formation, investor relations, and AI operations tooling. Nine years at Civitas Capital Group.",
+        "Capital formation, private wealth, and AI operations tooling. Senior Vice President, Capital Formation at Menlo Equities.",
       pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
     },
     {

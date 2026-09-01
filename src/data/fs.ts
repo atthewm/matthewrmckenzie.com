@@ -17,6 +17,7 @@ export interface FSItem {
 }
 
 export const fileSystem: FSItem[] = [
+  { id: "card", name: "Business Card", type: "app", icon: "Contact", appComponent: "BusinessCardApp", staticRoute: "/card", description: "Digital business card. Save contact, call, or email.", defaultSize: { width: 400, height: 640 } },
   { id: "about", name: "About", type: "app", icon: "User", appComponent: "AboutApp", contentPath: "about.md", staticRoute: "/about", description: "About Matthew McKenzie.", defaultSize: { width: 640, height: 520 } },
   { id: "work", name: "Work", type: "app", icon: "Briefcase", appComponent: "ProjectsApp", contentPath: "work.md", staticRoute: "/work", description: "Professional work, projects, and case studies.", defaultSize: { width: 640, height: 520 }, children: [
     { id: "resume", name: "Resume", type: "app", icon: "FileText", appComponent: "ResumeApp", description: "Professional resume and experience.", defaultSize: { width: 560, height: 640 } },
@@ -27,7 +28,7 @@ export const fileSystem: FSItem[] = [
   { id: "now", name: "Now", type: "document", icon: "Zap", contentPath: "now.md", description: "What I'm up to right now.", defaultSize: { width: 520, height: 440 } },
   { id: "photos", name: "Photos", type: "app", icon: "Image", appComponent: "InstagramApp", description: "Photos currently mirror Instagram.", defaultSize: { width: 480, height: 560 } },
   { id: "music", name: "Music", type: "app", icon: "Headphones", appComponent: "SoundCloudPlayer", description: "SoundCloud player.", defaultSize: { width: 420, height: 500 } },
-  { id: "videos", name: "Videos", type: "app", icon: "Disc3", appComponent: "YouTubeWinampPlayer", description: "YouTube playlist player.", defaultSize: { width: 320, height: 360 } },
+  { id: "videos", name: "Zune", type: "app", icon: "Music", appComponent: "ZunePlayer", description: "Zune-style music player.", defaultSize: { width: 380, height: 560 } },
   { id: "apple-music", name: "Apple Music", type: "app", icon: "ListMusic", appComponent: "AppleMusicFolder", description: "Apple Music playlists.", defaultSize: { width: 480, height: 420 } },
   { id: "contact", name: "Contact", type: "app", icon: "Mail", appComponent: "ContactApp", staticRoute: "/contact", description: "Get in touch.", defaultSize: { width: 480, height: 500 } },
   { id: "guestbook", name: "Guestbook", type: "app", icon: "BookOpen", appComponent: "GuestbookApp", description: "Sign the guestbook.", defaultSize: { width: 560, height: 500 } },
@@ -44,6 +45,7 @@ export const fileSystem: FSItem[] = [
     ]},
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
+  { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Tennis, baking, and photography.", defaultSize: { width: 560, height: 640 } },
   { id: "recipes", name: "Recipes", type: "folder", icon: "UtensilsCrossed", description: "Tried and true recipes from the kitchen.", children: [
     { id: "rye-starter", name: "Rye Starter", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/rye-starter.md", description: "6-day rye starter build plus a low-waste daily maintenance plan.", defaultSize: { width: 600, height: 640 } },
     { id: "city-loaf-master-recipe", name: "City Loaf Master Recipe", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/city-loaf-master-recipe.md", description: "Two 950 g loaves baked in a Dutch oven.", defaultSize: { width: 600, height: 640 } },
@@ -118,12 +120,14 @@ export function getRootItems(showHidden = false): FSItem[] {
 // ---------------------------------------------------------------------------
 
 export const dockItemIds: (string | "|")[] = [
+  "card",
   "start-here",
   "about",
   "work",
   "|",
   "life",
   "health",
+  "hobbies",
   "recipes",
   "media",
   "|",

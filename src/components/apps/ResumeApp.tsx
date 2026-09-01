@@ -29,21 +29,30 @@ matthew.mckenzie@mac.com
 ==========================================================
 
 LOCATION:   Texas, USA
-FOCUS:      Capital formation, growth strategy,
-            real asset backed businesses
+FOCUS:      Capital formation, private wealth,
+            family offices and RIAs
 
 ==========================================================
 EXPERIENCE
 ==========================================================
 
+Senior Vice President, Capital Formation
+Menlo Equities
+2026 to Present
+  Capital formation across Menlo's private wealth
+  channel. Develop and expand relationships with
+  high net worth and ultra high net worth investors,
+  family offices, and registered investment advisors
+  across the firm's investment platforms.
+
 Vice President, Investor Relations
 Civitas Capital Group
-December 2022 to Present
+December 2022 to 2026
   Capital formation for an alternative investment
   manager focused on niche U.S. real estate.
-  Manage relationships with family offices, UHNW
+  Managed relationships with family offices, UHNW
   investors, and institutional groups globally.
-  Work across both debt and equity structures.
+  Worked across both debt and equity structures.
 
 Investor Relations Associate
 Civitas Capital Group

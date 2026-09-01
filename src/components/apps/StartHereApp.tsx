@@ -34,7 +34,7 @@ const tips = [
   "F9: Exposé to see all open windows",
   "Right-click the desktop for quick actions",
   "Drag the desktop icons to rearrange them",
-  "Try typing \"coffee\" in Terminal",
+  "Try typing \"whoami\" in Terminal",
 ];
 
 export default function StartHereApp() {

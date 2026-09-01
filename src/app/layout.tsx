@@ -18,23 +18,24 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://matthewrmckenzie.com"),
   title: {
-    default: "Matthew McKenzie | Capital Formation & Growth Strategy",
+    default: "Matthew McKenzie | Capital Formation, Menlo Equities",
     template: "%s | Matthew McKenzie",
   },
   description:
-    "Matthew McKenzie structures capital partnerships for real asset backed businesses and builds AI operations tooling. Vice President of Investor Relations at Civitas Capital Group.",
+    "Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, leading private wealth relationships with high net worth investors, family offices, and RIAs. He also builds AI operations tooling.",
   keywords: [
     "Matthew McKenzie",
     "capital formation",
+    "private wealth",
     "investor relations",
     "real estate",
     "alternative investments",
-    "Civitas Capital Group",
+    "Menlo Equities",
     "family office",
+    "registered investment advisors",
     "UHNW investors",
     "AI operations",
     "MCP server",
-    "Teams bot",
   ],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
@@ -43,16 +44,16 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://matthewrmckenzie.com",
     siteName: "Matthew McKenzie",
-    title: "Matthew McKenzie | Capital Formation & AI Operations",
+    title: "Matthew McKenzie | Capital Formation, Menlo Equities",
     description:
-      "Matthew McKenzie structures capital partnerships for real asset backed businesses and builds AI operations tooling. Civitas Capital Group.",
+      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs. Also builds AI operations tooling.",
     images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Matthew McKenzie | Capital Formation & AI Operations",
+    title: "Matthew McKenzie | Capital Formation, Menlo Equities",
     description:
-      "Matthew McKenzie structures capital partnerships for real asset backed businesses and builds AI operations tooling. Civitas Capital Group.",
+      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs. Also builds AI operations tooling.",
     images: ["/opengraph-image"],
   },
   alternates: {

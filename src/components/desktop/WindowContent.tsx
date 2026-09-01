@@ -12,6 +12,7 @@ import MarkdownViewer from "@/components/apps/MarkdownViewer";
 import SettingsApp from "@/components/settings/SettingsApp";
 import SoundCloudPlayer from "@/components/players/SoundCloudPlayer";
 import YouTubeWinampPlayer from "@/components/players/YouTubeWinampPlayer";
+import ZunePlayer from "@/components/players/ZunePlayer";
 import AppleMusicFolder from "@/components/apps/AppleMusicFolder";
 import ResumeApp from "@/components/apps/ResumeApp";
 import RecipeViewer from "@/components/apps/RecipeViewer";
@@ -36,6 +37,8 @@ import WhatsNewApp from "@/components/apps/WhatsNewApp";
 import NutritionApp from "@/components/apps/NutritionApp";
 import MediaShelfApp from "@/components/apps/MediaShelfApp";
 import LifeDashboardApp from "@/components/apps/life/LifeDashboardApp";
+import BusinessCardApp from "@/components/apps/BusinessCardApp";
+import HobbiesApp from "@/components/apps/HobbiesApp";
 
 interface WindowContentProps {
   windowState: WindowState;
@@ -50,6 +53,7 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   SettingsApp,
   SoundCloudPlayer,
   YouTubeWinampPlayer,
+  ZunePlayer,
   AppleMusicFolder,
   ResumeApp,
   RecipeViewer,
@@ -74,6 +78,8 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   NutritionApp,
   MediaShelfApp,
   LifeDashboardApp,
+  BusinessCardApp,
+  HobbiesApp,
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {

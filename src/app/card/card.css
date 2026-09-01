@@ -1,0 +1,315 @@
+/* ============================================================================
+   DIGITAL BUSINESS CARD — slate & gold
+   ============================================================================
+   Standalone styling for /card. Deliberately independent of the Panther
+   desktop chrome: this page is investor-facing and must load fast and read
+   cleanly on a phone at a conference. Palette matches the mckm.at identity
+   (PURO slate + Aurum gold) so all properties feel like one brand.
+   ============================================================================ */
+
+.card-stage {
+  --c-bg: #1c2329;
+  --c-bg-2: #20282e;
+  --c-panel: #29333a;
+  --c-panel-2: #323d45;
+  --c-ink: #e8ecee;
+  --c-ink-2: #9aa7ad;
+  --c-ink-3: #717e85;
+  --c-line: #3a454c;
+  --c-line-2: #46525a;
+  --c-gold: #d9be6b;
+  --c-gold-2: #f0dda0;
+  --c-gold-tint: rgba(217, 190, 107, 0.14);
+
+  --c-serif: var(--font-marcellus), "Cormorant Garamond", Georgia, serif;
+  --c-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --c-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 18px 56px;
+  background: radial-gradient(120% 80% at 50% -10%, var(--c-bg-2), var(--c-bg) 62%), var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--c-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.card-panel {
+  width: 100%;
+  max-width: 430px;
+  background: var(--c-panel);
+  border: 1px solid var(--c-line);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.75);
+  position: relative;
+}
+
+.card-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--c-gold) 24%, var(--c-gold-2) 50%, var(--c-gold) 76%, transparent);
+}
+
+/* ---- Identity ---- */
+
+.card-head {
+  padding: 34px 26px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.card-portrait {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--c-line-2);
+  margin: 0 auto 18px;
+  display: block;
+  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.7);
+}
+
+.card-name {
+  font-family: var(--c-serif);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: 0.012em;
+  color: var(--c-ink);
+}
+
+.card-title {
+  margin-top: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--c-gold);
+  letter-spacing: 0.01em;
+}
+
+.card-company {
+  margin-top: 5px;
+  font-family: var(--c-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-ink-3);
+}
+
+/* ---- Actions ---- */
+
+.card-actions {
+  padding: 22px 22px 6px;
+  display: grid;
+  gap: 10px;
+}
+
+.card-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid var(--c-line-2);
+  background: var(--c-panel-2);
+  color: var(--c-ink);
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 500;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.card-btn:hover,
+.card-btn:focus-visible {
+  border-color: var(--c-gold);
+  background: var(--c-gold-tint);
+}
+
+.card-btn:active {
+  transform: scale(0.99);
+}
+
+.card-btn--primary {
+  background: var(--c-gold);
+  border-color: var(--c-gold);
+  color: #1c2329;
+  font-weight: 600;
+}
+
+.card-btn--primary:hover,
+.card-btn--primary:focus-visible {
+  background: var(--c-gold-2);
+  border-color: var(--c-gold-2);
+  color: #1c2329;
+}
+
+.card-btn svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.card-btn-sub {
+  margin-left: auto;
+  font-family: var(--c-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--c-ink-3);
+}
+
+.card-btn--primary .card-btn-sub {
+  color: rgba(28, 35, 41, 0.62);
+}
+
+/* ---- Sections ---- */
+
+.card-section {
+  padding: 20px 26px;
+  border-top: 1px solid var(--c-line);
+}
+
+.card-section-label {
+  font-family: var(--c-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-ink-3);
+  margin-bottom: 12px;
+}
+
+.card-bio {
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--c-ink-2);
+}
+
+.card-offices {
+  display: grid;
+  gap: 14px;
+}
+
+.card-office {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-office-city {
+  font-family: var(--c-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  width: 84px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.card-office-addr {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--c-ink-2);
+}
+
+/* ---- Links row ---- */
+
+.card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.card-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--c-line-2);
+  color: var(--c-ink-2);
+  text-decoration: none;
+  font-size: 12.5px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.card-chip:hover,
+.card-chip:focus-visible {
+  color: var(--c-gold);
+  border-color: var(--c-gold);
+  background: var(--c-gold-tint);
+}
+
+.card-chip svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---- Footer ---- */
+
+.card-foot {
+  padding: 16px 26px 22px;
+  border-top: 1px solid var(--c-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--c-ink-3);
+}
+
+.card-foot a {
+  color: var(--c-ink-3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.card-foot a:hover {
+  color: var(--c-gold);
+}
+
+/* ---- Focus + motion ---- */
+
+.card-btn:focus-visible,
+.card-chip:focus-visible,
+.card-foot a:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
+}
+
+@media (max-width: 400px) {
+  .card-head {
+    padding: 28px 20px 20px;
+  }
+  .card-section,
+  .card-foot {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .card-actions {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .card-name {
+    font-size: 26px;
+  }
+  .card-office-city {
+    width: 74px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-btn,
+  .card-chip {
+    transition: none;
+  }
+}

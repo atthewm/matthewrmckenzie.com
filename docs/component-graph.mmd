@@ -1,0 +1,364 @@
+%% McKenzie OS - Component Dependency Graph
+%% Generated 2026-05-08 from a static scan of `import ... from "@/..."` edges
+%% across src/app, src/components, src/hooks, src/lib, src/data, src/config.
+%% Render with any Mermaid renderer (e.g. https://mermaid.live).
+%%
+%% Layers (top to bottom):
+%%   pages   = src/app/*/page.tsx + layout.tsx + api/* (entry points)
+%%   chrome  = src/components/desktop/*
+%%   apps    = src/components/apps/*  (incl. apps/whoop, settings, players)
+%%   ui      = src/components/ui/*
+%%   hooks   = src/hooks/*
+%%   lib     = src/lib/*
+%%   data    = src/data/*
+%%   config  = src/config/*
+%%
+%% Notes:
+%%   - WindowContent has 33 outbound edges (highest in the repo).
+%%   - data/fs and useDesktopStore each receive 16 inbound edges.
+%%   - One mild cycle: DesktopShell -> Desktop -> MenuBar -> DesktopShell
+%%     (broken in tech-debt P1-10).
+
+flowchart LR
+    %% =============== Subgraphs ===============
+    subgraph PAGES["pages — src/app"]
+        Layout["layout"]
+        HomePage["page (homepage)"]
+        AboutPage["about/page"]
+        ContactPage["contact/page"]
+        WorkPage["work/page"]
+        ProjectsPage["projects/page"]
+        WritingIndex["writing/page"]
+        WritingPost["writing/[slug]/page"]
+        PrivacyPage["privacy/page"]
+        NotFound["not-found"]
+        Gate["gate/page"]
+    end
+
+    subgraph CHROME["chrome — components/desktop"]
+        DesktopShell
+        Desktop
+        DesktopProvider
+        WindowManager
+        Window
+        WindowContent
+        MenuBar
+        Dock
+        ContextMenu
+        Spotlight
+        Expose
+        DesktopIcon
+        FloatingStickies
+        Screensaver
+        FlurryScreensaver
+        ZenBackground
+        SettingsProvider
+        PantherIcons
+        RetroIcons
+        MobileView
+    end
+
+    subgraph APPS["apps — components/apps + settings + players"]
+        AboutApp
+        AppleMusicFolder
+        BrowserApp
+        ChessApp
+        ContactApp
+        FolderView
+        GalleryApp
+        GitHubApp
+        GuestbookApp
+        IChatApp
+        InstagramApp
+        LinktreeApp
+        MarkdownViewer
+        MinesweeperApp
+        PhotoBoothApp
+        ProjectsApp
+        RecipeViewer
+        ResumeApp
+        ScheduleApp
+        StartHereApp
+        StickiesApp
+        TerminalApp
+        UrlShortenerApp
+        WhatsNewApp
+        WhoopDashboardApp
+        WhoopSplitApp
+        GetWhoopApp
+        SettingsApp
+        SoundCloudPlayer
+        YouTubeWinampPlayer
+    end
+
+    subgraph UI["ui — components/ui"]
+        StaticPageLayout
+        JsonLd
+        EmptyContent
+        AffiliationRow
+        CtaBlock
+        CalEmbed
+    end
+
+    subgraph HOOKS["hooks"]
+        useDesktopStore
+        useSettingsStore
+        useIsMobile
+        useIdleTimer
+        useKeyboardShortcuts
+    end
+
+    subgraph LIB["lib"]
+        analytics
+        browserStore
+        config_lib["config"]
+        content
+        soundEffects
+        startupChime
+        supabase
+        useSecrets
+        whoopClient["whoop/client"]
+        whoopConfig["whoop/config"]
+        whoopCrypto["whoop/crypto"]
+        whoopKv["whoop/kv"]
+        whoopTokens["whoop/tokens"]
+    end
+
+    subgraph DATA["data"]
+        fs["data/fs"]
+        whoopDashboard["data/whoop/dashboard"]
+        whoopSplits["data/whoop/splits"]
+    end
+
+    subgraph CFG["config"]
+        themesCfg["config/themes"]
+        playlistsCfg["config/playlists"]
+        pantherTheme["config/panther-theme (unused)"]
+        recipesContent["content/recipes"]
+    end
+
+    %% =============== Pages -> downstream ===============
+    Layout --> JsonLd
+    HomePage --> fs
+    HomePage --> content
+    HomePage --> DesktopShell
+    AboutPage --> content
+    AboutPage --> StaticPageLayout
+    AboutPage --> JsonLd
+    AboutPage --> AffiliationRow
+    AboutPage --> EmptyContent
+    ContactPage --> content
+    ContactPage --> StaticPageLayout
+    ContactPage --> JsonLd
+    ContactPage --> CalEmbed
+    ContactPage --> EmptyContent
+    WorkPage --> content
+    WorkPage --> StaticPageLayout
+    WorkPage --> JsonLd
+    WorkPage --> EmptyContent
+    ProjectsPage --> content
+    ProjectsPage --> StaticPageLayout
+    ProjectsPage --> JsonLd
+    ProjectsPage --> EmptyContent
+    WritingIndex --> content
+    WritingIndex --> StaticPageLayout
+    WritingIndex --> JsonLd
+    WritingIndex --> EmptyContent
+    WritingPost --> StaticPageLayout
+    WritingPost --> JsonLd
+    PrivacyPage --> StaticPageLayout
+    PrivacyPage --> JsonLd
+    NotFound --> StaticPageLayout
+
+    %% =============== Chrome internals ===============
+    DesktopShell --> Desktop
+    DesktopShell --> SettingsProvider
+    DesktopShell --> DesktopProvider
+    DesktopShell --> Screensaver
+    DesktopShell --> startupChime
+    DesktopShell --> soundEffects
+
+    Desktop --> WindowManager
+    Desktop --> Dock
+    Desktop --> MenuBar
+    Desktop --> ContextMenu
+    Desktop --> Spotlight
+    Desktop --> Expose
+    Desktop --> DesktopIcon
+    Desktop --> FloatingStickies
+    Desktop --> ZenBackground
+    Desktop --> useKeyboardShortcuts
+    Desktop --> useDesktopStore
+    Desktop --> useIsMobile
+    Desktop --> useSecrets
+    Desktop --> fs
+
+    DesktopProvider --> useDesktopStore
+    DesktopProvider --> fs
+    DesktopProvider --> analytics
+
+    WindowManager --> Window
+    WindowManager --> WindowContent
+    WindowManager --> useDesktopStore
+
+    Window --> useDesktopStore
+    Window --> useSettingsStore
+    Window --> useIsMobile
+    Window --> soundEffects
+
+    WindowContent --> fs
+    WindowContent --> useDesktopStore
+    WindowContent --> AboutApp
+    WindowContent --> AppleMusicFolder
+    WindowContent --> BrowserApp
+    WindowContent --> ChessApp
+    WindowContent --> ContactApp
+    WindowContent --> FolderView
+    WindowContent --> GalleryApp
+    WindowContent --> GitHubApp
+    WindowContent --> GuestbookApp
+    WindowContent --> IChatApp
+    WindowContent --> InstagramApp
+    WindowContent --> LinktreeApp
+    WindowContent --> MarkdownViewer
+    WindowContent --> MinesweeperApp
+    WindowContent --> PhotoBoothApp
+    WindowContent --> ProjectsApp
+    WindowContent --> RecipeViewer
+    WindowContent --> ResumeApp
+    WindowContent --> ScheduleApp
+    WindowContent --> StartHereApp
+    WindowContent --> StickiesApp
+    WindowContent --> TerminalApp
+    WindowContent --> UrlShortenerApp
+    WindowContent --> WhatsNewApp
+    WindowContent --> WhoopDashboardApp
+    WindowContent --> WhoopSplitApp
+    WindowContent --> GetWhoopApp
+    WindowContent --> SettingsApp
+    WindowContent --> SoundCloudPlayer
+    WindowContent --> YouTubeWinampPlayer
+
+    MenuBar --> useDesktopStore
+    MenuBar --> fs
+    MenuBar --> browserStore
+    MenuBar --> useIsMobile
+    MenuBar --> DesktopShell
+
+    Dock --> fs
+    Dock --> useDesktopStore
+    Dock --> useIsMobile
+    Dock --> analytics
+    Dock --> PantherIcons
+
+    ContextMenu --> useDesktopStore
+    ContextMenu --> fs
+
+    Spotlight --> fs
+    Spotlight --> useDesktopStore
+    Spotlight --> analytics
+    Spotlight --> PantherIcons
+
+    Expose --> useDesktopStore
+
+    DesktopIcon --> fs
+    DesktopIcon --> useDesktopStore
+    DesktopIcon --> useSettingsStore
+    DesktopIcon --> analytics
+    DesktopIcon --> PantherIcons
+
+    FloatingStickies --> useDesktopStore
+
+    Screensaver --> useIdleTimer
+    Screensaver --> useSettingsStore
+    Screensaver --> FlurryScreensaver
+
+    ZenBackground --> useSettingsStore
+    ZenBackground --> themesCfg
+    ZenBackground --> useIsMobile
+
+    SettingsProvider --> useSettingsStore
+
+    MobileView --> fs
+
+    %% =============== Apps -> deps ===============
+    AboutApp --> useDesktopStore
+    AppleMusicFolder --> playlistsCfg
+    BrowserApp --> browserStore
+    ContactApp --> browserStore
+    ContactApp --> analytics
+    FolderView --> fs
+    FolderView --> useDesktopStore
+    FolderView --> PantherIcons
+    FolderView --> recipesContent
+    FolderView --> config_lib
+    GitHubApp --> analytics
+    GuestbookApp --> analytics
+    IChatApp --> analytics
+    InstagramApp --> config_lib
+    InstagramApp --> browserStore
+    LinktreeApp --> config_lib
+    LinktreeApp --> browserStore
+    LinktreeApp --> analytics
+    MarkdownViewer --> fs
+    MarkdownViewer --> content
+    PhotoBoothApp --> analytics
+    ProjectsApp --> useDesktopStore
+    RecipeViewer --> fs
+    RecipeViewer --> config_lib
+    RecipeViewer --> recipesContent
+    ResumeApp --> analytics
+    ScheduleApp --> browserStore
+    StartHereApp --> useDesktopStore
+    StartHereApp --> fs
+    StartHereApp --> PantherIcons
+    StickiesApp --> useDesktopStore
+    TerminalApp --> useDesktopStore
+    TerminalApp --> fs
+    UrlShortenerApp --> analytics
+    WhatsNewApp --> useDesktopStore
+    WhoopDashboardApp --> whoopDashboard
+    WhoopDashboardApp --> whoopConfig
+    WhoopSplitApp --> whoopSplits
+    WhoopSplitApp --> fs
+    GetWhoopApp --> whoopDashboard
+    SettingsApp --> useSettingsStore
+    SettingsApp --> themesCfg
+    SoundCloudPlayer --> useSettingsStore
+    YouTubeWinampPlayer --> useSettingsStore
+    YouTubeWinampPlayer --> analytics
+
+    %% =============== Lib + API internals (whoop subgraph) ===============
+    whoopClient --> whoopConfig
+    whoopClient --> whoopTokens
+    whoopClient --> whoopKv
+    whoopTokens --> whoopConfig
+    whoopTokens --> whoopCrypto
+    whoopTokens --> whoopKv
+    whoopKv --> whoopConfig
+
+    %% API routes
+    HomePage:::pageStyle
+    AboutPage:::pageStyle
+    ContactPage:::pageStyle
+    WorkPage:::pageStyle
+    ProjectsPage:::pageStyle
+    WritingIndex:::pageStyle
+    WritingPost:::pageStyle
+    PrivacyPage:::pageStyle
+    NotFound:::pageStyle
+    Gate:::pageStyle
+    Layout:::pageStyle
+
+    %% Hub call-outs
+    WindowContent:::hub
+    Desktop:::hub
+    fs:::hot
+    useDesktopStore:::hot
+
+    %% Mild cycle highlight
+    MenuBar -. cycle .-> DesktopShell
+
+    classDef pageStyle fill:#fff5d6,stroke:#b58c00,color:#3a2a00
+    classDef hub fill:#ffe1e1,stroke:#b00,color:#330,stroke-width:2px
+    classDef hot fill:#d8f0ff,stroke:#06c,color:#003,stroke-width:2px

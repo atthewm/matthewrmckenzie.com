@@ -44,9 +44,11 @@ export default async function HomePage() {
             ownership at the center.
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
-            Over nine years at Civitas Capital Group, he has helped raise and deploy capital across
-            niche U.S. real estate strategies, managing investor relationships across North America,
-            the Middle East, and Asia.
+            As Senior Vice President, Capital Formation at Menlo Equities, he leads capital formation
+            across the firm&apos;s private wealth channel, working with high net worth investors, family
+            offices, and registered investment advisors. Previously he spent nearly a decade at Civitas
+            Capital Group, raising capital across niche U.S. real estate strategies and managing investor
+            relationships across North America, the Middle East, and Asia.
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
             Matthew also builds production AI tooling: MCP servers and Microsoft Teams bots that connect
