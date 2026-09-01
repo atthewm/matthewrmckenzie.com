@@ -111,6 +111,12 @@ is built not to, so the sync makes three guarantees:
    `notion_sync_runs` (see the schema file) and readable at
    `GET /api/notion/sync?status=1`. Without it a broken cron looks exactly like
    a quiet week, because the cache keeps answering with data that stopped moving.
+   A misconfigured deployment is recorded too, under the `_config` sentinel, and
+   the status branch is answered *before* the `NOTION_TOKEN` check so the
+   endpoint still explains itself when that is the thing that is missing.
+   The one blind spot is a missing `SUPABASE_SERVICE_ROLE_KEY`: the run log
+   lives in the database that key opens, so that failure shows up only in the
+   route's 503 body and the Vercel logs.
 
 Datasets are isolated: one failing database does not stop the others, and the
 route returns `207` when some datasets failed.

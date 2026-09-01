@@ -16,6 +16,13 @@ import type { CacheRow } from "./datasets";
 export const CACHE_TABLE = "notion_cache";
 export const RUNS_TABLE = "notion_sync_runs";
 
+/**
+ * Sentinel `dataset` value for a run that never got as far as a dataset,
+ * because the deployment was misconfigured. Kept distinct from every real
+ * dataset key so it cannot collide with one.
+ */
+export const CONFIG_DATASET = "_config";
+
 /** Supabase rejects very large payloads, so upserts go up in batches. */
 const BATCH_SIZE = 500;
 

@@ -39,6 +39,8 @@ alter table public.notion_cache enable row level security;
 
 create table if not exists public.notion_sync_runs (
   id          bigserial primary key,
+  -- A dataset key, or '_config' for a run that never reached a dataset because
+  -- the deployment was missing NOTION_TOKEN.
   dataset     text not null,
   ok          boolean not null,
   row_count   integer not null default 0,
