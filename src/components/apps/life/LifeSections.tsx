@@ -17,7 +17,7 @@ import {
 import type { WhoopSplit } from "@/data/whoop/splits";
 
 // ============================================================================
-// LIFE DASHBOARD — presentational sections (Panther aesthetic)
+// LIFE DASHBOARD: presentational sections (Panther aesthetic)
 // ============================================================================
 // Pure, prop-driven pieces composed by LifeDashboardApp. All data fetching
 // lives in the container; these only render. Panther tokens only (the same

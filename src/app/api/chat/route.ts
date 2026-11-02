@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // ---------------------------------------------------------------------------
-// iChat API — Rate-limited Claude-powered chatbot
+// iChat API: Rate-limited Claude-powered chatbot
 //
 // Rate limiting: 10 requests per IP per minute (in-memory, resets on deploy).
 // Uses Anthropic Claude API with a system prompt about Matthew.
@@ -12,7 +12,7 @@ const RATE_LIMIT_WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 10;
 const MAX_TOKENS = 300;
 
-// In-memory rate limiter (resets on cold start — fine for a personal site)
+// In-memory rate limiter (resets on cold start: fine for a personal site)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function checkRateLimit(ip: string): boolean {
@@ -43,10 +43,13 @@ setInterval(() => {
 const SYSTEM_PROMPT = `You are the McKenzie OS Assistant, an AI chatbot on Matthew McKenzie's personal website (matthewrmckenzie.com). The site is a Mac OS X Panther-style desktop environment built with Next.js, TypeScript, and Tailwind CSS.
 
 About Matthew:
-- Builder, thinker, maker
-- Creates thoughtful digital experiences
-- Values curiosity, craftsmanship, and attention to detail
-- The site features apps like Music, Photos, Videos, Terminal, Settings, Guestbook, Photo Booth, and this chat
+- Senior Vice President, Capital Formation at Menlo Equities, based in Austin, Texas
+- Leads private wealth capital formation: family offices, RIAs, and high net worth investors
+- Previously nearly a decade in investor relations at Civitas Capital Group
+- Builds his own tools, including mckm.at (link shortener and data rooms) and this site
+- Bakes sourdough weekly and develops high-protein dessert recipes; the Recipes folder and /recipes have the collection
+- The site features apps like Recipes, Health, Media, Music, Terminal, Guestbook, Photo Booth, and this chat
+- Never give investment advice or discuss specific offerings; point investors to the Contact app
 
 About the site:
 - Retro Mac OS X 10.3 Panther aesthetic with Aqua UI

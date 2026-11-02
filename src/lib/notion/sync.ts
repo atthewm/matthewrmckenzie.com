@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — ORCHESTRATION
+// NOTION SYNC: ORCHESTRATION
 // ============================================================================
 // Pulls every (or one) dataset from Notion, normalizes rows, and writes them to
 // the Supabase cache. Called by the scheduled /api/notion/sync route.
@@ -29,7 +29,7 @@ async function buildPeopleMap(): Promise<Record<string, string>> {
     const people = await queryDatabase(NOTION_DB.people, { max: 5000 });
     for (const p of people) map[p.id] = primaryTitle(p);
   } catch {
-    // People DB optional — relations just won't resolve to names.
+    // People DB optional: relations just won't resolve to names.
   }
   return map;
 }

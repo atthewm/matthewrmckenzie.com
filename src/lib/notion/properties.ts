@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — PROPERTY EXTRACTORS
+// NOTION SYNC: PROPERTY EXTRACTORS
 // ============================================================================
 // Tiny, dependency-free helpers that read values out of the raw property
 // objects returned by the Notion REST API (version 2022-06-28). Each helper is
@@ -92,7 +92,7 @@ export function getRelationIds(page: NotionPage, name: string): string[] {
 }
 
 /**
- * Parse a star-string select ("★★★★½") into a 0–5 number.
+ * Parse a star-string select ("★★★★½") into a 0 to 5 number.
  * Returns null for non-rating values like "DNF".
  */
 export function parseStars(stars: string | null): number | null {

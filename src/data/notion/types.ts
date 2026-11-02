@@ -63,7 +63,7 @@ export const DEFAULT_NUTRITION_TARGETS: NutritionTargets = {
 };
 
 // ---------------------------------------------------------------------------
-// Media (public shelf) — unified shape for Films / TV / Audiobooks
+// Media (public shelf): unified shape for Films / TV / Audiobooks
 // ---------------------------------------------------------------------------
 
 export type MediaKind = "film" | "tv" | "audiobook";
@@ -73,7 +73,7 @@ export interface MediaItem {
   kind: MediaKind;
   title: string;
   year: number | null;
-  /** 0–5 stars parsed from the "My Rating" select. */
+  /** 0 to 5 stars parsed from the "My Rating" select. */
   rating: number | null;
   ratingStars: string | null; // e.g. "★★★★½"
   status: string | null; // Watched | Watchlist | Reading | Read | ...
@@ -92,7 +92,7 @@ export interface MediaItem {
 }
 
 // ---------------------------------------------------------------------------
-// Favorite foods (public) — curated subset of the Recipe Booklet / favorites
+// Favorite foods (public): curated subset of the Recipe Booklet / favorites
 // ---------------------------------------------------------------------------
 
 export interface FavoriteFood {

@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — SUPABASE CACHE
+// NOTION SYNC: SUPABASE CACHE
 // ============================================================================
 // The sync writes normalized rows here; the read API serves from here. Using a
 // cache (instead of hitting Notion on every page view) keeps reads fast, avoids

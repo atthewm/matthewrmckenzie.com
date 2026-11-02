@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — DATASET REGISTRY
+// NOTION SYNC: DATASET REGISTRY
 // ============================================================================
 // One entry per syncable "piece" of Notion. Each entry knows:
 //   - which database to read
@@ -210,7 +210,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     },
   },
 
-  // -- Audiobooks (PUBLIC, private notes) — Books DB filtered ----------------
+  // -- Audiobooks (PUBLIC, private notes): Books DB filtered ----------------
   audiobooks: {
     key: "audiobooks",
     label: "Audiobooks",
@@ -264,7 +264,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     },
   },
 
-  // -- Favorite foods (PUBLIC) — Recipe Booklet favorites -------------------
+  // -- Favorite foods (PUBLIC): Recipe Booklet favorites -------------------
   // NOTE: Recipe Booklet field names are best-effort; confirm against the live
   // schema and adjust the getters below if needed.
   "favorite-foods": {

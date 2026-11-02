@@ -70,8 +70,19 @@ Desktop apps are wired in three places, all of which must agree:
 ## Content sources
 
 - Markdown in `src/content/` (about, work, now, resume, recipes, essays)
+- Recipes: drop a `.md` with frontmatter (title, subtitle, yield, total_time,
+  tags, category, source, updated) into `src/content/recipes/`. `npm run recipes`
+  (also run by predev/prebuild) regenerates `index.ts` and mirrors the file to
+  `public/recipes/`. The desktop folder, `/recipes`, sitemap, and llms.txt all
+  read the generated index.
+- Static reading routes use the `.site` tokens in `globals.css` (slate and gold,
+  shared with mckm.at) via `StaticPageLayout`. Phones get `MobileView`.
 - Notion sync via `src/lib/notion/` — nutrition, films, TV, audiobooks
 - WHOOP via `src/lib/whoop/` — activity, workouts, recovery
+
+## Archive
+
+Old audits live in `docs/archive/`. Do not restore the root `audit/` folder.
 
 ## Style
 

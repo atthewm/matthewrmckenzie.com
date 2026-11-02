@@ -31,7 +31,7 @@ export function useKeyboardShortcuts() {
 
       // -- Global shortcuts (don't need a focused window) --
 
-      // Cmd/Ctrl + , → open Settings
+      // Cmd/Ctrl +, → open Settings
       if (isMeta && e.key === ",") {
         e.preventDefault();
         const settingsItem = findFSItem("settings");

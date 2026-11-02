@@ -1,5 +1,5 @@
 // ============================================================================
-// ANALYTICS — Vercel Analytics + custom event tracking
+// ANALYTICS: Vercel Analytics + custom event tracking
 // ============================================================================
 // Uses Vercel Analytics (already loaded via <Analytics /> in layout).
 // The track() function sends custom events to Vercel's dashboard.

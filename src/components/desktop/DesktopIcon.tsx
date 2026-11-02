@@ -95,6 +95,12 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
         touchAction: "none",
       }}
       onDoubleClick={handleOpen}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleOpen();
+        }
+      }}
       onClick={() => { if (!didDrag.current) setSelected(true); }}
       onBlur={() => setSelected(false)}
       onPointerDown={handlePointerDown}

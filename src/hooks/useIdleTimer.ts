@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 // ---------------------------------------------------------------------------
-// useIdleTimer — fires after `timeout` ms of no user interaction.
+// useIdleTimer: fires after `timeout` ms of no user interaction.
 // Returns `idle` (boolean) and `reset` (manual dismiss).
 // Listens to: mousemove, mousedown, keydown, touchstart, scroll, wheel.
 // ---------------------------------------------------------------------------

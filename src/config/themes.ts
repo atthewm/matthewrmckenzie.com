@@ -9,9 +9,9 @@
 export interface ZenTheme {
   id: string;
   name: string;
-  /** WebM video (VP9+Opus) — primary, smaller */
+  /** WebM video (VP9+Opus): primary, smaller */
   videoWebm: string;
-  /** MP4 video (H.264+AAC) — fallback */
+  /** MP4 video (H.264+AAC): fallback */
   videoMp4: string;
   /** Desktop poster / reduced-motion fallback (landscape) */
   poster: string;

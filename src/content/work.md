@@ -32,13 +32,13 @@ Capital formation and investor relations for an alternative investment manager f
 ## What Others Say
 
 > "Matthew is one of the few people in this business who calls you when there is nothing to sell. That is why he gets our capital."
-> — *Family Office Principal, Southwest U.S.*
+> *Family Office Principal, Southwest U.S.*
 
 > "Clear, direct, and always prepared. He understands our mandate better than most GPs we work with."
-> — *CIO, Multi Family Office*
+> *CIO, Multi Family Office*
 
 > "We committed to three consecutive vehicles because of the relationship Matthew built with our team. The returns matter, but the trust matters more."
-> — *Managing Director, RIA Platform*
+> *Managing Director, RIA Platform*
 
 ## Principles
 
