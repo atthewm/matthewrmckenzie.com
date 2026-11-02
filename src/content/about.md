@@ -4,32 +4,26 @@ title: About
 
 # About
 
-Matthew McKenzie structures capital partnerships and growth strategy for real asset backed businesses. He works across both debt and equity, partnering with family offices, UHNW investors, and institutional groups to build companies with disciplined underwriting and long term ownership at the center.
+Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, based in Austin. He builds long-term partnerships between private wealth investors and real estate operators, with disciplined underwriting and clear communication at the center.
 
 ## Background
 
-Matthew is Senior Vice President, Capital Formation at Menlo Equities, where he is responsible for capital formation across Menlo's private wealth channel. His focus is developing and expanding relationships with high net worth and ultra high net worth investors, family offices, and registered investment advisors across the firm's investment platforms.
+At Menlo Equities, Matthew is responsible for capital formation across the firm's private wealth channel. His focus is developing and expanding relationships with high net worth and ultra high net worth investors, family offices, and registered investment advisors across Menlo's investment platforms.
 
-Prior to joining Menlo in 2026, he spent nearly a decade at Civitas Capital Group, most recently as Vice President, Investor Relations, where he raised capital from private wealth investors across closed-end funds, open-end perpetual vehicles, and co-investments, managing relationships across North America, the Middle East, and Asia.
+Before joining Menlo in 2026, he spent nearly a decade at Civitas Capital Group, most recently as Vice President, Investor Relations. There he raised capital from private wealth investors across closed-end funds, open-end perpetual vehicles, and co-investments, and managed relationships across North America, the Middle East, and Asia.
 
-In parallel, he builds production AI tooling: MCP servers and Microsoft Teams bots for restaurant operations platforms, plus integrations with consumer health data sources like Eight Sleep.
+He holds a BS in Economics and a BA in Public Policy from Southern Methodist University.
 
-## What Sets Matthew Apart
+## How He Works
 
-Most capital formation professionals stay in one lane. Matthew operates across three:
+**Investor partnerships.** Matthew structures and manages relationships with family offices, high net worth investors, RIAs, and institutional allocators. He communicates plainly when stakes are high and builds partnerships meant to last beyond a single transaction.
 
-**Investor Partnerships.** Deep experience structuring and managing relationships with family offices, high net worth investors, and institutional allocators. He communicates clearly when stakes are high and builds partnerships designed to last beyond a single transaction.
+**Underwriting first.** He works alongside sponsors and operators to pressure test business plans and assumptions before going to market, so investors get clarity on what they are buying.
 
-**Operating Strategy.** He does not just raise capital. He works alongside operators to sharpen growth plans, model unit economics, and pressure test assumptions before going to market. Capital partners get clarity because the work behind the raise is rigorous.
+**Building tools.** Matthew writes software that puts AI to work on real operations: MCP servers, agents, and data pipelines. This site, the mckm.at link and data room platform, and his personal health data stack are all his own builds.
 
-**Technical Building.** Matthew builds production software that connects AI to real business operations. He has shipped MCP servers and Microsoft Teams bots that give restaurant and hospitality teams natural language access to platforms like Toast and MarginEdge. This is not a side hobby; it reflects how he thinks about leverage and scale.
+## Outside Work
 
-## Now
+Sourdough and baking, recipe development, strength and endurance training, tennis, and photography. The [Recipes](/recipes) collection is where the kitchen notebook lives.
 
-What I'm focused on right now:
-
-- Capital formation across the private wealth channel at Menlo Equities
-- Shipping AI operations tools for restaurant and hospitality teams (Toast, MarginEdge)
-- Consumer health data integrations and sleep optimization (Eight Sleep, WHOOP)
-- Health and performance: hybrid athlete focused on strength and endurance
-- Sourdough baking, recipe development, and cooking
+For what he is focused on this month, see [Now](/now).

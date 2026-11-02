@@ -6,8 +6,7 @@ import type { FSItem } from "@/data/fs";
 import { getRootItems } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { PantherIcon } from "@/components/desktop/PantherIcons";
-import { recipes as recipeIndex } from "@/content/recipes/index";
-import { siteConfig } from "@/lib/config";
+import { recipes as recipeIndex, RECIPE_CATEGORIES } from "@/content/recipes/index";
 
 // ============================================================================
 // FOLDER VIEW (Mac OS X 10.3 Panther Finder-Style)
@@ -60,68 +59,77 @@ function Sidebar({ currentId }: { currentId: string }) {
   );
 }
 
-/** Recipe list view: icon + title + one-line subtitle */
+/** Recipe list view, grouped by category: icon + title + one-line subtitle */
 function RecipeListView({ children }: { children: FSItem[] }) {
   const { openItem } = useDesktop();
-  const recipeMap = new Map(recipeIndex.map((r) => [r.slug, r]));
+  const byId = new Map(children.map((c) => [c.id, c]));
 
   return (
     <div className="flex flex-col">
-      {children.map((child) => {
-        const meta = recipeMap.get(child.id);
+      {RECIPE_CATEGORIES.map((category) => {
+        const metas = recipeIndex.filter((r) => r.category === category && byId.has(r.slug));
+        if (metas.length === 0) return null;
         return (
-          <button
-            key={child.id}
-            className="flex items-center gap-3 px-3 py-2.5 text-left border-b
-                       hover:bg-desktop-border/30 transition-colors duration-75
-                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
-            style={{ borderColor: "var(--desktop-border)" }}
-            onDoubleClick={() => openItem(child)}
-            aria-label={`Open ${child.name}`}
-            title={child.description}
-          >
-            <div className="w-8 h-8 flex items-center justify-center shrink-0">
-              <PantherIcon itemId={child.id} size={28} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[12px] font-medium text-desktop-text truncate">
-                {child.name}
-              </p>
-              {meta && (
-                <p className="text-[10px] text-desktop-text-secondary truncate">
-                  {meta.subtitle}
-                </p>
-              )}
-            </div>
-          </button>
+          <section key={category} aria-label={category}>
+            <h3
+              className="sticky top-0 z-[1] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-desktop-text-secondary border-b"
+              style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface)" }}
+            >
+              {category} <span className="font-normal">({metas.length})</span>
+            </h3>
+            {metas.map((meta) => {
+              const child = byId.get(meta.slug)!;
+              return (
+                <button
+                  key={child.id}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-left border-b
+                             hover:bg-desktop-border/30 transition-colors duration-75
+                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
+                  style={{ borderColor: "var(--desktop-border)" }}
+                  onDoubleClick={() => openItem(child)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openItem(child);
+                    }
+                  }}
+                  aria-label={`Open ${child.name}`}
+                  title={child.description}
+                >
+                  <div className="w-7 h-7 flex items-center justify-center shrink-0">
+                    <PantherIcon itemId={child.id} size={24} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[12px] font-medium text-desktop-text truncate">{child.name}</p>
+                    <p className="text-[10px] text-desktop-text-secondary truncate">{meta.subtitle}</p>
+                  </div>
+                  <span className="hidden sm:block text-[10px] text-desktop-text-secondary shrink-0 max-w-[120px] truncate">
+                    {meta.yield}
+                  </span>
+                </button>
+              );
+            })}
+          </section>
         );
       })}
 
-      {/* Notion Recipe Library link */}
       <div
-        className="mx-3 my-3 px-3 py-2.5 rounded-lg border flex items-center justify-between"
-        style={{
-          borderColor: "var(--desktop-border)",
-          background: "var(--desktop-surface-raised)",
-        }}
+        className="mx-3 my-3 px-3 py-2.5 rounded-lg border flex items-center justify-between gap-3"
+        style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
-        <div>
-          <p className="text-[11px] font-medium text-desktop-text">
-            Notion Recipe Library
-          </p>
-          <p className="text-[10px] text-desktop-text-secondary">
-            Browse the full collection
-          </p>
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium text-desktop-text">{recipeIndex.length} recipes</p>
+          <p className="text-[10px] text-desktop-text-secondary">Printable, shareable web versions</p>
         </div>
         <a
-          href={siteConfig.notionRecipesUrl}
+          href="/recipes"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium
-                     bg-desktop-accent text-white hover:opacity-90 transition-opacity"
+                     bg-desktop-accent text-white hover:opacity-90 transition-opacity shrink-0"
         >
           <ExternalLink size={10} />
-          Open in Notion
+          Open web view
         </a>
       </div>
     </div>

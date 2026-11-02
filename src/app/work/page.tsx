@@ -25,9 +25,7 @@ export default async function WorkPage() {
       ])} />
       {content ? (
         <article
-          className="prose prose-sm dark:prose-invert max-w-none
-                     prose-headings:font-semibold
-                     prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline"
+          className="site-prose"
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (

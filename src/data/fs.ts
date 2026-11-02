@@ -1,4 +1,6 @@
 // FILE SYSTEM DATA MODEL
+import { recipes } from "@/content/recipes/index";
+
 export type FSItemType = "folder" | "app" | "document" | "link";
 
 export interface FSItem {
@@ -46,16 +48,17 @@ export const fileSystem: FSItem[] = [
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
   { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Tennis, baking, and photography.", defaultSize: { width: 560, height: 640 } },
-  { id: "recipes", name: "Recipes", type: "folder", icon: "UtensilsCrossed", description: "Tried and true recipes from the kitchen.", children: [
-    { id: "rye-starter", name: "Rye Starter", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/rye-starter.md", description: "6-day rye starter build plus a low-waste daily maintenance plan.", defaultSize: { width: 600, height: 640 } },
-    { id: "city-loaf-master-recipe", name: "City Loaf Master Recipe", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/city-loaf-master-recipe.md", description: "Two 950 g loaves baked in a Dutch oven.", defaultSize: { width: 600, height: 640 } },
-    { id: "strawberry-jam-honey", name: "Strawberry Jam with Honey", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/strawberry-jam-honey.md", description: "No refined sugar, thickened naturally with optional chia.", defaultSize: { width: 600, height: 640 } },
-    { id: "cinnamon-protein-overnight-oats", name: "Cinnamon Protein Overnight Oats", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/cinnamon-protein-overnight-oats.md", description: "One serving with a thicker texture and revised liquid ratio.", defaultSize: { width: 600, height: 640 } },
-    { id: "brownies-9x13", name: "Brownies (9x13)", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/brownies-9x13.md", description: "Recipe card version with English walnuts.", defaultSize: { width: 600, height: 640 } },
-    { id: "high-protein-heirloom-blue-corn-tortillas", name: "High-Protein Blue Corn Tortillas", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/high-protein-heirloom-blue-corn-tortillas.md", description: "High-protein tortillas using blue corn masa and vital wheat gluten.", defaultSize: { width: 600, height: 640 } },
-    { id: "mamas-healthy-meatballs", name: "Mama's Healthy Meatballs", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/mamas-healthy-meatballs.md", description: "Lean, high-protein meatballs with beef, lamb, and venison.", defaultSize: { width: 600, height: 640 } },
-    { id: "parmesan-crusted-baked-chicken-tenders", name: "Parmesan Crusted Baked Chicken Tenders", type: "app", icon: "FileText", appComponent: "RecipeViewer", contentPath: "recipes/parmesan-crusted-baked-chicken-tenders.md", description: "Higher-protein baked tenders with a Parmesan crust.", defaultSize: { width: 600, height: 640 } },
-  ]},
+  { id: "recipes", name: "Recipes", type: "folder", icon: "UtensilsCrossed", staticRoute: "/recipes", description: "Sourdough, family recipe cards, and high-protein baking.", children: recipes.map((r) => ({
+    id: r.slug,
+    name: r.title,
+    type: "app" as const,
+    icon: "FileText",
+    appComponent: "RecipeViewer",
+    contentPath: r.filePath,
+    staticRoute: `/recipes/${r.slug}`,
+    description: r.subtitle,
+    defaultSize: { width: 620, height: 680 },
+  })) },
   { id: "media", name: "Media", type: "folder", icon: "Image", description: "Films, TV, and audiobooks synced from my Notion Media Library.", children: [
     { id: "media-movies", name: "Movies", type: "app", icon: "Disc3", appComponent: "MediaShelfApp", description: "Films I've watched, rated, and queued.", defaultSize: { width: 660, height: 600 } },
     { id: "media-tv", name: "TV Shows", type: "app", icon: "Image", appComponent: "MediaShelfApp", description: "TV I'm watching and recommend.", defaultSize: { width: 660, height: 600 } },

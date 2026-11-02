@@ -4,32 +4,26 @@ title: Projects
 
 # Projects
 
-A selection of things I have built or am actively building.
+Things I have built or am actively building.
 
-## AI Operations Tooling
+## Platforms
 
-**Toast MCP Server.** A production MCP server that gives AI assistants authenticated access to the Toast restaurant platform. 11 read tools and 3 gated write tools covering menus, orders, configuration, and health checks. Deployed on Azure, open source on [GitHub](https://github.com/atthewm/toast-mcp-server).
+**mckm.at.** My link shortener and data room platform. Tracked short links with password protection, expiration, click limits, QR posters, public stats pages, and email-gated data rooms with per-page dwell analytics. Built with Next.js, Supabase, and Cloudflare R2. [Visit mckm.at](https://mckm.at).
 
-**Toast Teams Bot.** A Microsoft Teams bot that lets restaurant teams query Toast data using natural language directly in their team channels. Live and deployed in production. [GitHub](https://github.com/atthewm/toast-teams-bot).
+**McKenzie OS.** This site. A desktop operating system built from scratch with Next.js, React, and TypeScript, with a window manager, dock, Spotlight search, terminal, and more than 20 apps. Recipes, media, and nutrition sync from Notion. [Source](https://github.com/atthewm/matthewrmckenzie.com).
 
-**MarginEdge MCP Server.** MCP server for the MarginEdge back office platform. 13 read tools covering invoices, vendors, products, and food cost categories. [GitHub](https://github.com/atthewm/marginedge-mcp-server).
+## Health Data
 
-**MarginEdge Teams Bot.** Teams bot for querying invoice data, vendor information, and food costs through natural language. [GitHub](https://github.com/atthewm/marginedge-teams-bot).
+**Eight Sleep Consumer.** A pipeline that pulls nightly sleep data from Eight Sleep into a personal health stack and powers training readiness and recovery signals. [GitHub](https://github.com/atthewm/eightsleep-consumer).
 
-## Consumer Health Data
+**Eight Sleep Client.** A TypeScript client for the Eight Sleep API that the consumer pipeline and other tools depend on. [GitHub](https://github.com/atthewm/eightsleep-client).
 
-**Eight Sleep Consumer.** Pipeline that pulls nightly sleep data from Eight Sleep into a personal health stack. Powers training readiness signals and recovery analytics. [GitHub](https://github.com/atthewm/eightsleep-consumer).
+**WHOOP Dashboard.** A live WHOOP integration on this site: strain, recovery, workouts, and strength splits. Open the Health folder on the desktop to see it.
 
-**Eight Sleep Client.** TypeScript client for the Eight Sleep API. Reusable library that the consumer pipeline and other tooling depend on. [GitHub](https://github.com/atthewm/eightsleep-client).
+## Utilities
 
-## Platforms and Tools
-
-**McKenzie OS.** This site. A custom desktop operating system built from scratch with Next.js, React, and TypeScript. Includes a window manager, dock, Spotlight search, terminal, and over 20 interactive apps. [Source](https://github.com/atthewm/matthewrmckenzie.com).
-
-**Remote Pulse.** An operational dashboard for restaurant performance. Python, PostgreSQL, and Streamlit. Ingests data from Toast, transforms it into analytics views, and surfaces insights across sales, labor, and item performance.
-
-**Cosmos Collector.** A headless Playwright script that downloads all assets from cosmos.so boards, including images and Mux video URLs. [GitHub](https://github.com/atthewm/cosmos-collector).
+**Cosmos Collector.** A headless Playwright script that downloads every asset from cosmos.so boards, including images and Mux video. [GitHub](https://github.com/atthewm/cosmos-collector).
 
 ## Capital Formation
 
-Selected deal work and capital formation case studies are available on request. [Get in touch](/contact) or [connect on LinkedIn](https://www.linkedin.com/in/mrmckenzie/).
+Selected capital formation work is available on request. [Get in touch](/contact) or [connect on LinkedIn](https://www.linkedin.com/in/mrmckenzie/).

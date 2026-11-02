@@ -2,12 +2,12 @@
 title: High-Protein Heirloom Blue Corn Tortillas
 subtitle: High-protein tortillas using blue corn masa, wheat flour, and vital wheat gluten
 yield: 19 tortillas (42 to 45 g each)
-total_time: TBD
+total_time: About 1 hour 15 minutes
 tags: [tortillas, high protein, meal prep]
+category: Bread
+source: Kitchen notebook
+updated: 2026-02-16
 ---
-
-## Yield
-19 tortillas (42 to 45 g each)
 
 ## Ingredients
 

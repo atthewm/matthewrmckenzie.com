@@ -19,24 +19,22 @@ export default async function ContactPage() {
   const content = await getContent("contact");
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout hideCta>
       <JsonLd data={breadcrumbSchema([
         { name: "Home", url: "https://matthewrmckenzie.com" },
         { name: "Contact", url: "https://matthewrmckenzie.com/contact" },
       ])} />
       {content ? (
         <article
-          className="prose prose-sm dark:prose-invert max-w-none
-                     prose-headings:font-semibold
-                     prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline"
+          className="site-prose"
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (
         <EmptyContent />
       )}
       {/* Inline Cal.com scheduling embed */}
-      <div className="mt-8">
-        <h2 className="text-sm font-semibold text-desktop-text mb-3">Book a Time</h2>
+      <div className="mt-10 pt-8 border-t" style={{ borderColor: "var(--site-rule)" }}>
+        <p className="site-eyebrow mb-3">Book a time</p>
         <CalEmbed />
       </div>
     </StaticPageLayout>

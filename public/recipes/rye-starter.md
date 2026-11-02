@@ -4,6 +4,9 @@ subtitle: 6-day rye starter build plus a low-waste daily maintenance plan
 yield: Makes about 175 g starter
 total_time: 6 days
 tags: [bread, sourdough, starter, rye]
+category: Bread
+source: Kitchen notebook
+updated: 2026-02-16
 ---
 
 ## Overview

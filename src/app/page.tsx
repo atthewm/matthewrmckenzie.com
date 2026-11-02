@@ -16,7 +16,8 @@ export default async function HomePage() {
   const contentMap: Record<string, string> = {};
 
   for (const item of allItems) {
-    if (item.contentPath) {
+    // Recipes load on demand from /api/recipes/[slug] to keep the page light.
+    if (item.contentPath && !item.contentPath.startsWith("recipes/")) {
       const slug = item.contentPath.replace(/\.md$/, "");
       const content = await getContent(slug);
       if (content) {
@@ -30,7 +31,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <h1 className="sr-only">Matthew McKenzie | Capital Formation & Growth Strategy</h1>
+      <h1 className="sr-only">Matthew McKenzie | Capital Formation, Menlo Equities</h1>
       <DesktopShell contentMap={contentMap} />
       {/* Crawler / noscript fallback: structured content for search engines and users without JS */}
       <noscript>
@@ -38,10 +39,9 @@ export default async function HomePage() {
           <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Matthew McKenzie</h2>
           <p style={{ fontSize: 15, color: "#636366", marginBottom: 24 }}>Capital Formation &amp; Growth Strategy</p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
-            Matthew McKenzie structures capital partnerships and growth strategy for real asset backed
-            businesses. He works across both debt and equity, partnering with family offices, UHNW investors,
-            and institutional groups to build companies with disciplined underwriting and long term
-            ownership at the center.
+            Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities in Austin. He
+            builds long-term partnerships between private wealth investors and real estate operators, with
+            disciplined underwriting and clear communication at the center.
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
             As Senior Vice President, Capital Formation at Menlo Equities, he leads capital formation
@@ -51,15 +51,15 @@ export default async function HomePage() {
             relationships across North America, the Middle East, and Asia.
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
-            Matthew also builds production AI tooling: MCP servers and Microsoft Teams bots that connect
-            natural language interfaces to restaurant operations platforms (Toast, MarginEdge), plus
-            integrations with Eight Sleep and other consumer health data.
+            He also builds his own tools, including the mckm.at link and data room platform and a personal
+            health data stack, and bakes from a growing recipe collection.
           </p>
           <nav style={{ display: "flex", gap: 24, fontSize: 14, flexWrap: "wrap" as const }}>
             <Link href="/about">About</Link>
             <Link href="/work">Work</Link>
             <Link href="/projects">Projects</Link>
             <Link href="/writing">Writing</Link>
+            <Link href="/recipes">Recipes</Link>
             <Link href="/contact">Contact</Link>
             <Link href="/privacy">Privacy</Link>
           </nav>

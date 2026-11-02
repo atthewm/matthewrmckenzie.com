@@ -67,7 +67,7 @@ export async function GET() {
       title: "Projects: AI Operations Tooling and Platforms",
       link: `${SITE_URL}/projects`,
       description:
-        "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and more.",
+        "mckm.at, McKenzie OS, Eight Sleep integrations, and more.",
       pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
     },
   ];

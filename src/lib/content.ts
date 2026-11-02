@@ -8,6 +8,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
+import gfm from "remark-gfm";
 import html from "remark-html";
 
 const contentDirectory = path.join(process.cwd(), "src/content");
@@ -26,7 +27,7 @@ export async function getContent(slug: string): Promise<ContentData | null> {
     const fileContents = fs.readFileSync(filePath, "utf8");
     const { data, content } = matter(fileContents);
 
-    const processed = await remark().use(html).process(content);
+    const processed = await remark().use(gfm).use(html).process(content);
     const contentHtml = processed.toString();
 
     // Extract title from first heading if not in frontmatter

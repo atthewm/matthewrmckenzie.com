@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { ExternalLink, GitFork, Code2, Bot, Server, Moon, Gamepad2, Globe } from "lucide-react";
+import { ExternalLink, GitFork, Code2, Moon, Gamepad2, Globe } from "lucide-react";
 
 // ============================================================================
 // GITHUB APP - Public Repositories Showcase
 // ============================================================================
 
-type RepoCategory = "all" | "mcp" | "bots" | "projects";
+type RepoCategory = "all" | "health" | "projects" | "games";
 
 interface Repo {
   name: string;
@@ -24,54 +24,12 @@ interface Repo {
 
 const repos: Repo[] = [
   {
-    name: "toast-mcp-server",
-    description: "MCP server for the Toast restaurant platform. Safe, read-oriented AI access to menus, orders, and restaurant operations.",
-    url: "https://github.com/atthewm/toast-mcp-server",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-    category: ["mcp"],
-    icon: <Server size={14} />,
-    license: "MIT",
-    updated: "Mar 2026",
-  },
-  {
-    name: "toast-teams-bot",
-    description: "Microsoft Teams bot for Toast restaurant operations. Queries menus, orders, and system health via the Toast MCP Server.",
-    url: "https://github.com/atthewm/toast-teams-bot",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-    category: ["bots"],
-    icon: <Bot size={14} />,
-    license: "MIT",
-    updated: "Mar 2026",
-  },
-  {
-    name: "marginedge-mcp-server",
-    description: "MCP server for MarginEdge restaurant back-office platform. AI-accessible data layer for invoices, recipes, and operations.",
-    url: "https://github.com/atthewm/marginedge-mcp-server",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-    category: ["mcp"],
-    icon: <Server size={14} />,
-    updated: "Mar 2026",
-  },
-  {
-    name: "marginedge-teams-bot",
-    description: "Microsoft Teams bot for MarginEdge restaurant back-office. AI assistant for invoices, food costs, and vendor management.",
-    url: "https://github.com/atthewm/marginedge-teams-bot",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-    category: ["bots"],
-    icon: <Bot size={14} />,
-    updated: "Mar 2026",
-  },
-  {
     name: "eightsleep-consumer",
     description: "Eight Sleep data pipeline. Pulls nightly sleep metrics into a personal health stack for training readiness and recovery analytics.",
     url: "https://github.com/atthewm/eightsleep-consumer",
     language: "TypeScript",
     languageColor: "#3178c6",
-    category: ["projects"],
+    category: ["health"],
     icon: <Moon size={14} />,
     updated: "May 2026",
   },
@@ -81,7 +39,7 @@ const repos: Repo[] = [
     url: "https://github.com/atthewm/eightsleep-client",
     language: "TypeScript",
     languageColor: "#3178c6",
-    category: ["projects"],
+    category: ["health"],
     icon: <Moon size={14} />,
     updated: "May 2026",
   },
@@ -112,7 +70,7 @@ const repos: Repo[] = [
     url: "https://github.com/atthewm/snowcraft-remake",
     language: "TypeScript",
     languageColor: "#3178c6",
-    category: ["projects"],
+    category: ["games"],
     icon: <Gamepad2 size={14} />,
     updated: "Feb 2026",
   },
@@ -122,7 +80,7 @@ const repos: Repo[] = [
     url: "https://github.com/atthewm/snowcraft",
     language: "",
     languageColor: "#888",
-    category: ["projects"],
+    category: ["games"],
     icon: <Gamepad2 size={14} />,
     updated: "Feb 2026",
   },
@@ -130,9 +88,9 @@ const repos: Repo[] = [
 
 const filters: { label: string; value: RepoCategory }[] = [
   { label: "All", value: "all" },
-  { label: "MCP Servers", value: "mcp" },
-  { label: "Teams Bots", value: "bots" },
   { label: "Projects", value: "projects" },
+  { label: "Health Data", value: "health" },
+  { label: "Games", value: "games" },
 ];
 
 export default function GitHubApp() {
@@ -180,7 +138,7 @@ export default function GitHubApp() {
               @atthewm
             </a>
             <p className="text-[10px] text-desktop-text-secondary">
-              MCP servers, Teams bots, and other projects
+              Health data pipelines, tools, and side projects
             </p>
           </div>
         </div>

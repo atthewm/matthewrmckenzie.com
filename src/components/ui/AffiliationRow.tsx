@@ -1,8 +1,5 @@
 // ============================================================================
-// AFFILIATION ROW — visual proof strip
-// ============================================================================
-// Displays affiliations/associations in a clean horizontal row.
-// Text-based for now; swap in SVG logos when available.
+// AFFILIATION ROW
 // ============================================================================
 
 const affiliations = [
@@ -14,18 +11,17 @@ const affiliations = [
 
 export default function AffiliationRow() {
   return (
-    <div className="mt-10 pt-6 border-t border-desktop-border">
-      <p className="text-3xs font-semibold uppercase tracking-wider text-desktop-text-secondary mb-3">
-        Affiliations
-      </p>
-      <div className="flex items-center gap-6 flex-wrap">
+    <div className="mt-12 pt-6 border-t" style={{ borderColor: "var(--site-rule)" }}>
+      <p className="site-eyebrow mb-3">Affiliations</p>
+      <div className="flex items-center gap-x-6 gap-y-2 flex-wrap">
         {affiliations.map((a) => (
           <a
             key={a.name}
             href={a.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-desktop-text-secondary hover:text-desktop-text transition-colors"
+            className="site-display text-[17px] hover:underline"
+            style={{ color: "var(--site-muted)" }}
           >
             {a.name}
           </a>
