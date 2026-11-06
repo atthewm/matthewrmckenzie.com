@@ -12,7 +12,6 @@ import {
   Globe,
   Server,
   Bot,
-  Link2,
   Moon,
 } from "lucide-react";
 
@@ -48,7 +47,6 @@ const projectLinks: LinkItem[] = [
 const actionLinks: LinkItem[] = [
   { label: "Schedule a Call", href: "https://cal.com/mattmck/site", icon: Calendar, description: "Book a meeting with me" },
   { label: "Email", href: "mailto:matthew.mckenzie@mac.com", icon: Mail, description: "matthew.mckenzie@mac.com" },
-  { label: "URL Shortener", href: "https://mckm.at", icon: Link2, description: "mckm.at, my link shortener" },
 ];
 
 function LinkSection({ title, links }: { title: string; links: LinkItem[] }) {
@@ -148,7 +146,7 @@ export default function LinktreeApp() {
         className="shrink-0 h-[22px] flex items-center px-3 border-t text-[10px] text-desktop-text-secondary"
         style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
-        mckm.at
+        matthewrmckenzie.com
       </div>
     </div>
   );

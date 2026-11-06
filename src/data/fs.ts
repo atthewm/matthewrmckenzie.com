@@ -80,7 +80,6 @@ export const fileSystem: FSItem[] = [
   { id: "github-projects", name: "GitHub", type: "app", icon: "Github", appComponent: "GitHubApp", description: "Public repositories and open source projects.", defaultSize: { width: 520, height: 580 } },
   { id: "whats-new", name: "What's New", type: "app", icon: "Sparkles", appComponent: "WhatsNewApp", description: "Changelog and release history for McKenzie OS.", defaultSize: { width: 460, height: 560 } },
   { id: "linktree", name: "Links", type: "app", icon: "Link", appComponent: "LinktreeApp", description: "All links in one place.", defaultSize: { width: 420, height: 620 } },
-  { id: "url-shortener", name: "URL Shortener", type: "app", icon: "Link2", appComponent: "UrlShortenerApp", description: "Create and manage short links at mckm.at.", defaultSize: { width: 440, height: 520 } },
   { id: "schedule", name: "Schedule", type: "app", icon: "Calendar", appComponent: "ScheduleApp", description: "Book a meeting.", defaultSize: { width: 800, height: 600 } },
   // Hidden items - revealed by easter eggs
   { id: "secrets", name: "Secrets", type: "folder", icon: "Lock", hidden: true, description: "You found the hidden folder.", children: [
