@@ -20,7 +20,7 @@ const sections = [
     href: "/health",
     title: "Health and Fitness",
     blurb: "Training, recovery and sleep from WHOOP, plus my daily nutrition.",
-    icon: "/icons/custom/whoop.svg",
+    icon: "/brands/whoop.svg",
   },
   {
     href: "/kitchen",

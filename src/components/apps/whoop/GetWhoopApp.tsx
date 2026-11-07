@@ -28,7 +28,7 @@ export default function GetWhoopApp() {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/icons/custom/whoop.svg"
+        src="/brands/whoop.svg"
         alt="WHOOP"
         width={56}
         height={56}

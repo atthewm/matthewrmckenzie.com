@@ -7,6 +7,7 @@ import EmptyContent from "@/components/ui/EmptyContent";
 import WhoopDashboardApp from "@/components/apps/whoop/WhoopDashboardApp";
 import NutritionApp from "@/components/apps/NutritionApp";
 import TopFoodsApp from "@/components/apps/TopFoodsApp";
+import BrandLogo from "@/components/ui/BrandLogo";
 
 function Panel({ title, height, children }: { title: string; height: number; children: React.ReactNode }) {
   return (
@@ -51,6 +52,13 @@ export default async function HealthPage() {
       ) : (
         <EmptyContent />
       )}
+      <section className="mt-8">
+        <h2 className="mb-3 text-sm font-semibold text-desktop-text">Tracked with</h2>
+        <div className="flex flex-wrap gap-3">
+          <BrandLogo brand="whoop" />
+          <BrandLogo brand="eightSleep" />
+        </div>
+      </section>
       <Panel title="Training and recovery" height={640}>
         <WhoopDashboardApp />
       </Panel>

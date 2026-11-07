@@ -48,4 +48,4 @@ I hold a few things as non negotiable in how I work:
 
 ## Let's Talk
 
-If you are an investor, an advisor, or an operator raising capital, I would like to hear from you. [Get in touch](/contact), see my [resume](/?open=resume), or [connect on LinkedIn](https://www.linkedin.com/in/mrmckenzie/).
+If you are an investor, an advisor, or an operator raising capital, I would like to hear from you. [Get in touch](/contact), see my [resume](/desktop?open=resume), or [connect on LinkedIn](https://www.linkedin.com/in/mrmckenzie/).

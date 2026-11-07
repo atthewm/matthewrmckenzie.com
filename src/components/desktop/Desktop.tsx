@@ -84,7 +84,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
     });
   }, []);
 
-  // Auto-open window from ?open= query param (e.g. /?open=about)
+  // Auto-open window from ?open= query param (e.g. /desktop?open=about)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const openId = params.get("open");
@@ -94,7 +94,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
         dispatch({ type: "OPEN_WINDOW", payload: { fsItem: item } });
       }
       // Clean URL without reload
-      window.history.replaceState({}, "", "/");
+      window.history.replaceState({}, "", window.location.pathname);
     }
   }, [dispatch]);
 
