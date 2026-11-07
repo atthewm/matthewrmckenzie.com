@@ -20,7 +20,7 @@ const iconMap: Record<string, string> = {
   "about":          "finder.png",
   "work":           "applications-folder.png",
   "writing":        "textedit.png",
-  "now":            "sherlock.png",
+  "now":            "stickies.png",
   "browser":        "safari.png",
   "settings":       "system-preferences.png",
   "terminal":       "terminal.png",
@@ -31,16 +31,19 @@ const iconMap: Record<string, string> = {
   "schedule":       "ical.png",
   "ichat":          "ichat.png",
   "photo-booth":    "image-capture.png",
-  "chess":          "generic-application.png",
-  "minesweeper":    "calculator.png",
-  "whats-new":      "sherlock.png",
+  "chess":          "/icons/custom/chess.svg",
+  "minesweeper":    "/icons/custom/minesweeper.svg",
+  "whats-new":      "macosx.png",
+  "card":           "/icons/custom/card.svg",
 
   // Media
   "media":          "movies-folder.png",
   "photos":         "iphoto.png",
-  "music":          "dvd-player.png",
-  "videos":         "quicktime-player.png",
-  "apple-music":    "itunes-3.png",
+  "music":          "itunes-2.png",
+    "apple-music":    "itunes-3.png",
+  "media-movies":   "dvd-player.png",
+  "media-tv":       "imovie-hd.png",
+  "media-audiobooks": "/icons/custom/audiobooks.svg",
 
   // Work children
   "more":           "applications.png",
@@ -50,16 +53,19 @@ const iconMap: Record<string, string> = {
   "essays":         "documents.png",
 
   // Life + Health
-  "life":           "macosx.png",
+  "life":           "/icons/custom/life.svg",
   "health":         "disk-utility.png",
   "health-overview":"documents.png",
-  "whoop-dashboard":"generic-application.png",
+  "whoop-dashboard":"/icons/custom/whoop.svg",
+  "nutrition":      "/icons/custom/nutrition.svg",
+  "top-foods":      "/icons/custom/top-foods.svg",
+  "hobbies":        "/icons/custom/hobbies.svg",
   "whoop-splits":   "folder.png",
-  "whoop-split-arms-abs":   "generic-application.png",
-  "whoop-split-back":       "generic-application.png",
-  "whoop-split-chest":      "generic-application.png",
-  "whoop-split-legs":       "generic-application.png",
-  "whoop-split-shoulders":  "generic-application.png",
+  "whoop-split-arms-abs":   "/icons/custom/whoop.svg",
+  "whoop-split-back":       "/icons/custom/whoop.svg",
+  "whoop-split-chest":      "/icons/custom/whoop.svg",
+  "whoop-split-legs":       "/icons/custom/whoop.svg",
+  "whoop-split-shoulders":  "/icons/custom/whoop.svg",
   "get-whoop":      "external-link.png",
 
   // Recipes
@@ -85,6 +91,12 @@ const iconMap: Record<string, string> = {
 
 // Fallback icon for items not in the map
 const FALLBACK_ICON = "generic-application.png";
+
+// Entries that start with "/" are full paths (custom SVG icons); everything
+// else is a filename in /icons/panther/.
+function resolveIcon(filename: string): string {
+  return filename.startsWith("/") ? filename : `/icons/panther/${filename}`;
+}
 
 // ---------------------------------------------------------------------------
 // Icon component that renders a PNG <img>
@@ -122,7 +134,7 @@ export function getPantherIcon(fsItemId: string): React.FC<IconProps> | null {
   if (cached) return cached;
 
   const IconComponent: React.FC<IconProps> = ({ size = 32 }) => (
-    <PantherIconImg src={`/icons/panther/${filename}`} size={size} alt={fsItemId} />
+    <PantherIconImg src={resolveIcon(filename)} size={size} alt={fsItemId} />
   );
   IconComponent.displayName = `PantherIcon_${fsItemId}`;
   iconCache.set(fsItemId, IconComponent);
@@ -135,7 +147,7 @@ export function getPantherIcon(fsItemId: string): React.FC<IconProps> | null {
 
 export function getPantherIconPath(fsItemId: string): string {
   const filename = iconMap[fsItemId] || FALLBACK_ICON;
-  return `/icons/panther/${filename}`;
+  return resolveIcon(filename);
 }
 
 // ---------------------------------------------------------------------------

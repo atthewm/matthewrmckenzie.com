@@ -41,7 +41,7 @@ export const fileSystem: FSItem[] = [
       { id: "whoop-split-legs", name: "LegsOfRegret.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Legs split.", defaultSize: { width: 380, height: 480 } },
       { id: "whoop-split-shoulders", name: "BoulderProtocol.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Shoulders split.", defaultSize: { width: 380, height: 480 } },
     ]},
-    { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Tennis setup, plus baking and photography.", defaultSize: { width: 560, height: 640 } },
+    { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Training, tennis, cooking, DJing and photography.", defaultSize: { width: 560, height: 640 } },
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
   { id: "recipes", name: "Cooking and Baking", type: "app", icon: "UtensilsCrossed", appComponent: "RecipesApp", staticRoute: "/kitchen", description: "Sourdough, jam, and high protein recipes, tested and written down.", defaultSize: { width: 640, height: 620 }, children: [
@@ -61,7 +61,6 @@ export const fileSystem: FSItem[] = [
     { id: "now", name: "Now", type: "document", icon: "Zap", contentPath: "now.md", description: "What I'm up to right now.", defaultSize: { width: 520, height: 440 } },
     { id: "photos", name: "Photos", type: "app", icon: "Image", appComponent: "InstagramApp", description: "Photos currently mirror Instagram.", defaultSize: { width: 480, height: 560 } },
     { id: "music", name: "Music", type: "app", icon: "Headphones", appComponent: "SoundCloudPlayer", description: "SoundCloud player.", defaultSize: { width: 420, height: 500 } },
-    { id: "videos", name: "Zune", type: "app", icon: "Music", appComponent: "ZunePlayer", description: "Zune-style music player.", defaultSize: { width: 380, height: 560 } },
     { id: "apple-music", name: "Apple Music", type: "app", icon: "ListMusic", appComponent: "AppleMusicFolder", description: "Apple Music playlists.", defaultSize: { width: 480, height: 420 } },
     { id: "media", name: "Media", type: "folder", icon: "Image", description: "Films, TV, and audiobooks synced from my Notion Media Library.", children: [
       { id: "media-movies", name: "Movies", type: "app", icon: "Disc3", appComponent: "MediaShelfApp", description: "Films I've watched, rated, and queued.", defaultSize: { width: 660, height: 600 } },

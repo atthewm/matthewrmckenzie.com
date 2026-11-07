@@ -22,6 +22,8 @@ Personal site of Matthew McKenzie. The site covers professional background, work
 - /writing: Essays and writing
 - /health: Health and fitness: training, recovery, sleep, and nutrition
 - /kitchen: Cooking and baking: sourdough and tested recipes
+- /hobbies: Training, tennis, DJing and photography
+- /desktop: Optional Mac OS X style desktop view of the same content
 - /contact: Contact information
 - /privacy: Privacy policy
 

@@ -18,9 +18,9 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/work", label: "Work" },
-  { href: "/health", label: "Health and Fitness" },
-  { href: "/kitchen", label: "Cooking and Baking" },
-  { href: "/writing", label: "Writing" },
+  { href: "/health", label: "Health" },
+  { href: "/kitchen", label: "Kitchen" },
+  { href: "/hobbies", label: "Hobbies" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -49,7 +49,7 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-xs text-desktop-text-secondary hover:text-desktop-text transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1"
+                className="text-[13px] text-desktop-text-secondary hover:text-desktop-text transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1"
               >
                 {link.label}
               </Link>
@@ -71,7 +71,7 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
         <div className="max-w-2xl mx-auto px-5 py-6 text-xs text-desktop-text-secondary">
           <p>&copy; {new Date().getFullYear()} Matthew McKenzie. All rights reserved.</p>
           <nav aria-label="Footer navigation" className="mt-1 flex items-center gap-3 flex-wrap">
-            {[{ href: "/", label: "Back to desktop view" }, ...navLinks.slice(1), { href: "/privacy", label: "Privacy" }].map((link, i) => (
+            {[...navLinks, { href: "/writing", label: "Writing" }, { href: "/desktop", label: "Desktop mode" }, { href: "/privacy", label: "Privacy" }].map((link, i) => (
               <React.Fragment key={link.href}>
                 {i > 0 && <span className="text-desktop-border">|</span>}
                 <Link

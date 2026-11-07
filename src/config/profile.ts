@@ -27,10 +27,10 @@ export const profile = {
   offices: [
     {
       city: "Austin",
-      street: "816 Congress Avenue, Suite 1130",
+      street: "510 Baylor Street",
       locality: "Austin",
       region: "TX",
-      postalCode: "78701",
+      postalCode: "78703",
     },
     {
       city: "Menlo Park",

@@ -261,7 +261,7 @@ export default function TopFoodsApp() {
             <p className="max-w-[280px] text-xs text-desktop-text-secondary">
               {failed
                 ? "The nutrition feed is unavailable right now."
-                : "Add NOTION_TOKEN and run the sync to rank the meal log."}
+                : "This ranks everything in my meal log. It syncs from Notion every hour."}
             </p>
             <button
               onClick={load}
