@@ -4,7 +4,7 @@ title: Contact
 
 # Contact
 
-I welcome conversations about capital formation, growth strategy, investor partnerships, and AI operations tooling. Whether you have a specific opportunity or just want to connect, I am happy to make time.
+I welcome conversations about capital formation, investor partnerships, and growth strategy. Whether you have a specific opportunity or just want to connect, I am happy to make time.
 
 **Email:** [matthew.mckenzie@mac.com](mailto:matthew.mckenzie@mac.com)
 
@@ -12,11 +12,11 @@ I welcome conversations about capital formation, growth strategy, investor partn
 
 ## When to Reach Out
 
-**Investors and Allocators.** If you are exploring opportunities in real estate, consumer platforms, or alternative investments and want to learn more about what I am working on.
+**Investors and Allocators.** If you are exploring opportunities in real estate or alternative investments and want to learn more about what I am working on.
 
 **Founders and Operators.** If you are raising capital, building a growth plan, or looking for someone who understands both the investor side and the operating side.
 
-**AI and Operations.** If you are interested in MCP servers, Teams bots, or AI tooling for restaurant and hospitality operations.
+**Training and Cooking.** If you want to compare training notes or trade a recipe.
 
 **General.** Press, speaking, collaboration, or anything else.
 

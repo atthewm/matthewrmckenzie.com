@@ -9,16 +9,12 @@ import {
   Calendar,
   Mail,
   Instagram,
-  Globe,
-  Server,
-  Bot,
-  Moon,
 } from "lucide-react";
 
 // ============================================================================
 // LINKTREE APP - Link Bio Page
 // ============================================================================
-// Full link bio with sections: social, projects, tools.
+// Full link bio with sections: social and connect.
 // ============================================================================
 
 interface LinkItem {
@@ -32,16 +28,6 @@ const socialLinks: LinkItem[] = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/mrmckenzie/", icon: Linkedin, description: "Connect professionally" },
   { label: "GitHub", href: "https://github.com/atthewm", icon: Github, description: "Code and open source projects" },
   { label: "Instagram", href: "https://www.instagram.com/mrem/", icon: Instagram, description: "Photos and stories" },
-];
-
-const projectLinks: LinkItem[] = [
-  { label: "Toast MCP Server", href: "https://github.com/atthewm/toast-mcp-server", icon: Server, description: "AI access to Toast restaurant platform" },
-  { label: "Toast Teams Bot", href: "https://github.com/atthewm/toast-teams-bot", icon: Bot, description: "Teams bot for restaurant operations" },
-  { label: "MarginEdge MCP Server", href: "https://github.com/atthewm/marginedge-mcp-server", icon: Server, description: "AI access to MarginEdge back-office" },
-  { label: "MarginEdge Teams Bot", href: "https://github.com/atthewm/marginedge-teams-bot", icon: Bot, description: "Teams bot for invoices and food costs" },
-  { label: "Eight Sleep Consumer", href: "https://github.com/atthewm/eightsleep-consumer", icon: Moon, description: "Sleep data pipeline and integrations" },
-  { label: "Eight Sleep Client", href: "https://github.com/atthewm/eightsleep-client", icon: Moon, description: "TypeScript client for the Eight Sleep API" },
-  { label: "Cosmos Collector", href: "https://github.com/atthewm/cosmos-collector", icon: Globe, description: "Download cosmos.so boards headlessly" },
 ];
 
 const actionLinks: LinkItem[] = [
@@ -131,12 +117,11 @@ export default function LinktreeApp() {
               Matthew McKenzie
             </h2>
             <p className="text-[11px] text-desktop-text-secondary mt-0.5 max-w-[280px] mx-auto leading-relaxed">
-              Capital formation, growth strategy, and AI-powered tools for restaurant operations.
+              Capital formation at Menlo Equities. Training, recovery, and cooking on the side.
             </p>
           </div>
 
           <LinkSection title="Social" links={socialLinks} />
-          <LinkSection title="Projects" links={projectLinks} />
           <LinkSection title="Connect" links={actionLinks} />
         </div>
       </div>

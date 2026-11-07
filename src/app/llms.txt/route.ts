@@ -10,17 +10,18 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const body = `# matthewrmckenzie.com
 
-> Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, responsible for capital formation across the firm's private wealth channel with high net worth investors, family offices, and registered investment advisors. He also builds AI operations tooling.
+> Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, responsible for capital formation across the firm's private wealth channel with high net worth investors, family offices, and registered investment advisors. Outside of work he trains for strength and endurance, tracks recovery, and bakes sourdough.
 
 ## About
-Personal site of Matthew McKenzie. The site covers professional background, work experience, essays, project portfolio, and contact information. Built as a custom desktop operating system with Next.js, React, and TypeScript.
+Personal site of Matthew McKenzie. The site covers professional background, work experience, essays, health and fitness, cooking and baking, and contact information. Built as a custom desktop operating system with Next.js, React, and TypeScript.
 
 ## Pages
 - /: Home page with introduction and navigation
 - /about: About Matthew McKenzie
 - /work: Work experience and professional background
 - /writing: Essays and writing
-- /projects: Project portfolio, including MCP servers, Teams bots, and open source tools
+- /health: Health and fitness: training, recovery, sleep, and nutrition
+- /kitchen: Cooking and baking: sourdough and tested recipes
 - /contact: Contact information
 - /privacy: Privacy policy
 

@@ -18,8 +18,9 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/work", label: "Work" },
+  { href: "/health", label: "Health and Fitness" },
+  { href: "/kitchen", label: "Cooking and Baking" },
   { href: "/writing", label: "Writing" },
-  { href: "/projects", label: "Projects" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -70,29 +71,17 @@ export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
         <div className="max-w-2xl mx-auto px-5 py-6 text-xs text-desktop-text-secondary">
           <p>&copy; {new Date().getFullYear()} Matthew McKenzie. All rights reserved.</p>
           <nav aria-label="Footer navigation" className="mt-1 flex items-center gap-3 flex-wrap">
-            <Link href="/" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Back to desktop view
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/about" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              About
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/work" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Work
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/writing" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Writing
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/projects" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Projects
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/privacy" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Privacy
-            </Link>
+            {[{ href: "/", label: "Back to desktop view" }, ...navLinks.slice(1), { href: "/privacy", label: "Privacy" }].map((link, i) => (
+              <React.Fragment key={link.href}>
+                {i > 0 && <span className="text-desktop-border">|</span>}
+                <Link
+                  href={link.href}
+                  className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1"
+                >
+                  {link.label}
+                </Link>
+              </React.Fragment>
+            ))}
           </nav>
         </div>
       </footer>

@@ -62,13 +62,6 @@ Investor Relations Analyst
 Civitas Capital Group
 May 2016 to December 2018
 
-AI Operations Tooling (Independent)
-2025 to Present
-  MCP servers and Microsoft Teams bots for
-  restaurant operations platforms (Toast,
-  MarginEdge). Consumer health integrations
-  (Eight Sleep). Open source on GitHub.
-
 ==========================================================
 EDUCATION
 ==========================================================
@@ -88,7 +81,7 @@ SKILLS
 
 Capital Formation, Investor Relations, Real Estate,
 Deal Structuring, Business Development, Growth Strategy,
-Underwriting, AI Operations, Platform Development
+Underwriting
 
 ==========================================================
 LINKS

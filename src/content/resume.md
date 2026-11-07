@@ -6,7 +6,7 @@ title: Resume
 
 ## Matthew McKenzie
 
-Capital Formation, Private Wealth, and AI Operations
+Capital Formation and Private Wealth
 
 ### Experience
 
@@ -19,11 +19,6 @@ Responsible for capital formation across Menlo's private wealth channel, develop
 *December 2022 to 2026*
 
 Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Raised capital from private wealth investors across closed-end funds, open-end perpetual vehicles, and co-investments. Managed relationships with family offices, UHNW investors, and institutional groups globally across both debt and equity.
-
-**Independent** | AI Operations Tooling
-*2025 to Present*
-
-Production MCP servers and Microsoft Teams bots for restaurant operations (Toast, MarginEdge). Consumer health data integrations (Eight Sleep). Open source on GitHub.
 
 **Civitas Capital Group** | Investor Relations Associate
 *January 2019 to December 2022*
@@ -43,6 +38,6 @@ Mechanical Engineering, Economics
 
 ### Skills
 
-Capital Formation, Private Wealth, Investor Relations, Family Offices, RIAs, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting, AI Operations, Platform Development
+Capital Formation, Private Wealth, Investor Relations, Family Offices, RIAs, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting
 
 *For a full overview, visit [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).*

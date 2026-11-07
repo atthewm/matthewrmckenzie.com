@@ -5,23 +5,23 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
-  title: "Projects | AI Operations Tooling, Platforms, Open Source",
-  description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie. Open source on GitHub.",
-  alternates: { canonical: "https://matthewrmckenzie.com/projects" },
+  title: "Cooking and Baking",
+  description: "Sourdough from a homemade rye starter, jam, and high protein recipes by Matthew McKenzie, each tested and written down.",
+  alternates: { canonical: "https://matthewrmckenzie.com/kitchen" },
   openGraph: {
-    title: "Projects | AI Operations Tooling, Platforms, Open Source",
-    description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie.",
+    title: "Cooking and Baking",
+    description: "Sourdough from a homemade rye starter, jam, and high protein recipes by Matthew McKenzie, each tested and written down.",
   },
 };
 
-export default async function ProjectsPage() {
-  const content = await getContent("projects");
+export default async function KitchenPage() {
+  const content = await getContent("kitchen");
 
   return (
     <StaticPageLayout>
       <JsonLd data={breadcrumbSchema([
         { name: "Home", url: "https://matthewrmckenzie.com" },
-        { name: "Projects", url: "https://matthewrmckenzie.com/projects" },
+        { name: "Cooking and Baking", url: "https://matthewrmckenzie.com/kitchen" },
       ])} />
       {content ? (
         <article

@@ -18,8 +18,6 @@ I structure capital, build investor partnerships, and develop growth strategy fo
 
 **Growth Strategy.** Working alongside operators to develop and pressure test growth plans, model unit economics, refine positioning, and prepare businesses for their next stage of capital.
 
-**AI Operations Tooling.** Building production software that connects AI to real business operations. MCP servers and Microsoft Teams bots that give teams natural language access to platforms like Toast and MarginEdge.
-
 ## Experience
 
 **Menlo Equities** | Senior Vice President, Capital Formation
@@ -27,9 +25,6 @@ Capital formation across Menlo's private wealth channel, developing and expandin
 
 **Civitas Capital Group** | Vice President, Investor Relations
 Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Nearly a decade of progressive responsibility from analyst through VP.
-
-**Independent** | AI Operations Tooling
-MCP servers and Microsoft Teams bots for restaurant operations platforms (Toast, MarginEdge), plus consumer health data integrations (Eight Sleep). Open source on GitHub.
 
 ## What Others Say
 
@@ -53,4 +48,4 @@ I hold a few things as non negotiable in how I work:
 
 ## Let's Talk
 
-If you are raising capital, building a growth plan, or exploring how AI can improve your operations, I would like to hear from you. [Get in touch](/contact) or [connect on LinkedIn](https://www.linkedin.com/in/mrmckenzie/).
+If you are an investor, an advisor, or an operator raising capital, I would like to hear from you. [Get in touch](/contact), see my [resume](/?open=resume), or [connect on LinkedIn](https://www.linkedin.com/in/mrmckenzie/).

@@ -17,7 +17,7 @@ export default function CtaBlock() {
       <div className="rounded-lg border border-desktop-border bg-desktop-surface px-6 py-5">
         <p className="text-sm font-semibold text-desktop-text">Interested in working together?</p>
         <p className="text-xs text-desktop-text-secondary mt-1 leading-relaxed">
-          I welcome conversations about capital formation, investor partnerships, growth strategy, and AI operations tooling.
+          I welcome conversations about capital formation, investor partnerships, and growth strategy.
         </p>
         <div className="flex items-center gap-3 mt-3 flex-wrap">
           <Link

@@ -51,14 +51,14 @@ export default async function HomePage() {
             relationships across North America, the Middle East, and Asia.
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
-            Matthew also builds production AI tooling: MCP servers and Microsoft Teams bots that connect
-            natural language interfaces to restaurant operations platforms (Toast, MarginEdge), plus
-            integrations with Eight Sleep and other consumer health data.
+            Outside of work, Matthew trains for strength and endurance, tracks recovery and nutrition,
+            and bakes sourdough from his own rye starter. His recipes are on the Cooking and Baking page.
           </p>
           <nav style={{ display: "flex", gap: 24, fontSize: 14, flexWrap: "wrap" as const }}>
             <Link href="/about">About</Link>
             <Link href="/work">Work</Link>
-            <Link href="/projects">Projects</Link>
+            <Link href="/health">Health and Fitness</Link>
+            <Link href="/kitchen">Cooking and Baking</Link>
             <Link href="/writing">Writing</Link>
             <Link href="/contact">Contact</Link>
             <Link href="/privacy">Privacy</Link>

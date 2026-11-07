@@ -168,7 +168,7 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
         <div className="flex items-center justify-between gap-2 px-3 py-2">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <UtensilsCrossed className="h-4 w-4" />
-            Recipes
+            Cooking and Baking
           </div>
           <div className="flex flex-wrap justify-end gap-1">
             {filters.map((f) => (
@@ -187,6 +187,11 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
             ))}
           </div>
         </div>
+
+        <p className="px-3 pb-2 text-[11px] leading-relaxed text-desktop-text-secondary">
+          Sourdough from my own rye starter, jam, and high protein versions of everyday
+          meals. Each one is tested and written down so the results repeat.
+        </p>
 
         <div className="px-3 pb-2">
           <label className="relative block">

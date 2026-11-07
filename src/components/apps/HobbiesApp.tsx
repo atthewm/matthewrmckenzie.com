@@ -129,7 +129,7 @@ export default function HobbiesApp() {
         </div>
         <p className="text-2xs leading-relaxed text-desktop-text-secondary">
           Rye starter, city loaf, and a rotating set of jams and high protein
-          experiments. The full method for each is in the Recipes folder, written down
+          experiments. The full method for each is in Cooking and Baking, written down
           properly so the results repeat.
         </p>
       </section>

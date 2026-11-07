@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s | Matthew McKenzie",
   },
   description:
-    "Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, leading private wealth relationships with high net worth investors, family offices, and RIAs. He also builds AI operations tooling.",
+    "Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, leading private wealth relationships with high net worth investors, family offices, and RIAs. Also: training, recovery, and cooking.",
   keywords: [
     "Matthew McKenzie",
     "capital formation",
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
     "family office",
     "registered investment advisors",
     "UHNW investors",
-    "AI operations",
-    "MCP server",
+    "health and fitness",
+    "sourdough",
   ],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
@@ -46,14 +46,14 @@ export const metadata: Metadata = {
     siteName: "Matthew McKenzie",
     title: "Matthew McKenzie | Capital Formation, Menlo Equities",
     description:
-      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs. Also builds AI operations tooling.",
+      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs.",
     images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Matthew McKenzie | Capital Formation, Menlo Equities",
     description:
-      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs. Also builds AI operations tooling.",
+      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs.",
     images: ["/opengraph-image"],
   },
   alternates: {

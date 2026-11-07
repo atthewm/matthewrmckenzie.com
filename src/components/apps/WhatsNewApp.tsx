@@ -30,13 +30,24 @@ const changeIcon: Record<ChangeType, React.ReactNode> = {
 
 const releases: Release[] = [
   {
+    version: "3.0",
+    date: "Nov 7, 2026",
+    title: "Refocus & Simpler Navigation",
+    changes: [
+      { text: "New sections: Health and Fitness, and Cooking and Baking", type: "feature" },
+      { text: "Dock trimmed to the main sections; extras moved into a More folder", type: "polish" },
+      { text: "About, Work, Resume, and Now rewritten around capital formation, training, and cooking", type: "polish" },
+      { text: "Retired the GitHub projects app and the Projects page", type: "polish" },
+      { text: "Static /health and /kitchen pages for search and sharing", type: "tool" },
+    ],
+  },
+  {
     version: "2.6",
     date: "Mar 27, 2026",
     title: "GitHub & Link Bio",
     changes: [
       { text: "GitHub Projects app — filterable showcase of all public repos", type: "feature" },
       { text: "Link Bio upgrade — sectioned links page with Social, Projects, and Connect", type: "feature" },
-      { text: "Updated About bio with MCP and AI operations work", type: "polish" },
       { text: "Terminal commands: github, gh, repos, links, bio", type: "tool" },
       { text: "GitHub app on desktop icons and Start Here explore row", type: "polish" },
       { text: "Links app added to dock for easy discovery", type: "polish" },

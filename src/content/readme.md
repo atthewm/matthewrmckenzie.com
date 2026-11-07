@@ -4,12 +4,17 @@ title: README
 
 # Welcome
 
-Hey, I'm Matthew McKenzie. This is my personal corner of the internet.
+I'm Matthew McKenzie. I raise capital for real estate at Menlo Equities, and I spend the rest of my time training and cooking.
 
-Navigate around like you would a desktop: double-click folders and apps to explore, drag windows around, and make yourself at home.
+This site works like a desktop. Open anything from the dock at the bottom or the icons on the right. Four places to start:
 
-Head to [About](/about) for background or [Work](/work) for the professional side.
+- **About:** who I am and what I do
+- **Work:** capital formation, experience, and resume
+- **Health and Fitness:** training, recovery, and nutrition
+- **Cooking and Baking:** sourdough and tested recipes
+
+Everything else, including music, photos, and a few games, is in the **More** folder.
 
 ## Colophon
 
-This site is built with Next.js and deployed on Vercel. The desktop metaphor is a custom UI built from scratch with React, TypeScript, and CSS.
+Built with Next.js and deployed on Vercel. The desktop is a custom interface built from scratch with React, TypeScript, and CSS.
