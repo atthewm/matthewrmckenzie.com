@@ -31,7 +31,7 @@ const sections = [
   {
     href: "/hobbies",
     title: "Hobbies",
-    blurb: "Tennis, DJing and photography.",
+    blurb: "Tennis, DJing, photography and Rematch, the tool I built to fix my iTunes library.",
     icon: "/icons/custom/hobbies.svg",
   },
 ];

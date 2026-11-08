@@ -41,7 +41,7 @@ export const fileSystem: FSItem[] = [
       { id: "whoop-split-legs", name: "LegsOfRegret.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Legs split.", defaultSize: { width: 380, height: 480 } },
       { id: "whoop-split-shoulders", name: "BoulderProtocol.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Shoulders split.", defaultSize: { width: 380, height: 480 } },
     ]},
-    { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Training, tennis, cooking, DJing and photography.", defaultSize: { width: 560, height: 640 } },
+    { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Training, tennis, cooking, DJing, photography and Rematch.", defaultSize: { width: 560, height: 640 } },
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
   { id: "recipes", name: "Cooking and Baking", type: "app", icon: "UtensilsCrossed", appComponent: "RecipesApp", staticRoute: "/kitchen", description: "Sourdough, jam, and high protein recipes, tested and written down.", defaultSize: { width: 640, height: 620 }, children: [

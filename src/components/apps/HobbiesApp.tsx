@@ -142,6 +142,20 @@ export default function HobbiesApp() {
         </p>
       </Hobby>
 
+      <Hobby emoji="💿" title="Rematch">
+        <p className="text-2xs leading-relaxed text-desktop-text-secondary">
+          Years ago iTunes Match scrambled the tags on my lossless library, so
+          songs showed up under the wrong artist, album and genre. Rematch is the
+          tool I built in Python to fix it. It ignores the old tags, identifies
+          every file by its audio fingerprint against MusicBrainz, and sends the
+          few it can&apos;t settle to a review queue. It never touches the audio
+          and works on a copy, so the originals stay safe.
+        </p>
+        <p className="mt-2 text-2xs leading-relaxed text-desktop-text-secondary">
+          The result: 11,936 tracks in a clean library, 8,956 of them corrected.
+        </p>
+      </Hobby>
+
       <Hobby emoji="📷" title="Photography">
         <p className="text-2xs leading-relaxed text-desktop-text-secondary">
           Studied photography alongside economics at SMU. Back behind a proper camera,
