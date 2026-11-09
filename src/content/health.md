@@ -16,7 +16,7 @@ I track sleep, strain, and recovery with WHOOP and Eight Sleep. The data helps m
 
 ## Nutrition
 
-I log what I eat and track macros against daily targets. The foods I log most, with average macros per serving, are in [Top Foods](/desktop?open=top-foods). A lot of what I cook is built around protein, which is where the [Cooking and Baking](/kitchen) section comes in.
+I log what I eat and track macros against daily targets. The foods I log most, with average macros per serving, are in [Top Foods](/desktop?open=top-foods), and you can play with them in the [Food Room](/food-room). A lot of what I cook is built around protein, which is where the [Cooking and Baking](/kitchen) section comes in.
 
 ## Tennis
 
