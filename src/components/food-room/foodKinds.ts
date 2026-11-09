@@ -24,20 +24,20 @@ export type FoodKind =
   | "onigiri";
 
 const RULES: [FoodKind, RegExp][] = [
-  ["shake", /\b(shake|whey|protein powder|isolate|smoothie)\b/],
-  ["tortilla", /\b(tortilla|taco|wrap|quesadilla|masa)\b/],
-  ["oats", /\b(oat|oats|oatmeal|granola|muesli|cereal|porridge)\b/],
-  ["bread", /\b(bread|toast|sourdough|loaf|bagel|bun|roll|baguette|pita|english muffin)\b/],
-  ["sweet", /\b(brownie|cookie|cake|jam|chocolate|ice cream|dessert|muffin|pie|honey)\b/],
-  ["egg", /\b(egg|eggs|omelet|omelette|frittata)\b/],
-  ["fish", /\b(salmon|tuna|fish|shrimp|cod|sardine|trout|halibut)\b/],
-  ["meat", /\b(venison|bison|beef|steak|chicken|turkey|pork|lamb|meatball|burger|sausage|bacon|jerky|ham|elk)\b/],
-  ["dairy", /\b(cottage|yogurt|yoghurt|skyr|kefir|milk|cheese|parmesan|mozzarella|cream)\b/],
+  ["shake", /\b(shake|whey|protein powder|isolate|smoothie)(e?s)?\b/],
+  ["tortilla", /\b(tortilla|taco|wrap|quesadilla|masa)(e?s)?\b/],
+  ["oats", /\b(oat|oats|oatmeal|granola|muesli|cereal|porridge)(e?s)?\b/],
+  ["bread", /\b(bread|toast|sourdough|loaf|bagel|bun|roll|baguette|pita|english muffin)(e?s)?\b/],
+  ["sweet", /\b(brownie|cookie|cake|jam|chocolate|ice cream|dessert|muffin|pie|honey)(e?s)?\b/],
+  ["egg", /\b(egg|eggs|omelet|omelette|frittata)(e?s)?\b/],
+  ["fish", /\b(salmon|tuna|fish|shrimp|cod|sardine|trout|halibut)(e?s)?\b/],
+  ["meat", /\b(venison|bison|beef|steak|chicken|turkey|pork|lamb|meatball|burger|sausage|bacon|jerky|ham|elk)(e?s)?\b/],
+  ["dairy", /\b(cottage|yogurt|yoghurt|skyr|kefir|milk|cheese|parmesan|mozzarella|cream)(e?s)?\b/],
   ["berry", /\b(strawberr|blueberr|raspberr|blackberr|berries|berry|cherr|grape)/],
-  ["fruit", /\b(apple|banana|orange|peach|pear|mango|pineapple|kiwi|melon|fruit|avocado)\b/],
-  ["veg", /\b(broccoli|spinach|salad|kale|zucchini|carrot|pepper|vegetable|veggie|greens|asparagus|cauliflower|beans|lettuce|tomato|onion|potato|squash)\b/],
-  ["rice", /\b(rice|quinoa|pasta|noodle|lasagna|couscous|farro)\b/],
-  ["drink", /\b(tea|juice|soda|water|electrolyte|drink|latte|espresso|coffee)\b/],
+  ["fruit", /\b(apple|banana|orange|peach|pear|mango|pineapple|kiwi|melon|fruit|avocado)(e?s)?\b/],
+  ["veg", /\b(broccoli|spinach|salad|kale|zucchini|carrot|pepper|vegetable|veggie|greens|asparagus|cauliflower|beans|lettuce|tomato|onion|potato|squash)(e?s)?\b/],
+  ["rice", /\b(rice|quinoa|pasta|noodle|lasagna|couscous|farro)(e?s)?\b/],
+  ["drink", /\b(tea|juice|soda|water|electrolyte|drink|latte|espresso|coffee)(e?s)?\b/],
 ];
 
 export function foodKind(name: string): FoodKind {
