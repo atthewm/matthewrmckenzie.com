@@ -8,6 +8,7 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { profile } from "@/config/profile";
 import { PantherIcon } from "./PantherIcons";
 import WindowContent from "./WindowContent";
+import BoardView from "@/components/board/BoardView";
 
 // ============================================================================
 // MOBILE VIEW
@@ -73,9 +74,9 @@ export default function MobileView({ contentMap }: MobileViewProps) {
           </div>
           <div className="w-16" />
         </div>
-        <div className="flex-1 overflow-auto overscroll-contain">
+        <div className={`flex-1 overscroll-contain ${currentItem.type === "folder" ? "overflow-hidden" : "overflow-auto"}`}>
           {currentItem.type === "folder" ? (
-            <MobileFolderView item={currentItem} onOpen={open} />
+            <BoardView item={currentItem} contentMap={contentMap} onOpen={open} />
           ) : (
             <WindowContent windowState={top} contentMap={contentMap} />
           )}
@@ -150,33 +151,3 @@ function QuickAction({ href, label, icon, external = false }: { href: string; la
   );
 }
 
-function MobileFolderView({ item, onOpen }: { item: FSItem; onOpen: (item: FSItem) => void }) {
-  if (!item.children?.length) {
-    return (
-      <div className="flex items-center justify-center h-40 text-desktop-text-secondary text-sm">
-        This folder is empty.
-      </div>
-    );
-  }
-  return (
-    <div className="p-2">
-      {item.children.filter((c) => !c.hidden).map((child) => (
-        <button
-          key={child.id}
-          onClick={() => onOpen(child)}
-          className="w-full flex items-center gap-3 p-3 rounded-xl active:bg-desktop-border/60 transition-colors"
-        >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0">
-            <PantherIcon itemId={child.id} size={32} />
-          </div>
-          <div className="text-left min-w-0">
-            <div className="text-[15px] font-medium text-desktop-text truncate">{child.name}</div>
-            {child.description && (
-              <div className="text-[13px] text-desktop-text-secondary line-clamp-1">{child.description}</div>
-            )}
-          </div>
-        </button>
-      ))}
-    </div>
-  );
-}

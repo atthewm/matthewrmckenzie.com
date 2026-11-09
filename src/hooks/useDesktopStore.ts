@@ -104,6 +104,23 @@ function getDefaultWindowPosition(index: number, width?: number, height?: number
   };
 }
 
+/**
+ * Boards (folders) open nearly full screen but stay a normal window, so they
+ * can still be dragged by the title bar and resized. Phones use MobileView.
+ */
+function getBoardWindowGeometry() {
+  if (typeof window === "undefined" || window.innerWidth < 768) return null;
+  const MENU_BAR = 22;
+  const DOCK = 84;
+  const INSET = 14;
+  return {
+    x: INSET,
+    y: MENU_BAR + INSET / 2,
+    width: window.innerWidth - INSET * 2,
+    height: window.innerHeight - MENU_BAR - DOCK - INSET / 2,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Reducer
 // ---------------------------------------------------------------------------
@@ -120,9 +137,10 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
           payload: { id: existing.id },
         });
       }
-      const winWidth = fsItem.defaultSize?.width ?? 600;
-      const winHeight = fsItem.defaultSize?.height ?? 450;
-      const pos = getDefaultWindowPosition(state.windows.length, winWidth, winHeight);
+      const board = fsItem.type === "folder" ? getBoardWindowGeometry() : null;
+      const winWidth = board?.width ?? fsItem.defaultSize?.width ?? 600;
+      const winHeight = board?.height ?? fsItem.defaultSize?.height ?? 450;
+      const pos = board ?? getDefaultWindowPosition(state.windows.length, winWidth, winHeight);
       const newWindow: WindowState = {
         id: `win-${fsItem.id}-${Date.now()}`,
         fsItemId: fsItem.id,

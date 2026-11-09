@@ -16,13 +16,18 @@ export interface FSItem {
   staticRoute?: string;
   defaultSize?: { width: number; height: number };
   hidden?: boolean;
+  /** Ids of items elsewhere in the tree to also pin on this folder's board */
+  pins?: string[];
 }
 
 export const fileSystem: FSItem[] = [
   { id: "card", name: "Business Card", type: "app", icon: "Contact", appComponent: "BusinessCardApp", staticRoute: "/card", description: "Digital business card. Save contact, call, or email.", defaultSize: { width: 400, height: 640 } },
   { id: "about", name: "About", type: "app", icon: "User", appComponent: "AboutApp", contentPath: "about.md", staticRoute: "/about", description: "About Matthew McKenzie.", defaultSize: { width: 640, height: 520 } },
-  { id: "work", name: "Work", type: "app", icon: "Briefcase", appComponent: "ProjectsApp", contentPath: "work.md", staticRoute: "/work", description: "Professional work, projects, and case studies.", defaultSize: { width: 640, height: 520 }, children: [
-    { id: "resume", name: "Resume", type: "app", icon: "FileText", appComponent: "ResumeApp", description: "Professional resume and experience.", defaultSize: { width: 560, height: 640 } },
+  { id: "work", name: "Work", type: "folder", icon: "Briefcase", staticRoute: "/work", description: "Resume, professional overview, and ways to work together.", pins: ["about", "card", "contact", "schedule", "linkedin"], children: [
+    { id: "work-overview", name: "Work Overview", type: "app", icon: "Briefcase", appComponent: "ProjectsApp", contentPath: "work.md", description: "Professional work, projects, and case studies.", defaultSize: { width: 640, height: 560 } },
+    { id: "resume", name: "Resume", type: "app", icon: "FileText", appComponent: "ResumeApp", contentPath: "resume.md", description: "Professional resume and experience.", defaultSize: { width: 560, height: 640 } },
+    { id: "capital-formation-overview", name: "Capital Formation Overview.pdf", type: "link", icon: "FileText", href: "/Matthew_McKenzie_Capital_Formation_Overview.pdf", description: "One-page capital formation overview (PDF)." },
+    { id: "working-with", name: "Working With Matthew.pdf", type: "link", icon: "FileText", href: "/Matthew_McKenzie_Working_With.pdf", description: "How I work with partners (PDF)." },
   ]},
   { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", hidden: true, description: "Essays, notes, and long-form writing.", children: [
     { id: "essays", name: "Essays", type: "document", icon: "BookOpen", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
