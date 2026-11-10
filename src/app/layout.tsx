@@ -3,6 +3,9 @@ import { Inter, Marcellus, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd, { personSchema, websiteSchema, profilePageSchema } from "@/components/ui/JsonLd";
 import "./globals.css";
+import "@/styles/board.css";
+import "@/styles/board-cards.css";
+import "@/styles/board-chrome.css";
 
 const inter = Inter({
   subsets: ["latin"],

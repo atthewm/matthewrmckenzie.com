@@ -48,7 +48,7 @@ function Fastener({ type, color }: { type: BoardFastener; color: string }) {
 function RecipeFace({ item }: { item: FSItem }) {
   const meta = getRecipeBySlug(item.id);
   return (
-    <div className="card-face card-index">
+    <div className="card-face card-index" data-tint={meta?.category.toLowerCase()}>
       <p className="card-eyebrow">{meta?.category ?? "Recipe"}</p>
       <h3 className="card-title-display">{meta?.title ?? item.name}</h3>
       {meta?.subtitle && <p className="card-sub">{meta.subtitle}</p>}

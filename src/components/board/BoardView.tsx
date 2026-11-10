@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Minus, Plus, Maximize2, RotateCcw } from "lucide-react";
 import type { FSItem } from "@/data/fs";
 import { getRootItems } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useBoardCamera, zoomAround, type Camera } from "@/hooks/useBoardCamera";
-import { buildGroups, cardKind, computeLayout, hashString } from "@/lib/boardLayout";
+import { BOARD_MARGIN, buildGroups, cardKind, computeLayout, hashString } from "@/lib/boardLayout";
 import { packItem } from "@/lib/boardExport";
+import { clearSaved, readSaved, writeSaved, type Point } from "@/lib/boardStorage";
 import { getBoardTheme, PIN_COLORS } from "@/config/boards";
-import { PantherIcon } from "@/components/desktop/PantherIcons";
 import BoardCard from "./BoardCard";
 import Backpack from "./Backpack";
+import BoardToolbar from "./BoardToolbar";
 
 // ============================================================================
 // BOARD VIEW
@@ -31,8 +31,6 @@ interface BoardViewProps {
   /** Override how an item opens (the phone view manages its own stack). */
   onOpen?: (item: FSItem) => void;
 }
-
-type Point = { x: number; y: number };
 
 interface CardDrag {
   kind: "card";
@@ -59,32 +57,6 @@ const DRAG_THRESHOLD = 5;
 const KEY_PAN_STEP = 80;
 const KEY_NUDGE_STEP = 12;
 const TOAST_MS = 2800;
-const STORAGE_PREFIX = "mmck-board:";
-
-function readSaved(boardId: string): Record<string, Point> {
-  try {
-    const raw = localStorage.getItem(STORAGE_PREFIX + boardId);
-    return raw ? (JSON.parse(raw) as Record<string, Point>) : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeSaved(boardId: string, positions: Record<string, Point>) {
-  try {
-    localStorage.setItem(STORAGE_PREFIX + boardId, JSON.stringify(positions));
-  } catch {
-    // Private mode or storage blocked: layout just won't persist.
-  }
-}
-
-function clearSaved(boardId: string) {
-  try {
-    localStorage.removeItem(STORAGE_PREFIX + boardId);
-  } catch {
-    // ignore
-  }
-}
 
 function distance(a: Point, b: Point) {
   return Math.hypot(a.x - b.x, a.y - b.y);
@@ -102,7 +74,7 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
 
   const viewportRef = useRef<HTMLDivElement>(null);
   const backpackRef = useRef<HTMLDivElement>(null);
-  const { camera, cameraRef, setCamera, fit, zoomBy, panBy } = useBoardCamera(viewportRef, layout);
+  const { camera, cameraRef, setCamera, fit, reset, zoomBy, panBy } = useBoardCamera(viewportRef, layout, BOARD_MARGIN);
 
   const [positions, setPositions] = useState<Record<string, Point>>({});
   const positionsRef = useRef(positions);
@@ -332,7 +304,7 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
   const tidyUp = () => {
     clearSaved(board.id);
     setPositions({});
-    fit();
+    reset();
   };
 
   const switchBoard = (next: FSItem) => {
@@ -394,8 +366,11 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
           }}
         >
           {layout.groups.map((g) => (
-            <div key={g.id} className="board-group-label" style={{ transform: `translate(${g.x}px, ${g.y}px)` }}>
-              {g.label}
+            <div key={g.id} className="board-group-head" style={{ width: g.width, transform: `translate(${g.x}px, ${g.y}px)` }}>
+              <h2 className="board-group-label">
+                {g.label}
+                <span className="board-group-count">{g.count}</span>
+              </h2>
             </div>
           ))}
 
@@ -432,47 +407,6 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
         <div className="board-toast" role="status" aria-live="polite" data-visible={toast ? "true" : "false"}>
           {toast}
         </div>
-      </div>
-    </div>
-  );
-}
-
-interface BoardToolbarProps {
-  boards: FSItem[];
-  currentId: string;
-  tagline: string;
-  scale: number;
-  onSwitch: (item: FSItem) => void;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onFit: () => void;
-  onTidy: () => void;
-}
-
-function BoardToolbar({ boards, currentId, tagline, scale, onSwitch, onZoomIn, onZoomOut, onFit, onTidy }: BoardToolbarProps) {
-  return (
-    <div className="board-toolbar">
-      <nav aria-label="Boards" className="flex items-center gap-1 min-w-0 overflow-x-auto scrollbar-thin">
-        {boards.map((b) => (
-          <button
-            key={b.id}
-            type="button"
-            onClick={() => onSwitch(b)}
-            aria-current={b.id === currentId ? "page" : undefined}
-            className="board-tab"
-          >
-            <PantherIcon itemId={b.id} size={14} />
-            <span>{b.name}</span>
-          </button>
-        ))}
-      </nav>
-      <p className="board-tagline">{tagline}</p>
-      <div className="flex items-center gap-0.5 shrink-0" role="group" aria-label="Zoom">
-        <button type="button" className="board-tool" onClick={onZoomOut} aria-label="Zoom out"><Minus size={13} /></button>
-        <span className="board-zoom-readout" aria-live="off">{Math.round(scale * 100)}%</span>
-        <button type="button" className="board-tool" onClick={onZoomIn} aria-label="Zoom in"><Plus size={13} /></button>
-        <button type="button" className="board-tool" onClick={onFit} aria-label="Fit board to window" title="Fit"><Maximize2 size={12} /></button>
-        <button type="button" className="board-tool" onClick={onTidy} aria-label="Tidy up: reset card positions" title="Tidy up"><RotateCcw size={12} /></button>
       </div>
     </div>
   );

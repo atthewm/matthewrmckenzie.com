@@ -26,6 +26,7 @@ export interface CardPlacement {
 export interface GroupPlacement {
   id: string;
   label: string;
+  count: number;
   x: number;
   y: number;
   width: number;
@@ -39,18 +40,30 @@ export interface BoardLayout {
 }
 
 export const CARD_SIZES: Record<CardKind, { w: number; h: number }> = {
-  recipe: { w: 240, h: 160 },
-  split: { w: 210, h: 170 },
-  paper: { w: 200, h: 250 },
-  folder: { w: 210, h: 150 },
-  link: { w: 190, h: 120 },
-  polaroid: { w: 170, h: 190 },
+  recipe: { w: 264, h: 176 },
+  split: { w: 232, h: 184 },
+  paper: { w: 220, h: 272 },
+  folder: { w: 232, h: 164 },
+  link: { w: 212, h: 136 },
+  polaroid: { w: 184, h: 206 },
 };
 
-const GAP = 44;
-const GROUP_GAP = 96;
-const LABEL_SPACE = 88;
-const MARGIN = 80;
+/** Gutter between cards. Jitter plus rotation overhang must stay well inside half of it. */
+const GAP = 40;
+const GROUP_GAP = 88;
+const ROW_GAP = 72;
+const LABEL_SPACE = 84;
+/** Empty cork around the content, in world units. The camera anchors to it. */
+export const BOARD_MARGIN = 72;
+const MAX_JITTER = 5;
+const MAX_ROTATION_DEG = 1.5;
+/** Groups stack about this tall (world units) before spilling into another column. */
+const TARGET_GROUP_HEIGHT = 640;
+const MAX_COLS = 6;
+/** Small groups read best as a single row. */
+const SINGLE_ROW_MAX = 3;
+/** Wrap groups onto a new row once a row passes this aspect (width over height). */
+const TARGET_ASPECT = 2;
 
 /** Small stable string hash (FNV-1a) used for jitter and pin colors. */
 export function hashString(input: string): number {
@@ -107,48 +120,103 @@ export function buildGroups(folder: FSItem): BoardGroup[] {
   return [...groups, ...nested];
 }
 
-function columnsFor(count: number): number {
-  if (count <= 2) return 1;
-  if (count <= 6) return 2;
-  return 3;
+function columnsFor(count: number, cellH: number): number {
+  if (count <= SINGLE_ROW_MAX) return count;
+  const rows = Math.max(1, Math.floor((TARGET_GROUP_HEIGHT + GAP) / (cellH + GAP)));
+  return Math.min(MAX_COLS, Math.max(1, Math.ceil(count / rows)));
 }
 
-/** Lay groups out left to right as columns of cards, with a little hand-pinned jitter. */
+/** Deterministic value in [-1, 1] from a hash and a bit offset. */
+function unit(h: number, shift: number): number {
+  return (((h >>> shift) % 201) - 100) / 100;
+}
+
+interface GroupBlock {
+  group: BoardGroup;
+  cols: number;
+  cellW: number;
+  cellH: number;
+  width: number;
+  height: number;
+}
+
+function measure(group: BoardGroup): GroupBlock {
+  const sizes = group.items.map((i) => CARD_SIZES[cardKind(i)]);
+  const cellW = Math.max(...sizes.map((s) => s.w));
+  const cellH = Math.max(...sizes.map((s) => s.h));
+  const cols = columnsFor(group.items.length, cellH);
+  const rows = Math.ceil(group.items.length / cols);
+  return {
+    group,
+    cols,
+    cellW,
+    cellH,
+    width: cols * cellW + (cols - 1) * GAP,
+    height: LABEL_SPACE + rows * cellH + (rows - 1) * GAP,
+  };
+}
+
+/** Greedy shelf packing: fill a row left to right, wrap once it gets wider than the target. */
+function packRows(blocks: GroupBlock[]): GroupBlock[][] {
+  const area = blocks.reduce((sum, b) => sum + (b.width + GROUP_GAP) * (b.height + ROW_GAP), 0);
+  const widest = Math.max(...blocks.map((b) => b.width));
+  const targetWidth = Math.max(widest, Math.sqrt(area * TARGET_ASPECT));
+  const rows: GroupBlock[][] = [];
+  let row: GroupBlock[] = [];
+  let rowWidth = 0;
+  for (const block of blocks) {
+    const next = rowWidth + (row.length ? GROUP_GAP : 0) + block.width;
+    if (row.length && next > targetWidth) {
+      rows.push(row);
+      row = [];
+      rowWidth = 0;
+    }
+    rowWidth += (row.length ? GROUP_GAP : 0) + block.width;
+    row.push(block);
+  }
+  if (row.length) rows.push(row);
+  return rows;
+}
+
+/**
+ * Lay groups out as tidy grids of cards. Groups flow left to right and wrap
+ * into rows so the board stays roughly screen shaped. Each card is pinned at
+ * the top center of a fixed cell; jitter and tilt are small enough that cards never touch.
+ */
 export function computeLayout(groups: BoardGroup[]): BoardLayout {
   const cards: Record<string, CardPlacement> = {};
   const placedGroups: GroupPlacement[] = [];
-  let cursorX = MARGIN;
-  let maxBottom = 0;
+  if (groups.length === 0) return { cards, groups: placedGroups, width: BOARD_MARGIN * 2, height: BOARD_MARGIN * 2 };
 
-  for (const group of groups) {
-    const cols = columnsFor(group.items.length);
-    const sizes = group.items.map((i) => CARD_SIZES[cardKind(i)]);
-    const cellW = Math.max(...sizes.map((s) => s.w));
-    const cellH = Math.max(...sizes.map((s) => s.h));
-    const groupWidth = cols * cellW + (cols - 1) * GAP;
+  let cursorY = BOARD_MARGIN;
+  let maxRight = 0;
 
-    placedGroups.push({ id: group.id, label: group.label, x: cursorX, y: MARGIN, width: groupWidth });
+  for (const row of packRows(groups.map(measure))) {
+    let cursorX = BOARD_MARGIN;
+    for (const block of row) {
+      const { group, cols, cellW, cellH, width } = block;
+      placedGroups.push({ id: group.id, label: group.label, count: group.items.length, x: cursorX, y: cursorY, width });
 
-    group.items.forEach((item, index) => {
-      const h = hashString(item.id);
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      const jitterX = ((h % 21) - 10) * 1.2;
-      const jitterY = (((h >> 5) % 21) - 10) * 1.2;
-      const rotation = (((h >> 10) % 9) - 4) * 0.9;
-      const x = cursorX + col * (cellW + GAP) + jitterX;
-      const y = MARGIN + LABEL_SPACE + row * (cellH + GAP) + jitterY;
-      cards[item.id] = { x, y, rotation };
-      maxBottom = Math.max(maxBottom, y + cellH);
-    });
+      group.items.forEach((item, index) => {
+        const size = CARD_SIZES[cardKind(item)];
+        const h = hashString(item.id);
+        const col = index % cols;
+        const r = Math.floor(index / cols);
+        const x = cursorX + col * (cellW + GAP) + (cellW - size.w) / 2 + unit(h, 0) * MAX_JITTER;
+        const y = cursorY + LABEL_SPACE + r * (cellH + GAP) + unit(h, 8) * MAX_JITTER;
+        cards[item.id] = { x, y, rotation: unit(h, 16) * MAX_ROTATION_DEG };
+      });
 
-    cursorX += groupWidth + GROUP_GAP;
+      cursorX += width + GROUP_GAP;
+      maxRight = Math.max(maxRight, cursorX - GROUP_GAP);
+    }
+    cursorY += Math.max(...row.map((b) => b.height)) + ROW_GAP;
   }
 
   return {
     cards,
     groups: placedGroups,
-    width: cursorX - GROUP_GAP + MARGIN,
-    height: maxBottom + MARGIN,
+    width: maxRight + BOARD_MARGIN,
+    height: cursorY - ROW_GAP + BOARD_MARGIN,
   };
 }
