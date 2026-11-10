@@ -36,6 +36,8 @@ import GitHubApp from "@/components/apps/GitHubApp";
 import WhatsNewApp from "@/components/apps/WhatsNewApp";
 import NutritionApp from "@/components/apps/NutritionApp";
 import MediaShelfApp from "@/components/apps/MediaShelfApp";
+import TopFoodsApp from "@/components/apps/TopFoodsApp";
+import RecipesApp from "@/components/apps/RecipesApp";
 import LifeDashboardApp from "@/components/apps/life/LifeDashboardApp";
 import BusinessCardApp from "@/components/apps/BusinessCardApp";
 import HobbiesApp from "@/components/apps/HobbiesApp";
@@ -77,6 +79,8 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   WhatsNewApp,
   NutritionApp,
   MediaShelfApp,
+  TopFoodsApp,
+  RecipesApp,
   LifeDashboardApp,
   BusinessCardApp,
   HobbiesApp,

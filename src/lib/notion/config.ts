@@ -32,6 +32,10 @@ export function isNotionConfigured(): boolean {
 export const NOTION_DB = {
   // Daily Logs (Nutrition OS)
   nutrition: process.env.NOTION_DB_NUTRITION || "089c0ce983db4f6abe5205d8782f8278",
+  // Meal Entries (Nutrition OS) — per-meal rows that aggregate to the daily log.
+  // Only ever leaves the server as anonymous aggregates (see the top-foods
+  // dataset); individual meal rows are never written to the cache.
+  mealEntries: process.env.NOTION_DB_MEAL_ENTRIES || "f22e960b143c48028f4b1457bbb2ca06",
   // Media Library
   films: process.env.NOTION_DB_FILMS || "22a708535bf849109b0dc1a04a6e01a5",
   tv: process.env.NOTION_DB_TV || "0d6bf30c62e74a70a8c348642555936d",

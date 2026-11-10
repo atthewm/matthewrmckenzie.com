@@ -15,6 +15,8 @@ export interface RecipeMeta {
   source: string;
   updated: string;
   filePath: string;
+  /** Optional photo path, e.g. "/recipes/photos/city-loaf.jpg". */
+  image?: string;
 }
 
 export const RECIPE_CATEGORIES: RecipeCategory[] = ["Bread","Breakfast","Dinner","Dessert","Pantry"];

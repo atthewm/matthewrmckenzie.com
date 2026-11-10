@@ -53,6 +53,7 @@ export const fileSystem: FSItem[] = [
     { id: "get-whoop", name: "Get WHOOP", type: "app", icon: "ExternalLink", appComponent: "GetWhoopApp", description: "Try WHOOP with a referral link.", defaultSize: { width: 340, height: 440 } },
   ]},
   { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", description: "Tennis, baking, and photography.", defaultSize: { width: 560, height: 640 } },
+  { id: "top-foods", name: "Top Foods", type: "app", icon: "Trophy", appComponent: "TopFoodsApp", description: "The foods I log most, with average macros per serving.", defaultSize: { width: 620, height: 620 } },
   { id: "recipes", name: "Recipes", type: "folder", icon: "UtensilsCrossed", staticRoute: "/recipes", description: "Sourdough, family recipe cards, and high-protein baking.", children: recipes.map((r) => ({
     id: r.slug,
     name: r.title,
@@ -137,6 +138,7 @@ export const dockItemIds: (string | "|")[] = [
   "health",
   "hobbies",
   "recipes",
+  "top-foods",
   "media",
   "|",
   "photos",
