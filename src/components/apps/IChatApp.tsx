@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
-// iCHAT APP — Classic iChat/AIM-Styled AI Chatbot
+// iCHAT APP: Classic iChat/AIM-Styled AI Chatbot
 // ============================================================================
 // Visitors can chat with an AI assistant that knows about Matthew and his work.
 // Styled like classic iChat with speech bubbles and buddy icons.

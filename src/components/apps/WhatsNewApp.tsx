@@ -30,12 +30,25 @@ const changeIcon: Record<ChangeType, React.ReactNode> = {
 
 const releases: Release[] = [
   {
+    version: "3.0",
+    date: "Nov 2, 2026",
+    title: "Recipes, Reading View & Mobile",
+    changes: [
+      { text: "21 new recipes from the Notion kitchen notebook, grouped by category", type: "feature" },
+      { text: "Shareable recipe pages at /recipes with yield, time, and macros", type: "feature" },
+      { text: "New reading view for About, Work, Writing, and Projects", type: "polish" },
+      { text: "Phone home screen with full-screen apps and quick contact actions", type: "feature" },
+      { text: "Desktop icons open with Enter or Space", type: "fix" },
+      { text: "Retired restaurant tooling projects from the site", type: "polish" },
+    ],
+  },
+  {
     version: "2.6",
     date: "Mar 27, 2026",
     title: "GitHub & Link Bio",
     changes: [
-      { text: "GitHub Projects app — filterable showcase of all public repos", type: "feature" },
-      { text: "Link Bio upgrade — sectioned links page with Social, Projects, and Connect", type: "feature" },
+      { text: "GitHub Projects app: filterable showcase of all public repos", type: "feature" },
+      { text: "Link Bio upgrade: sectioned links page with Social, Projects, and Connect", type: "feature" },
       { text: "Updated About bio with MCP and AI operations work", type: "polish" },
       { text: "Terminal commands: github, gh, repos, links, bio", type: "tool" },
       { text: "GitHub app on desktop icons and Start Here explore row", type: "polish" },
@@ -59,8 +72,8 @@ const releases: Release[] = [
     date: "Mar 13, 2026",
     title: "Dock Reorg, Sound Effects & Shut Down",
     changes: [
-      { text: "Dock trimmed to essentials — games, recipes, health moved to desktop icons", type: "polish" },
-      { text: "Sound effects via Web Audio — close, minimize sounds (toggleable)", type: "feature" },
+      { text: "Dock trimmed to essentials: games, recipes, health moved to desktop icons", type: "polish" },
+      { text: "Sound effects via Web Audio: close, minimize sounds (toggleable)", type: "feature" },
       { text: "Shut Down in Apple menu with fadeout animation and auto-reboot", type: "feature" },
       { text: "Start Here redesigned with quick-access grid and keyboard shortcut tips", type: "polish" },
       { text: "Chess Queen movement bug and missing default return fixed", type: "fix" },
@@ -71,12 +84,12 @@ const releases: Release[] = [
     date: "Mar 13, 2026",
     title: "Exposé, Spotlight, Chess & Minesweeper",
     changes: [
-      { text: "Exposé (F9) — bird's-eye view of all open windows", type: "feature" },
-      { text: "Spotlight (Cmd+Space) — global search to find and open any app", type: "feature" },
+      { text: "Exposé (F9): bird's-eye view of all open windows", type: "feature" },
+      { text: "Spotlight (Cmd+Space): global search to find and open any app", type: "feature" },
       { text: "Genie minimize animation when minimizing windows to dock", type: "feature" },
       { text: "Draggable desktop icons with localStorage persistence", type: "feature" },
-      { text: "Chess — full rules engine with minimax AI (depth 3, alpha-beta pruning)", type: "feature" },
-      { text: "Minesweeper — 3 difficulties, flood reveal, chord click, timer", type: "feature" },
+      { text: "Chess: full rules engine with minimax AI (depth 3, alpha-beta pruning)", type: "feature" },
+      { text: "Minesweeper: 3 difficulties, flood reveal, chord click, timer", type: "feature" },
     ],
   },
   {
@@ -84,10 +97,10 @@ const releases: Release[] = [
     date: "Mar 13, 2026",
     title: "iChat, Photo Booth & Context Menus",
     changes: [
-      { text: "iChat — AI chatbot powered by Claude Haiku", type: "feature" },
-      { text: "Photo Booth — webcam app with 8 retro effects and snapshot capture", type: "feature" },
+      { text: "iChat: AI chatbot powered by Claude Haiku", type: "feature" },
+      { text: "Photo Booth: webcam app with 8 retro effects and snapshot capture", type: "feature" },
       { text: "Right-click context menu with Panther frosted glass styling", type: "feature" },
-      { text: "Startup chime — synthesized F-major chord on boot", type: "feature" },
+      { text: "Startup chime: synthesized F-major chord on boot", type: "feature" },
       { text: "Keyboard shortcuts: Cmd+N, Cmd+comma, Cmd+H", type: "tool" },
       { text: "Panther PNG icons for iChat and Photo Booth", type: "polish" },
     ],

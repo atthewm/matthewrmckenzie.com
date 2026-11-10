@@ -3,9 +3,7 @@ import Link from "next/link";
 // ============================================================================
 // EMPTY CONTENT STATE
 // ============================================================================
-// Fallback block rendered when a static page's markdown source is missing.
-// Replaces the prior single sentence paragraph with a bordered empty state
-// block that tells visitors what is going on and routes them home.
+// Rendered when a static page's markdown source is missing.
 // ============================================================================
 
 interface EmptyContentProps {
@@ -17,18 +15,15 @@ interface EmptyContentProps {
 
 export default function EmptyContent({
   heading = "Content coming soon",
-  helper = "This page is still being drafted. In the meantime, everything else on the site is live.",
-  homeHref = "/",
-  homeLabel = "Return to home",
+  helper = "This page is still being drafted. Everything else on the site is live.",
+  homeHref = "/about",
+  homeLabel = "Go to About",
 }: EmptyContentProps) {
   return (
-    <div className="rounded-md border border-desktop-border bg-desktop-surface-raised px-5 py-6">
-      <p className="text-sm font-semibold text-desktop-text">{heading}</p>
-      <p className="mt-1 text-xs text-desktop-text-secondary">{helper}</p>
-      <Link
-        href={homeHref}
-        className="mt-3 inline-block text-xs text-desktop-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1 rounded"
-      >
+    <div className="rounded-xl border px-5 py-6" style={{ borderColor: "var(--site-rule)", background: "var(--site-surface)" }}>
+      <p className="text-[15px] font-semibold">{heading}</p>
+      <p className="mt-1 text-[14px]" style={{ color: "var(--site-muted)" }}>{helper}</p>
+      <Link href={homeHref} className="mt-3 inline-block text-[14px] site-link">
         {homeLabel}
       </Link>
     </div>

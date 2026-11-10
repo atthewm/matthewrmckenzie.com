@@ -53,7 +53,7 @@ export default function StartHereApp() {
           Welcome to McKenzie OS
         </h1>
         <p className="text-[12px] mt-1" style={{ color: "var(--desktop-text-secondary)" }}>
-          This is my personal corner of the internet. Navigate around like you would a desktop —
+          This is my personal corner of the internet. Navigate around like you would a desktop,
           double-click icons, drag windows, and make yourself at home.
         </p>
       </div>

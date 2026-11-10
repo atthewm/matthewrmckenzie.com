@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — REST CLIENT
+// NOTION SYNC: REST CLIENT
 // ============================================================================
 // Minimal fetch-based client for the Notion API. No SDK dependency (mirrors the
 // direct-REST approach in src/lib/whoop/kv.ts), so the bundle stays lean and

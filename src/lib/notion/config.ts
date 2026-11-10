@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — CONFIG / ENV
+// NOTION SYNC: CONFIG / ENV
 // ============================================================================
 // Server-only configuration for the Notion -> Supabase sync.
 // Nothing here is exposed to the client. Mirrors the graceful-degradation

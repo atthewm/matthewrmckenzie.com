@@ -6,11 +6,11 @@ import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Projects | AI Operations Tooling, Platforms, Open Source",
-  description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie. Open source on GitHub.",
+  description: "mckm.at, McKenzie OS, Eight Sleep integrations, and other projects by Matthew McKenzie.",
   alternates: { canonical: "https://matthewrmckenzie.com/projects" },
   openGraph: {
     title: "Projects | AI Operations Tooling, Platforms, Open Source",
-    description: "Toast MCP Server, MarginEdge integrations, Teams bots for restaurant operations, McKenzie OS, and other projects by Matthew McKenzie.",
+    description: "mckm.at, McKenzie OS, Eight Sleep integrations, and other projects by Matthew McKenzie.",
   },
 };
 
@@ -25,9 +25,7 @@ export default async function ProjectsPage() {
       ])} />
       {content ? (
         <article
-          className="prose prose-sm dark:prose-invert max-w-none
-                     prose-headings:font-semibold
-                     prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline"
+          className="site-prose"
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       ) : (

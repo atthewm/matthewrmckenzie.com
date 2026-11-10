@@ -16,7 +16,7 @@ import {
 } from "./LifeSections";
 
 // ============================================================================
-// LIFE DASHBOARD — unified public "Health and Diet" view
+// LIFE DASHBOARD: unified public "Health and Diet" view
 // ============================================================================
 // One screen composing three sections in the Panther window style:
 //   Activity  -> GET /api/whoop/data        (calories burned, strain, recovery, sleep)

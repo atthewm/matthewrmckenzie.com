@@ -28,7 +28,7 @@ function safePlay(fn: (ctx: AudioContext) => void) {
 }
 
 // ---------------------------------------------------------------------------
-// Window open — soft rising chime
+// Window open: soft rising chime
 // ---------------------------------------------------------------------------
 export function playWindowOpen() {
   safePlay((ctx) => {
@@ -46,7 +46,7 @@ export function playWindowOpen() {
 }
 
 // ---------------------------------------------------------------------------
-// Window close — soft falling tone
+// Window close: soft falling tone
 // ---------------------------------------------------------------------------
 export function playWindowClose() {
   safePlay((ctx) => {
@@ -64,7 +64,7 @@ export function playWindowClose() {
 }
 
 // ---------------------------------------------------------------------------
-// Error beep — classic Mac "Sosumi" style
+// Error beep: classic Mac "Sosumi" style
 // ---------------------------------------------------------------------------
 export function playErrorBeep() {
   safePlay((ctx) => {
@@ -85,7 +85,7 @@ export function playErrorBeep() {
 }
 
 // ---------------------------------------------------------------------------
-// Minimize — swoosh down
+// Minimize: swoosh down
 // ---------------------------------------------------------------------------
 export function playMinimize() {
   safePlay((ctx) => {
@@ -103,7 +103,7 @@ export function playMinimize() {
 }
 
 // ---------------------------------------------------------------------------
-// Shutdown — descending chord
+// Shutdown: descending chord
 // ---------------------------------------------------------------------------
 export function playShutdown() {
   safePlay((ctx) => {

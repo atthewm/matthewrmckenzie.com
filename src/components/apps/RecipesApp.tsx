@@ -16,10 +16,9 @@ import { findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import {
   recipes as recipeIndex,
-  getRecipeCategory,
   RECIPE_CATEGORIES,
   type RecipeMeta,
-  type RecipeCategoryId,
+  type RecipeCategory,
 } from "@/content/recipes/index";
 import { siteConfig } from "@/lib/config";
 
@@ -129,7 +128,7 @@ function RecipeCard({ recipe, onOpen }: { recipe: RecipeMeta; onOpen: () => void
 
 export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
   const { openItem } = useDesktop();
-  const [category, setCategory] = useState<RecipeCategoryId | "all">("all");
+  const [category, setCategory] = useState<RecipeCategory | "all">("all");
   const [query, setQuery] = useState("");
 
   // The window's own children carry contentPath, which is what RecipeViewer
@@ -142,7 +141,7 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
     return recipeIndex.filter((r) => {
-      if (category !== "all" && getRecipeCategory(r) !== category) return false;
+      if (category !== "all" && r.category !== category) return false;
       if (!q) return true;
       return (
         r.title.toLowerCase().includes(q) ||
@@ -157,9 +156,9 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
     if (item) openItem(item);
   };
 
-  const filters: { id: RecipeCategoryId | "all"; label: string }[] = [
+  const filters: { id: RecipeCategory | "all"; label: string }[] = [
     { id: "all", label: "All" },
-    ...RECIPE_CATEGORIES.map((c) => ({ id: c.id as RecipeCategoryId, label: c.label })),
+    ...RECIPE_CATEGORIES.map((c) => ({ id: c, label: c })),
   ];
 
   return (

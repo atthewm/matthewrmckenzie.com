@@ -1,5 +1,5 @@
 // ============================================================================
-// POST/GET /api/notion/sync  — scheduled Notion -> Supabase sync
+// POST/GET /api/notion/sync : scheduled Notion -> Supabase sync
 // ============================================================================
 // Triggered by Vercel Cron (see vercel.json) or manually with the shared
 // secret. Protected so the public cannot trigger expensive syncs.

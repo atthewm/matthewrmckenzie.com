@@ -125,16 +125,14 @@ export default async function EssayPage({
         })}
       />
       <article
-        className="prose prose-sm dark:prose-invert max-w-none
-                   prose-headings:font-semibold
-                   prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline"
+        className="site-prose"
       >
         {date && (
-          <p className="text-desktop-text-secondary text-xs mb-4">{date}</p>
+          <p className="site-eyebrow mb-4">{date}</p>
         )}
         <div dangerouslySetInnerHTML={{ __html: essay.html }} />
-        <hr className="my-8" />
-        <p className="text-desktop-text-secondary text-sm">
+        <hr />
+        <p>
           <Link href="/writing">&larr; Back to Writing</Link>
         </p>
       </article>

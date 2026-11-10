@@ -3,7 +3,7 @@
 import React from "react";
 import { findFSItem, type FSItem } from "@/data/fs";
 import type { WindowState } from "@/hooks/useDesktopStore";
-import FolderView from "@/components/apps/FolderView";
+import BoardView from "@/components/board/BoardView";
 import AboutApp from "@/components/apps/AboutApp";
 import ProjectsApp from "@/components/apps/ProjectsApp";
 import ContactApp from "@/components/apps/ContactApp";
@@ -92,7 +92,7 @@ export default function WindowContent({ windowState, contentMap }: WindowContent
     return <div className="p-5 text-sm text-desktop-text-secondary">Item not found.</div>;
   }
   if (fsItem.type === "folder") {
-    return <FolderView item={fsItem} />;
+    return <BoardView item={fsItem} contentMap={contentMap} windowId={windowState.id} />;
   }
   if (fsItem.type === "app" && fsItem.appComponent) {
     const Component = appComponents[fsItem.appComponent];

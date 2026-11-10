@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { recipes } from "@/content/recipes/index";
 
 function getEssayEntries(): MetadataRoute.Sitemap {
   const essaysDir = path.join(process.cwd(), "src/content/essays");
@@ -72,6 +73,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     ...getEssayEntries(),
+    {
+      url: `${baseUrl}/recipes`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    ...recipes.map((r) => ({
+      url: `${baseUrl}/recipes/${r.slug}`,
+      lastModified: r.updated || now,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
+    {
+      url: `${baseUrl}/now`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
     {
       url: `${baseUrl}/projects`,
       lastModified: now,

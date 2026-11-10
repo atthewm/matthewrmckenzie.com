@@ -8,7 +8,7 @@ import {
 } from "@/data/notion/types";
 
 // ============================================================================
-// NUTRITION DASHBOARD — Notion (Daily Logs) -> /api/notion/data?dataset=nutrition
+// NUTRITION DASHBOARD: Notion (Daily Logs) -> /api/notion/data?dataset=nutrition
 // ============================================================================
 // PRIVATE app: the API returns 401 unless the admin gate cookie is present.
 // Mirrors the WHOOP dashboard's panel idiom and the Nutrition OS targets.
@@ -56,7 +56,7 @@ function Ring({
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {icon}
           <span className="text-[11px] font-semibold text-desktop-text">
-            {value != null ? Math.round(value) : "—"}
+            {value != null ? Math.round(value) : "n/a"}
           </span>
         </div>
       </div>
@@ -159,7 +159,7 @@ export default function NutritionApp() {
         <div>
           <h1 className="text-base font-semibold">Nutrition</h1>
           <p className="text-[11px] text-desktop-text-secondary">
-            {today?.date ?? "—"}
+            {today?.date ?? "n/a"}
             {today?.status ? ` · ${today.status}` : ""}
           </p>
         </div>
@@ -207,11 +207,11 @@ export default function NutritionApp() {
             >
               <span className="w-20 shrink-0 font-medium">{d.date.slice(5)}</span>
               <span className="flex-1 text-desktop-text-secondary">
-                {d.calories != null ? `${Math.round(d.calories)} kcal` : "—"} ·{" "}
+                {d.calories != null ? `${Math.round(d.calories)} kcal` : "n/a"} ·{" "}
                 {d.proteinBioavailable != null
                   ? `${Math.round(d.proteinBioavailable)}g P`
-                  : "—"}{" "}
-                · {d.fiberFood != null ? `${Math.round(d.fiberFood)}g fib` : "—"}
+                  : "n/a"}{" "}
+                · {d.fiberFood != null ? `${Math.round(d.fiberFood)}g fib` : "n/a"}
               </span>
               <span
                 className={

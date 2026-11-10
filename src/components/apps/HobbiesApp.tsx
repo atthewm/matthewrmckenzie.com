@@ -32,7 +32,7 @@ const stringSetup: SpecRow[] = [
   { label: "Configuration", value: "Full bed", note: "gut mains and crosses" },
   { label: "Mains tension", value: "56 lbs" },
   { label: "Crosses tension", value: "54 lbs" },
-  { label: "Manufacturer range", value: "48 – 57 lbs" },
+  { label: "Manufacturer range", value: "48 to 57 lbs" },
   { label: "Overgrip", value: "Wilson Pro", note: "comfort" },
 ];
 
@@ -100,7 +100,7 @@ export default function HobbiesApp() {
         </p>
 
         <div className="mb-4">
-          <SectionHeading>Frame — Head Graphene Pro</SectionHeading>
+          <SectionHeading>Frame: Head Graphene Pro</SectionHeading>
           <SpecTable rows={frameSpecs} />
         </div>
 

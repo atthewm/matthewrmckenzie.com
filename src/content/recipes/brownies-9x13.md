@@ -4,6 +4,9 @@ subtitle: Recipe card version, English walnuts
 yield: 1 pan (9x13)
 total_time: About 45 minutes
 tags: [dessert, brownies, baking]
+category: Dessert
+source: Family recipe card
+updated: 2026-02-16
 ---
 
 ## Ingredients

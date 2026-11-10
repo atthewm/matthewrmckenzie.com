@@ -10,9 +10,9 @@ import FlurryScreensaver from "./FlurryScreensaver";
 // Screensaver Manager
 //
 // Supports multiple screensaver types:
-//   • Flying Toasters — After Dark (1989) recreation (canvas + sprites)
-//   • Flurry — Mac OS X default screensaver (canvas particle system)
-//   • None — disabled
+//   • Flying Toasters: After Dark (1989) recreation (canvas + sprites)
+//   • Flurry: Mac OS X default screensaver (canvas particle system)
+//   • None: disabled
 //
 // Type and idle timeout are controlled via Settings.
 // Activates after user-configured idle timeout. Dismissed by any input.
@@ -87,7 +87,7 @@ export default function Screensaver() {
       imagesRef.current = { toasters: [t1, t2, t3, t4], toast, cloud };
       setLoaded(true);
     }).catch(() => {
-      // Silently fail — screensaver just won't show
+      // Silently fail: screensaver just won't show
     });
     return () => { cancelled = true; };
   }, [screensaverType]);

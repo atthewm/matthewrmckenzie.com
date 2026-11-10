@@ -5,95 +5,100 @@ import CtaBlock from "./CtaBlock";
 // ============================================================================
 // STATIC PAGE LAYOUT
 // ============================================================================
-// Shared layout for static fallback pages (/about, /work, etc.).
-// These are SEO-friendly server-rendered pages that share content with the
-// desktop app.
+// Reading layout for the server-rendered routes (/about, /work, /recipes ...).
+// Uses the .site tokens in globals.css (slate and gold, shared with mckm.at).
 // ============================================================================
 
 interface StaticPageLayoutProps {
   children: React.ReactNode;
+  /** Wider column for index pages such as /recipes. */
+  wide?: boolean;
+  /** Hide the closing contact block (e.g. on /contact itself). */
+  hideCta?: boolean;
 }
 
 const navLinks = [
-  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/work", label: "Work" },
   { href: "/writing", label: "Writing" },
+  { href: "/recipes", label: "Recipes" },
   { href: "/projects", label: "Projects" },
   { href: "/contact", label: "Contact" },
 ];
 
-export default function StaticPageLayout({ children }: StaticPageLayoutProps) {
+const footerLinks = [
+  ...navLinks,
+  { href: "/now", label: "Now" },
+  { href: "/privacy", label: "Privacy" },
+];
+
+export default function StaticPageLayout({ children, wide = false, hideCta = false }: StaticPageLayoutProps) {
+  const column = wide ? "max-w-5xl" : "max-w-[680px]";
   return (
-    <div className="min-h-screen bg-desktop-bg text-desktop-text">
-      {/* Skip to content link for keyboard/screen reader users */}
+    <div className="site">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-desktop-accent focus:text-white focus:px-4 focus:py-2 focus:rounded focus:text-sm"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:rounded focus:text-sm"
+        style={{ background: "var(--site-ink)", color: "var(--site-bg)" }}
       >
         Skip to content
       </a>
 
-      {/* Nav */}
-      <header className="border-b border-desktop-border bg-desktop-surface">
-        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between flex-wrap gap-y-2">
-          <Link
-            href="/"
-            className="text-sm font-semibold tracking-wide hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-2"
-          >
+      <header className="site-noprint border-b" style={{ borderColor: "var(--site-rule)" }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+          <Link href="/about" className="site-display text-[21px] leading-none whitespace-nowrap shrink-0">
             Matthew McKenzie
           </Link>
-          <nav aria-label="Main navigation" className="flex items-center gap-4 flex-wrap">
-            {navLinks.slice(1).map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-xs text-desktop-text-secondary hover:text-desktop-text transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1"
-              >
-                {link.label}
+          <Link
+            href="/"
+            className="site-mono text-[11px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full border whitespace-nowrap"
+            style={{ borderColor: "var(--site-rule)", color: "var(--site-muted)" }}
+          >
+            Open desktop
+          </Link>
+        </div>
+        <nav
+          aria-label="Main navigation"
+          className="max-w-5xl mx-auto px-4 sm:px-6 flex gap-5 overflow-x-auto scrollbar-none -mb-px"
+        >
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="py-3 text-[14px] whitespace-nowrap border-b-2 border-transparent hover:border-[var(--site-gold)] transition-colors"
+              style={{ color: "var(--site-muted)" }}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+      </header>
+
+      <main id="main-content" className={`${column} mx-auto px-4 sm:px-6 pt-12 pb-8 sm:pt-16`}>
+        {children}
+      </main>
+
+      {!hideCta && <CtaBlock wide={wide} />}
+
+      <footer className="site-noprint border-t mt-16" style={{ borderColor: "var(--site-rule)" }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+          <div>
+            <p className="site-display text-[19px]">Matthew McKenzie</p>
+            <p className="text-[13px] mt-1" style={{ color: "var(--site-muted)" }}>
+              Capital formation at Menlo Equities. Austin, Texas.
+            </p>
+          </div>
+          <nav aria-label="Footer navigation" className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-2 text-[13px]">
+            {footerLinks.map((l) => (
+              <Link key={l.href} href={l.href} className="hover:underline" style={{ color: "var(--site-muted)" }}>
+                {l.label}
               </Link>
             ))}
           </nav>
         </div>
-      </header>
-
-      {/* Content */}
-      <main id="main-content" className="max-w-2xl mx-auto px-5 py-10 bg-desktop-surface rounded-b-lg min-h-[60vh]">
-        {children}
-      </main>
-
-      {/* CTA Block (client component for analytics tracking) */}
-      <CtaBlock />
-
-      {/* Footer */}
-      <footer className="border-t border-desktop-border mt-10 bg-desktop-surface">
-        <div className="max-w-2xl mx-auto px-5 py-6 text-xs text-desktop-text-secondary">
-          <p>&copy; {new Date().getFullYear()} Matthew McKenzie. All rights reserved.</p>
-          <nav aria-label="Footer navigation" className="mt-1 flex items-center gap-3 flex-wrap">
-            <Link href="/" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Back to desktop view
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/about" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              About
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/work" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Work
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/writing" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Writing
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/projects" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Projects
-            </Link>
-            <span className="text-desktop-border">|</span>
-            <Link href="/privacy" className="hover:text-desktop-accent transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1">
-              Privacy
-            </Link>
-          </nav>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10 site-mono text-[11px]" style={{ color: "var(--site-muted)" }}>
+          &copy; {new Date().getFullYear()} Matthew McKenzie &middot; Short links by{" "}
+          <a href="https://mckm.at" className="site-link">mckm.at</a>
         </div>
       </footer>
     </div>

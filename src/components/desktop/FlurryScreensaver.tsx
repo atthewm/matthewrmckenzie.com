@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 
 // ---------------------------------------------------------------------------
-// Flurry Screensaver — Mac OS X default screensaver recreation
+// Flurry Screensaver: Mac OS X default screensaver recreation
 //
 // Ported from the original C/OpenGL source by Calum Robinson:
 // https://github.com/calumr/flurry
@@ -171,7 +171,7 @@ function updateSpark(
   spark.position[1] = y;
   spark.position[2] = z;
 
-  // Color cycling — phase-shifted cosines through RGB
+  // Color cycling: phase-shifted cosines through RGB
   const cycleTime = 6.0 * Math.PI;
   const colorRot = 2.0 * Math.PI / cycleTime;
   const redPhaseShift = 0;

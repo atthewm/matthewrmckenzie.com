@@ -4,19 +4,19 @@ title: Contact
 
 # Contact
 
-I welcome conversations about capital formation, growth strategy, investor partnerships, and AI operations tooling. Whether you have a specific opportunity or just want to connect, I am happy to make time.
+I am glad to talk about capital formation, private wealth partnerships, and real estate investing. If you have a specific opportunity or just want to connect, I will make time.
 
 **Email:** [matthew.mckenzie@mac.com](mailto:matthew.mckenzie@mac.com)
 
-**Schedule a Call:** [Book a time on my calendar](https://cal.com/mattmck/site)
+**Schedule a call:** [Book a time on my calendar](https://cal.com/mattmck/site)
 
 ## When to Reach Out
 
-**Investors and Allocators.** If you are exploring opportunities in real estate, consumer platforms, or alternative investments and want to learn more about what I am working on.
+**Investors and advisors.** Family offices, RIAs, and private investors who want to learn about Menlo Equities' investment platforms.
 
-**Founders and Operators.** If you are raising capital, building a growth plan, or looking for someone who understands both the investor side and the operating side.
+**Sponsors and operators.** If you are raising capital or pressure testing a business plan and want someone who knows the investor side.
 
-**AI and Operations.** If you are interested in MCP servers, Teams bots, or AI tooling for restaurant and hospitality operations.
+**Builders.** If you are working on MCP servers, agents, or tools for investor relations and want to compare notes.
 
 **General.** Press, speaking, collaboration, or anything else.
 
@@ -25,4 +25,4 @@ I welcome conversations about capital formation, growth strategy, investor partn
 - [LinkedIn](https://www.linkedin.com/in/mrmckenzie/)
 - [GitHub](https://github.com/atthewm)
 
-I typically respond within one to two business days.
+I usually reply within one to two business days.

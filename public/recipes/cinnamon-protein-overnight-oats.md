@@ -4,6 +4,9 @@ subtitle: 1 serving, thicker texture, revised liquid ratio
 yield: 1 serving
 total_time: 6 to 12 hours (overnight)
 tags: [breakfast, oats, high protein, meal prep]
+category: Breakfast
+source: Kitchen notebook
+updated: 2026-02-16
 ---
 
 ## Ingredients (locked)
