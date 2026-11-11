@@ -9,7 +9,7 @@
 // leaves the others (and the cached copy of the failing one) intact.
 // ============================================================================
 
-import { queryDatabase } from "./client";
+import { queryDatabase, type QueryResult } from "./client";
 import { NOTION_DB } from "./config";
 import { DATASET_LIST, getDataset, type CacheRow, type SyncContext } from "./datasets";
 import { writeDataset, recordSyncRuns, type SyncRunRecord } from "./cache";
@@ -37,15 +37,15 @@ function primaryTitle(page: NotionPage): string {
  * would cost memory for nothing.
  */
 function makeQueryCache() {
-  const cache = new Map<string, NotionPage[]>();
+  const cache = new Map<string, QueryResult>();
   const retain = new Set<string>([NOTION_DB.nutrition, NOTION_DB.people]);
 
   return async function cachedQuery(databaseId: string, max?: number) {
     const hit = cache.get(databaseId);
     if (hit) return hit;
-    const pages = await queryDatabase(databaseId, { max });
-    if (retain.has(databaseId)) cache.set(databaseId, pages);
-    return pages;
+    const result = await queryDatabase(databaseId, { max });
+    if (retain.has(databaseId)) cache.set(databaseId, result);
+    return result;
   };
 }
 
@@ -54,8 +54,11 @@ type CachedQuery = ReturnType<typeof makeQueryCache>;
 async function buildPeopleMap(query: CachedQuery): Promise<Record<string, string>> {
   const map: Record<string, string> = {};
   try {
-    const people = await query(NOTION_DB.people, 5000);
-    for (const p of people) map[p.id] = primaryTitle(p);
+    const { pages, truncated } = await query(NOTION_DB.people);
+    if (truncated) {
+      console.warn("[notion-sync] People hit the row cap; some relations will not resolve");
+    }
+    for (const p of pages) map[p.id] = primaryTitle(p);
   } catch {
     // People DB optional: relations just won't resolve to names.
   }
@@ -71,8 +74,11 @@ async function buildPeopleMap(query: CachedQuery): Promise<Record<string, string
 async function buildDayMap(query: CachedQuery): Promise<Record<string, string>> {
   const map: Record<string, string> = {};
   try {
-    const days = await query(NOTION_DB.nutrition, 5000);
-    for (const d of days) {
+    const { pages, truncated } = await query(NOTION_DB.nutrition);
+    if (truncated) {
+      console.warn("[notion-sync] Daily Logs hit the row cap; day counts will under-report");
+    }
+    for (const d of pages) {
       const date = getDate(d, "Log Date") || primaryTitle(d);
       if (date) map[d.id] = date;
     }
@@ -117,7 +123,7 @@ export async function runSync(only?: string): Promise<SyncSummary> {
     if (!def) continue;
     const began = Date.now();
     try {
-      const pages = await query(def.databaseId, def.maxRows);
+      const { pages, truncated } = await query(def.databaseId, def.maxRows);
       const filtered = def.rowFilter ? pages.filter(def.rowFilter) : pages;
 
       let rows: CacheRow[];
@@ -135,7 +141,14 @@ export async function runSync(only?: string): Promise<SyncSummary> {
       }
 
       const count = await writeDataset(def.key, rows);
-      results.push({ key: def.key, count, ms: Date.now() - began });
+
+      // The rows that did arrive are still written: stale-but-partial beats
+      // dropping the dataset. The run is marked failed so a silent shortfall
+      // cannot hide behind a green status the way the film shelf did.
+      const error = truncated
+        ? `row cap reached: wrote ${count} rows but the source has more`
+        : undefined;
+      results.push({ key: def.key, count, ms: Date.now() - began, error });
     } catch (err: any) {
       results.push({
         key: def.key,

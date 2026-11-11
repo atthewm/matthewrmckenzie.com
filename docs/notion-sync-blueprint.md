@@ -107,7 +107,16 @@ is built not to, so the sync makes three guarantees:
    returns zero rows for a dataset that currently has cached rows — revoked
    integration access, a renamed filter property — the write is refused and the
    run is logged as failed rather than emptying the shelf.
-3. **Failures are visible.** Every dataset in every run is recorded in
+3. **A truncated pull is a failure, not a quiet shortfall.** `queryDatabase`
+   caps pagination as a guard against a runaway database, and it used to stop
+   at 2000 rows and return the partial set with no signal. Films outgrew that
+   (2485 titles), so the shelf served exactly 2000 and lost 485 with nothing
+   reporting it. The cap is now 20000, and reaching it returns `truncated`,
+   which marks the dataset's run failed while still writing the rows that did
+   arrive. The same bug was latent for audiobooks, where the Books database is
+   fetched and only then filtered, so truncation would have silently dropped
+   audiobooks from the tail.
+4. **Failures are visible.** Every dataset in every run is recorded in
    `notion_sync_runs` (see the schema file) and readable at
    `GET /api/notion/sync?status=1`. Without it a broken cron looks exactly like
    a quiet week, because the cache keeps answering with data that stopped moving.
