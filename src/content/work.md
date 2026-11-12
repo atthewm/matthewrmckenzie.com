@@ -22,10 +22,10 @@ I lead private wealth capital formation at Menlo Equities. My work is building d
 
 ## Experience
 
-**Menlo Equities** | Senior Vice President, Capital Formation
+**Menlo Equities** | Senior Vice President, Capital Formation | 2026 to present
 Capital formation across Menlo's private wealth channel, developing and expanding relationships with high net worth and ultra high net worth investors, family offices, and registered investment advisors across the firm's investment platforms.
 
-**Civitas Capital Group** | Vice President, Investor Relations
+**Civitas Capital Group** | Vice President, Investor Relations | Previously, 2016 to 2026
 Capital formation and investor relations for an alternative investment manager focused on niche opportunities in U.S. real estate. Nearly a decade of progressive responsibility from analyst through VP.
 
 
