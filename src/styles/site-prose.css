@@ -360,3 +360,25 @@
   font-variant-numeric: tabular-nums;
   color: var(--site-muted);
 }
+
+/* ---------------------------------------------------------------------------
+   Brand logos (Health: "Tracked with")
+   --------------------------------------------------------------------------- */
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  min-width: 168px;
+  padding: 8px 24px;
+  border: 1px solid var(--site-rule);
+  border-radius: 2px;
+  background: var(--site-surface);
+  transition: border-color var(--duration-fast) ease;
+}
+.brand-logo:hover { border-color: var(--site-ink); }
+.brand-logo-img { display: block; width: auto; height: var(--logo-h-light); }
+@media (prefers-color-scheme: dark) {
+  .brand-logo-img { height: var(--logo-h-dark); }
+}
