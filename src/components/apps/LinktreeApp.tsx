@@ -9,15 +9,12 @@ import {
   Calendar,
   Mail,
   Instagram,
-  Globe,
-  Link2,
-  Moon,
 } from "lucide-react";
 
 // ============================================================================
 // LINKTREE APP - Link Bio Page
 // ============================================================================
-// Full link bio with sections: social, projects, tools.
+// Full link bio with sections: social and connect.
 // ============================================================================
 
 interface LinkItem {
@@ -31,13 +28,6 @@ const socialLinks: LinkItem[] = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/mrmckenzie/", icon: Linkedin, description: "Connect professionally" },
   { label: "GitHub", href: "https://github.com/atthewm", icon: Github, description: "Code and open source projects" },
   { label: "Instagram", href: "https://www.instagram.com/mrem/", icon: Instagram, description: "Photos and stories" },
-];
-
-const projectLinks: LinkItem[] = [
-  { label: "mckm.at", href: "https://mckm.at", icon: Link2, description: "Link shortener and data rooms" },
-  { label: "Eight Sleep Consumer", href: "https://github.com/atthewm/eightsleep-consumer", icon: Moon, description: "Sleep data pipeline and integrations" },
-  { label: "Eight Sleep Client", href: "https://github.com/atthewm/eightsleep-client", icon: Moon, description: "TypeScript client for the Eight Sleep API" },
-  { label: "Cosmos Collector", href: "https://github.com/atthewm/cosmos-collector", icon: Globe, description: "Download cosmos.so boards headlessly" },
 ];
 
 const actionLinks: LinkItem[] = [
@@ -127,12 +117,11 @@ export default function LinktreeApp() {
               Matthew McKenzie
             </h2>
             <p className="text-[11px] text-desktop-text-secondary mt-0.5 max-w-[280px] mx-auto leading-relaxed">
-              Private wealth capital formation at Menlo Equities. Builder of small, useful tools.
+              Capital formation at Menlo Equities. Training, recovery, and cooking on the side.
             </p>
           </div>
 
           <LinkSection title="Social" links={socialLinks} />
-          <LinkSection title="Projects" links={projectLinks} />
           <LinkSection title="Connect" links={actionLinks} />
         </div>
       </div>
@@ -142,7 +131,7 @@ export default function LinktreeApp() {
         className="shrink-0 h-[22px] flex items-center px-3 border-t text-[10px] text-desktop-text-secondary"
         style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface-raised)" }}
       >
-        mckm.at
+        matthewrmckenzie.com
       </div>
     </div>
   );

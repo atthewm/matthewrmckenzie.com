@@ -164,8 +164,8 @@ export default function CardPage() {
 
         <footer className="card-foot">
           <span>matthewrmckenzie.com</span>
-          <a href="https://mckm.at" target="_blank" rel="noopener noreferrer">
-            mckm.at →
+          <a href="https://github.com/atthewm" target="_blank" rel="noopener noreferrer">
+            GitHub →
           </a>
         </footer>
       </article>

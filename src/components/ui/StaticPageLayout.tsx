@@ -20,15 +20,18 @@ interface StaticPageLayoutProps {
 const navLinks = [
   { href: "/about", label: "About" },
   { href: "/work", label: "Work" },
-  { href: "/writing", label: "Writing" },
+  { href: "/health", label: "Health" },
+  { href: "/kitchen", label: "Kitchen" },
   { href: "/recipes", label: "Recipes" },
-  { href: "/projects", label: "Projects" },
+  { href: "/hobbies", label: "Hobbies" },
   { href: "/contact", label: "Contact" },
 ];
 
 const footerLinks = [
   ...navLinks,
+  { href: "/writing", label: "Writing" },
   { href: "/now", label: "Now" },
+  { href: "/desktop", label: "Desktop" },
   { href: "/privacy", label: "Privacy" },
 ];
 
@@ -46,11 +49,11 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
 
       <header className="site-noprint border-b" style={{ borderColor: "var(--site-rule)" }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Link href="/about" className="site-display text-[21px] leading-none whitespace-nowrap shrink-0">
+          <Link href="/" className="site-display text-[21px] leading-none whitespace-nowrap shrink-0">
             Matthew McKenzie
           </Link>
           <Link
-            href="/"
+            href="/desktop"
             className="site-mono text-[11px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full border whitespace-nowrap"
             style={{ borderColor: "var(--site-rule)", color: "var(--site-muted)" }}
           >
@@ -97,8 +100,7 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
           </nav>
         </div>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10 site-mono text-[11px]" style={{ color: "var(--site-muted)" }}>
-          &copy; {new Date().getFullYear()} Matthew McKenzie &middot; Short links by{" "}
-          <a href="https://mckm.at" className="site-link">mckm.at</a>
+          &copy; {new Date().getFullYear()} Matthew McKenzie
         </div>
       </footer>
     </div>

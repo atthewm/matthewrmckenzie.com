@@ -23,7 +23,7 @@ import { findFSItem } from "@/data/fs";
 // Icons are now in the Dock; the desktop surface is clean.
 // ============================================================================
 
-const MOBILE_WELCOME_KEY = "mmck-mobile-welcomed";
+const WELCOME_KEY = "mmck-welcomed";
 const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 interface DesktopProps {
@@ -42,12 +42,12 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const [exposeActive, setExposeActive] = useState(false);
   const [spotlightActive, setSpotlightActive] = useState(false);
 
-  // Desktop icons (right column + second column for overflow)
+  // Desktop icons: the main sections in the right column, extras beside them
   const DESKTOP_ICON_IDS = [
-    // Right column: key items
-    "now", "recipes", "health", "apple-music",
-    // Second column: projects & extras
-    "github-projects", "chess", "minesweeper", "photo-booth",
+    // Right column: main sections
+    "work", "health", "recipes", "now",
+    // Second column: extras
+    "more", "apple-music", "chess", "photo-booth",
   ];
   const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
 
@@ -84,7 +84,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
     });
   }, []);
 
-  // Auto-open window from ?open= query param (e.g. /?open=about)
+  // Auto-open window from ?open= query param (e.g. /desktop?open=about)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const openId = params.get("open");
@@ -94,26 +94,30 @@ export default function Desktop({ contentMap }: DesktopProps) {
         dispatch({ type: "OPEN_WINDOW", payload: { fsItem: item } });
       }
       // Clean URL without reload
-      window.history.replaceState({}, "", "/");
+      window.history.replaceState({}, "", window.location.pathname);
     }
   }, [dispatch]);
 
-  // On mobile first load (no ?open param), auto-open the README window
+  // First load of a session (no ?open param): open Start Here so visitors see
+  // the main sections right away instead of an empty desktop. README on phones,
+  // where a text page reads better than the button grid in a full-screen window.
   useEffect(() => {
-    if (!isMobile || didOpenRef.current) return;
-    if (sessionStorage.getItem(MOBILE_WELCOME_KEY)) return;
+    if (didOpenRef.current) return;
+    if (sessionStorage.getItem(WELCOME_KEY)) return;
     // Skip if we just opened something via ?open=
     const params = new URLSearchParams(window.location.search);
     if (params.get("open")) return;
 
     didOpenRef.current = true;
-    sessionStorage.setItem(MOBILE_WELCOME_KEY, "1");
+    sessionStorage.setItem(WELCOME_KEY, "1");
 
-    const readme = findFSItem("readme");
-    if (readme) {
-      dispatch({ type: "OPEN_WINDOW", payload: { fsItem: readme } });
+    // Read the width directly: useIsMobile is false on the first render.
+    const onPhone = window.innerWidth < 768;
+    const welcome = findFSItem(onPhone ? "readme" : "start-here");
+    if (welcome) {
+      dispatch({ type: "OPEN_WINDOW", payload: { fsItem: welcome } });
     }
-  }, [isMobile, dispatch]);
+  }, [dispatch]);
 
   // Toast auto-dismiss
   useEffect(() => {
