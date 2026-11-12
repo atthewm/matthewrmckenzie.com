@@ -1,8 +1,4 @@
 import React from "react";
-import { whoopCircle } from "@/config/brands";
-
-// Official WHOOP circle mark, for the WHOOP entries below.
-const WHOOP_ICON = whoopCircle.light;
 
 // ============================================================================
 // MAC OS X 10.3 PANTHER ICONS - PNG Assets
@@ -60,16 +56,16 @@ const iconMap: Record<string, string> = {
   "life":           "/icons/custom/life.svg",
   "health":         "disk-utility.png",
   "health-overview":"documents.png",
-  "whoop-dashboard":WHOOP_ICON,
+  "whoop-dashboard":"/brands/whoop.svg",
   "nutrition":      "/icons/custom/nutrition.svg",
   "top-foods":      "/icons/custom/top-foods.svg",
   "hobbies":        "/icons/custom/hobbies.svg",
   "whoop-splits":   "folder.png",
-  "whoop-split-arms-abs":   WHOOP_ICON,
-  "whoop-split-back":       WHOOP_ICON,
-  "whoop-split-chest":      WHOOP_ICON,
-  "whoop-split-legs":       WHOOP_ICON,
-  "whoop-split-shoulders":  WHOOP_ICON,
+  "whoop-split-arms-abs":   "/brands/whoop.svg",
+  "whoop-split-back":       "/brands/whoop.svg",
+  "whoop-split-chest":      "/brands/whoop.svg",
+  "whoop-split-legs":       "/brands/whoop.svg",
+  "whoop-split-shoulders":  "/brands/whoop.svg",
   "get-whoop":      "external-link.png",
 
   // Recipes
@@ -106,18 +102,11 @@ function resolveIcon(filename: string): string {
 // Icon component that renders a PNG <img>
 // ---------------------------------------------------------------------------
 
-// Official brand marks (public/brands/) are single-colour and transparent, so
-// they sit on a white rounded tile to read as an icon in both desktop themes.
-function isBrandIcon(src: string): boolean {
-  return src.startsWith("/brands/");
-}
-
 function PantherIconImg({ src, size = 32, alt }: { src: string; size?: number; alt?: string }) {
-  const brand = isBrandIcon(src);
   return (
     <img
       src={src}
-      alt={alt || (brand ? "WHOOP logo" : "")}
+      alt={alt || ""}
       width={size}
       height={size}
       draggable={false}
@@ -126,9 +115,6 @@ function PantherIconImg({ src, size = 32, alt }: { src: string; size?: number; a
         height: size,
         objectFit: "contain",
         imageRendering: "auto",
-        ...(brand
-          ? { background: "#fff", borderRadius: "22%", padding: Math.round(size * 0.14), boxSizing: "border-box" as const }
-          : {}),
       }}
     />
   );

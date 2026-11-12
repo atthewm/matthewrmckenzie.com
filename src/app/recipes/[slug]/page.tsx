@@ -6,23 +6,6 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import { getContent } from "@/lib/content";
 import { recipes, getRecipeBySlug } from "@/content/recipes/index";
 import { recipeSchema } from "@/lib/recipe-schema";
-import { splitProse, monoNumbers, type ProseSection } from "@/lib/prose";
-
-// Sections that list what you need sit in the sticky left column on desktop.
-const SIDE_SECTION = /ingredients|equipment/i;
-
-function RecipeSections({ sections }: { sections: readonly ProseSection[] }) {
-  return (
-    <>
-      {sections.map((section) => (
-        <section key={section.id} id={section.id}>
-          <h2 dangerouslySetInnerHTML={{ __html: section.heading }} />
-          <div className="site-prose" dangerouslySetInnerHTML={{ __html: monoNumbers(section.html) }} />
-        </section>
-      ))}
-    </>
-  );
-}
 
 const SITE = "https://matthewrmckenzie.com";
 
@@ -59,10 +42,6 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
     { label: "Source", value: recipe.source },
   ].filter((f) => f.value);
 
-  const { intro, sections } = splitProse(content.html);
-  const sideSections = sections.filter((s) => SIDE_SECTION.test(s.heading));
-  const methodSections = sections.filter((s) => !SIDE_SECTION.test(s.heading));
-
   return (
     <StaticPageLayout>
       <JsonLd
@@ -74,60 +53,44 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
       />
       <JsonLd data={recipeSchema(recipe, content.raw)} />
 
-      <article>
-        <header className="site-grid page-head">
-          <Link href="/recipes" className="page-back site-noprint">
-            <span aria-hidden="true">&larr;</span> All recipes
-          </Link>
-          <p className="site-eyebrow">{recipe.category}</p>
-          <h1 className="site-title col-title">{recipe.title}</h1>
-          {recipe.subtitle && <p className="site-lede col-body">{recipe.subtitle}</p>}
-          <dl className="site-facts">
-            {facts.map((f) => (
-              <div key={f.label}>
-                <dt>{f.label}</dt>
-                <dd>{f.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="site-noprint site-actions">
-            <a href={`/recipes/${slug}.md`} download className="site-link">
-              Download as text
-            </a>
-            {recipe.tags.length > 0 && (
-              <span className="site-mono site-muted" style={{ fontSize: "var(--text-label)" }}>
-                {recipe.tags.join(" · ")}
-              </span>
-            )}
-          </div>
-        </header>
+      <Link href="/recipes" className="site-noprint site-mono text-[11px] uppercase tracking-[0.12em]" style={{ color: "var(--site-muted)" }}>
+        &larr; All recipes
+      </Link>
 
-        <div className={sideSections.length > 0 ? "site-grid recipe-body" : "site-grid recipe-body is-solo"}>
-          {intro && (
-            <div
-              className="recipe-intro site-prose site-prose-intro"
-              dangerouslySetInnerHTML={{ __html: monoNumbers(intro) }}
-            />
+      <header className="mt-6">
+        <p className="site-eyebrow">{recipe.category}</p>
+        <h1 className="site-display text-[36px] sm:text-[46px] leading-[1.08] mt-3">{recipe.title}</h1>
+        {recipe.subtitle && (
+          <p className="text-[18px] leading-relaxed mt-3" style={{ color: "var(--site-muted)" }}>
+            {recipe.subtitle}
+          </p>
+        )}
+        <dl className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-7 rounded-xl overflow-hidden border" style={{ borderColor: "var(--site-rule)", background: "var(--site-rule)" }}>
+          {facts.map((f) => (
+            <div key={f.label} className="px-4 py-3" style={{ background: "var(--site-surface)" }}>
+              <dt className="site-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: "var(--site-muted)" }}>{f.label}</dt>
+              <dd className="text-[14px] mt-1 leading-snug">{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="site-noprint flex gap-4 mt-4 text-[13px]">
+          <a href={`/recipes/${slug}.md`} download className="site-link">Download as text</a>
+          {recipe.tags.length > 0 && (
+            <span className="site-mono text-[11px] self-center" style={{ color: "var(--site-muted)" }}>
+              {recipe.tags.join(" · ")}
+            </span>
           )}
-          {sideSections.length > 0 && (
-            <aside className="recipe-side" aria-label="Ingredients and equipment">
-              <RecipeSections sections={sideSections} />
-            </aside>
-          )}
-          <div className="recipe-method">
-            <RecipeSections sections={methodSections} />
-          </div>
         </div>
-      </article>
+      </header>
+
+      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: content.html }} />
 
       {next && next.slug !== slug && (
-        <nav aria-label="Next recipe" className="site-grid site-row site-noprint" style={{ marginTop: "var(--space-block)" }}>
-          <p className="site-eyebrow col-head">Next recipe</p>
-          <div className="col-body">
-            <Link href={`/recipes/${next.slug}`} className="site-index-title" style={{ fontSize: "var(--text-h2)" }}>
-              {next.title}
-            </Link>
-          </div>
+        <nav aria-label="Next recipe" className="site-noprint mt-14 pt-6 border-t" style={{ borderColor: "var(--site-rule)" }}>
+          <p className="site-eyebrow">Next recipe</p>
+          <Link href={`/recipes/${next.slug}`} className="site-display text-[24px] mt-2 inline-block hover:underline underline-offset-4">
+            {next.title}
+          </Link>
         </nav>
       )}
     </StaticPageLayout>

@@ -8,7 +8,6 @@
 import { WHOOP_API_BASE, WHOOP_ENDPOINTS, CACHE_TTL } from "./config";
 import { getValidAccessToken } from "./tokens";
 import { kvGet, kvSet } from "./kv";
-import { STRAIN_SERIES_DAYS, toStrainSeries, type StrainPoint } from "./strain";
 
 // ---------------------------------------------------------------------------
 // Response types (based on official WHOOP API v1 schemas)
@@ -137,8 +136,6 @@ export interface WhoopDashboardData {
   latestCycle: WhoopCycle | null;
   latestSleep: WhoopSleep | null;
   recentWorkouts: WhoopWorkout[];
-  /** Day strain for the last two weeks, oldest first. Missing in older cached payloads. */
-  strainSeries?: StrainPoint[];
 }
 
 export interface WhoopDisconnected {
@@ -243,7 +240,7 @@ export async function fetchDashboardData(): Promise<WhoopDataResponse> {
       whoopFetch<PaginatedResponse<WhoopCycle>>(
         WHOOP_ENDPOINTS.cycles,
         accessToken,
-        { limit: String(STRAIN_SERIES_DAYS) },
+        { limit: "1" },
       ),
       whoopFetch<PaginatedResponse<WhoopSleep>>(
         WHOOP_ENDPOINTS.sleep,
@@ -278,7 +275,6 @@ export async function fetchDashboardData(): Promise<WhoopDataResponse> {
     latestCycle,
     latestSleep,
     recentWorkouts: workoutsResponse?.records ?? [],
-    strainSeries: toStrainSeries(cyclesResponse?.records),
   };
 
   // Cache the result

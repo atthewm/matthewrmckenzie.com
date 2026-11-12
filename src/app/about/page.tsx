@@ -4,7 +4,6 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import AffiliationRow from "@/components/ui/AffiliationRow";
 import EmptyContent from "@/components/ui/EmptyContent";
-import ProseRows from "@/components/site/ProseRows";
 
 export const metadata: Metadata = {
   title: "About | Capital Formation, Health, and Cooking",
@@ -26,12 +25,16 @@ export default async function AboutPage() {
         { name: "About", url: "https://matthewrmckenzie.com/about" },
       ])} />
       {content ? (
-        <ProseRows html={content.html} eyebrow="Austin, Texas">
-          <AffiliationRow />
-        </ProseRows>
+        <article
+          className="prose prose-sm dark:prose-invert max-w-none
+                     prose-headings:font-semibold
+                     prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline"
+          dangerouslySetInnerHTML={{ __html: content.html }}
+        />
       ) : (
         <EmptyContent />
       )}
+      <AffiliationRow />
     </StaticPageLayout>
   );
 }

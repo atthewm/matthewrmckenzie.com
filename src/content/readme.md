@@ -4,7 +4,7 @@ title: README
 
 # Welcome
 
-I'm Matthew McKenzie. I raise capital for real estate at Menlo Equities. The rest of my time goes to training and cooking.
+I'm Matthew McKenzie. I raise capital for real estate at Menlo Equities, and I spend the rest of my time training and cooking.
 
 This site works like a desktop. Open anything from the dock at the bottom or the icons on the right. Four places to start:
 
@@ -13,7 +13,7 @@ This site works like a desktop. Open anything from the dock at the bottom or the
 - **Health and Fitness:** training, recovery, and nutrition
 - **Cooking and Baking:** sourdough and tested recipes
 
-Everything else is in the **More** folder: music, photos, and a few games.
+Everything else, including music, photos, and a few games, is in the **More** folder.
 
 ## Colophon
 

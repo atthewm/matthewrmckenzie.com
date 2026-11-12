@@ -23,7 +23,7 @@ import {
 import { siteConfig } from "@/lib/config";
 
 // ============================================================================
-// RECIPES: card grid index over src/content/recipes
+// RECIPES — card grid index over src/content/recipes
 // ============================================================================
 // Replaces the plain Finder list for the Recipes folder. Filter by category or
 // search, then open a card to launch the existing RecipeViewer window (the
