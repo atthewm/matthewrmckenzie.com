@@ -70,7 +70,7 @@ export default function RoomScene({ g, boardFoods, onBoard }: RoomSceneProps) {
           width: pct(g.board.x1 - g.board.x0, g.w),
           height: pct(g.board.y1 - g.board.y0, g.h),
         }}
-        aria-label="Board: open the food dashboard"
+        aria-label="Food board: open the dashboard"
       >
         <span className="food-room-board-title">Food board</span>
         <svg viewBox="0 0 100 50" className="absolute bottom-[8%] left-[6%] w-[88%]" aria-hidden="true">

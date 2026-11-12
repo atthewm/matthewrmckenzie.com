@@ -48,8 +48,11 @@
   border-radius: 2px;
 }
 
+/* The frame takes its shape from CSS (wide, or tall on phones) so it has the
+   right size before the script runs. Keep in step with roomGeometry.ts. */
 .food-room {
   position: relative;
+  aspect-ratio: 1000 / 625;
   width: 100%;
   max-width: 1000px;
   margin-inline: auto;
@@ -63,6 +66,9 @@
   box-shadow: 0 24px 40px -28px rgba(28, 29, 32, 0.45);
 }
 .food-room:focus-visible { outline: 2px solid var(--site-gold); outline-offset: 3px; }
+@media (max-width: 640px) {
+  .food-room { aspect-ratio: 600 / 800; }
+}
 
 .food-room-board {
   border: 5px solid #9a7a3c;

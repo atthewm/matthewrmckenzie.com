@@ -44,6 +44,7 @@ async function loadTopFoods(): Promise<{ rows: TopFood[]; syncedAt: string | nul
 
 export default function FoodRoom() {
   const compact = useCompactRoom();
+  const ready = compact !== null;
   const g = compact ? TALL_ROOM : WIDE_ROOM;
   const geometry = useRef(g);
 
@@ -311,12 +312,11 @@ export default function FoodRoom() {
         onBlur={() => keys.current.clear()}
         onClick={onFloorClick}
         className="food-room"
-        style={{ aspectRatio: `${g.w} / ${g.h}` }}
       >
-        <RoomScene g={g} boardFoods={boardFoods} onBoard={goToBoard} />
+        {ready && <RoomScene g={g} boardFoods={boardFoods} onBoard={goToBoard} />}
 
         {/* foods and avatar, drawn in depth order */}
-        {sorted.map((item) => {
+        {ready && sorted.map((item) => {
           const combo = item.foods.length > 1;
           const f = item.foods[0];
           return (
@@ -372,6 +372,7 @@ export default function FoodRoom() {
 
         <div
           className="pointer-events-none absolute"
+          hidden={!ready}
           style={{
             left: `${(avatar.x / g.w) * 100}%`,
             top: `${(avatar.y / g.h) * 100}%`,
@@ -397,7 +398,7 @@ export default function FoodRoom() {
           </button>
         )}
 
-        {foods === null && <div className="food-room-loading">Setting the table</div>}
+        {(foods === null || !ready) && <div className="food-room-loading">Setting the table</div>}
       </div>
 
       {/* The card and the board open over the page, so they fit on a phone. */}
