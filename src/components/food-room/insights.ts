@@ -1,6 +1,6 @@
 import type { NutritionDay, TopFood } from "@/data/notion/types";
 import { DEFAULT_NUTRITION_TARGETS } from "@/data/notion/types";
-import { foodKind } from "./foodKinds";
+import { foodKind, TREAT_KINDS } from "./foodKinds";
 
 // ============================================================================
 // FOOD ROOM: insights
@@ -36,7 +36,7 @@ export function mostEfficient(foods: TopFood[], n = 8): (TopFood & { density: nu
 export function guiltyPleasures(foods: TopFood[], n = 6): TopFood[] {
   return foods
     .filter((f) => {
-      if (foodKind(f.name) === "sweet") return true;
+      if (TREAT_KINDS.has(foodKind(f.name))) return true;
       const d = proteinDensity(f);
       return (f.avgCalories ?? 0) >= 250 && d != null && d < 5;
     })

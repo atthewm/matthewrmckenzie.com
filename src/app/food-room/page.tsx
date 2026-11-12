@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import PageHead from "@/components/site/PageHead";
 import FoodRoom from "@/components/food-room/FoodRoom";
+import "@/styles/food-room.css";
 
-// Kept out of search and the sitemap until Matthew decides whether this page is public.
+// Public, but kept out of search engines (noindex) and out of the sitemap.
+// Diet only: nothing from WHOOP, Eight Sleep or Apple Health belongs here.
 export const metadata: Metadata = {
   title: "Food Room",
   description: "The foods Matthew McKenzie eats most, as characters on a table, with a board of charts on favorites, protein per calorie and where to improve.",
@@ -17,7 +19,7 @@ export default function FoodRoomPage() {
       <PageHead
         eyebrow="From my Notion food log"
         title="Food Room"
-        lede="The foods I eat most, from my Notion log. Walk with the arrow keys or click the floor. Click a food for its stats, drag one onto another to make a plate, and walk to the board for the charts."
+        lede="The foods I eat most, from my Notion meal log. Walk around the room, tap a food for its stats, drag one onto another to make a plate, and open the board for the charts."
       />
       <FoodRoom />
     </StaticPageLayout>

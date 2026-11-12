@@ -7,134 +7,119 @@ import { foodKind } from "./foodKinds";
 import { SAMPLE_FOODS } from "./sampleFoods";
 import StatCard from "./StatCard";
 import BoardDashboard from "./BoardDashboard";
+import Avatar from "./Avatar";
+import RoomScene from "./RoomScene";
+import { useCompactRoom } from "./useCompactRoom";
+import { TALL_ROOM, WIDE_ROOM, clamp, inBox, layoutItems, nearBoard, type RoomItem } from "./roomGeometry";
 
 // ============================================================================
 // FOOD ROOM
 // ============================================================================
 // A small game-style room: my most eaten foods sit on a table as characters.
-// Walk with the arrow keys or WASD (or tap the floor), drag foods onto each
-// other to make a plate, tap one for its stat card, and walk to the board on
-// the wall to open the food dashboard.
+// Walk with the arrow keys or WASD, or tap the floor. Tap a food for its stat
+// card, drag foods onto each other to make a plate, and walk to the board on
+// the wall (or press "Open board") for the food dashboard.
 //
-// Everything is laid out in a fixed 1000 x 625 logical space and positioned in
-// percentages, so the room scales with its container.
+// Diet only: the data is the public top-foods rollup from the Notion meal log.
+// The room has a wide layout and a tall one for phones (see roomGeometry.ts).
 // ============================================================================
 
-const W = 1000;
-const H = 625;
-const FLOOR_TOP = 262;
-const TABLE = { x0: 300, x1: 700, y0: 330, y1: 470 }; // table top, drawn
-const TABLE_BLOCK = { x0: 290, x1: 710, y0: 320, y1: 560 }; // where the avatar can't stand
-const BOARD = { x0: 60, x1: 340, y0: 34, y1: 214 };
-const BOARD_SPOT = { x: 200, y: 300 };
 const SPEED = 280; // logical units per second
-const SPRITE_W = 7.2; // % of room width
-const MAX_ON_TABLE = 10;
+const EDGE = 30; // how close the avatar can get to the side walls
+const DRAG_START = 8; // movement before a press counts as a drag
+const MERGE_REACH = 60; // drop distance that makes a plate
+const MOVE_KEYS = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "w", "a", "s", "d"];
 
-type Item = { id: string; foods: TopFood[]; x: number; y: number };
+type Target = { x: number; y: number; thenBoard?: boolean };
+type Drag = { id: string; sx: number; sy: number; ox: number; oy: number; moved: boolean };
 
-function layout(foods: TopFood[]): Item[] {
-  const top = foods.slice(0, MAX_ON_TABLE);
-  const rows = [top.slice(0, 5), top.slice(5)];
-  const items: Item[] = [];
-  rows.forEach((row, r) => {
-    row.forEach((f, i) => {
-      const span = TABLE.x1 - TABLE.x0 - 80;
-      const x = TABLE.x0 + 40 + (row.length > 1 ? (span * i) / (row.length - 1) : span / 2);
-      items.push({ id: f.key, foods: [f], x, y: r === 0 ? 395 : 462 });
-    });
-  });
-  return items;
-}
-
-const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
-const inBlock = (x: number, y: number) =>
-  x > TABLE_BLOCK.x0 && x < TABLE_BLOCK.x1 && y > TABLE_BLOCK.y0 && y < TABLE_BLOCK.y1;
-const nearBoard = (x: number, y: number) => Math.hypot(x - BOARD_SPOT.x, y - BOARD_SPOT.y) < 110;
-
-function Avatar({ facing, moving }: { facing: 1 | -1; moving: boolean }) {
-  return (
-    <svg viewBox="0 0 64 96" className={moving ? "food-room-bob" : undefined} style={{ width: "100%", overflow: "visible", transform: `scaleX(${facing})` }} aria-hidden="true">
-      <ellipse cx={32} cy={93} rx={16} ry={3.5} fill="#000" opacity={0.18} />
-      {/* legs */}
-      <rect x={22} y={72} width={8} height={18} rx={3} fill="#2c3e50" />
-      <rect x={34} y={72} width={8} height={18} rx={3} fill="#2c3e50" />
-      {/* body */}
-      <path d="M16 52 Q16 44 24 44 L40 44 Q48 44 48 52 L48 76 L16 76 Z" fill="#e4572e" stroke="#3b2a22" strokeWidth={2} />
-      {/* head */}
-      <circle cx={32} cy={28} r={20} fill="#f6d2b5" stroke="#3b2a22" strokeWidth={2} />
-      <path d="M12 26 Q14 6 34 8 Q52 10 52 26 Q44 16 30 18 Q20 18 12 26 Z" fill="#4a3426" stroke="#3b2a22" strokeWidth={2} />
-      {/* face (looks to the right; flipped with the body) */}
-      <ellipse cx={30} cy={30} rx={2.6} ry={3.4} fill="#1f1530" />
-      <ellipse cx={42} cy={30} rx={2.6} ry={3.4} fill="#1f1530" />
-      <circle cx={29} cy={28.6} r={1} fill="#fff" />
-      <circle cx={41} cy={28.6} r={1} fill="#fff" />
-      <ellipse cx={26} cy={36} rx={2.6} ry={1.4} fill="#ff8fa3" opacity={0.7} />
-      <path d="M33 37 Q36 39.5 39 37" fill="none" stroke="#3b2a22" strokeWidth={1.4} strokeLinecap="round" />
-    </svg>
-  );
+async function loadTopFoods(): Promise<{ rows: TopFood[]; syncedAt: string | null }> {
+  const res = await fetch("/api/notion/data?dataset=top-foods");
+  if (!res.ok) throw new Error(`top-foods responded ${res.status}`);
+  const json: unknown = await res.json();
+  const body = (typeof json === "object" && json !== null ? json : {}) as { items?: unknown; syncedAt?: unknown };
+  const rows = Array.isArray(body.items) ? (body.items as TopFood[]).filter((f) => f && typeof f.name === "string") : [];
+  return { rows, syncedAt: typeof body.syncedAt === "string" ? body.syncedAt : null };
 }
 
 export default function FoodRoom() {
+  const compact = useCompactRoom();
+  const g = compact ? TALL_ROOM : WIDE_ROOM;
+  const geometry = useRef(g);
+
   const [foods, setFoods] = useState<TopFood[] | null>(null);
   const [sample, setSample] = useState(false);
   const [syncedAt, setSyncedAt] = useState<string | null>(null);
   const [days, setDays] = useState<NutritionDay[] | null>(null);
-  const [items, setItems] = useState<Item[]>([]);
-  const [avatar, setAvatar] = useState({ x: 520, y: 590, facing: 1 as 1 | -1, moving: false });
+  const [items, setItems] = useState<RoomItem[]>([]);
+  const [avatar, setAvatar] = useState({ x: g.start.x, y: g.start.y, facing: 1 as 1 | -1, moving: false });
   const [card, setCard] = useState<string | null>(null);
   const [boardOpen, setBoardOpen] = useState(false);
 
   const roomRef = useRef<HTMLDivElement>(null);
   const keys = useRef(new Set<string>());
-  const target = useRef<{ x: number; y: number; thenBoard?: boolean } | null>(null);
-  const pos = useRef({ x: 520, y: 590 });
-  const drag = useRef<{ id: string; sx: number; sy: number; ox: number; oy: number; moved: boolean } | null>(null);
+  const target = useRef<Target | null>(null);
+  const pos = useRef({ x: g.start.x, y: g.start.y });
+  const facing = useRef<1 | -1>(1);
+  const drag = useRef<Drag | null>(null);
   const overlayOpen = boardOpen || card != null;
+
+  const closeOverlays = useCallback(() => {
+    setCard(null);
+    setBoardOpen(false);
+    roomRef.current?.focus({ preventScroll: true });
+  }, []);
 
   // ---- data ---------------------------------------------------------------
   useEffect(() => {
     let alive = true;
-    (async () => {
-      let rows: TopFood[] = [];
-      try {
-        const res = await fetch("/api/notion/data?dataset=top-foods");
-        if (res.ok) {
-          const json = await res.json();
-          rows = (json.items ?? []) as TopFood[];
-          if (alive) setSyncedAt(json.syncedAt ?? null);
-        }
-      } catch {
-        /* fall through to sample data */
-      }
-      if (!alive) return;
-      const useSample = rows.length === 0;
-      const list = useSample ? SAMPLE_FOODS : [...rows].sort((a, b) => a.rank - b.rank);
-      setSample(useSample);
-      setFoods(list);
-      setItems(layout(list));
-    })();
-    (async () => {
-      try {
-        const res = await fetch("/api/notion/data?dataset=nutrition");
-        if (!res.ok) return; // 401 for everyone but me
-        const json = await res.json();
-        if (alive && Array.isArray(json.items) && json.items.length) setDays(json.items as NutritionDay[]);
-      } catch {
-        /* private or unavailable */
-      }
-    })();
+    loadTopFoods()
+      .catch(() => ({ rows: [] as TopFood[], syncedAt: null })) // fall back to the labeled sample data
+      .then(({ rows, syncedAt: synced }) => {
+        if (!alive) return;
+        const useSample = rows.length === 0;
+        setSample(useSample);
+        setSyncedAt(synced);
+        setFoods(useSample ? SAMPLE_FOODS : [...rows].sort((a, b) => a.rank - b.rank));
+      });
+    // The daily log is private: this is a 401 for everyone but the signed-in owner.
+    fetch("/api/notion/data?dataset=nutrition")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json: { items?: unknown } | null) => {
+        if (alive && json && Array.isArray(json.items) && json.items.length) setDays(json.items as NutritionDay[]);
+      })
+      .catch(() => undefined); // private or unavailable: the board says so
     return () => {
       alive = false;
     };
   }, []);
 
+  // Set the table whenever the foods arrive or the room switches layout.
+  useEffect(() => {
+    geometry.current = g;
+    target.current = null;
+    pos.current = { x: g.start.x, y: g.start.y };
+    setAvatar({ x: g.start.x, y: g.start.y, facing: 1, moving: false });
+    setItems(foods ? layoutItems(foods, g) : []);
+    setCard(null);
+  }, [g, foods]);
+
+  // Escape closes the stat card and the board wherever the focus is.
+  useEffect(() => {
+    if (!overlayOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeOverlays();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [overlayOpen, closeOverlays]);
+
   // ---- movement loop ------------------------------------------------------
-  const avatarFacing = useRef<1 | -1>(1);
   useEffect(() => {
     let raf = 0;
     let last = performance.now();
     const tick = (now: number) => {
+      const room = geometry.current;
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       let dx = 0;
@@ -159,24 +144,23 @@ export default function FoodRoom() {
         }
       }
 
-      const moving = dx !== 0 || dy !== 0;
-      if (moving) {
+      if (dx !== 0 || dy !== 0) {
         const len = Math.hypot(dx, dy) || 1;
-        let nx = clamp(p.x + (dx / len) * SPEED * dt, 30, W - 30);
-        let ny = clamp(p.y + (dy / len) * SPEED * dt, FLOOR_TOP + 10, H - 12);
-        if (inBlock(nx, ny)) {
+        let nx = clamp(p.x + (dx / len) * SPEED * dt, EDGE, room.w - EDGE);
+        let ny = clamp(p.y + (dy / len) * SPEED * dt, room.floorTop + 10, room.h - 12);
+        if (inBox(room.block, nx, ny)) {
           // slide along whichever axis is still free
-          if (!inBlock(nx, p.y)) ny = p.y;
-          else if (!inBlock(p.x, ny)) nx = p.x;
+          if (!inBox(room.block, nx, p.y)) ny = p.y;
+          else if (!inBox(room.block, p.x, ny)) nx = p.x;
           else {
             nx = p.x;
             ny = p.y;
             target.current = null;
           }
         }
+        if (dx) facing.current = dx < 0 ? -1 : 1;
         pos.current = { x: nx, y: ny };
-        setAvatar({ x: nx, y: ny, facing: dx < 0 ? -1 : dx > 0 ? 1 : (avatarFacing.current as 1 | -1), moving: true });
-        if (dx) avatarFacing.current = dx < 0 ? -1 : 1;
+        setAvatar({ x: nx, y: ny, facing: facing.current, moving: true });
       } else {
         setAvatar((a) => (a.moving ? { ...a, moving: false } : a));
       }
@@ -188,50 +172,47 @@ export default function FoodRoom() {
 
   // ---- helpers ------------------------------------------------------------
   const toLogical = useCallback((clientX: number, clientY: number) => {
-    const r = roomRef.current!.getBoundingClientRect();
-    return { x: ((clientX - r.left) / r.width) * W, y: ((clientY - r.top) / r.height) * H };
+    const el = roomRef.current;
+    const room = geometry.current;
+    if (!el) return { x: room.start.x, y: room.start.y };
+    const r = el.getBoundingClientRect();
+    return { x: ((clientX - r.left) / r.width) * room.w, y: ((clientY - r.top) / r.height) * room.h };
   }, []);
 
   const goToBoard = useCallback(() => {
-    if (nearBoard(pos.current.x, pos.current.y)) setBoardOpen(true);
-    else target.current = { ...BOARD_SPOT, thenBoard: true };
+    const room = geometry.current;
+    if (nearBoard(room, pos.current.x, pos.current.y)) setBoardOpen(true);
+    else target.current = { ...room.boardSpot, thenBoard: true };
   }, []);
 
   // ---- input --------------------------------------------------------------
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      setCard(null);
-      setBoardOpen(false);
-      return;
-    }
     if (overlayOpen) return;
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "w", "a", "s", "d"].includes(k)) {
+    if (MOVE_KEYS.includes(k)) {
       e.preventDefault();
       keys.current.add(k);
     }
-    if ((k === "e" || k === "Enter") && nearBoard(pos.current.x, pos.current.y)) {
+    if ((k === "e" || k === "Enter") && e.target === roomRef.current && nearBoard(g, pos.current.x, pos.current.y)) {
       e.preventDefault();
       setBoardOpen(true);
     }
   };
   const onKeyUp = (e: React.KeyboardEvent) => {
-    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-    keys.current.delete(k);
+    keys.current.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key);
   };
 
-  const onFloorPointerDown = (e: React.PointerEvent) => {
+  // A tap or click on the floor walks there. Using click (not pointerdown)
+  // means a finger that starts a page scroll inside the room does not move
+  // the avatar.
+  const onFloorClick = (e: React.MouseEvent) => {
     if (overlayOpen) return;
-    roomRef.current?.focus();
+    roomRef.current?.focus({ preventScroll: true });
     const p = toLogical(e.clientX, e.clientY);
-    if (p.x >= BOARD.x0 && p.x <= BOARD.x1 && p.y >= BOARD.y0 && p.y <= BOARD.y1) {
-      goToBoard();
-      return;
-    }
-    target.current = { x: clamp(p.x, 30, W - 30), y: clamp(p.y, FLOOR_TOP + 10, H - 12) };
+    target.current = { x: clamp(p.x, EDGE, g.w - EDGE), y: clamp(p.y, g.floorTop + 10, g.h - 12) };
   };
 
-  const onItemPointerDown = (e: React.PointerEvent, item: Item) => {
+  const onItemPointerDown = (e: React.PointerEvent, item: RoomItem) => {
     e.stopPropagation();
     if (overlayOpen) return;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -243,14 +224,14 @@ export default function FoodRoom() {
     const d = drag.current;
     if (!d) return;
     const p = toLogical(e.clientX, e.clientY);
-    if (!d.moved && Math.hypot(p.x - d.sx, p.y - d.sy) < 8) return;
+    if (!d.moved && Math.hypot(p.x - d.sx, p.y - d.sy) < DRAG_START) return;
     d.moved = true;
-    const x = clamp(p.x + d.ox, 30, W - 30);
-    const y = clamp(p.y + d.oy, 80, H - 4);
+    const x = clamp(p.x + d.ox, EDGE, g.w - EDGE);
+    const y = clamp(p.y + d.oy, 80, g.h - 4);
     setItems((list) => list.map((it) => (it.id === d.id ? { ...it, x, y } : it)));
   };
 
-  const onItemPointerUp = (item: Item) => {
+  const onItemPointerUp = (item: RoomItem) => {
     const d = drag.current;
     drag.current = null;
     if (!d) return;
@@ -262,9 +243,9 @@ export default function FoodRoom() {
     setItems((list) => {
       const me = list.find((it) => it.id === d.id);
       if (!me) return list;
-      const other = list.find((it) => it.id !== me.id && Math.hypot(it.x - me.x, it.y - me.y) < 60);
+      const other = list.find((it) => it.id !== me.id && Math.hypot(it.x - me.x, it.y - me.y) < MERGE_REACH);
       if (!other) return list;
-      const merged: Item = {
+      const merged: RoomItem = {
         id: `${other.id}+${me.id}`,
         foods: [...other.foods, ...me.foods].slice(0, 6),
         x: other.x,
@@ -279,44 +260,45 @@ export default function FoodRoom() {
     setItems((list) => {
       const it = list.find((x) => x.id === id);
       if (!it) return list;
-      const parts = it.foods.map((f, i) => ({ id: f.key, foods: [f], x: clamp(it.x + (i - (it.foods.length - 1) / 2) * 70, 30, W - 30), y: it.y }));
+      const gap = (g.spriteW / 100) * g.w;
+      const parts = it.foods.map((f, i) => ({
+        id: f.key,
+        foods: [f],
+        x: clamp(it.x + (i - (it.foods.length - 1) / 2) * gap, EDGE, g.w - EDGE),
+        y: it.y,
+      }));
       return [...list.filter((x) => x.id !== id), ...parts];
     });
     setCard(null);
   };
 
   const reset = () => {
-    if (foods) setItems(layout(foods));
+    if (foods) setItems(layoutItems(foods, g));
     setCard(null);
   };
 
   const openItem = useMemo(() => items.find((it) => it.id === card) ?? null, [items, card]);
-  const showBoardPrompt = !overlayOpen && nearBoard(avatar.x, avatar.y);
+  const showBoardPrompt = !overlayOpen && nearBoard(g, avatar.x, avatar.y);
   const boardFoods = foods ?? [];
-
   // Draw back to front so lower things overlap higher ones.
   const sorted = [...items].sort((a, b) => a.y - b.y);
-  const avatarLayer = Math.round(avatar.y);
 
   return (
     <div className="w-full">
-      <style>{`
-        @keyframes foodRoomBob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-3%) } }
-        .food-room-bob { animation: foodRoomBob 0.32s ease-in-out infinite; }
-        @keyframes foodRoomIdle { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4%) } }
-        .food-room-idle { animation: foodRoomIdle 2.4s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) { .food-room-bob, .food-room-idle { animation: none; } }
-      `}</style>
-
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-[11px] text-desktop-text-secondary">
-        <span>
-          Walk with the arrow keys or WASD, or tap the floor. Drag foods onto each other to make a plate. Tap a food for its stats. Walk to the board for the dashboard.
-        </span>
-        <span className="flex items-center gap-2">
-          {sample && <span className="rounded bg-desktop-surface px-1.5 py-0.5 font-medium">Sample data</span>}
-          <button onClick={reset} className="rounded border border-desktop-border px-2 py-0.5 hover:bg-desktop-surface">Reset table</button>
-          <button onClick={goToBoard} className="rounded border border-desktop-border px-2 py-0.5 hover:bg-desktop-surface">Open board</button>
-        </span>
+      <div className="food-room-bar">
+        <p className="food-room-hint">
+          <span className="only-phone">Tap the floor to walk. Tap a food for its stats. Drag one food onto another to make a plate.</span>
+          <span className="only-wide">Arrow keys or WASD to walk, or click the floor. Click a food for its stats. Drag one food onto another to make a plate. Press E at the board.</span>
+        </p>
+        <div className="food-room-actions">
+          {sample && <span className="food-room-tag">Sample data</span>}
+          <button type="button" onClick={reset} className="site-btn site-btn-ghost">
+            Reset table
+          </button>
+          <button type="button" onClick={() => setBoardOpen(true)} className="site-btn site-btn-primary">
+            Open board
+          </button>
+        </div>
       </div>
 
       <div
@@ -327,72 +309,11 @@ export default function FoodRoom() {
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
         onBlur={() => keys.current.clear()}
-        onPointerDown={onFloorPointerDown}
-        className="relative w-full touch-none select-none overflow-hidden rounded-xl border border-desktop-border outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
-        style={{ aspectRatio: `${W} / ${H}` }}
+        onClick={onFloorClick}
+        className="food-room"
+        style={{ aspectRatio: `${g.w} / ${g.h}` }}
       >
-        {/* wall */}
-        <div className="absolute inset-x-0 top-0" style={{ height: `${(FLOOR_TOP / H) * 100}%`, background: "repeating-linear-gradient(90deg,#f7e6d0 0 38px,#f2dcc2 38px 40px)" }} />
-        <div className="absolute inset-x-0" style={{ top: `${(FLOOR_TOP / H) * 100 - 1.5}%`, height: "1.5%", background: "#c89f74" }} />
-        {/* floor */}
-        <div
-          className="absolute inset-x-0 bottom-0"
-          style={{
-            top: `${(FLOOR_TOP / H) * 100}%`,
-            background:
-              "repeating-conic-gradient(#e9d3b4 0% 25%, #dcc29d 0% 50%) 0 0 / 8% 12.8%",
-          }}
-        />
-
-        {/* window */}
-        <div className="absolute rounded-md border-4" style={{ left: "70%", top: "6%", width: "20%", height: "26%", borderColor: "#c89f74", background: "linear-gradient(#9ad1f5,#d9f0ff)" }}>
-          <div className="absolute inset-y-0 left-1/2 w-1 -translate-x-1/2" style={{ background: "#c89f74" }} />
-          <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2" style={{ background: "#c89f74" }} />
-        </div>
-        {/* plant */}
-        <div className="absolute" style={{ left: "92%", top: "24%", width: "6%" }}>
-          <svg viewBox="0 0 40 60" style={{ width: "100%" }} aria-hidden="true">
-            <path d="M20 30 Q6 20 8 6 Q18 14 20 30 Q22 12 34 6 Q34 22 20 30" fill="#5cb85c" stroke="#2f6b2f" strokeWidth={1.5} />
-            <path d="M10 30 L30 30 L27 56 L13 56 Z" fill="#c0634a" stroke="#3b2a22" strokeWidth={1.5} />
-          </svg>
-        </div>
-
-        {/* board */}
-        <button
-          type="button"
-          onPointerDown={(e) => {
-            e.stopPropagation();
-            goToBoard();
-          }}
-          className="absolute rounded-md border-[6px] text-left shadow-md transition-transform hover:scale-[1.02]"
-          style={{
-            left: `${(BOARD.x0 / W) * 100}%`,
-            top: `${(BOARD.y0 / H) * 100}%`,
-            width: `${((BOARD.x1 - BOARD.x0) / W) * 100}%`,
-            height: `${((BOARD.y1 - BOARD.y0) / H) * 100}%`,
-            borderColor: "#8a5a3c",
-            background: "#2f4f3a",
-          }}
-          aria-label="Board: open the food dashboard"
-        >
-          <span className="absolute left-[6%] top-[6%] font-mono text-[clamp(7px,1.3vw,13px)] font-bold text-white/90">FOOD BOARD</span>
-          <svg viewBox="0 0 100 50" className="absolute bottom-[8%] left-[6%] w-[88%]" aria-hidden="true">
-            {boardFoods.slice(0, 6).map((f, i) => {
-              const max = boardFoods[0]?.count || 1;
-              const h = (f.count / max) * 40;
-              return <rect key={f.key} x={i * 16 + 2} y={48 - h} width={11} height={h} fill={["#f2b705", "#e4572e", "#7ae582", "#4e8fd8", "#9b5de5", "#f3a712"][i]} rx={1.5} />;
-            })}
-          </svg>
-        </button>
-
-        {/* table */}
-        <div className="absolute" style={{ left: `${(TABLE.x0 / W) * 100}%`, top: `${(TABLE.y0 / H) * 100}%`, width: `${((TABLE.x1 - TABLE.x0) / W) * 100}%`, height: `${((560 - TABLE.y0) / H) * 100}%` }}>
-          <div className="absolute inset-x-[4%] bottom-0 top-[60%] flex justify-between">
-            <div className="h-full w-[5%] rounded-b" style={{ background: "#7a4a2c" }} />
-            <div className="h-full w-[5%] rounded-b" style={{ background: "#7a4a2c" }} />
-          </div>
-          <div className="absolute inset-x-0 top-0 rounded-[1.2rem]" style={{ height: "60%", background: "linear-gradient(#c98a55,#b06f3d)", boxShadow: "inset 0 -10px 0 #8f5530, 0 8px 14px rgba(0,0,0,.18)" }} />
-        </div>
+        <RoomScene g={g} boardFoods={boardFoods} onBoard={goToBoard} />
 
         {/* foods and avatar, drawn in depth order */}
         {sorted.map((item) => {
@@ -405,6 +326,10 @@ export default function FoodRoom() {
               onPointerDown={(e) => onItemPointerDown(e, item)}
               onPointerMove={onItemPointerMove}
               onPointerUp={() => onItemPointerUp(item)}
+              onPointerCancel={() => {
+                drag.current = null;
+              }}
+              onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
@@ -412,11 +337,11 @@ export default function FoodRoom() {
                   setCard(item.id);
                 }
               }}
-              className="group absolute cursor-grab touch-none active:cursor-grabbing focus-visible:outline-none"
+              className="food-room-item group"
               style={{
-                left: `${(item.x / W) * 100}%`,
-                top: `${(item.y / H) * 100}%`,
-                width: `${SPRITE_W * (combo ? 1.35 : 1)}%`,
+                left: `${(item.x / g.w) * 100}%`,
+                top: `${(item.y / g.h) * 100}%`,
+                width: `${g.spriteW * (combo ? 1.35 : 1)}%`,
                 transform: "translate(-50%,-100%)",
                 zIndex: Math.round(item.y),
               }}
@@ -440,16 +365,20 @@ export default function FoodRoom() {
                   <FoodSprite kind={foodKind(f.name)} size={64} className="h-auto w-full" />
                 </span>
               )}
-              <span className="pointer-events-none absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap rounded bg-black/65 px-1 text-[clamp(7px,1vw,11px)] text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-                {combo ? `${item.foods.length} foods` : f.name}
-              </span>
+              <span className="food-room-label">{combo ? `${item.foods.length} foods` : f.name}</span>
             </button>
           );
         })}
 
         <div
           className="pointer-events-none absolute"
-          style={{ left: `${(avatar.x / W) * 100}%`, top: `${(avatar.y / H) * 100}%`, width: "6.4%", transform: "translate(-50%,-100%)", zIndex: avatarLayer }}
+          style={{
+            left: `${(avatar.x / g.w) * 100}%`,
+            top: `${(avatar.y / g.h) * 100}%`,
+            width: `${g.avatarW}%`,
+            transform: "translate(-50%,-100%)",
+            zIndex: Math.round(avatar.y),
+          }}
         >
           <Avatar facing={avatar.facing} moving={avatar.moving} />
         </div>
@@ -457,45 +386,32 @@ export default function FoodRoom() {
         {showBoardPrompt && (
           <button
             type="button"
-            onPointerDown={(e) => {
+            onClick={(e) => {
               e.stopPropagation();
               setBoardOpen(true);
             }}
-            className="absolute z-[2000] rounded-md bg-black/75 px-2 py-1 text-[11px] font-medium text-white"
-            style={{ left: `${(BOARD_SPOT.x / W) * 100}%`, top: `${((BOARD.y1 + 14) / H) * 100}%`, transform: "translateX(-50%)" }}
+            className="food-room-prompt"
+            style={{ left: `${(g.boardSpot.x / g.w) * 100}%`, top: `${((g.board.y1 + 14) / g.h) * 100}%` }}
           >
-            Read the board (E)
+            Read the board<span className="only-wide"> (E)</span>
           </button>
         )}
 
-        {foods === null && (
-          <div className="absolute inset-0 z-[3000] grid place-items-center bg-black/10 text-xs text-desktop-text-secondary">Setting the table…</div>
-        )}
-
-        {overlayOpen && (
-          <div
-            className="absolute inset-0 z-[4000] grid place-items-center bg-black/40 p-2"
-            onPointerDown={(e) => {
-              e.stopPropagation();
-              setCard(null);
-              setBoardOpen(false);
-            }}
-          >
-            {openItem && !boardOpen && (
-              <StatCard
-                foods={openItem.foods}
-                onClose={() => setCard(null)}
-                onSplit={openItem.foods.length > 1 ? () => split(openItem.id) : undefined}
-              />
-            )}
-          </div>
-        )}
+        {foods === null && <div className="food-room-loading">Setting the table</div>}
       </div>
 
-      {/* The dashboard is bigger than the room on a phone, so it opens over the page. */}
-      {boardOpen && (
-        <div className="fixed inset-0 z-[5000] grid place-items-center bg-black/50 p-2" onPointerDown={() => setBoardOpen(false)}>
-          <BoardDashboard foods={boardFoods} days={days} sample={sample} syncedAt={syncedAt} onClose={() => setBoardOpen(false)} />
+      {/* The card and the board open over the page, so they fit on a phone. */}
+      {overlayOpen && (
+        <div className="food-room-veil" onClick={closeOverlays}>
+          {boardOpen ? (
+            <BoardDashboard foods={boardFoods} days={days} sample={sample} syncedAt={syncedAt} onClose={closeOverlays} />
+          ) : openItem ? (
+            <StatCard
+              foods={[...openItem.foods]}
+              onClose={closeOverlays}
+              onSplit={openItem.foods.length > 1 ? () => split(openItem.id) : undefined}
+            />
+          ) : null}
         </div>
       )}
     </div>
