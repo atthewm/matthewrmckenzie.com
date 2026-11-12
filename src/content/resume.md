@@ -38,6 +38,6 @@ Mechanical Engineering, Economics
 
 ### Skills
 
-Capital Formation, Private Wealth, Investor Relations, Family Offices, RIAs, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting
+Capital Formation, Private Wealth, Investor Relations, Family Offices, RIAs, Real Estate, Deal Structuring, Business Development, Growth Strategy, Underwriting, AI Tooling, Platform Development
 
 *For a full overview, visit [LinkedIn](https://www.linkedin.com/in/mrmckenzie/).*

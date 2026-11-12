@@ -631,10 +631,7 @@ export default function MenuBar() {
       {
         type: "action",
         label: "Links",
-        action: () => {
-          const l = findFSItem("linktree");
-          if (l) openItem(l);
-        },
+        action: () => openInBrowser("https://mckm.at/", "Links"),
       },
       { type: "separator" },
       {

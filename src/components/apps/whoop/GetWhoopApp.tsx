@@ -26,15 +26,16 @@ export default function GetWhoopApp() {
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/brands/whoop.svg"
-        alt="WHOOP"
-        width={56}
-        height={56}
-        className="w-14 h-14 mb-4"
-        draggable={false}
-      />
+      {/* WHOOP logo placeholder */}
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+        style={{
+          background: "linear-gradient(135deg, #00f19b 0%, #00b4e6 100%)",
+          boxShadow: "0 4px 20px rgba(0,241,155,0.2)",
+        }}
+      >
+        <span className="text-black font-black text-lg tracking-tighter">W</span>
+      </div>
 
       <h2 className="text-base font-bold text-white mb-1">Try WHOOP</h2>
       <p className="text-xs text-gray-400 max-w-[240px] mb-5">

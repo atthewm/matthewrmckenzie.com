@@ -102,7 +102,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
             <p className="max-w-[280px] text-xs text-desktop-text-secondary">
               {failed
                 ? "The media feed is unavailable right now."
-                : "This list syncs from my Notion media library every hour."}
+                : "Add NOTION_TOKEN + run the sync to populate from your Media Library."}
             </p>
             <button
               onClick={load}

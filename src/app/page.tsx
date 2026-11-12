@@ -1,113 +1,77 @@
 import Link from "next/link";
-import StaticPageLayout from "@/components/ui/StaticPageLayout";
-import { profile } from "@/config/profile";
+import { flattenFS } from "@/data/fs";
+import { getContent } from "@/lib/content";
+import DesktopShell from "@/components/desktop/DesktopShell";
 
 // ============================================================================
 // HOME PAGE
 // ============================================================================
-// Plain, scannable homepage: who I am, the four sections, and how to reach
-// me. The Mac OS X desktop lives on at /desktop for anyone who wants it.
+// Server component that pre-loads all content, then renders the client-side
+// desktop shell.
 // ============================================================================
 
-const sections = [
-  {
-    href: "/work",
-    title: "Work",
-    blurb: "Capital formation at Menlo Equities: private wealth, family offices and RIAs.",
-    icon: "/icons/panther/applications-folder.png",
-  },
-  {
-    href: "/health",
-    title: "Health and Fitness",
-    blurb: "Training, recovery and sleep from WHOOP, plus my daily nutrition.",
-    icon: "/brands/whoop.svg",
-  },
-  {
-    href: "/kitchen",
-    title: "Cooking and Baking",
-    blurb: "Sourdough, jam and high protein recipes, tested and written down.",
-    icon: "/icons/panther/library-folder.png",
-  },
-  {
-    href: "/hobbies",
-    title: "Hobbies",
-    blurb: "Tennis, DJing, photography and Rematch, the tool I built to fix my iTunes library.",
-    icon: "/icons/custom/hobbies.svg",
-  },
-];
+export default async function HomePage() {
+  // Pre-load all content for windows
+  const allItems = flattenFS();
+  const contentMap: Record<string, string> = {};
 
-export default function HomePage() {
-  const austin = profile.offices.find((o) => o.city === "Austin");
+  for (const item of allItems) {
+    // Recipes load on demand from /api/recipes/[slug] to keep the page light.
+    if (item.contentPath && !item.contentPath.startsWith("recipes/")) {
+      const slug = item.contentPath.replace(/\.md$/, "");
+      const content = await getContent(slug);
+      if (content) {
+        // Downgrade h1→h2 so the homepage has a single sr-only H1
+        contentMap[item.id] = content.html
+          .replace(/<h1(\s|>)/g, "<h2$1")
+          .replace(/<\/h1>/g, "</h2>");
+      }
+    }
+  }
 
   return (
-    <StaticPageLayout>
-      <section className="mb-10">
-        <h1 className="text-2xl font-semibold tracking-tight text-desktop-text">
-          Matthew McKenzie
-        </h1>
-        <p className="mt-1 text-sm text-desktop-text-secondary">
-          {profile.title} at {profile.company}
-          {austin ? ` · ${austin.city}, Texas` : ""}
-        </p>
-        <p className="mt-5 text-sm leading-relaxed text-desktop-text">
-          I structure capital partnerships for real asset backed businesses, across debt and
-          equity, with family offices, UHNW investors and institutional groups. Outside of
-          work I train, play tennis, and bake sourdough from my own rye starter.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          <a
-            href="mailto:matthew.mckenzie@mac.com"
-            className="inline-flex items-center rounded bg-desktop-accent px-4 py-2 text-xs font-medium text-white hover:opacity-90"
-          >
-            Email me
-          </a>
-          <a
-            href="https://cal.com/mattmck/site"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center rounded border border-desktop-border px-4 py-2 text-xs font-medium text-desktop-text hover:bg-desktop-border/30"
-          >
-            Schedule a meeting
-          </a>
-          <a
-            href="https://www.linkedin.com/in/mrmckenzie/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center rounded border border-desktop-border px-4 py-2 text-xs font-medium text-desktop-text hover:bg-desktop-border/30"
-          >
-            LinkedIn
-          </a>
+    <>
+      <h1 className="sr-only">Matthew McKenzie | Capital Formation, Menlo Equities</h1>
+      <DesktopShell contentMap={contentMap} />
+      {/* Crawler / noscript fallback: structured content for search engines and users without JS */}
+      <noscript>
+        <div style={{ maxWidth: 640, margin: "0 auto", padding: "48px 24px", fontFamily: "system-ui, sans-serif", color: "#1a1a1a" }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Matthew McKenzie</h2>
+          <p style={{ fontSize: 15, color: "#636366", marginBottom: 24 }}>Capital Formation &amp; Growth Strategy</p>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+            Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities in Austin. He
+            builds long-term partnerships between private wealth investors and real estate operators, with
+            disciplined underwriting and clear communication at the center.
+          </p>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+            As Senior Vice President, Capital Formation at Menlo Equities, he leads capital formation
+            across the firm&apos;s private wealth channel, working with high net worth investors, family
+            offices, and registered investment advisors. Previously he spent nearly a decade at Civitas
+            Capital Group, raising capital across niche U.S. real estate strategies and managing investor
+            relationships across North America, the Middle East, and Asia.
+          </p>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
+            He also builds his own tools, including the mckm.at link and data room platform and a personal
+            health data stack, and bakes from a growing recipe collection.
+          </p>
+          <nav style={{ display: "flex", gap: 24, fontSize: 14, flexWrap: "wrap" as const }}>
+            <Link href="/about">About</Link>
+            <Link href="/work">Work</Link>
+            <Link href="/projects">Projects</Link>
+            <Link href="/writing">Writing</Link>
+            <Link href="/recipes">Recipes</Link>
+            <Link href="/contact">Contact</Link>
+            <Link href="/privacy">Privacy</Link>
+          </nav>
+          <p style={{ fontSize: 13, marginTop: 32, color: "#636366" }}>
+            <a href="mailto:matthew.mckenzie@mac.com">matthew.mckenzie@mac.com</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://www.linkedin.com/in/mrmckenzie/">LinkedIn</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://cal.com/mattmck/site">Schedule a Call</a>
+          </p>
         </div>
-      </section>
-
-      <nav aria-label="Sections" className="grid gap-3 sm:grid-cols-2">
-        {sections.map((s) => (
-          <Link
-            key={s.href}
-            href={s.href}
-            className="group flex items-start gap-3 rounded-lg border border-desktop-border bg-desktop-surface p-4 transition-colors hover:border-desktop-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.icon} alt="" width={36} height={36} className="h-9 w-9 shrink-0" />
-            <span>
-              <span className="block text-sm font-semibold text-desktop-text group-hover:text-desktop-accent">
-                {s.title}
-              </span>
-              <span className="mt-0.5 block text-xs leading-relaxed text-desktop-text-secondary">
-                {s.blurb}
-              </span>
-            </span>
-          </Link>
-        ))}
-      </nav>
-
-      <p className="mt-10 text-xs text-desktop-text-secondary">
-        Prefer the old Mac OS X desktop?{" "}
-        <Link href="/desktop" className="text-desktop-accent hover:underline">
-          Open desktop mode
-        </Link>
-        .
-      </p>
-    </StaticPageLayout>
+      </noscript>
+    </>
   );
 }

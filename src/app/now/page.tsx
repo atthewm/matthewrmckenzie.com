@@ -5,7 +5,7 @@ import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Now",
-  description: "What Matthew McKenzie is focused on right now: capital formation at Menlo Equities, training, and cooking.",
+  description: "What Matthew McKenzie is focused on right now: capital formation at Menlo Equities, mckm.at, baking, and training.",
   alternates: { canonical: "https://matthewrmckenzie.com/now" },
 };
 
