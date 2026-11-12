@@ -3,15 +3,14 @@ import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import EmptyContent from "@/components/ui/EmptyContent";
-import ProseRows from "@/components/site/ProseRows";
 
 export const metadata: Metadata = {
-  title: "Writing | Capital Formation and Investor Partnerships",
-  description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, and building durable businesses.",
+  title: "Writing | Capital Formation, Growth Strategy, AI Operations",
+  description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, AI operations, and building durable businesses.",
   alternates: { canonical: "https://matthewrmckenzie.com/writing" },
   openGraph: {
-    title: "Writing | Capital Formation and Investor Partnerships",
-    description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, and building durable businesses.",
+    title: "Writing | Capital Formation, Growth Strategy, AI Operations",
+    description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, AI operations, and building durable businesses.",
   },
 };
 
@@ -25,7 +24,10 @@ export default async function WritingPage() {
         { name: "Writing", url: "https://matthewrmckenzie.com/writing" },
       ])} />
       {content ? (
-        <ProseRows html={content.html} eyebrow="Essays" />
+        <article
+          className="site-prose"
+          dangerouslySetInnerHTML={{ __html: content.html }}
+        />
       ) : (
         <EmptyContent />
       )}

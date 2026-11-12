@@ -1,108 +1,77 @@
 import Link from "next/link";
-import StaticPageLayout from "@/components/ui/StaticPageLayout";
-import CtaBlock from "@/components/ui/CtaBlock";
-import Hero from "@/components/home/Hero";
-import Chapter from "@/components/home/Chapter";
-import LedgerLine from "@/components/home/LedgerLine";
-import RecipeFan from "@/components/home/RecipeFan";
-import HomeMotionRoot from "@/components/home/HomeMotionRoot";
-import StrainSparkline from "@/components/site/StrainSparkline";
-import "@/styles/site-home.css";
+import { flattenFS } from "@/data/fs";
+import { getContent } from "@/lib/content";
+import DesktopShell from "@/components/desktop/DesktopShell";
 
 // ============================================================================
 // HOME PAGE
 // ============================================================================
-// Hero, three chapters (Capital, Training, Kitchen), a hobbies line, the
-// closing contact block and a small link to the Mac OS X desktop at /desktop.
-// Everything is server-rendered in its final state; HomeMotionRoot adds the
-// scroll motion on top when the visitor allows motion.
+// Server component that pre-loads all content, then renders the client-side
+// desktop shell.
 // ============================================================================
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Pre-load all content for windows
+  const allItems = flattenFS();
+  const contentMap: Record<string, string> = {};
+
+  for (const item of allItems) {
+    // Recipes load on demand from /api/recipes/[slug] to keep the page light.
+    if (item.contentPath && !item.contentPath.startsWith("recipes/")) {
+      const slug = item.contentPath.replace(/\.md$/, "");
+      const content = await getContent(slug);
+      if (content) {
+        // Downgrade h1→h2 so the homepage has a single sr-only H1
+        contentMap[item.id] = content.html
+          .replace(/<h1(\s|>)/g, "<h2$1")
+          .replace(/<\/h1>/g, "</h2>");
+      }
+    }
+  }
+
   return (
-    <StaticPageLayout variant="home" hideCta>
-      <HomeMotionRoot>
-        <Hero />
-
-        <Chapter
-          id="capital"
-          number="01"
-          title="Capital"
-          links={
-            <Link href="/work" className="site-arrow">
-              Work and track record
-            </Link>
-          }
-          data={<LedgerLine />}
-        >
-          <p>
-            I structure capital, build investor partnerships, and develop growth strategy for real
-            asset backed businesses. I work across both debt and equity. I care most about
-            disciplined underwriting and long term alignment.
+    <>
+      <h1 className="sr-only">Matthew McKenzie | Capital Formation, Menlo Equities</h1>
+      <DesktopShell contentMap={contentMap} />
+      {/* Crawler / noscript fallback: structured content for search engines and users without JS */}
+      <noscript>
+        <div style={{ maxWidth: 640, margin: "0 auto", padding: "48px 24px", fontFamily: "system-ui, sans-serif", color: "#1a1a1a" }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Matthew McKenzie</h2>
+          <p style={{ fontSize: 15, color: "#636366", marginBottom: 24 }}>Capital Formation &amp; Growth Strategy</p>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+            Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities in Austin. He
+            builds long-term partnerships between private wealth investors and real estate operators, with
+            disciplined underwriting and clear communication at the center.
           </p>
-        </Chapter>
-
-        <Chapter
-          id="training"
-          number="02"
-          title="Training"
-          links={
-            <Link href="/health" className="site-arrow">
-              Health and fitness
-            </Link>
-          }
-          data={<StrainSparkline />}
-        >
-          <p>
-            I train for strength and endurance, and I treat recovery as part of the training. Most
-            weeks I run a strength split: back, chest, legs, shoulders, and arms and abs.
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+            As Senior Vice President, Capital Formation at Menlo Equities, he leads capital formation
+            across the firm&apos;s private wealth channel, working with high net worth investors, family
+            offices, and registered investment advisors. Previously he spent nearly a decade at Civitas
+            Capital Group, raising capital across niche U.S. real estate strategies and managing investor
+            relationships across North America, the Middle East, and Asia.
           </p>
-        </Chapter>
-
-        <Chapter
-          id="kitchen"
-          number="03"
-          title="Kitchen"
-          links={
-            <>
-              <Link href="/kitchen" className="site-arrow">
-                Cooking and baking
-              </Link>
-              <Link href="/recipes" className="site-arrow">
-                All recipes
-              </Link>
-            </>
-          }
-          data={<RecipeFan />}
-        >
-          <p>
-            I bake sourdough from a rye starter I built myself. I also make jam and work out high
-            protein versions of everyday meals. I write each recipe down properly so it comes out
-            the same every time.
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
+            He also builds his own tools, including the mckm.at link and data room platform and a personal
+            health data stack, and bakes from a growing recipe collection.
           </p>
-        </Chapter>
-
-        <section className="home-hobbies site-wrap" aria-label="Hobbies">
-          <Link href="/hobbies" className="site-grid home-hobbies-row">
-            <span className="site-eyebrow col-head">Hobbies</span>
-            <span className="col-body home-hobbies-words">
-              Tennis, DJing, photography and Rematch
-              <span className="home-hobbies-arrow" aria-hidden="true">
-                &rarr;
-              </span>
-            </span>
-          </Link>
-        </section>
-      </HomeMotionRoot>
-
-      <CtaBlock />
-
-      <p className="home-desktop site-wrap">
-        Prefer the old Mac OS X desktop?{" "}
-        <Link href="/desktop" className="site-link">
-          Desktop mode
-        </Link>
-      </p>
-    </StaticPageLayout>
+          <nav style={{ display: "flex", gap: 24, fontSize: 14, flexWrap: "wrap" as const }}>
+            <Link href="/about">About</Link>
+            <Link href="/work">Work</Link>
+            <Link href="/projects">Projects</Link>
+            <Link href="/writing">Writing</Link>
+            <Link href="/recipes">Recipes</Link>
+            <Link href="/contact">Contact</Link>
+            <Link href="/privacy">Privacy</Link>
+          </nav>
+          <p style={{ fontSize: 13, marginTop: 32, color: "#636366" }}>
+            <a href="mailto:matthew.mckenzie@mac.com">matthew.mckenzie@mac.com</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://www.linkedin.com/in/mrmckenzie/">LinkedIn</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://cal.com/mattmck/site">Schedule a Call</a>
+          </p>
+        </div>
+      </noscript>
+    </>
   );
 }

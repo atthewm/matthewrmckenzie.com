@@ -7,8 +7,6 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
-import ProseRows from "@/components/site/ProseRows";
-import SiteRow from "@/components/site/SiteRow";
 import JsonLd, { breadcrumbSchema, blogPostingSchema } from "@/components/ui/JsonLd";
 
 const essaysDir = path.join(process.cwd(), "src/content/essays");
@@ -126,13 +124,18 @@ export default async function EssayPage({
           articleBody: toPlainText(essay.raw),
         })}
       />
-      <ProseRows html={essay.html} eyebrow={date ?? "Essay"}>
-        <SiteRow>
-          <Link href="/writing" className="page-back">
-            <span aria-hidden="true">&larr;</span> Back to Writing
-          </Link>
-        </SiteRow>
-      </ProseRows>
+      <article
+        className="site-prose"
+      >
+        {date && (
+          <p className="site-eyebrow mb-4">{date}</p>
+        )}
+        <div dangerouslySetInnerHTML={{ __html: essay.html }} />
+        <hr />
+        <p>
+          <Link href="/writing">&larr; Back to Writing</Link>
+        </p>
+      </article>
     </StaticPageLayout>
   );
 }

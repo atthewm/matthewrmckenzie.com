@@ -53,8 +53,8 @@ export const personSchema = {
     "Registered Investment Advisors",
     "Real Estate Investment",
     "Alternative Investments",
-    "Strength Training",
-    "Sourdough Baking",
+    "AI Operations",
+    "MCP Servers",
   ],
   sameAs: [
     "https://www.linkedin.com/in/mrmckenzie/",
@@ -69,7 +69,7 @@ export const websiteSchema = {
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
   description:
-    "Personal site of Matthew McKenzie. Capital formation at Menlo Equities, plus health, fitness, cooking, and baking.",
+    "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
   publisher: {
     "@type": "Person",
     name: "Matthew McKenzie",
@@ -86,10 +86,10 @@ export const profilePageSchema = {
     url: "https://matthewrmckenzie.com",
     jobTitle: "Senior Vice President, Capital Formation",
     description:
-      "Capital formation across the private wealth channel at Menlo Equities, working with high net worth investors, family offices, and RIAs.",
+      "Capital formation across the private wealth channel at Menlo Equities, working with high net worth investors, family offices, and RIAs. Also builds AI operations tooling.",
   },
   dateCreated: "2026-01-01",
-  dateModified: "2026-11-07",
+  dateModified: "2026-09-01",
 };
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {

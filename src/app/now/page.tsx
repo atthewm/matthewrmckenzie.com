@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import EmptyContent from "@/components/ui/EmptyContent";
-import ProseRows from "@/components/site/ProseRows";
 
 export const metadata: Metadata = {
   title: "Now",
-  description: "What Matthew McKenzie is focused on right now: capital formation at Menlo Equities, training, and cooking.",
+  description: "What Matthew McKenzie is focused on right now: capital formation at Menlo Equities, mckm.at, baking, and training.",
   alternates: { canonical: "https://matthewrmckenzie.com/now" },
 };
 
@@ -15,7 +14,7 @@ export default async function NowPage() {
   return (
     <StaticPageLayout>
       {content ? (
-        <ProseRows html={content.html} eyebrow="A snapshot" />
+        <article className="site-prose" dangerouslySetInnerHTML={{ __html: content.html }} />
       ) : (
         <EmptyContent />
       )}

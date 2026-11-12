@@ -4,17 +4,17 @@ title: README
 
 # Welcome
 
-I'm Matthew McKenzie. I raise capital for real estate at Menlo Equities. The rest of my time goes to training and cooking.
+Hi, I'm Matthew McKenzie. I lead private wealth capital formation at Menlo Equities in Austin, and this is my corner of the internet.
 
-This site works like a desktop. Open anything from the dock at the bottom or the icons on the right. Four places to start:
+It works like a desktop: double-click folders and apps, drag windows around, and press Cmd+Space to search.
 
-- **About:** who I am and what I do
-- **Work:** capital formation, experience, and resume
-- **Health and Fitness:** training, recovery, and nutrition
-- **Cooking and Baking:** sourdough and tested recipes
+Good places to start:
 
-Everything else is in the **More** folder: music, photos, and a few games.
+- [About](/about) for background
+- [Work](/work) for the professional side
+- [Recipes](/recipes) for the kitchen notebook
+- [Contact](/contact) to get in touch
 
 ## Colophon
 
-Built with Next.js and deployed on Vercel. The desktop is a custom interface built from scratch with React, TypeScript, and CSS.
+Built with Next.js, React, and TypeScript and deployed on Vercel. Recipes, media, and nutrition sync from Notion. Short links run through [mckm.at](https://mckm.at).

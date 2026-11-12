@@ -5,7 +5,7 @@ import { RefreshCw, Search, Trophy, Flame, Beef, Leaf } from "lucide-react";
 import type { TopFood } from "@/data/notion/types";
 
 // ============================================================================
-// TOP FOODS: most-logged foods from the Notion meal log
+// TOP FOODS — most-logged foods from the Notion meal log
 // ============================================================================
 // PUBLIC, read-only. The API serves an anonymous rollup that is aggregated at
 // sync time: counts and average macros per food, never the underlying per-meal
@@ -39,7 +39,7 @@ function Macro({ value, unit, label }: { value: number | null; unit: string; lab
   return (
     <div className="flex flex-col items-end leading-tight" title={label}>
       <span className="text-[11px] font-semibold tabular-nums text-desktop-text">
-        {value != null ? Math.round(value * 10) / 10 : "n/a"}
+        {value != null ? Math.round(value * 10) / 10 : "—"}
       </span>
       <span className="text-[9px] uppercase tracking-wide text-desktop-text-secondary">
         {unit}
@@ -144,7 +144,7 @@ function SummaryStrip({ foods }: { foods: TopFood[] }) {
         <Beef className="h-3.5 w-3.5 shrink-0 text-desktop-text-secondary" />
         <div className="min-w-0 leading-tight">
           <div className="truncate text-[11px] font-semibold text-desktop-text">
-            {stats.topProtein?.name ?? "n/a"}
+            {stats.topProtein?.name ?? "—"}
           </div>
           <div className="truncate text-[9px] text-desktop-text-secondary">most protein</div>
         </div>
@@ -153,7 +153,7 @@ function SummaryStrip({ foods }: { foods: TopFood[] }) {
         <Leaf className="h-3.5 w-3.5 shrink-0 text-desktop-text-secondary" />
         <div className="min-w-0 leading-tight">
           <div className="truncate text-[11px] font-semibold text-desktop-text">
-            {stats.topFiber?.name ?? "n/a"}
+            {stats.topFiber?.name ?? "—"}
           </div>
           <div className="truncate text-[9px] text-desktop-text-secondary">most fiber</div>
         </div>
@@ -261,7 +261,7 @@ export default function TopFoodsApp() {
             <p className="max-w-[280px] text-xs text-desktop-text-secondary">
               {failed
                 ? "The nutrition feed is unavailable right now."
-                : "This ranks everything in my meal log. It syncs from Notion every hour."}
+                : "Add NOTION_TOKEN and run the sync to rank the meal log."}
             </p>
             <button
               onClick={load}

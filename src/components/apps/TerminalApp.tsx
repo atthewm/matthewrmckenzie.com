@@ -311,8 +311,9 @@ export default function TerminalApp() {
         case "github":
         case "gh":
         case "repos": {
-          addOutput("Opening GitHub...");
-          setTimeout(() => window.open("https://github.com/atthewm", "_blank", "noopener,noreferrer"), 300);
+          addOutput("Opening GitHub projects...");
+          const ghItem = findFSItem("github-projects");
+          if (ghItem) setTimeout(() => openItem(ghItem), 300);
           break;
         }
 

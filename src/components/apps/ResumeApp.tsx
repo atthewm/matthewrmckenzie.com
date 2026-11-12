@@ -81,7 +81,7 @@ SKILLS
 
 Capital Formation, Investor Relations, Real Estate,
 Deal Structuring, Business Development, Growth Strategy,
-Underwriting
+Underwriting, AI Operations, Platform Development
 
 ==========================================================
 LINKS

@@ -133,7 +133,7 @@ export default function NutritionApp() {
         <p className="max-w-[280px] text-center text-xs text-desktop-text-secondary">
           {state === "error"
             ? "The nutrition feed is unavailable. Try again shortly."
-            : "Daily totals sync from my Notion log every hour. Check back shortly."}
+            : "Add NOTION_TOKEN + run the sync, then your Daily Logs appear here."}
         </p>
         <button
           onClick={load}

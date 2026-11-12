@@ -4,21 +4,21 @@ title: Contact
 
 # Contact
 
-Email me or book a call. I am happy to make time to talk about capital formation, investor partnerships, or growth strategy, whether you have a specific opportunity or just want to connect.
+I am glad to talk about capital formation, private wealth partnerships, and real estate investing. If you have a specific opportunity or just want to connect, I will make time.
 
 **Email:** [matthew.mckenzie@mac.com](mailto:matthew.mckenzie@mac.com)
 
 **Schedule a call:** [Book a time on my calendar](https://cal.com/mattmck/site)
 
-## When to reach out
+## When to Reach Out
 
-**Investors and allocators.** You are exploring real estate or alternative investments and want to know what I am working on.
+**Investors and advisors.** Family offices, RIAs, and private investors who want to learn about Menlo Equities' investment platforms.
 
-**Founders and operators.** You are raising capital or building a growth plan, and you want someone who understands both the investor side and the operating side.
+**Sponsors and operators.** If you are raising capital or pressure testing a business plan and want someone who knows the investor side.
 
-**Training and cooking.** You want to compare training notes or trade a recipe.
+**Builders.** If you are working on MCP servers, agents, or tools for investor relations and want to compare notes.
 
-**Anything else.** Press, speaking, or collaboration.
+**General.** Press, speaking, collaboration, or anything else.
 
 ## Elsewhere
 

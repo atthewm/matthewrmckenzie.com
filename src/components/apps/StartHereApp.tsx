@@ -12,19 +12,21 @@ import { PantherIcon } from "@/components/desktop/PantherIcons";
 // ============================================================================
 
 const quickLinks = [
-  { id: "about", label: "About", desc: "Who I am" },
-  { id: "work", label: "Work", desc: "Capital formation" },
-  { id: "health", label: "Health and Fitness", desc: "Training and recovery" },
-  { id: "recipes", label: "Cooking and Baking", desc: "Tested recipes" },
+  { id: "about", label: "About Me", desc: "Background and bio" },
+  { id: "work", label: "Work", desc: "Projects and case studies" },
+  { id: "contact", label: "Contact", desc: "Get in touch" },
+  { id: "guestbook", label: "Guestbook", desc: "Leave a message" },
 ];
 
 const exploreLinks = [
-  { id: "now", label: "Now" },
-  { id: "resume", label: "Resume" },
-  { id: "contact", label: "Contact" },
-  { id: "card", label: "Business Card" },
-  { id: "linktree", label: "Links" },
-  { id: "more", label: "More" },
+  { id: "photos", label: "Photos" },
+  { id: "music", label: "Music" },
+  { id: "recipes", label: "Recipes" },
+  { id: "health", label: "Health" },
+  { id: "github-projects", label: "GitHub" },
+  { id: "whats-new", label: "What's New" },
+  { id: "ichat", label: "iChat" },
+  { id: "chess", label: "Chess" },
 ];
 
 const tips = [
@@ -48,11 +50,11 @@ export default function StartHereApp() {
       {/* Hero header */}
       <div className="shrink-0 px-5 pt-5 pb-3">
         <h1 className="text-[18px] font-bold" style={{ color: "var(--desktop-text)" }}>
-          Welcome
+          Welcome to McKenzie OS
         </h1>
         <p className="text-[12px] mt-1" style={{ color: "var(--desktop-text-secondary)" }}>
-          I raise capital for real estate at Menlo Equities. Outside of work I train and cook.
-          Pick a section below, or use the dock at the bottom of the screen.
+          This is my personal corner of the internet. Navigate around like you would a desktop,
+          double-click icons, drag windows, and make yourself at home.
         </p>
       </div>
 

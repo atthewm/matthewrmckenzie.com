@@ -1,8 +1,4 @@
 import React from "react";
-import { whoopCircle } from "@/config/brands";
-
-// Official WHOOP circle mark, for the WHOOP entries below.
-const WHOOP_ICON = whoopCircle.light;
 
 // ============================================================================
 // MAC OS X 10.3 PANTHER ICONS - PNG Assets
@@ -24,7 +20,7 @@ const iconMap: Record<string, string> = {
   "about":          "finder.png",
   "work":           "applications-folder.png",
   "writing":        "textedit.png",
-  "now":            "stickies.png",
+  "now":            "sherlock.png",
   "browser":        "safari.png",
   "settings":       "system-preferences.png",
   "terminal":       "terminal.png",
@@ -35,41 +31,35 @@ const iconMap: Record<string, string> = {
   "schedule":       "ical.png",
   "ichat":          "ichat.png",
   "photo-booth":    "image-capture.png",
-  "chess":          "/icons/custom/chess.svg",
-  "minesweeper":    "/icons/custom/minesweeper.svg",
-  "whats-new":      "macosx.png",
-  "card":           "/icons/custom/card.svg",
+  "chess":          "generic-application.png",
+  "minesweeper":    "calculator.png",
+  "github-projects":"terminal.png",
+  "whats-new":      "sherlock.png",
 
   // Media
   "media":          "movies-folder.png",
   "photos":         "iphoto.png",
-  "music":          "itunes-2.png",
-    "apple-music":    "itunes-3.png",
-  "media-movies":   "dvd-player.png",
-  "media-tv":       "imovie-hd.png",
-  "media-audiobooks": "/icons/custom/audiobooks.svg",
+  "music":          "dvd-player.png",
+  "videos":         "quicktime-player.png",
+  "apple-music":    "itunes-3.png",
 
   // Work children
-  "more":           "applications.png",
+  "projects":       "applications.png",
   "resume":         "textedit.png",
 
   // Writing children
   "essays":         "documents.png",
 
   // Life + Health
-  "life":           "/icons/custom/life.svg",
+  "life":           "macosx.png",
   "health":         "disk-utility.png",
-  "health-overview":"documents.png",
-  "whoop-dashboard":WHOOP_ICON,
-  "nutrition":      "/icons/custom/nutrition.svg",
-  "top-foods":      "/icons/custom/top-foods.svg",
-  "hobbies":        "/icons/custom/hobbies.svg",
+  "whoop-dashboard":"generic-application.png",
   "whoop-splits":   "folder.png",
-  "whoop-split-arms-abs":   WHOOP_ICON,
-  "whoop-split-back":       WHOOP_ICON,
-  "whoop-split-chest":      WHOOP_ICON,
-  "whoop-split-legs":       WHOOP_ICON,
-  "whoop-split-shoulders":  WHOOP_ICON,
+  "whoop-split-arms-abs":   "generic-application.png",
+  "whoop-split-back":       "generic-application.png",
+  "whoop-split-chest":      "generic-application.png",
+  "whoop-split-legs":       "generic-application.png",
+  "whoop-split-shoulders":  "generic-application.png",
   "get-whoop":      "external-link.png",
 
   // Recipes
@@ -96,28 +86,15 @@ const iconMap: Record<string, string> = {
 // Fallback icon for items not in the map
 const FALLBACK_ICON = "generic-application.png";
 
-// Entries that start with "/" are full paths (custom SVG icons); everything
-// else is a filename in /icons/panther/.
-function resolveIcon(filename: string): string {
-  return filename.startsWith("/") ? filename : `/icons/panther/${filename}`;
-}
-
 // ---------------------------------------------------------------------------
 // Icon component that renders a PNG <img>
 // ---------------------------------------------------------------------------
 
-// Official brand marks (public/brands/) are single-colour and transparent, so
-// they sit on a white rounded tile to read as an icon in both desktop themes.
-function isBrandIcon(src: string): boolean {
-  return src.startsWith("/brands/");
-}
-
 function PantherIconImg({ src, size = 32, alt }: { src: string; size?: number; alt?: string }) {
-  const brand = isBrandIcon(src);
   return (
     <img
       src={src}
-      alt={alt || (brand ? "WHOOP logo" : "")}
+      alt={alt || ""}
       width={size}
       height={size}
       draggable={false}
@@ -126,9 +103,6 @@ function PantherIconImg({ src, size = 32, alt }: { src: string; size?: number; a
         height: size,
         objectFit: "contain",
         imageRendering: "auto",
-        ...(brand
-          ? { background: "#fff", borderRadius: "22%", padding: Math.round(size * 0.14), boxSizing: "border-box" as const }
-          : {}),
       }}
     />
   );
@@ -148,7 +122,7 @@ export function getPantherIcon(fsItemId: string): React.FC<IconProps> | null {
   if (cached) return cached;
 
   const IconComponent: React.FC<IconProps> = ({ size = 32 }) => (
-    <PantherIconImg src={resolveIcon(filename)} size={size} alt={fsItemId} />
+    <PantherIconImg src={`/icons/panther/${filename}`} size={size} alt={fsItemId} />
   );
   IconComponent.displayName = `PantherIcon_${fsItemId}`;
   iconCache.set(fsItemId, IconComponent);
@@ -161,7 +135,7 @@ export function getPantherIcon(fsItemId: string): React.FC<IconProps> | null {
 
 export function getPantherIconPath(fsItemId: string): string {
   const filename = iconMap[fsItemId] || FALLBACK_ICON;
-  return resolveIcon(filename);
+  return `/icons/panther/${filename}`;
 }
 
 // ---------------------------------------------------------------------------

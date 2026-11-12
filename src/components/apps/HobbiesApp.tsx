@@ -1,16 +1,42 @@
 "use client";
 
 import React from "react";
-import { frameSpecs, stringSetup, type SpecRow } from "@/data/hobbies";
 
 // ============================================================================
 // HOBBIES APP
 // ============================================================================
-// Specs come from the tennis racket spec log in Notion (measured 2026-08-20).
-// Tensions and lead placement aren't recorded there, so they aren't shown.
+// Tennis first, with the real frame and string setup. Specs are sourced from
+// the tennis racket spec log in Notion (measured 2026-08-20), not estimated.
 // ============================================================================
 
-function SpecTable({ rows }: { rows: readonly SpecRow[] }) {
+interface SpecRow {
+  label: string;
+  value: string;
+  note?: string;
+}
+
+const frameSpecs: SpecRow[] = [
+  { label: "Head size", value: "100 in²", note: "645 cm²" },
+  { label: "Weight, printed", value: "315 g" },
+  { label: "Weight, strung", value: "344 g", note: "measured, with dampener" },
+  { label: "Weight, unstrung", value: "~322 g", note: "estimated" },
+  { label: "Balance", value: "310 mm" },
+  { label: "Beam", value: "22 mm" },
+  { label: "Pattern", value: "16 × 20" },
+  { label: "Length", value: "27 in", note: "685 mm" },
+];
+
+const stringSetup: SpecRow[] = [
+  { label: "String", value: "Babolat VS Team BT7", note: "natural gut" },
+  { label: "Gauge", value: "17", note: "1.25 mm" },
+  { label: "Configuration", value: "Full bed", note: "gut mains and crosses" },
+  { label: "Mains tension", value: "56 lbs" },
+  { label: "Crosses tension", value: "54 lbs" },
+  { label: "Manufacturer range", value: "48 to 57 lbs" },
+  { label: "Overgrip", value: "Wilson Pro", note: "comfort" },
+];
+
+function SpecTable({ rows }: { rows: SpecRow[] }) {
   return (
     <div className="flex flex-col">
       {rows.map((row, i) => (
@@ -45,53 +71,32 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Hobby({
-  emoji,
-  title,
-  children,
-  first,
-}: {
-  emoji: string;
-  title: string;
-  children: React.ReactNode;
-  first?: boolean;
-}) {
-  return (
-    <section
-      className={first ? "mb-6" : "mb-6 pt-5"}
-      style={first ? undefined : { borderTop: "1px solid var(--desktop-border)" }}
-    >
-      <div className="flex items-baseline gap-2 mb-2">
-        <span className="text-[15px]" aria-hidden="true">
-          {emoji}
-        </span>
-        <h2 className="text-title font-semibold text-desktop-text">{title}</h2>
-      </div>
-      {children}
-    </section>
-  );
-}
-
 export default function HobbiesApp() {
   return (
     <div className="h-full overflow-auto bg-desktop-surface p-5">
       <h1 className="text-[17px] font-semibold text-desktop-text mb-1">Hobbies</h1>
       <p className="text-2xs text-desktop-text-secondary mb-5">
-        Training, tennis, the kitchen, music and a camera.
+        The things that keep me sharp outside the desk.
       </p>
 
-      <Hobby emoji="🏋️" title="Training" first>
-        <p className="text-2xs leading-relaxed text-desktop-text-secondary">
-          Strength work and classes at the gym, tracked with WHOOP. The
-          splits, recovery and sleep numbers are on the Health and Fitness page.
-        </p>
-      </Hobby>
+      {/* -- Tennis -- */}
+      <section className="mb-6">
+        <div className="flex items-baseline gap-2 mb-3">
+          <span className="text-[15px]" aria-hidden="true">
+            🎾
+          </span>
+          <h2 className="text-title font-semibold text-desktop-text">Tennis</h2>
+          <span className="text-3xs text-desktop-text-secondary ml-auto">
+            Casual and social
+          </span>
+        </div>
 
-      <Hobby emoji="🎾" title="Tennis">
         <p className="text-2xs leading-relaxed text-desktop-text-secondary mb-4">
-          I play in Austin. The frame is
-          weighted up from stock, and the string bed is a hybrid: natural gut mains
-          for feel and tension hold, polyester crosses for control and durability.
+          I play social tennis, which means I optimize the setup for tension retention
+          rather than power. A dead string bed is the thing that actually ruins a
+          match, so the current build is a full natural gut bed. It holds tension far
+          longer than any polyester, and gut on gut does not saw itself apart the way a
+          gut and poly hybrid does.
         </p>
 
         <div className="mb-4">
@@ -99,47 +104,52 @@ export default function HobbiesApp() {
           <SpecTable rows={frameSpecs} />
         </div>
 
-        <div>
-          <SectionHeading>String setup</SectionHeading>
+        <div className="mb-3">
+          <SectionHeading>Current string setup</SectionHeading>
           <SpecTable rows={stringSetup} />
         </div>
-      </Hobby>
 
-      <Hobby emoji="🍞" title="Cooking and baking">
-        <p className="text-2xs leading-relaxed text-desktop-text-secondary">
-          Sourdough from my own rye starter, a city loaf, jams, and high protein
-          versions of the things I actually want to eat. Every method is written down
-          in Cooking and Baking so the results repeat.
+        <p className="text-3xs leading-relaxed text-desktop-text-secondary italic">
+          Expected service life at casual frequency is 20 to 30+ hours with minimal
+          tension drop, roughly double what a poly-containing bed gives. Gut&apos;s real
+          enemy is moisture, not play, so the frame never rides in a hot car.
         </p>
-      </Hobby>
+      </section>
 
-      <Hobby emoji="🎧" title="DJing and music">
+      {/* -- Baking -- */}
+      <section
+        className="mb-6 pt-5"
+        style={{ borderTop: "1px solid var(--desktop-border)" }}
+      >
+        <div className="flex items-baseline gap-2 mb-2">
+          <span className="text-[15px]" aria-hidden="true">
+            🍞
+          </span>
+          <h2 className="text-title font-semibold text-desktop-text">Baking</h2>
+        </div>
         <p className="text-2xs leading-relaxed text-desktop-text-secondary">
-          Learning to mix on a Pioneer DDJ-800 in rekordbox, starting from the
-          basics: beatmatching, phrasing and clean transitions.
+          Rye starter, city loaf, and a rotating set of jams and high protein
+          experiments. The full method for each is in the Recipes folder, written down
+          properly so the results repeat.
         </p>
-      </Hobby>
+      </section>
 
-      <Hobby emoji="💿" title="Rematch">
+      {/* -- Photography -- */}
+      <section
+        className="pt-5"
+        style={{ borderTop: "1px solid var(--desktop-border)" }}
+      >
+        <div className="flex items-baseline gap-2 mb-2">
+          <span className="text-[15px]" aria-hidden="true">
+            📷
+          </span>
+          <h2 className="text-title font-semibold text-desktop-text">Photography</h2>
+        </div>
         <p className="text-2xs leading-relaxed text-desktop-text-secondary">
-          Years ago iTunes Match scrambled the tags on my lossless library, so
-          songs showed up under the wrong artist, album and genre. Rematch is the
-          tool I built in Python to fix it. It ignores the old tags, identifies
-          every file by its audio fingerprint against MusicBrainz, and sends the
-          few it can&apos;t settle to a review queue. It never touches the audio
-          and works on a copy, so the originals stay safe.
+          Studied photography alongside economics at SMU. Recently back behind a proper
+          camera, shooting a new city.
         </p>
-        <p className="mt-2 text-2xs leading-relaxed text-desktop-text-secondary">
-          The result: 11,936 tracks in a clean library, 8,956 of them corrected.
-        </p>
-      </Hobby>
-
-      <Hobby emoji="📷" title="Photography">
-        <p className="text-2xs leading-relaxed text-desktop-text-secondary">
-          Studied photography alongside economics at SMU. Back behind a proper camera,
-          shooting a new city.
-        </p>
-      </Hobby>
+      </section>
     </div>
   );
 }
