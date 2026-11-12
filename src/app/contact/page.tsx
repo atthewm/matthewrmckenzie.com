@@ -4,6 +4,8 @@ import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import CalEmbed from "@/components/ui/CalEmbed";
 import EmptyContent from "@/components/ui/EmptyContent";
+import ProseRows from "@/components/site/ProseRows";
+import SiteRow from "@/components/site/SiteRow";
 
 export const metadata: Metadata = {
   title: "Contact | Investor Relations, Capital Formation, Collaboration",
@@ -25,18 +27,14 @@ export default async function ContactPage() {
         { name: "Contact", url: "https://matthewrmckenzie.com/contact" },
       ])} />
       {content ? (
-        <article
-          className="site-prose"
-          dangerouslySetInnerHTML={{ __html: content.html }}
-        />
+        <ProseRows html={content.html} eyebrow="Get in touch">
+          <SiteRow heading="Book a time" wide>
+            <CalEmbed />
+          </SiteRow>
+        </ProseRows>
       ) : (
         <EmptyContent />
       )}
-      {/* Inline Cal.com scheduling embed */}
-      <div className="mt-10 pt-8 border-t" style={{ borderColor: "var(--site-rule)" }}>
-        <p className="site-eyebrow mb-3">Book a time</p>
-        <CalEmbed />
-      </div>
     </StaticPageLayout>
   );
 }

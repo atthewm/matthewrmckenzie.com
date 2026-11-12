@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import EmptyContent from "@/components/ui/EmptyContent";
+import ProseRows from "@/components/site/ProseRows";
 
 export const metadata: Metadata = {
   title: "Now",
@@ -14,7 +15,7 @@ export default async function NowPage() {
   return (
     <StaticPageLayout>
       {content ? (
-        <article className="site-prose" dangerouslySetInnerHTML={{ __html: content.html }} />
+        <ProseRows html={content.html} eyebrow="A snapshot" />
       ) : (
         <EmptyContent />
       )}

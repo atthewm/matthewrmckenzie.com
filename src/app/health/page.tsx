@@ -4,22 +4,23 @@ import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import EmptyContent from "@/components/ui/EmptyContent";
+import ProseRows from "@/components/site/ProseRows";
+import SiteRow from "@/components/site/SiteRow";
+import StrainSparkline from "@/components/site/StrainSparkline";
 import WhoopDashboardApp from "@/components/apps/whoop/WhoopDashboardApp";
 import NutritionApp from "@/components/apps/NutritionApp";
 import TopFoodsApp from "@/components/apps/TopFoodsApp";
 import BrandLogo from "@/components/ui/BrandLogo";
 
+// The three panels below are the desktop apps, embedded as they are. They keep
+// their own Panther styling inside a plain frame.
 function Panel({ title, height, children }: { title: string; height: number; children: React.ReactNode }) {
   return (
-    <section className="mt-10">
-      <h2 className="mb-3 text-sm font-semibold text-desktop-text">{title}</h2>
-      <div
-        className="overflow-hidden rounded-lg border border-desktop-border"
-        style={{ height }}
-      >
+    <SiteRow heading={title} wide>
+      <div className="site-panel" style={{ height }}>
         {children}
       </div>
-    </section>
+    </SiteRow>
   );
 }
 
@@ -43,31 +44,29 @@ export default async function HealthPage() {
         { name: "Health and Fitness", url: "https://matthewrmckenzie.com/health" },
       ])} />
       {content ? (
-        <article
-          className="prose prose-sm dark:prose-invert max-w-none
-                     prose-headings:font-semibold
-                     prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline"
-          dangerouslySetInnerHTML={{ __html: content.html }}
-        />
+        <ProseRows html={content.html} eyebrow="Training and recovery">
+          <SiteRow heading="Tracked with">
+            <div className="site-actions">
+              <BrandLogo brand="whoop" />
+              <BrandLogo brand="eightSleep" />
+            </div>
+          </SiteRow>
+          <SiteRow heading="Day strain" note="WHOOP">
+            <StrainSparkline />
+          </SiteRow>
+          <Panel title="Training and recovery" height={640}>
+            <WhoopDashboardApp />
+          </Panel>
+          <Panel title="Nutrition" height={680}>
+            <NutritionApp />
+          </Panel>
+          <Panel title="Top foods" height={620}>
+            <TopFoodsApp />
+          </Panel>
+        </ProseRows>
       ) : (
         <EmptyContent />
       )}
-      <section className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold text-desktop-text">Tracked with</h2>
-        <div className="flex flex-wrap gap-3">
-          <BrandLogo brand="whoop" />
-          <BrandLogo brand="eightSleep" />
-        </div>
-      </section>
-      <Panel title="Training and recovery" height={640}>
-        <WhoopDashboardApp />
-      </Panel>
-      <Panel title="Nutrition" height={680}>
-        <NutritionApp />
-      </Panel>
-      <Panel title="Top foods" height={620}>
-        <TopFoodsApp />
-      </Panel>
     </StaticPageLayout>
   );
 }

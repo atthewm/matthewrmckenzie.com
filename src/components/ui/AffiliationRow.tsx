@@ -1,3 +1,5 @@
+import SiteRow from "@/components/site/SiteRow";
+
 // ============================================================================
 // AFFILIATION ROW
 // ============================================================================
@@ -18,28 +20,17 @@ const affiliations: readonly Affiliation[] = [
 
 export default function AffiliationRow() {
   return (
-    <div className="mt-12 pt-6 border-t" style={{ borderColor: "var(--site-rule)" }}>
-      <p className="site-eyebrow mb-3">Affiliations</p>
-      <div className="flex items-baseline gap-x-6 gap-y-2 flex-wrap">
+    <SiteRow heading="Affiliations">
+      <ul className="site-affiliations">
         {affiliations.map((a) => (
-          <span key={a.name} className="inline-flex items-baseline gap-x-2">
-            <a
-              href={a.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="site-display text-[17px] hover:underline"
-              style={{ color: "var(--site-muted)" }}
-            >
+          <li key={a.name}>
+            <a href={a.href} target="_blank" rel="noopener noreferrer" className="site-affiliation-name">
               {a.name}
             </a>
-            {a.period ? (
-              <span className="text-[12px]" style={{ color: "var(--site-muted)" }}>
-                {a.period}
-              </span>
-            ) : null}
-          </span>
+            {a.period ? <span className="site-affiliation-period">{a.period}</span> : null}
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </SiteRow>
   );
 }

@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Marcellus, Space_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Marcellus, Newsreader, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd, { personSchema, websiteSchema, profilePageSchema } from "@/components/ui/JsonLd";
+import HeroIntroScript from "@/components/home/HeroIntroScript";
 import "./globals.css";
+import "@/styles/site.css";
+import "@/styles/site-prose.css";
 import "@/styles/board.css";
 import "@/styles/board-cards.css";
 import "@/styles/board-chrome.css";
@@ -14,11 +17,33 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+// Reading site display face: variable, with the optical size axis so large
+// headlines and small captions each get the right cut.
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-newsreader",
+  axes: ["opsz"],
+  adjustFontFallback: true,
+});
+
+// Reading site numbers, dates and small labels.
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jetbrains",
+  preload: false,
+  adjustFontFallback: true,
+});
+
+// Marcellus and Space Mono are kept only for the Mac OS X desktop at /desktop
+// (boards, phone view). They are not preloaded, so reading pages never fetch them.
 const marcellus = Marcellus({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-display",
   weight: "400",
+  preload: false,
 });
 
 const spaceMono = Space_Mono({
@@ -26,6 +51,7 @@ const spaceMono = Space_Mono({
   display: "swap",
   variable: "--font-mono",
   weight: ["400", "700"],
+  preload: false,
 });
 
 // ============================================================================
@@ -106,8 +132,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${marcellus.variable} ${spaceMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${marcellus.variable} ${spaceMono.variable}`}>
       <head>
+        <HeroIntroScript />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <link rel="alternate" type="application/rss+xml" title="Matthew McKenzie" href="/feed.xml" />

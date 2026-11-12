@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { frameSpecs, stringSetup, type SpecRow } from "@/data/hobbies";
 
 // ============================================================================
 // HOBBIES APP
@@ -9,33 +10,7 @@ import React from "react";
 // Tensions and lead placement aren't recorded there, so they aren't shown.
 // ============================================================================
 
-interface SpecRow {
-  label: string;
-  value: string;
-  note?: string;
-}
-
-const frameSpecs: SpecRow[] = [
-  { label: "Head size", value: "100 in²", note: "645 cm²" },
-  { label: "Stock weight", value: "315 g", note: "printed on the frame" },
-  { label: "Playing weight", value: "344 g", note: "strung, weighted, with dampener" },
-  { label: "Added weight", value: "About 29 g", note: "over stock, lead plus strings" },
-  { label: "Balance", value: "310 mm" },
-  { label: "Pattern", value: "16 × 20" },
-  { label: "Length", value: "27 in", note: "685 mm" },
-];
-
-const stringSetup: SpecRow[] = [
-  { label: "String", value: "Babolat VS Team BT7", note: "natural gut" },
-  { label: "Gauge", value: "17", note: "1.25 mm" },
-  { label: "Configuration", value: "Full bed", note: "gut mains and crosses" },
-  { label: "Mains tension", value: "56 lbs" },
-  { label: "Crosses tension", value: "54 lbs" },
-  { label: "Manufacturer range", value: "48 to 57 lbs" },
-  { label: "Overgrip", value: "Wilson Pro", note: "comfort" },
-];
-
-function SpecTable({ rows }: { rows: SpecRow[] }) {
+function SpecTable({ rows }: { rows: readonly SpecRow[] }) {
   return (
     <div className="flex flex-col">
       {rows.map((row, i) => (
