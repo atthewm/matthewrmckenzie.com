@@ -1,112 +1,107 @@
 import Link from "next/link";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
-import { profile } from "@/config/profile";
+import CtaBlock from "@/components/ui/CtaBlock";
+import Hero from "@/components/home/Hero";
+import Chapter from "@/components/home/Chapter";
+import LedgerLine from "@/components/home/LedgerLine";
+import RecipeFan from "@/components/home/RecipeFan";
+import HomeMotionRoot from "@/components/home/HomeMotionRoot";
+import StrainSparkline from "@/components/site/StrainSparkline";
+import "@/styles/site-home.css";
 
 // ============================================================================
 // HOME PAGE
 // ============================================================================
-// Plain, scannable homepage: who I am, the four sections, and how to reach
-// me. The Mac OS X desktop lives on at /desktop for anyone who wants it.
+// Hero, three chapters (Capital, Training, Kitchen), a hobbies line, the
+// closing contact block and a small link to the Mac OS X desktop at /desktop.
+// Everything is server-rendered in its final state; HomeMotionRoot adds the
+// scroll motion on top when the visitor allows motion.
 // ============================================================================
 
-const sections = [
-  {
-    href: "/work",
-    title: "Work",
-    blurb: "Capital formation at Menlo Equities: private wealth, family offices and RIAs.",
-    icon: "/icons/panther/applications-folder.png",
-  },
-  {
-    href: "/health",
-    title: "Health and Fitness",
-    blurb: "Training, recovery and sleep from WHOOP, plus my daily nutrition.",
-    icon: "/brands/whoop.svg",
-  },
-  {
-    href: "/kitchen",
-    title: "Cooking and Baking",
-    blurb: "Sourdough, jam and high protein recipes, tested and written down.",
-    icon: "/icons/panther/library-folder.png",
-  },
-  {
-    href: "/hobbies",
-    title: "Hobbies",
-    blurb: "Tennis, DJing, photography and Rematch, the tool I built to fix my iTunes library.",
-    icon: "/icons/custom/hobbies.svg",
-  },
-];
-
 export default function HomePage() {
-  const austin = profile.offices.find((o) => o.city === "Austin");
-
   return (
-    <StaticPageLayout>
-      <section className="mb-10">
-        <h1 className="text-2xl font-semibold tracking-tight text-desktop-text">
-          Matthew McKenzie
-        </h1>
-        <p className="mt-1 text-sm text-desktop-text-secondary">
-          {profile.title} at {profile.company}
-          {austin ? ` · ${austin.city}, Texas` : ""}
-        </p>
-        <p className="mt-5 text-sm leading-relaxed text-desktop-text">
-          I structure capital partnerships for real asset backed businesses, across debt and
-          equity, with family offices, UHNW investors and institutional groups. Outside of
-          work I train, play tennis, and bake sourdough from my own rye starter.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          <a
-            href="mailto:matthew.mckenzie@mac.com"
-            className="inline-flex items-center rounded bg-desktop-accent px-4 py-2 text-xs font-medium text-white hover:opacity-90"
-          >
-            Email me
-          </a>
-          <a
-            href="https://cal.com/mattmck/site"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center rounded border border-desktop-border px-4 py-2 text-xs font-medium text-desktop-text hover:bg-desktop-border/30"
-          >
-            Schedule a meeting
-          </a>
-          <a
-            href="https://www.linkedin.com/in/mrmckenzie/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center rounded border border-desktop-border px-4 py-2 text-xs font-medium text-desktop-text hover:bg-desktop-border/30"
-          >
-            LinkedIn
-          </a>
-        </div>
-      </section>
+    <StaticPageLayout variant="home" hideCta>
+      <HomeMotionRoot>
+        <Hero />
 
-      <nav aria-label="Sections" className="grid gap-3 sm:grid-cols-2">
-        {sections.map((s) => (
-          <Link
-            key={s.href}
-            href={s.href}
-            className="group flex items-start gap-3 rounded-lg border border-desktop-border bg-desktop-surface p-4 transition-colors hover:border-desktop-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.icon} alt="" width={36} height={36} className="h-9 w-9 shrink-0" />
-            <span>
-              <span className="block text-sm font-semibold text-desktop-text group-hover:text-desktop-accent">
-                {s.title}
-              </span>
-              <span className="mt-0.5 block text-xs leading-relaxed text-desktop-text-secondary">
-                {s.blurb}
+        <Chapter
+          id="capital"
+          number="01"
+          title="Capital"
+          links={
+            <Link href="/work" className="site-arrow">
+              Work and track record
+            </Link>
+          }
+          data={<LedgerLine />}
+        >
+          <p>
+            I structure capital, build investor partnerships, and develop growth strategy for real
+            asset backed businesses. I work across both debt and equity. I care most about
+            disciplined underwriting and long term alignment.
+          </p>
+        </Chapter>
+
+        <Chapter
+          id="training"
+          number="02"
+          title="Training"
+          links={
+            <Link href="/health" className="site-arrow">
+              Health and fitness
+            </Link>
+          }
+          data={<StrainSparkline />}
+        >
+          <p>
+            I train for strength and endurance, and I treat recovery as part of the training. Most
+            weeks I run a strength split: back, chest, legs, shoulders, and arms and abs.
+          </p>
+        </Chapter>
+
+        <Chapter
+          id="kitchen"
+          number="03"
+          title="Kitchen"
+          links={
+            <>
+              <Link href="/kitchen" className="site-arrow">
+                Cooking and baking
+              </Link>
+              <Link href="/recipes" className="site-arrow">
+                All recipes
+              </Link>
+            </>
+          }
+          data={<RecipeFan />}
+        >
+          <p>
+            I bake sourdough from a rye starter I built myself. I also make jam and work out high
+            protein versions of everyday meals. I write each recipe down properly so it comes out
+            the same every time.
+          </p>
+        </Chapter>
+
+        <section className="home-hobbies site-wrap" aria-label="Hobbies">
+          <Link href="/hobbies" className="site-grid home-hobbies-row">
+            <span className="site-eyebrow col-head">Hobbies</span>
+            <span className="col-body home-hobbies-words">
+              Tennis, DJing, photography and Rematch
+              <span className="home-hobbies-arrow" aria-hidden="true">
+                &rarr;
               </span>
             </span>
           </Link>
-        ))}
-      </nav>
+        </section>
+      </HomeMotionRoot>
 
-      <p className="mt-10 text-xs text-desktop-text-secondary">
+      <CtaBlock />
+
+      <p className="home-desktop site-wrap">
         Prefer the old Mac OS X desktop?{" "}
-        <Link href="/desktop" className="text-desktop-accent hover:underline">
-          Open desktop mode
+        <Link href="/desktop" className="site-link">
+          Desktop mode
         </Link>
-        .
       </p>
     </StaticPageLayout>
   );

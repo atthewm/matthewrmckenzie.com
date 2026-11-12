@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useRef } from "react";
 import type { NutritionDay, TopFood } from "@/data/notion/types";
 import { DEFAULT_NUTRITION_TARGETS } from "@/data/notion/types";
 import { Donut, HBars, PALETTE, TrendLine } from "./Charts";
@@ -14,9 +16,9 @@ import { favorites, guiltyPleasures, improvements, macroMix, mealSplit, mostEffi
 
 function Panel({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-desktop-border bg-desktop-surface p-3">
-      <h3 className="text-[12px] font-semibold text-desktop-text">{title}</h3>
-      {sub && <p className="mb-2 text-[10px] text-desktop-text-secondary">{sub}</p>}
+    <section className="food-panel">
+      <h3 className="food-panel-title">{title}</h3>
+      {sub && <p className="food-panel-sub">{sub}</p>}
       {children}
     </section>
   );
@@ -48,29 +50,36 @@ export default function BoardDashboard({
   const tips = improvements(foods, days);
   const recent = days ? [...days].sort((a, b) => a.date.localeCompare(b.date)).slice(-30) : null;
   const t = DEFAULT_NUTRITION_TARGETS;
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    closeRef.current?.focus();
+  }, []);
 
   return (
     <div
       role="dialog"
+      aria-modal="true"
       aria-label="Food dashboard"
-      className="flex max-h-[88vh] w-[min(96vw,56rem)] flex-col overflow-hidden rounded-xl border border-desktop-border bg-desktop-bg shadow-2xl"
+      className="food-board"
       onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
     >
-      <header className="flex items-center justify-between border-b border-desktop-border px-4 py-3">
+      <header className="food-board-head">
         <div>
-          <h2 className="text-sm font-semibold text-desktop-text">Food dashboard</h2>
-          <p className="text-[11px] text-desktop-text-secondary">
+          <h2 className="food-board-title">Food board</h2>
+          <p className="food-board-sub">
             {sample
               ? "Sample data. My real numbers appear once the Notion sync runs."
               : `From my Notion meal log${syncedAt ? `, synced ${new Date(syncedAt).toLocaleString()}` : ""}.`}
           </p>
         </div>
-        <button onClick={onClose} className="rounded px-2 text-xl leading-none text-desktop-text-secondary hover:text-desktop-text" aria-label="Close dashboard">
+        <button ref={closeRef} type="button" onClick={onClose} className="food-close" aria-label="Close dashboard">
           ×
         </button>
       </header>
 
-      <div className="grid gap-3 overflow-y-auto p-4 sm:grid-cols-2">
+      <div className="food-board-grid">
         <Panel title="Favorites" sub="Most eaten, by times logged.">
           <HBars rows={fav.map((f) => ({ label: f.name, value: f.count, note: f.topMeal ?? undefined }))} unit="×" />
         </Panel>
@@ -87,7 +96,7 @@ export default function BoardDashboard({
               color={PALETTE.calories}
             />
           ) : (
-            <p className="text-[11px] text-desktop-text-secondary">None in the top foods.</p>
+            <p className="food-panel-empty">None in the top foods.</p>
           )}
         </Panel>
 
@@ -101,7 +110,7 @@ export default function BoardDashboard({
               ]}
             />
           ) : (
-            <p className="text-[11px] text-desktop-text-secondary">Not enough data yet.</p>
+            <p className="food-panel-empty">Not enough data yet.</p>
           )}
         </Panel>
 
@@ -110,11 +119,11 @@ export default function BoardDashboard({
         </Panel>
 
         <Panel title="Where to improve">
-          <ul className="space-y-2">
+          <ul className="food-tips">
             {tips.map((tip) => (
-              <li key={tip.title} className="text-[11px]">
-                <div className="font-medium text-desktop-text">{tip.title}</div>
-                <div className="text-desktop-text-secondary">{tip.detail}</div>
+              <li key={tip.title}>
+                <strong>{tip.title}</strong>
+                <span>{tip.detail}</span>
               </li>
             ))}
           </ul>
@@ -141,7 +150,7 @@ export default function BoardDashboard({
           </>
         ) : (
           <Panel title="Daily trends">
-            <p className="text-[11px] text-desktop-text-secondary">
+            <p className="food-panel-empty">
               Daily calories and protein over time are private and only show here when I&apos;m signed in.
             </p>
           </Panel>

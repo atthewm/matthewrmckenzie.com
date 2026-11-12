@@ -9,6 +9,7 @@
     "lint": "next lint",
     "lint:ci": "ESLINT_USE_FLAT_CONFIG=false eslint src --ext .ts,.tsx",
     "verify": "tsc --noEmit && npm run lint:ci",
+    "test": "node --test \"src/**/*.test.ts\"",
     "unlock": "rm -f .git/index.lock .git/HEAD.lock .git/objects/maintenance.lock",
     "ship": "npm run unlock && npm run verify && npm run build && git push origin main",
     "recipes": "node scripts/build-recipe-index.mjs",
@@ -16,9 +17,11 @@
     "prebuild": "node scripts/build-recipe-index.mjs"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@supabase/supabase-js": "^2.95.3",
     "@vercel/analytics": "^1.4.1",
     "gray-matter": "^4.0.3",
+    "gsap": "^3.15.1",
     "lucide-react": "^0.468.0",
     "next": "^15.1.0",
     "react": "^19.0.0",

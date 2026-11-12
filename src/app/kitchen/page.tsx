@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import EmptyContent from "@/components/ui/EmptyContent";
+import ProseRows from "@/components/site/ProseRows";
+import SiteRow from "@/components/site/SiteRow";
+import { linkRecipesOnSite } from "@/lib/prose";
+import { recipes } from "@/content/recipes/index";
+
+const recipeSlugs = new Set(recipes.map((r) => r.slug));
 
 export const metadata: Metadata = {
   title: "Cooking and Baking",
@@ -24,12 +31,13 @@ export default async function KitchenPage() {
         { name: "Cooking and Baking", url: "https://matthewrmckenzie.com/kitchen" },
       ])} />
       {content ? (
-        <article
-          className="prose prose-sm dark:prose-invert max-w-none
-                     prose-headings:font-semibold
-                     prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline"
-          dangerouslySetInnerHTML={{ __html: content.html }}
-        />
+        <ProseRows html={linkRecipesOnSite(content.html, recipeSlugs)} eyebrow="Kitchen notebook">
+          <SiteRow heading="All recipes">
+            <p className="site-prose">
+              <Link href="/recipes">Browse all {recipes.length} recipes</Link>, grouped by bread, breakfast, dinner, dessert and pantry.
+            </p>
+          </SiteRow>
+        </ProseRows>
       ) : (
         <EmptyContent />
       )}

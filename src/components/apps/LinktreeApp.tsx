@@ -26,7 +26,7 @@ interface LinkItem {
 
 const socialLinks: LinkItem[] = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/mrmckenzie/", icon: Linkedin, description: "Connect professionally" },
-  { label: "GitHub", href: "https://github.com/atthewm", icon: Github, description: "Code and open source projects" },
+  { label: "GitHub", href: "https://github.com/atthewm", icon: Github, description: "Code and open source work" },
   { label: "Instagram", href: "https://www.instagram.com/mrem/", icon: Instagram, description: "Photos and stories" },
 ];
 

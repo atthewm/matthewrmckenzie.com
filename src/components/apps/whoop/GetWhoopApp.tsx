@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { whoopReferral } from "@/data/whoop/dashboard";
+import { whoopCircle } from "@/config/brands";
 
 // ============================================================================
 // GET WHOOP (Referral Card)
@@ -28,8 +29,8 @@ export default function GetWhoopApp() {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/brands/whoop.svg"
-        alt="WHOOP"
+        src={whoopCircle.dark}
+        alt="WHOOP logo"
         width={56}
         height={56}
         className="w-14 h-14 mb-4"

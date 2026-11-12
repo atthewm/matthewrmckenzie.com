@@ -718,7 +718,7 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
       {/* Profile */}
       {profile && (
         <p className="text-[10px] text-desktop-text-secondary text-center pt-3 pb-2">
-          {profile.first_name} {profile.last_name} -- WHOOP Developer API v1
+          {profile.first_name} {profile.last_name}, WHOOP Developer API v1
         </p>
       )}
     </div>

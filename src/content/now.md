@@ -7,7 +7,7 @@ date: 2026-11-07
 
 *Last updated: November 2026*
 
-A snapshot of what I am focused on right now.
+What I am focused on right now.
 
 - Capital formation across the private wealth channel at Menlo Equities
 - Strength and endurance training, with a focus on recovery

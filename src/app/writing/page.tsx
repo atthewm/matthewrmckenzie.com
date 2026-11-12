@@ -3,6 +3,7 @@ import { getContent } from "@/lib/content";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import EmptyContent from "@/components/ui/EmptyContent";
+import ProseRows from "@/components/site/ProseRows";
 
 export const metadata: Metadata = {
   title: "Writing | Capital Formation and Investor Partnerships",
@@ -24,10 +25,7 @@ export default async function WritingPage() {
         { name: "Writing", url: "https://matthewrmckenzie.com/writing" },
       ])} />
       {content ? (
-        <article
-          className="site-prose"
-          dangerouslySetInnerHTML={{ __html: content.html }}
-        />
+        <ProseRows html={content.html} eyebrow="Essays" />
       ) : (
         <EmptyContent />
       )}

@@ -1,5 +1,6 @@
 import React from "react";
 import type { FoodKind } from "./foodKinds";
+import { extraBody, OUTLINE } from "./FoodSpriteExtra";
 
 // ============================================================================
 // FOOD ROOM: drawn food characters
@@ -8,8 +9,6 @@ import type { FoodKind } from "./foodKinds";
 // sharing the same big glossy eyes and blush so they read as one cast.
 // viewBox is 64x64; the face sits around (32, 38) unless a body moves it.
 // ============================================================================
-
-const OUTLINE = "#3b2a22";
 
 function Face({ x = 32, y = 38, scale = 1, mood = "happy" }: { x?: number; y?: number; scale?: number; mood?: "happy" | "wow" }) {
   return (
@@ -36,6 +35,8 @@ function Face({ x = 32, y = 38, scale = 1, mood = "happy" }: { x?: number; y?: n
 
 function Body({ kind }: { kind: FoodKind }) {
   const s = { stroke: OUTLINE, strokeWidth: 2, strokeLinejoin: "round" as const };
+  const extra = extraBody(kind);
+  if (extra) return <>{extra}</>;
   switch (kind) {
     case "bread":
       return (
@@ -176,6 +177,20 @@ const FACE_POS: Partial<Record<FoodKind, { x?: number; y?: number; scale?: numbe
   berry: { y: 36, scale: 0.85 },
   onigiri: { y: 34, scale: 0.85 },
   dairy: { y: 36, scale: 0.85 },
+  popcorn: { y: 45, scale: 0.75 },
+  chocolate: { y: 48, scale: 0.7 },
+  bar: { y: 41, scale: 0.75 },
+  yogurt: { y: 36, scale: 0.8 },
+  steak: { x: 29, y: 36, scale: 0.8 },
+  chicken: { x: 28, y: 30, scale: 0.8 },
+  beans: { y: 46, scale: 0.85 },
+  blueberry: { y: 40 },
+  salad: { y: 46, scale: 0.85 },
+  milk: { y: 35, scale: 0.75 },
+  kiwi: { y: 37, scale: 0.62 },
+  sweetpotato: { x: 30, y: 38, scale: 0.85 },
+  squash: { y: 42, scale: 0.85 },
+  cauliflower: { y: 32, scale: 0.85 },
 };
 
 export default function FoodSprite({
