@@ -19,9 +19,9 @@ export default function PrivacyPolicyPage() {
         { name: "Home", url: "https://matthewrmckenzie.com" },
         { name: "Privacy Policy", url: "https://matthewrmckenzie.com/privacy" },
       ])} />
-      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-desktop-accent prose-a:no-underline hover:prose-a:underline">
+      <article className="site-prose">
         <h1>Privacy Policy</h1>
-        <p className="text-desktop-text-secondary text-sm">
+        <p className="site-eyebrow">
           Last updated: February 16, 2026
         </p>
 

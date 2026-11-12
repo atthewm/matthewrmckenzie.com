@@ -168,7 +168,7 @@ export default function ZenBackground() {
         />
       )}
 
-      {/* Sound toggle — only show when video theme is active on desktop */}
+      {/* Sound toggle: only show when video theme is active on desktop */}
       {!isDefault && !useStatic && hasVideo && !videoError && (
         <button
           onClick={toggleSound}

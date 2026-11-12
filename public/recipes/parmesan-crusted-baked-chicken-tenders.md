@@ -2,8 +2,11 @@
 title: Parmesan Crusted Baked Chicken Tenders
 subtitle: Higher-protein baked tenders with Parmesan crust
 yield: ~20 tenders (from 2 lb)
-total_time: TBD
+total_time: About 50 to 55 minutes
 tags: [chicken, high protein, dinner]
+category: Dinner
+source: Kitchen notebook
+updated: 2026-02-16
 ---
 
 A higher-protein, lower-butter version of classic baked Parmesan chicken using tenders.

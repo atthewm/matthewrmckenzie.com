@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Startup Chime — Synthesized Mac startup chord
+// Startup Chime: Synthesized Mac startup chord
 //
 // Plays a warm F-major chord (a nod to the classic Macintosh startup sound)
 // using the Web Audio API. No external audio files needed.
@@ -56,6 +56,6 @@ export function playStartupChime(): void {
     // Close context after chime finishes
     setTimeout(() => ctx.close(), (duration + 0.5) * 1000);
   } catch {
-    // Web Audio API not available — fail silently
+    // Web Audio API not available: fail silently
   }
 }

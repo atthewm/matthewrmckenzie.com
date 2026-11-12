@@ -1,5 +1,5 @@
 // ============================================================================
-// GET /api/notion/data?dataset=<key>  — read synced data for the UI
+// GET /api/notion/data?dataset=<key> : read synced data for the UI
 // ============================================================================
 // Public datasets (films, tv, audiobooks, favorite-foods) are served to anyone,
 // with sensitive fields stripped (those live in `private_data`). Private
@@ -37,7 +37,7 @@ export async function GET(req: Request) {
   const authed = isAuthed(req);
   if (def.visibility === "private" && !authed) {
     return NextResponse.json(
-      { error: "private dataset — admin only", key, authed: false },
+      { error: "private dataset: admin only", key, authed: false },
       { status: 401 }
     );
   }

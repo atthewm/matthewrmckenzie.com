@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — DATASET REGISTRY
+// NOTION SYNC: DATASET REGISTRY
 // ============================================================================
 // One entry per syncable "piece" of Notion. Each entry knows:
 //   - which database to read
@@ -224,7 +224,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     },
   },
 
-  // -- Audiobooks (PUBLIC, private notes) — Books DB filtered ----------------
+  // -- Audiobooks (PUBLIC, private notes): Books DB filtered ----------------
   audiobooks: {
     key: "audiobooks",
     label: "Audiobooks",
@@ -278,7 +278,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     },
   },
 
-  // -- Top foods (PUBLIC) — anonymous rollup of the Meal Entries log --------
+  // -- Top foods (PUBLIC): anonymous rollup of the Meal Entries log --------
   // The only dataset that aggregates. Meal Entries holds a per-meal food diary,
   // which is exactly the "daily meal detail" that must stay off the public
   // site, so the rows are reduced to a ranked table here, inside the sync, and
@@ -319,7 +319,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     },
   },
 
-  // -- Favorite foods (PUBLIC) — Recipe Booklet favorites -------------------
+  // -- Favorite foods (PUBLIC): Recipe Booklet favorites -------------------
   // NOTE: Recipe Booklet field names are best-effort; confirm against the live
   // schema and adjust the getters below if needed.
   "favorite-foods": {

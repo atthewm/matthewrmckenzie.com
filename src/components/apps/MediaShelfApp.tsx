@@ -6,7 +6,7 @@ import type { FSItem } from "@/data/fs";
 import type { MediaItem, NotionDatasetKey } from "@/data/notion/types";
 
 // ============================================================================
-// MEDIA SHELF — Films / TV / Audiobooks from the Notion Media Library
+// MEDIA SHELF: Films / TV / Audiobooks from the Notion Media Library
 // ============================================================================
 // PUBLIC app. One component serves all three shelves; the dataset is chosen by
 // the desktop item's id. Sensitive notes never reach this component (they live

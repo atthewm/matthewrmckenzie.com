@@ -22,7 +22,8 @@ export default async function DesktopPage() {
   const contentMap: Record<string, string> = {};
 
   for (const item of allItems) {
-    if (item.contentPath) {
+    // Recipes load on demand from /api/recipes/[slug] to keep the page light.
+    if (item.contentPath && !item.contentPath.startsWith("recipes/")) {
       const slug = item.contentPath.replace(/\.md$/, "");
       const content = await getContent(slug);
       if (content) {

@@ -7,37 +7,42 @@ import { trackEvent } from "@/lib/analytics";
 // ============================================================================
 // CTA BLOCK (Client Component)
 // ============================================================================
-// Extracted from StaticPageLayout so click events can be tracked via
-// Vercel Analytics. Used at the bottom of every static page.
+// Closing contact block on every static page. Client component so clicks can
+// be tracked with Vercel Analytics.
 // ============================================================================
 
-export default function CtaBlock() {
+export default function CtaBlock({ wide = false }: { wide?: boolean }) {
   return (
-    <div className="max-w-2xl mx-auto px-5 mt-8">
-      <div className="rounded-lg border border-desktop-border bg-desktop-surface px-6 py-5">
-        <p className="text-sm font-semibold text-desktop-text">Interested in working together?</p>
-        <p className="text-xs text-desktop-text-secondary mt-1 leading-relaxed">
-          I welcome conversations about capital formation, investor partnerships, and growth strategy.
+    <section
+      aria-label="Get in touch"
+      className={`site-noprint ${wide ? "max-w-5xl" : "max-w-[680px]"} mx-auto px-4 sm:px-6 mt-12`}
+    >
+      <div className="rounded-2xl border px-6 py-7 sm:px-8" style={{ borderColor: "var(--site-rule)", background: "var(--site-surface)" }}>
+        <p className="site-eyebrow">Get in touch</p>
+        <p className="site-display text-[24px] mt-2 leading-snug">
+          Investor, advisor, or sponsor? I would like to hear from you.
         </p>
-        <div className="flex items-center gap-3 mt-3 flex-wrap">
+        <div className="flex items-center gap-3 mt-5 flex-wrap">
           <Link
             href="/contact"
             onClick={() => trackEvent("cta_clicked", { label: "get_in_touch" })}
-            className="inline-flex items-center px-4 py-2 rounded text-xs font-medium bg-desktop-accent text-white hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-2"
+            className="inline-flex items-center px-5 py-2.5 rounded-full text-[14px] font-medium"
+            style={{ background: "var(--site-ink)", color: "var(--site-bg)" }}
           >
-            Get in Touch
+            Contact
           </Link>
           <a
             href="https://cal.com/mattmck/site"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackEvent("cta_clicked", { label: "schedule_a_call" })}
-            className="inline-flex items-center px-4 py-2 rounded text-xs font-medium border border-desktop-border text-desktop-text hover:bg-desktop-border/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-2"
+            className="inline-flex items-center px-5 py-2.5 rounded-full text-[14px] font-medium border"
+            style={{ borderColor: "var(--site-rule)" }}
           >
-            Schedule a Call
+            Schedule a call
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

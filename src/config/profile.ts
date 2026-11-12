@@ -1,5 +1,5 @@
 // ============================================================================
-// PROFILE — single source of truth for identity, role, and contact details
+// PROFILE: single source of truth for identity, role, and contact details
 // ============================================================================
 // Every page, metadata block, schema object, and the digital business card
 // reads from here. Update the role in one place and the whole site follows.
@@ -19,9 +19,9 @@ export const profile = {
   primaryCity: "Austin",
 
   email: "mckenzie@menloequities.com",
-  /** Direct office line — safe to render publicly. */
+  /** Direct office line: safe to render publicly. */
   directPhone: "512-277-6116",
-  /** Personal mobile — vCard only. Never render in public HTML. */
+  /** Personal mobile: vCard only. Never render in public HTML. */
   mobile: "904-434-4444",
 
   offices: [

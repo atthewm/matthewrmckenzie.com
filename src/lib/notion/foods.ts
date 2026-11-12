@@ -60,11 +60,38 @@ const UNIT_WORDS =
   "g|kg|mg|oz|lb|lbs|ml|l|cup|cups|tbsp|tsp|slice|slices|piece|pieces|serving|servings|scoop|scoops|can|cans|bar|packet";
 
 /**
+ * Titles that mark a deleted or corrected log entry rather than a food. The
+ * meal log carries these as tombstones ("REMOVED", "REMOVED - duplicate entry",
+ * "REMOVED: chicken breast"). They were ranking as the 13th most-logged "food"
+ * with zero calories, so they are dropped outright rather than normalized.
+ */
+const TOMBSTONE = /^\s*removed\b/i;
+
+/**
+ * A leading number that is part of the food's name, not a portion size:
+ * "93% lean ground beef", "2% cottage cheese", "1% milk". Treating it as a
+ * quantity both mangles the label (leaving a bare "%") and merges distinct
+ * products, collapsing 1%, 2% and whole milk onto a single "milk" entry.
+ */
+const LEADING_PERCENT = /^\s*\d+(?:\.\d+)?\s*%/;
+
+const LEADING_QUANTITY = new RegExp(
+  `^[\\d.,/\\s]+\\s*(?:${UNIT_WORDS})?\\b`,
+  "i"
+);
+
+/** Shared by the key and the label so the two cannot drift apart. */
+function stripLeadingQuantity(s: string): string {
+  return LEADING_PERCENT.test(s) ? s : s.replace(LEADING_QUANTITY, " ");
+}
+
+/**
  * Collapse a raw Notion "Item" title to a stable grouping key.
  *
  * Returns "" for titles that carry no food name at all, which the caller skips.
  */
 export function foodKey(raw: string): string {
+  if (TOMBSTONE.test(raw || "")) return "";
   let s = (raw || "").toLowerCase();
 
   // "Chicken breast (grilled)" / "Popcorn (35g = 150 cal)" -> drop the aside.
@@ -76,7 +103,7 @@ export function foodKey(raw: string): string {
   // "ProMix whey isolate shake - PRE-WORKOUT" -> drop the trailing qualifier.
   s = s.split(/\s+[-–—]\s+/)[0];
   // Leading quantity: "3 large whole eggs", "150g chicken", "1/2 cup oats".
-  s = s.replace(new RegExp(`^[\\d.,/\\s]+\\s*(?:${UNIT_WORDS})?\\b`, "i"), " ");
+  s = stripLeadingQuantity(s);
 
   const words = s
     .split(/[^a-z0-9]+/i)
@@ -112,11 +139,11 @@ export function canonicalFoodKey(raw: string): string {
 
 /** Strip parentheticals/quantities but keep the human wording for display. */
 export function displayName(raw: string): string {
-  const cleaned = (raw || "")
+  const base = (raw || "")
     .replace(/\([^)]*\)/g, " ")
     .replace(/\(.*$/, " ")
-    .split(/\s+[-–—]\s+/)[0]
-    .replace(new RegExp(`^[\\d.,/\\s]+\\s*(?:${UNIT_WORDS})?\\b`, "i"), " ")
+    .split(/\s+[-–—]\s+/)[0];
+  const cleaned = stripLeadingQuantity(base)
     .replace(/\s+/g, " ")
     .replace(/[\s,]+$/, "")
     .trim();
@@ -196,6 +223,9 @@ export function aggregateTopFoods(
 ): TopFood[] {
   const { limit = 100, minCount = 2 } = opts;
   const buckets = new Map<string, Bucket>();
+  // Entries that resolved to a real food. Tombstones and blank titles are
+  // excluded so `share` is a percentage of the food log, not of raw rows.
+  let counted = 0;
 
   for (const e of entries) {
     const key = canonicalFoodKey(e.item);
@@ -216,6 +246,7 @@ export function aggregateTopFoods(
       buckets.set(key, b);
     }
 
+    counted += 1;
     b.count += 1;
     const label = displayName(e.item);
     if (label) b.labels.set(label, (b.labels.get(label) ?? 0) + 1);
@@ -230,9 +261,9 @@ export function aggregateTopFoods(
     addMacro(b, "fiber", e.fiber);
   }
 
-  // Share is measured against every logged entry, including the long tail that
+  // Share is measured against every counted entry, including the long tail that
   // does not make the cut, so the percentages stay honest.
-  const totalEntries = entries.length;
+  const totalEntries = counted;
 
   const ranked = [...buckets.values()]
     .filter((b) => b.count >= minCount)

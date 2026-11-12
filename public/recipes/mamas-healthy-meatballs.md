@@ -1,9 +1,12 @@
 ---
-title: Mama’s Healthy Meatballs
+title: Mama's Healthy Meatballs
 subtitle: Lean, high-protein meatballs with beef, lamb, and venison
 yield: ~12 large meatballs
-total_time: TBD
+total_time: About 45 to 55 minutes
 tags: [meatballs, high protein, dinner]
+category: Dinner
+source: Family recipe card
+updated: 2026-02-16
 ---
 
 A lean, high-protein upgrade to the original with grass-fed beef, pasture-raised lamb, venison, and half the breadcrumbs for better macros and bold flavor.
@@ -48,5 +51,5 @@ Serving size: 1 meatball (cooked estimate, includes fat render during baking)
 | Fiber | ~0 g |
 | Net carbs | ~3 g |
 
-Protein-to-calorie ratio
+### Protein-to-calorie ratio
 - ~12 g protein per 100 calories

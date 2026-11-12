@@ -4,6 +4,8 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
+import MobileView from "./MobileView";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import Screensaver from "./Screensaver";
 import { playStartupChime } from "@/lib/startupChime";
 import { playShutdown } from "@/lib/soundEffects";
@@ -184,6 +186,7 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
   const [mounted, setMounted] = useState(false);
   const [booting, setBooting] = useState(false);
   const [shuttingDown, setShuttingDown] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setMounted(true);
@@ -220,10 +223,10 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
     <ShutdownProvider value={handleShutdown}>
       <DesktopProvider>
         <SettingsProvider>
-          {booting && <BootSequence onComplete={handleBootComplete} />}
+          {booting && !isMobile && <BootSequence onComplete={handleBootComplete} />}
           {shuttingDown && <ShutdownSequence onComplete={handleShutdownComplete} />}
           <Screensaver />
-          <Desktop contentMap={contentMap} />
+          {isMobile ? <MobileView contentMap={contentMap} /> : <Desktop contentMap={contentMap} />}
         </SettingsProvider>
       </DesktopProvider>
     </ShutdownProvider>

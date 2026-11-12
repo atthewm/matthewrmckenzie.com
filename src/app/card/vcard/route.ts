@@ -1,5 +1,5 @@
 // ============================================================================
-// GET /card/vcard — downloadable vCard (.vcf)
+// GET /card/vcard: downloadable vCard (.vcf)
 // ============================================================================
 // Serves a vCard 3.0 file so anyone who scans the conference QR can tap
 // "Save contact" and land straight in their phone's address book.

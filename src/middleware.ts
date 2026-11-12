@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // ---------------------------------------------------------------------------
-// Authentication middleware — PUBLIC by default, admin-only routes gated.
+// Authentication middleware: PUBLIC by default, admin-only routes gated.
 //
 // The site is publicly accessible. The `mckenzie_auth` cookie is set when
 // Matthew logs in via /gate, enabling admin features (guestbook moderation,
@@ -14,7 +14,7 @@ const AUTH_COOKIE = "mckenzie_auth";
 const AUTH_VALUE = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
 
 export function middleware(request: NextRequest) {
-  // Full site lock mode — redirect unauthenticated users to /gate
+  // Full site lock mode: redirect unauthenticated users to /gate
   if (process.env.SITE_LOCK_ENABLED === "true") {
     // Bypass token: allows dev/preview access via ?token=<value>
     const bypassToken = process.env.SITE_LOCK_BYPASS_TOKEN;
@@ -40,7 +40,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Site is public — allow all requests through.
+  // Site is public: allow all requests through.
   return NextResponse.next();
 }
 

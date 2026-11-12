@@ -1,9 +1,12 @@
 ---
-title: Mama’s Healthy Meatballs
+title: Mama's Healthy Meatballs
 subtitle: Lean, high-protein meatballs with beef, lamb, and venison
 yield: ~12 large meatballs
 total_time: About 45 to 55 minutes
 tags: [meatballs, high protein, dinner]
+category: Dinner
+source: Family recipe card
+updated: 2026-02-16
 ---
 
 A lean, high-protein upgrade to the original with grass-fed beef, pasture-raised lamb, venison, and half the breadcrumbs for better macros and bold flavor.

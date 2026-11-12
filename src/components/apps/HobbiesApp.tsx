@@ -26,10 +26,13 @@ const frameSpecs: SpecRow[] = [
 ];
 
 const stringSetup: SpecRow[] = [
-  { label: "Configuration", value: "Hybrid", note: "gut mains, poly crosses" },
-  { label: "Mains", value: "Babolat VS Team", note: "natural gut" },
-  { label: "Crosses", value: "Luxilon ALU Power", note: "polyester" },
-  { label: "Overgrip", value: "Wilson Pro" },
+  { label: "String", value: "Babolat VS Team BT7", note: "natural gut" },
+  { label: "Gauge", value: "17", note: "1.25 mm" },
+  { label: "Configuration", value: "Full bed", note: "gut mains and crosses" },
+  { label: "Mains tension", value: "56 lbs" },
+  { label: "Crosses tension", value: "54 lbs" },
+  { label: "Manufacturer range", value: "48 to 57 lbs" },
+  { label: "Overgrip", value: "Wilson Pro", note: "comfort" },
 ];
 
 function SpecTable({ rows }: { rows: SpecRow[] }) {

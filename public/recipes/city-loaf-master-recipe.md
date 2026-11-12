@@ -4,13 +4,13 @@ subtitle: Two 950 g loaves baked in a Dutch oven
 yield: Makes two 950 g loaves
 total_time: Day 1 + Day 2 (with optional overnight cold retard)
 tags: [bread, sourdough, city loaf, dutch oven]
+category: Bread
+source: Kitchen notebook
+updated: 2026-02-16
 ---
 
 ## Overview
 A two-loaf sourdough formula with a fed starter, autolyse, two folds, warm bulk fermentation, then shaping and an optional overnight cold retard before baking in a Dutch oven.
-
-## Yield
-Makes two 950 g loaves
 
 ## Timing
 ### Day 1 (morning)

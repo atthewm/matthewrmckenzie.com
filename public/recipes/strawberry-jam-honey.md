@@ -4,6 +4,9 @@ subtitle: No refined sugar, thickened naturally (optional chia)
 yield: About 2 cups (estimated)
 total_time: About 30 to 45 minutes
 tags: [jam, fruit, honey, no refined sugar]
+category: Pantry
+source: Kitchen notebook
+updated: 2026-02-16
 ---
 
 ## Ingredients

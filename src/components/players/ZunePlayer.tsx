@@ -31,7 +31,7 @@ const ZUNE_ORANGE = "#F2670E";
 
 /** Split "Artist - Title" into its two halves for the Metro-style stack. */
 function splitTrack(title: string): { artist: string; name: string } {
-  const parts = title.split(/\s+[-–—]\s+/);
+  const parts = title.split(/\s+[-\u2013\u2014]\s+/);
   if (parts.length >= 2) {
     return { artist: parts[0], name: parts.slice(1).join(" - ") };
   }
@@ -162,7 +162,7 @@ export default function ZunePlayer() {
     >
       <div ref={containerRef} className="hidden" />
 
-      {/* Oversized wordmark bleeding off the left edge — the Zune signature */}
+      {/* Oversized wordmark bleeding off the left edge: the Zune signature */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute select-none"

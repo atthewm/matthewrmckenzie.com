@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 
 // ---------------------------------------------------------------------------
-// Context Menu — Mac OS X Panther-style right-click menu
+// Context Menu: Mac OS X Panther-style right-click menu
 // ---------------------------------------------------------------------------
 
 export interface ContextMenuItem {

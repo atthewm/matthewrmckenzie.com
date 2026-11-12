@@ -15,7 +15,7 @@ type Piece = { color: PieceColor; type: PieceType } | null;
 type Board = Piece[][];
 type Position = [number, number];
 
-// Use filled pieces (♛ style) for both — color via CSS
+// Use filled pieces (♛ style) for both: color via CSS
 const UNICODE_PIECES: Record<string, string> = {
   wK: "♚", wQ: "♛", wR: "♜", wB: "♝", wN: "♞", wP: "♟",
   bK: "♚", bQ: "♛", bR: "♜", bB: "♝", bN: "♞", bP: "♟",

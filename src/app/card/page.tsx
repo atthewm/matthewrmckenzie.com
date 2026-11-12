@@ -4,7 +4,7 @@ import JsonLd from "@/components/ui/JsonLd";
 import { profile, phoneE164 } from "@/config/profile";
 
 // ============================================================================
-// /card — digital business card
+// /card: digital business card
 // ============================================================================
 // The destination for the conference QR code. Server rendered, no client JS,
 // so it loads instantly on congested venue wifi. The personal mobile number is
