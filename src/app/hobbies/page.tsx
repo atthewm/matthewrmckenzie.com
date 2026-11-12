@@ -43,8 +43,9 @@ export default function HobbiesPage() {
           <SiteRow id="training" heading="Training">
             <div className="site-prose">
               <p>
-                Strength work and classes at the gym, tracked with WHOOP. The splits, recovery and
-                sleep numbers are on the <Link href="/health">Health and Fitness</Link> page.
+                I do strength work and classes at the gym and track it all with WHOOP. The splits
+                and the recovery and sleep numbers are on the{" "}
+                <Link href="/health">Health and Fitness</Link> page.
               </p>
             </div>
           </SiteRow>
@@ -64,9 +65,10 @@ export default function HobbiesPage() {
           <SiteRow id="cooking" heading="Cooking and baking">
             <div className="site-prose">
               <p>
-                Sourdough from my own rye starter, a city loaf, jams, and high protein versions of
-                the things I actually want to eat. Every method is written down in{" "}
-                <Link href="/kitchen">Cooking and Baking</Link> so the results repeat.
+                I bake sourdough from my own rye starter, including a city loaf. I make jams, and I
+                cook high protein versions of the things I actually want to eat. Every method is
+                written down in <Link href="/kitchen">Cooking and Baking</Link> so the results
+                repeat.
               </p>
             </div>
           </SiteRow>
@@ -74,7 +76,7 @@ export default function HobbiesPage() {
           <SiteRow id="djing" heading="DJing and music">
             <div className="site-prose">
               <p>
-                Learning to mix on a Pioneer DDJ-800 in rekordbox, starting from the basics:
+                I am learning to mix on a Pioneer DDJ-800 in rekordbox. I started with the basics:
                 beatmatching, phrasing and clean transitions.
               </p>
             </div>
@@ -99,8 +101,7 @@ export default function HobbiesPage() {
           <SiteRow id="photography" heading="Photography">
             <div className="site-prose">
               <p>
-                Studied photography alongside economics at SMU. Back behind a proper camera,
-                shooting a new city.
+                I studied photography alongside economics at SMU. I am back behind a proper camera.
               </p>
             </div>
           </SiteRow>

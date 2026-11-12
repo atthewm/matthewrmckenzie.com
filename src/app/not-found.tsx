@@ -8,7 +8,7 @@ export default function NotFound() {
       <PageHead
         eyebrow="404"
         title="Page not found"
-        lede="This page doesn't exist. Maybe it was moved, or maybe it never was."
+        lede="This page does not exist. It may have moved."
       >
         <p className="col-body">
           <Link href="/" className="site-arrow">

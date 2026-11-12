@@ -34,7 +34,7 @@ export default function RecipesPage() {
       <PageHead
         eyebrow={<>Kitchen notebook &middot; {recipes.length} recipes</>}
         title="Recipes"
-        lede="Weekly sourdough, cards from the family recipe box, and a running series of protein-forward desserts. Most include macros. Every recipe can be downloaded as plain text."
+        lede="Weekly sourdough, cards from the family recipe box, and a running series of high protein desserts. Most have macros. You can download any recipe as plain text."
       >
         <nav aria-label="Recipe categories" className="col-body flex flex-wrap gap-2">
           {groups.map((g) => (

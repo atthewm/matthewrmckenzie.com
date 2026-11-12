@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     template: "%s | Matthew McKenzie",
   },
   description:
-    "Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, leading private wealth relationships with high net worth investors, family offices, and RIAs. Also: training, recovery, and cooking.",
+    "Matthew McKenzie, Senior Vice President, Capital Formation at Menlo Equities. I work with high net worth investors, family offices, and RIAs. This site also covers my training, cooking, and baking.",
   keywords: [
     "Matthew McKenzie",
     "capital formation",

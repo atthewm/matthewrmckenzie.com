@@ -37,8 +37,8 @@ export default function HomePage() {
         >
           <p>
             I structure capital, build investor partnerships, and develop growth strategy for real
-            asset backed businesses. My work spans both debt and equity, with a focus on disciplined
-            underwriting and long term alignment.
+            asset backed businesses. I work across both debt and equity. I care most about
+            disciplined underwriting and long term alignment.
           </p>
         </Chapter>
 
@@ -54,9 +54,8 @@ export default function HomePage() {
           data={<StrainSparkline />}
         >
           <p>
-            I train for strength and endurance, and I treat recovery as part of the training, not an
-            afterthought. Most weeks are built around a strength split: back, chest, legs,
-            shoulders, and arms and abs.
+            I train for strength and endurance, and I treat recovery as part of the training. Most
+            weeks I run a strength split: back, chest, legs, shoulders, and arms and abs.
           </p>
         </Chapter>
 
@@ -77,8 +76,9 @@ export default function HomePage() {
           data={<RecipeFan />}
         >
           <p>
-            I bake sourdough from a rye starter I built myself, make jam, and develop high protein
-            versions of everyday meals. Each recipe is written down properly so the results repeat.
+            I bake sourdough from a rye starter I built myself. I also make jam and work out high
+            protein versions of everyday meals. I write each recipe down properly so it comes out
+            the same every time.
           </p>
         </Chapter>
 
