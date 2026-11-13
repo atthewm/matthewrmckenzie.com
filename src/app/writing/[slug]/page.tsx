@@ -64,7 +64,7 @@ export async function generateMetadata({
   const dateModified = (essay.frontmatter.dateModified as string | undefined) ?? datePublished;
   const url = `https://matthewrmckenzie.com/writing/${slug}`;
   return {
-    title: `${title} | Matthew McKenzie`,
+    title,
     description,
     alternates: { canonical: url },
     openGraph: {
