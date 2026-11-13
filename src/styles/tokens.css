@@ -137,6 +137,11 @@
   --progress-track: #d8d8dc;
   --progress-fill: repeating-linear-gradient(-45deg, #4c8ff0 0 8px, #7fb0f5 8px 16px);
 
+  /* iTunes 4 LCD */
+  --lcd: linear-gradient(180deg, #f1f5e4 0%, #dfe6c9 100%);
+  --lcd-border: #8a8f78;
+  --lcd-text: #1d2112;
+
   /* Board / pinboard */
   --cork: #c39a6b;
 }
@@ -220,6 +225,10 @@
   --skeleton: #36383e;
   --progress-track: #3a3c42;
   --progress-fill: repeating-linear-gradient(-45deg, #8f99a6 0 8px, #b6bec9 8px 16px);
+
+  --lcd: linear-gradient(180deg, #2e3424 0%, #232819 100%);
+  --lcd-border: #11140c;
+  --lcd-text: #e6ecd3;
 
   --cork: #6d5236;
 }

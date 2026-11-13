@@ -7,6 +7,7 @@ import BoardView from "@/components/board/BoardView";
 import AboutApp from "@/components/apps/AboutApp";
 import WorkOverviewApp from "@/components/apps/WorkOverviewApp";
 import FoodRoomApp from "@/components/apps/FoodRoomApp";
+import TurntableApp from "@/components/apps/TurntableApp";
 import ContactApp from "@/components/apps/ContactApp";
 import GalleryApp from "@/components/apps/GalleryApp";
 import MarkdownViewer from "@/components/apps/MarkdownViewer";
@@ -50,6 +51,7 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   AboutApp,
   WorkOverviewApp,
   FoodRoomApp,
+  TurntableApp,
   ContactApp,
   GalleryApp,
   SettingsApp,

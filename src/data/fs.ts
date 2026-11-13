@@ -65,7 +65,7 @@ export const fileSystem: FSItem[] = [
   })) },
   { id: "food-room", name: "Food Room", type: "app", icon: "Utensils", appComponent: "FoodRoomApp", staticRoute: "/food-room", description: "The foods I eat most, as characters on a table.", defaultSize: { width: 860, height: 640 } },
   { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", staticRoute: "/hobbies", description: "Training, tennis, cooking, DJing, photography and Rematch.", defaultSize: { width: 580, height: 660 } },
-  { id: "turntable", name: "Turntable", type: "app", icon: "Disc3", appComponent: "TurntableApp", description: "My Apple Music playlists on a turntable.", defaultSize: { width: 720, height: 600 } },
+  { id: "turntable", name: "Turntable", type: "app", icon: "Disc3", appComponent: "TurntableApp", description: "My Apple Music playlists on a turntable.", defaultSize: { width: 720, height: 780 } },
   { id: "contact", name: "Contact", type: "app", icon: "Mail", appComponent: "ContactApp", staticRoute: "/contact", description: "Get in touch.", defaultSize: { width: 500, height: 560 } },
   { id: "card", name: "Business Card", shortName: "Card", type: "app", icon: "Contact", appComponent: "BusinessCardApp", staticRoute: "/card", description: "Digital business card. Save contact, call, or email.", defaultSize: { width: 400, height: 640 } },
   { id: "linktree", name: "Links", type: "app", icon: "Link", appComponent: "LinktreeApp", description: "All links in one place.", defaultSize: { width: 420, height: 620 } },

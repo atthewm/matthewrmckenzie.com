@@ -98,35 +98,47 @@ export interface AppleMusicPlaylist {
   title: string;
   description?: string;
   appleMusicUrl: string;
+  /** Cover art from the Apple Music page (og:image), where Apple publishes one. */
+  artwork?: string;
+}
+
+/** The Apple Music embed player URL for a music.apple.com link. */
+export function appleMusicEmbedUrl(url: string): string {
+  return url.replace("https://music.apple.com/", "https://embed.music.apple.com/");
 }
 
 export const appleMusicPlaylists: AppleMusicPlaylist[] = [
   {
     id: "am-berlin-bunker",
+    artwork: "https://is1-ssl.mzstatic.com/image/thumb/SG-MQ-US-001-Image000001/v4/da/02/df/da02dfac-d82c-e86a-ce87-f2a94cc7c1a6/image/600x600bb.jpg",
     title: "Berlin Bunker",
     description: "Dark, driving techno from the underground.",
     appleMusicUrl: "https://music.apple.com/us/playlist/berlin-bunker/pl.u-akZrcDyX4G",
   },
   {
     id: "am-untitled-tape",
+    artwork: "https://is1-ssl.mzstatic.com/image/thumb/SG-MQ-US-001-Image000001/v4/41/1d/ad/411dadf2-f0d3-ccad-d51a-2b0eef3949cd/image/600x600bb.jpg",
     title: "Untitled Tape 01",
     description: "A mixtape without a name.",
     appleMusicUrl: "https://music.apple.com/us/playlist/pl.u-ek1LI5Kbqm",
   },
   {
     id: "am-perotin",
+    artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/5f/02/9b/5f029b38-7388-12d1-6343-ab77741b02ef/00042283775121.rgb.jpg/600x600bb.jpg",
     title: "Perotin",
     description: "Medieval polyphony and sacred choral music.",
     appleMusicUrl: "https://music.apple.com/us/album/perotin/1452341609",
   },
   {
     id: "am-famous",
+    artwork: "https://is1-ssl.mzstatic.com/image/thumb/SG-MQ-US-001-Image000001/v4/15/4d/9e/154d9eae-6b66-68d2-ece3-a1e2b5770889/image/600x600bb.jpg",
     title: "Famous",
     description: "The playlist formerly known as untitled.",
     appleMusicUrl: "https://music.apple.com/us/playlist/famous/pl.u-Jbe3tdEK56",
   },
   {
     id: "am-monet",
+    artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/dd/a4/d9/dda4d90d-e9a8-3b2a-4944-4ccc1fc8e60f/cover.jpg/600x600bb.jpg",
     title: "En Voyage with Claude Monet",
     description: "Impressionist soundscapes for wandering.",
     appleMusicUrl: "https://music.apple.com/us/album/en-voyage-with-claude-monet/1840213176",
@@ -139,6 +151,7 @@ export const appleMusicPlaylists: AppleMusicPlaylist[] = [
   },
   {
     id: "am-cumbias",
+    artwork: "https://is1-ssl.mzstatic.com/image/thumb/SG-MQ-US-035-Image000001/v4/6f/81/94/6f8194fe-d0c4-bf5e-192f-13068923181b/image/600x600bb.jpg",
     title: "Cumbias",
     description: "Cumbia rhythms from across Latin America.",
     appleMusicUrl: "https://music.apple.com/us/playlist/cumbias/pl.u-3W3gC6da5A",
