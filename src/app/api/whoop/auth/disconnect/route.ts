@@ -8,8 +8,12 @@
 import { NextResponse } from "next/server";
 import { clearTokens } from "@/lib/whoop/tokens";
 import { clearDashboardCache } from "@/lib/whoop/client";
+import { isOwnerRequest, NO_STORE } from "@/lib/owner";
 
-export async function POST() {
+export async function POST(request: Request) {
+  if (!isOwnerRequest(request)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404, headers: NO_STORE });
+  }
   try {
     await Promise.all([clearTokens(), clearDashboardCache()]);
 

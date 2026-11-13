@@ -114,8 +114,27 @@
   text-transform: uppercase;
   color: var(--gymlog-ink);
 }
-.card-file { margin-top: 6px; font-family: var(--font-num); font-size: 12px; overflow-wrap: anywhere; color: var(--gymlog-muted); }
-.card-quote { margin-top: 12px; font-size: 13px; line-height: 1.38; font-style: italic; color: var(--board-ink-muted); }
+/* Filenames stay on one line; the full name is in the title attribute. */
+.card-file {
+  margin-top: 6px;
+  font-family: var(--font-num);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--gymlog-muted);
+}
+.card-quote {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.38;
+  font-style: italic;
+  color: var(--board-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* Document: paper sheet with faux text */
 .card-paper { padding: 18px 18px; }
@@ -125,11 +144,35 @@
 /* Link / PDF: sticky note */
 .card-note {
   --card-paper: var(--note-paper);
+  display: flex;
+  flex-direction: column;
   padding: 16px 18px;
   border-color: var(--note-edge);
   border-radius: 0 0 2px 2px;
 }
-.card-note .card-sub { margin-top: 6px; color: var(--note-ink); }
+.card-note .card-title-display { -webkit-line-clamp: 3; }
+.card-note .card-title-display,
+.card-paper .card-title-display {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.card-paper .card-title-display { -webkit-line-clamp: 2; }
+.card-note .card-sub {
+  margin-top: 6px;
+  color: var(--note-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-paper .card-sub {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* Everything else: polaroid */
 .card-polaroid { padding: 10px 10px 0; }
@@ -148,7 +191,10 @@
   font-size: 15px;
   line-height: 1.25;
   color: var(--board-ink);
-  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* --------------------------------------------------------------------------

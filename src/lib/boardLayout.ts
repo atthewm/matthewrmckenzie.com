@@ -44,7 +44,7 @@ export const CARD_SIZES: Record<CardKind, { w: number; h: number }> = {
   split: { w: 232, h: 184 },
   paper: { w: 220, h: 272 },
   folder: { w: 232, h: 164 },
-  link: { w: 212, h: 136 },
+  link: { w: 212, h: 156 },
   polaroid: { w: 184, h: 206 },
 };
 
@@ -120,10 +120,12 @@ export function buildGroups(folder: FSItem): BoardGroup[] {
   return [...groups, ...nested];
 }
 
-function columnsFor(count: number, cellH: number): number {
-  if (count <= SINGLE_ROW_MAX) return count;
-  const rows = Math.max(1, Math.floor((TARGET_GROUP_HEIGHT + GAP) / (cellH + GAP)));
-  return Math.min(MAX_COLS, Math.max(1, Math.ceil(count / rows)));
+function columnsFor(count: number, cellW: number, cellH: number, maxWidth: number, groupHeight: number): number {
+  // Never wider than the window can show at a readable zoom.
+  const fitCols = Math.max(1, Math.floor((maxWidth + GAP) / (cellW + GAP)));
+  if (count <= SINGLE_ROW_MAX) return Math.min(count, fitCols);
+  const rows = Math.max(1, Math.floor((groupHeight + GAP) / (cellH + GAP)));
+  return Math.min(MAX_COLS, fitCols, Math.max(1, Math.ceil(count / rows)));
 }
 
 /** Deterministic value in [-1, 1] from a hash and a bit offset. */
@@ -140,11 +142,11 @@ interface GroupBlock {
   height: number;
 }
 
-function measure(group: BoardGroup): GroupBlock {
+function measure(group: BoardGroup, maxWidth: number, groupHeight: number): GroupBlock {
   const sizes = group.items.map((i) => CARD_SIZES[cardKind(i)]);
   const cellW = Math.max(...sizes.map((s) => s.w));
   const cellH = Math.max(...sizes.map((s) => s.h));
-  const cols = columnsFor(group.items.length, cellH);
+  const cols = columnsFor(group.items.length, cellW, cellH, maxWidth, groupHeight);
   const rows = Math.ceil(group.items.length / cols);
   return {
     group,
@@ -157,10 +159,10 @@ function measure(group: BoardGroup): GroupBlock {
 }
 
 /** Greedy shelf packing: fill a row left to right, wrap once it gets wider than the target. */
-function packRows(blocks: GroupBlock[]): GroupBlock[][] {
+function packRows(blocks: GroupBlock[], aspect: number, maxWidth: number): GroupBlock[][] {
   const area = blocks.reduce((sum, b) => sum + (b.width + GROUP_GAP) * (b.height + ROW_GAP), 0);
   const widest = Math.max(...blocks.map((b) => b.width));
-  const targetWidth = Math.max(widest, Math.sqrt(area * TARGET_ASPECT));
+  const targetWidth = Math.max(widest, Math.min(maxWidth, Math.sqrt(area * aspect)));
   const rows: GroupBlock[][] = [];
   let row: GroupBlock[] = [];
   let rowWidth = 0;
@@ -183,7 +185,23 @@ function packRows(blocks: GroupBlock[]): GroupBlock[][] {
  * into rows so the board stays roughly screen shaped. Each card is pinned at
  * the top center of a fixed cell; jitter and tilt are small enough that cards never touch.
  */
-export function computeLayout(groups: BoardGroup[]): BoardLayout {
+export interface LayoutViewport {
+  /** Window content width and height in screen pixels. */
+  width: number;
+  height: number;
+}
+
+/** The zoom a board should be readable at in a window this wide. */
+export function readableScale(viewWidth: number): number {
+  return viewWidth < 760 ? 0.8 : 0.9;
+}
+
+export function computeLayout(groups: BoardGroup[], view?: LayoutViewport): BoardLayout {
+  // Shape the board like its window, so it opens fitted instead of with a
+  // column hanging off the right edge. Without a size, keep the wide default.
+  const aspect = view && view.width > 0 && view.height > 0 ? Math.max(0.5, Math.min(3, view.width / view.height)) : TARGET_ASPECT;
+  const maxWidth = view && view.width > 0 ? Math.max(CARD_SIZES.recipe.w, view.width / readableScale(view.width) - BOARD_MARGIN * 2) : Infinity;
+  const groupHeight = TARGET_GROUP_HEIGHT;
   const cards: Record<string, CardPlacement> = {};
   const placedGroups: GroupPlacement[] = [];
   if (groups.length === 0) return { cards, groups: placedGroups, width: BOARD_MARGIN * 2, height: BOARD_MARGIN * 2 };
@@ -191,7 +209,7 @@ export function computeLayout(groups: BoardGroup[]): BoardLayout {
   let cursorY = BOARD_MARGIN;
   let maxRight = 0;
 
-  for (const row of packRows(groups.map(measure))) {
+  for (const row of packRows(groups.map((g) => measure(g, maxWidth, groupHeight)), aspect, maxWidth)) {
     let cursorX = BOARD_MARGIN;
     for (const block of row) {
       const { group, cols, cellW, cellH, width } = block;

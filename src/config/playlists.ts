@@ -145,7 +145,7 @@ export const appleMusicPlaylists: AppleMusicPlaylist[] = [
   },
   {
     id: "am-surf-city",
-    title: "Surf City T X",
+    title: "Surf City TX",
     description: "Sun, salt, and sound from the Texas coast.",
     appleMusicUrl: "https://music.apple.com/us/playlist/surf-city-t-x/pl.u-a340FDyX4G",
   },
@@ -164,7 +164,7 @@ export const appleMusicPlaylists: AppleMusicPlaylist[] = [
   },
   {
     id: "am-makossa",
-    title: "M Makossa",
+    title: "m Makossa",
     description: "Makossa, Afro-funk, and West African grooves.",
     appleMusicUrl: "https://music.apple.com/us/playlist/m-makossa/pl.u-9L3LTGXAYZ",
   },

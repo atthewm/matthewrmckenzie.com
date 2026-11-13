@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   description: "Sourdough from a homemade rye starter, jam, and high protein recipes by Matthew McKenzie, each tested and written down.",
   alternates: { canonical: "https://matthewrmckenzie.com/kitchen" },
   openGraph: {
+    images: ["/opengraph-image"],
     title: "Cooking and Baking",
     description: "Sourdough from a homemade rye starter, jam, and high protein recipes by Matthew McKenzie, each tested and written down.",
   },

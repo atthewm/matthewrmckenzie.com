@@ -785,6 +785,21 @@ export default function WhoopDashboardApp() {
   const [dashData, setDashData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [disconnecting, setDisconnecting] = useState(false);
+  // Account controls show only when the server says this is the owner.
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/whoop/status", { cache: "no-store", signal: AbortSignal.timeout(8000) })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (alive) setIsOwner(j?.owner === true);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const fetchData = useCallback(async () => {
     try {
@@ -863,7 +878,7 @@ export default function WhoopDashboardApp() {
           WHOOP Dashboard
         </span>
         <div className="flex items-center gap-2">
-          {!loading && isConnected && (
+          {isOwner && !loading && isConnected && (
             <button
               onClick={() => fetchData()}
               className="flex items-center gap-1 px-1.5 py-0.5 rounded
@@ -873,7 +888,7 @@ export default function WhoopDashboardApp() {
               <RefreshCw size={10} />
             </button>
           )}
-          {!loading && isConnected ? (
+          {!isOwner ? null : !loading && isConnected ? (
             <button
               onClick={handleDisconnect}
               disabled={disconnecting}

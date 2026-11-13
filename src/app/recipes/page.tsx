@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     "Matthew McKenzie's kitchen notebook: sourdough, family recipe cards, high-protein baking, and weeknight dinners, with macros.",
   alternates: { canonical: "https://matthewrmckenzie.com/recipes" },
   openGraph: {
+    images: ["/opengraph-image"],
     title: "Recipes | Matthew McKenzie",
     description: "Sourdough, family recipe cards, high-protein baking, and weeknight dinners.",
   },

@@ -9,8 +9,12 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { WHOOP_AUTH_URL, WHOOP_SCOPES, getEnvVar } from "@/lib/whoop/config";
 import { kvSet } from "@/lib/whoop/kv";
+import { isOwnerRequest, NO_STORE } from "@/lib/owner";
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!isOwnerRequest(request)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404, headers: NO_STORE });
+  }
   try {
     const clientId = getEnvVar("WHOOP_CLIENT_ID");
     const redirectUri = getEnvVar("WHOOP_REDIRECT_URI");
@@ -32,9 +36,9 @@ export async function GET() {
     const authUrl = `${WHOOP_AUTH_URL}?${params.toString()}`;
     return NextResponse.redirect(authUrl);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("WHOOP auth start error:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
-      { error: "Failed to start WHOOP authentication", detail: message },
+      { error: "Failed to start WHOOP authentication" },
       { status: 500 },
     );
   }

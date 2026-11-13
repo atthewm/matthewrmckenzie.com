@@ -67,7 +67,7 @@ function SplitFace({ item }: { item: FSItem }) {
     <div className="card-face card-gymlog">
       <p className="card-eyebrow">Split</p>
       <h3 className="card-title-block">{split?.displayName ?? item.name}</h3>
-      <p className="card-file">{split?.sillyFileName ?? item.name}</p>
+      <p className="card-file" title={split?.sillyFileName ?? item.name}>{split?.sillyFileName ?? item.name}</p>
       {split?.description && <p className="card-quote">&ldquo;{split.description}&rdquo;</p>}
     </div>
   );
@@ -107,7 +107,7 @@ function PolaroidFace({ item }: { item: FSItem }) {
       <div className="card-photo">
         <PantherIcon itemId={item.id} size={64} />
       </div>
-      <p className="card-caption">{item.name}</p>
+      <p className="card-caption" title={item.name}>{item.name}</p>
     </div>
   );
 }
@@ -157,7 +157,7 @@ function BoardCard({
         opacity: isDragging && isOverBackpack ? 0.75 : 1,
       }}
       aria-label={`${item.name}. Press Enter to open, D to download, arrow keys to move.`}
-      title={item.description}
+      title={item.description ? `${item.name}: ${item.description}` : item.name}
       onKeyDown={(e) => onKeyDown(e, item)}
     >
       <Fastener type={fastener} color={pinColor} />

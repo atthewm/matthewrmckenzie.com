@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description: "How Matthew McKenzie trains, recovers, sleeps, and eats: strength and endurance work, WHOOP and Eight Sleep tracking, and nutrition.",
   alternates: { canonical: "https://matthewrmckenzie.com/health" },
   openGraph: {
+    images: ["/opengraph-image"],
     title: "Health and Fitness",
     description: "How Matthew McKenzie trains, recovers, sleeps, and eats: strength and endurance work, WHOOP and Eight Sleep tracking, and nutrition.",
   },

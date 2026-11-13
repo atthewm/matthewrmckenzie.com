@@ -33,9 +33,9 @@ import type {
   NutritionDay,
   MediaItem,
   FavoriteFood,
-  NutritionTargets,
 } from "@/data/notion/types";
 import { DEFAULT_NUTRITION_TARGETS } from "@/data/notion/types";
+import { hitTargets } from "@/lib/nutrition";
 import { aggregateTopFoods, type MealEntryInput } from "./foods";
 
 export interface SyncContext {
@@ -80,17 +80,6 @@ function resolvePeople(ids: string[], ctx: SyncContext): string[] {
   return ids.map((id) => ctx.peopleById[id]).filter(Boolean);
 }
 
-function hitTargets(d: NutritionDay, t: NutritionTargets): boolean | null {
-  if (d.calories == null && d.proteinBioavailable == null) return null;
-  const calOk =
-    d.calories != null
-      ? Math.abs(d.calories - (d.calorieTarget ?? t.calories)) <= t.calorieBuffer
-      : false;
-  const proOk =
-    (d.proteinBioavailable ?? 0) >= (d.proteinTarget ?? t.proteinBioavailable);
-  const fibOk = (d.fiberFood ?? d.fiberTotal ?? 0) >= t.fiber;
-  return calOk && proOk && fibOk;
-}
 
 // ---------------------------------------------------------------------------
 // Registry
