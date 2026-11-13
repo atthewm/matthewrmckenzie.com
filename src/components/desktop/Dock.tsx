@@ -132,11 +132,11 @@ function DockIcon({
       <span
         className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 transition-all duration-200"
         style={{
-          width: isOpen ? 4 : 0,
-          height: isOpen ? 4 : 0,
+          width: 5,
+          height: 5,
           borderRadius: "50%",
-          background: isFocused ? "var(--desktop-accent)" : "var(--desktop-text-secondary)",
-          boxShadow: isOpen ? `0 0 4px ${isFocused ? "var(--desktop-accent)" : "transparent"}` : "none",
+          background: "var(--dock-dot)",
+          boxShadow: `0 0 6px 1px var(--dock-dot-glow)`,
           opacity: isOpen ? 1 : 0,
         }}
       />
@@ -155,8 +155,7 @@ function DockSeparator() {
       style={{
         width: 1,
         height: 32,
-        background: "var(--desktop-border)",
-        opacity: 0.5,
+        background: "var(--dock-border)",
       }}
     />
   );
@@ -283,13 +282,9 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
                     : "bottom-1.5 px-2.5 pt-1.5 pb-1.5"
                   }`}
       style={{
-        background: "var(--desktop-dock)",
-        border: "1px solid rgba(255,255,255,0.35)",
-        boxShadow: `
-          0 4px 24px rgba(0,0,0,0.18),
-          0 1px 6px rgba(0,0,0,0.12),
-          inset 0 1px 0 rgba(255,255,255,0.45)
-        `,
+        background: "var(--dock-shelf), var(--dock-bg)",
+        border: "1px solid var(--dock-border)",
+        boxShadow: "0 6px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.35)",
         backdropFilter: "blur(28px)",
         WebkitBackdropFilter: "blur(28px)",
         ...(isMobile ? { borderRadius: "16px 16px 0 0", borderBottom: "none" } : {}),

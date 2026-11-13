@@ -47,7 +47,7 @@ export default function SettingsProvider({ children }: { children: React.ReactNo
     if (!hydrated) return;
     const root = document.documentElement;
     root.style.setProperty("--user-font-family", getFontFamilyCSS(settings.fontFamily));
-    root.style.setProperty("--user-font-size", `${settings.fontSize}px`);
+    root.style.setProperty("--user-font-size", `${Math.max(15, settings.fontSize)}px`);
     root.style.setProperty("--user-line-height", `${settings.lineHeight}`);
 
     if (settings.highContrast) {

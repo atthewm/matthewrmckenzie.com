@@ -235,9 +235,8 @@ export default function Window({ windowState, children }: WindowProps) {
     se: "cursor-se-resize", sw: "cursor-sw-resize",
   };
 
-  // Panther Aqua shadows
-  const focusedShadow = "0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)";
-  const unfocusedShadow = "0 2px 12px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)";
+  const focusedShadow = "var(--shadow-window)";
+  const unfocusedShadow = "var(--shadow-window-inactive)";
 
   // Title bar gradient from CSS vars
   const titleBarBg = isFocused
@@ -271,9 +270,9 @@ export default function Window({ windowState, children }: WindowProps) {
           ? Math.min(windowState.height, window.innerHeight - 94)
           : windowState.height,
         zIndex: windowState.zIndex,
-        borderRadius: windowState.isMaximized ? 0 : 10,
+        borderRadius: windowState.isMaximized ? 0 : "var(--radius-window)",
         boxShadow: isFocused ? focusedShadow : unfocusedShadow,
-        border: `0.5px solid ${isFocused ? "rgba(0,0,0,0.35)" : "rgba(0,0,0,0.15)"}`,
+        border: "1px solid var(--border)",
       }}
       onPointerDown={handleWindowPointerDown}
     >
@@ -301,33 +300,31 @@ export default function Window({ windowState, children }: WindowProps) {
       {/* TITLE BAR - Panther Aqua brushed metal */}
       <div
         className={`
-          flex items-center ${isMobile ? "h-titlebar-mobile" : "h-titlebar"} px-2 shrink-0
+          flex items-center px-2.5 shrink-0
           ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}
         `}
         style={{
+          height: "var(--titlebar-h)",
           background: titleBarBg,
-          borderBottom: `0.5px solid ${isFocused ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.08)"}`,
+          borderBottom: "1px solid var(--border)",
         }}
         onPointerDown={handleDragStart}
         onPointerMove={handleDragMove}
         onPointerUp={handleDragEnd}
         onDoubleClick={handleTitleDoubleClick}
       >
-        {/* Traffic lights - larger touch targets on mobile */}
-        <div
-          className={`flex items-center ${isMobile ? "gap-[10px]" : "gap-[8px]"} mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
-        >
-          <button onClick={handleClose} aria-label="Close window" className={`aqua-btn aqua-close ${isMobile ? "aqua-btn-mobile" : ""}`} />
-          <button onClick={handleMinimize} aria-label="Minimize window" className={`aqua-btn aqua-minimize ${isMobile ? "aqua-btn-mobile" : ""}`} />
-          <button onClick={() => toggleMaximize(windowState.id)} aria-label={windowState.isMaximized ? "Restore window" : "Maximize window"} className={`aqua-btn aqua-zoom ${isMobile ? "aqua-btn-mobile" : ""}`} />
+        {/* Traffic lights */}
+        <div className={`traffic mr-3 z-20 ${isFocused ? "" : "is-inactive"}`}>
+          <button onClick={handleClose} aria-label="Close window" className="traffic-light is-close" />
+          <button onClick={handleMinimize} aria-label="Minimize window" className="traffic-light is-min" />
+          <button onClick={() => toggleMaximize(windowState.id)} aria-label={windowState.isMaximized ? "Restore window" : "Zoom window"} className="traffic-light is-zoom" />
         </div>
 
         {/* Title */}
         <div
-          className="flex-1 text-center text-title font-semibold truncate pointer-events-none"
+          className="flex-1 text-center text-[13px] font-semibold truncate pointer-events-none"
           style={{
-            color: isFocused ? "var(--window-title-text, rgba(0,0,0,0.85))" : "var(--window-title-text-inactive, rgba(0,0,0,0.35))",
-            textShadow: isFocused ? "0 1px 0 rgba(255,255,255,0.5)" : "none",
+            color: isFocused ? "var(--titlebar-text)" : "var(--titlebar-text-inactive)",
           }}
         >
           {windowState.title}
@@ -352,11 +349,11 @@ export default function Window({ windowState, children }: WindowProps) {
       <div
         className="flex-1 overflow-auto scrollbar-thin"
         style={{
-          backgroundColor: "var(--desktop-surface)",
-          fontFamily: "var(--user-font-family, inherit)",
-          fontSize: "var(--user-font-size, 13px)",
-          lineHeight: "var(--user-line-height, 1.5)",
-          color: "var(--desktop-text)",
+          background: "var(--paper)",
+          fontFamily: "var(--user-font-family)",
+          fontSize: "var(--user-font-size)",
+          lineHeight: "var(--user-line-height)",
+          color: "var(--text)",
         }}
       >
         {children}

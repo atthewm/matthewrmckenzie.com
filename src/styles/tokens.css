@@ -120,6 +120,8 @@
     radial-gradient(60% 18% at 45% 48%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 70%),
     radial-gradient(45% 12% at 62% 62%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
 
+  --wallpaper-ribbon: #ffffff;
+
   /* Springboard (phone) */
   --status-bar: rgba(0, 0, 0, 0.35);
   --status-text: #ffffff;
@@ -200,6 +202,8 @@
   --wallpaper-streaks:
     radial-gradient(60% 18% at 45% 48%, rgba(170, 190, 230, 0.1) 0%, rgba(170, 190, 230, 0) 70%),
     radial-gradient(45% 12% at 62% 62%, rgba(170, 190, 230, 0.07) 0%, rgba(170, 190, 230, 0) 70%);
+
+  --wallpaper-ribbon: #9fb6e0;
 
   --status-bar: rgba(0, 0, 0, 0.5);
   --springboard-dock: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%);

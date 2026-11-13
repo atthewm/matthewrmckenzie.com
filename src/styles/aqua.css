@@ -157,3 +157,42 @@
   .aqua-button.is-default.is-pulsing { animation: none; }
   .aqua-progress > span { animation: none; }
 }
+
+/* Desktop icons: white labels with the classic soft shadow, a highlight
+   pill and a darkened box behind the art when selected, as in Panther. */
+.desktop-icon-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+.desktop-icon-label {
+  max-width: 88px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font: 600 13px / 1.25 var(--font-ui);
+  color: var(--icon-label);
+  text-align: center;
+  text-shadow: var(--icon-label-shadow);
+  overflow-wrap: anywhere;
+}
+.desktop-icon[data-selected] .desktop-icon-art { background: var(--icon-selected-box); }
+.desktop-icon[data-selected] .desktop-icon-label {
+  background: var(--icon-selected-bg);
+  color: var(--icon-selected-text);
+  text-shadow: none;
+}
+.desktop-icon:focus-visible .desktop-icon-label { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+
+/* Wallpaper drift: a very slow pan and zoom on the oversized wallpaper. */
+@keyframes wallpaper-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-1.5%, 1%, 0) scale(1.03); }
+  100% { transform: translate3d(1%, -1%, 0) scale(1.015); }
+}
+.wallpaper-drift { animation: wallpaper-drift 120s ease-in-out infinite alternate; will-change: transform; }
+:root.dark .menubar-apple { filter: invert(1) brightness(1.4); }
+@media (prefers-reduced-motion: reduce) {
+  .wallpaper-drift { animation: none; }
+}

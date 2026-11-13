@@ -39,7 +39,7 @@ function Clock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span className="text-2xs font-medium tabular-nums">{time}</span>;
+  return <span className="text-[13px] font-medium tabular-nums">{time}</span>;
 }
 
 // ---------------------------------------------------------------------------
@@ -167,11 +167,12 @@ function MenuDropdown({
       role="menu"
       aria-label={label}
       onKeyDown={handleKeyDown}
-      className="absolute left-0 top-full mt-0 min-w-[180px] py-1 rounded-b-md shadow-lg animate-fade-in z-10"
+      className="absolute left-0 top-full mt-0 min-w-[200px] py-1 rounded-b-md shadow-lg animate-menu-drop z-10"
       style={{
-        background: "var(--desktop-surface)",
-        border: "1px solid var(--desktop-border)",
+        background: "var(--menu-bg)",
+        border: "1px solid var(--border)",
         borderTop: "none",
+        backdropFilter: "blur(16px)",
       }}
     >
       {items.map((item, i) => {
@@ -211,7 +212,7 @@ function MenuDropdown({
             }}
             disabled={item.disabled}
             className={`
-              w-full flex items-center justify-between px-4 py-1 text-2xs text-left
+              w-full flex items-center justify-between px-4 py-1 text-[13px] text-left
               transition-colors duration-75
               ${item.disabled
                 ? "text-desktop-text-secondary/50 cursor-default"
@@ -221,7 +222,7 @@ function MenuDropdown({
           >
             <span>{item.label}</span>
             {item.shortcut && (
-              <span className="ml-6 text-3xs opacity-50">{item.shortcut}</span>
+              <span className="ml-6 text-[12px] opacity-50">{item.shortcut}</span>
             )}
           </button>
         );
@@ -322,14 +323,14 @@ function SubmenuItem({
         aria-expanded={open}
         tabIndex={-1}
         onKeyDown={handleTriggerKeyDown}
-        className="w-full flex items-center justify-between px-4 py-1 text-2xs
+        className="w-full flex items-center justify-between px-4 py-1 text-[13px]
                    text-desktop-text hover:bg-desktop-accent hover:text-on-accent
                    focus:bg-desktop-accent focus:text-on-accent focus:outline-none
                    transition-colors duration-75 cursor-default"
         onClick={() => { if (isMobileView) setOpen(!open); }}
       >
         <span>{item.label}</span>
-        <span className="text-3xs" aria-hidden="true">{open ? "\u25BE" : "\u25B8"}</span>
+        <span className="text-[12px]" aria-hidden="true">{open ? "\u25BE" : "\u25B8"}</span>
       </div>
       {open && (
         <div
@@ -365,14 +366,14 @@ function SubmenuItem({
                     child.action();
                     onClose();
                   }}
-                  className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-2xs text-left
+                  className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-[13px] text-left
                              text-desktop-text hover:bg-desktop-accent hover:text-on-accent
                              focus:bg-desktop-accent focus:text-on-accent focus:outline-none
                              transition-colors duration-75`}
                 >
                   <span>{child.label}</span>
                   {child.shortcut && (
-                    <span className="ml-4 text-3xs opacity-50">{child.shortcut}</span>
+                    <span className="ml-4 text-[12px] opacity-50">{child.shortcut}</span>
                   )}
                 </button>
               );
@@ -742,6 +743,7 @@ export default function MenuBar() {
         background: "var(--menubar-bg)",
         borderBottomColor: "var(--menubar-border)",
         backdropFilter: "saturate(180%) blur(20px)",
+        color: "var(--text)",
       }}
     >
       {/* Left: app name + menu items */}
@@ -757,7 +759,7 @@ export default function MenuBar() {
                 tabIndex={index === activeTopIndex ? 0 : -1}
                 onFocus={() => setFocusTopIndex(index)}
                 onKeyDown={(e) => handleTriggerKeyDown(e, index)}
-                className={`text-2xs px-2 py-0.5 rounded
+                className={`text-[13px] px-2 py-0.5 rounded
                            transition-colors duration-75 text-desktop-text
                            focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-desktop-accent
                            ${name === "\uF8FF" ? "font-bold tracking-wide" : "font-normal"}
@@ -765,7 +767,13 @@ export default function MenuBar() {
                 onMouseDown={() => openMenuFromMouse(activeMenu === name ? null : name)}
                 onMouseEnter={() => { if (activeMenu) openMenuFromMouse(name); }}
               >
-                {name === "\uF8FF" ? (isMobile ? "MCK_OS" : "McKenzie OS") : name}
+                {name === "\uF8FF" ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/icons/panther/apple-logo.png" alt="" width={15} height={15} className="menubar-apple" />
+                    McKenzie OS
+                  </span>
+                ) : name}
               </button>
               {activeMenu === name && (
                 <MenuDropdown
@@ -783,7 +791,7 @@ export default function MenuBar() {
 
         {/* Active window title (subtle, like classic Mac) - hidden on mobile */}
         {activeTitle && !isMobile && (
-          <span className="text-2xs text-desktop-text-secondary ml-4 truncate max-w-[200px]">
+          <span className="text-[13px] text-desktop-text-secondary ml-4 truncate max-w-[200px]">
             {activeTitle}
           </span>
         )}
