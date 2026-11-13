@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { logChessMove, resetChessLog } from "@/lib/duoStores";
 
 // ============================================================================
 // CHESS (Mac OS X Panther Style)
@@ -333,6 +334,7 @@ export default function ChessApp() {
       if (piece.type === "P" && to[0] === 7) nb[to[0]][to[1]] = { color: "b", type: "Q" };
       setBoard(nb);
       setLastMove([from, to]);
+      logChessMove("b", piece.type, from, to);
       setTurn("w");
       if (!checkGameEnd(nb, "w")) {
         setStatus("Your turn (White)");
@@ -362,6 +364,7 @@ export default function ChessApp() {
         setSelected(null);
         setLegalMoves([]);
         setLastMove([selected, [r, c]]);
+        logChessMove("w", piece.type, selected, [r, c]);
         setTurn("b");
         checkGameEnd(nb, "b");
         return;
@@ -391,6 +394,7 @@ export default function ChessApp() {
     setStatus("Your turn (White)");
     setGameOver(false);
     setLastMove(null);
+    resetChessLog();
     thinkingRef.current = false;
   }, []);
 

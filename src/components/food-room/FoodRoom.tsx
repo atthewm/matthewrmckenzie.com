@@ -10,6 +10,7 @@ import BoardDashboard from "./BoardDashboard";
 import Avatar from "./Avatar";
 import RoomScene from "./RoomScene";
 import { useCompactRoom } from "./useCompactRoom";
+import { foodRoomSelection } from "@/lib/duoStores";
 import { TALL_ROOM, WIDE_ROOM, clamp, inBox, layoutItems, nearBoard, type RoomItem } from "./roomGeometry";
 
 // ============================================================================
@@ -279,6 +280,10 @@ export default function FoodRoom() {
   };
 
   const openItem = useMemo(() => items.find((it) => it.id === card) ?? null, [items, card]);
+  // Share the open food with the Duo bottom screen.
+  useEffect(() => {
+    foodRoomSelection.set(openItem ? openItem.foods : null);
+  }, [openItem]);
   const showBoardPrompt = !overlayOpen && nearBoard(g, avatar.x, avatar.y);
   const boardFoods = foods ?? [];
   // Draw back to front so lower things overlap higher ones.
@@ -304,6 +309,7 @@ export default function FoodRoom() {
 
       <div
         ref={roomRef}
+        data-food-room-floor=""
         tabIndex={0}
         role="application"
         aria-label="Food room. Arrow keys to walk, E to read the board."

@@ -4,8 +4,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useTheme } from "@/lib/theme";
 import ThemeControl from "@/components/theme/ThemeControl";
+import { readDuoPreference, setDuoPreference } from "@/lib/duo";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
-import { useOpenInBrowser } from "@/lib/browserStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useShutdown } from "./ShutdownContext";
 
@@ -393,6 +393,8 @@ function SubmenuItem({
 export default function MenuBar() {
   const { state, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow } = useDesktop();
   const { resolved: resolvedTheme, setTheme } = useTheme();
+  const [duoOn, setDuoOn] = useState(false);
+  useEffect(() => setDuoOn(readDuoPreference()), []);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
   // Roving tab stop across the menubar triggers, plus whether an opening
@@ -400,7 +402,6 @@ export default function MenuBar() {
   const [focusTopIndex, setFocusTopIndex] = useState(0);
   const [dropdownFocus, setDropdownFocus] = useState<"first" | "last" | null>(null);
   const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const openInBrowser = useOpenInBrowser();
   const isMobile = useIsMobile();
   const shutdown = useShutdown();
 
@@ -460,6 +461,15 @@ export default function MenuBar() {
         type: "action",
         label: resolvedTheme === "dark" ? "Switch to Light Appearance" : "Switch to Dark Appearance",
         action: () => setTheme(resolvedTheme === "dark" ? "light" : "dark"),
+      },
+      {
+        type: "action",
+        label: duoOn ? "\u2713 Duo Layout" : "Duo Layout",
+        action: () => {
+          const next = !readDuoPreference();
+          setDuoPreference(next);
+          setDuoOn(next);
+        },
       },
       { type: "separator" },
       {
@@ -660,7 +670,7 @@ export default function MenuBar() {
     ];
 
     return { "\uF8FF": osItems, File: fileItems, Edit: editItems, View: viewItems, Window: windowItems, Help: helpItems };
-  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems, openInBrowser, shutdown]);
+  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems, shutdown, duoOn, resolvedTheme, setTheme]);
 
   const menus = buildMenus();
 

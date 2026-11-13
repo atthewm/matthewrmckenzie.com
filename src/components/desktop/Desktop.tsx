@@ -15,6 +15,7 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSecrets } from "@/lib/useSecrets";
 import { findFSItem, desktopIconIds } from "@/data/fs";
+import { desktopViewport } from "@/lib/viewport";
 
 // ============================================================================
 // DESKTOP
@@ -29,9 +30,11 @@ const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRi
 
 interface DesktopProps {
   contentMap: Record<string, string>;
+  /** The Duo laptop pose moves the dock to the bottom screen. */
+  hideDock?: boolean;
 }
 
-export default function Desktop({ contentMap }: DesktopProps) {
+export default function Desktop({ contentMap, hideDock = false }: DesktopProps) {
   useKeyboardShortcuts();
   const { dispatch } = useDesktop();
   const isMobile = useIsMobile();
@@ -47,13 +50,12 @@ export default function Desktop({ contentMap }: DesktopProps) {
   // column down to just above the dock, then moving one column left.
   const ICON_STORAGE_KEY = "mmck-desktop-icon-positions-v2";
   const getDefaultIconPositions = useCallback((): Record<string, { x: number; y: number }> => {
-    const vw = typeof window !== "undefined" ? window.innerWidth : 1440;
-    const vh = typeof window !== "undefined" ? window.innerHeight : 900;
+    const { width: vw, height: vh } = desktopViewport();
     const CELL_W = 96;
     const CELL_H = 100;
     const TOP = 34;
     const RIGHT = 12;
-    const DOCK_ROOM = 112;
+    const DOCK_ROOM = vh < 500 ? 16 : 112;
     const rows = Math.max(1, Math.floor((vh - TOP - DOCK_ROOM) / CELL_H));
     const positions: Record<string, { x: number; y: number }> = {};
     desktopIconIds.forEach((id, i) => {
@@ -318,7 +320,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
       <FloatingStickies visible={stickiesVisible} />
 
       {/* Dock */}
-      <Dock onStickiesToggle={() => setStickiesVisible((v) => !v)} stickiesActive={stickiesVisible} />
+      {!hideDock && <Dock onStickiesToggle={() => setStickiesVisible((v) => !v)} stickiesActive={stickiesVisible} />}
 
       {/* Exposé overlay */}
       <Expose active={exposeActive} onClose={() => setExposeActive(false)} />

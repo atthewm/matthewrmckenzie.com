@@ -1,0 +1,155 @@
+/* ============================================================================
+   DUO LAYOUT (two screens)
+   ============================================================================ */
+
+.duo-root { position: fixed; inset: 0; background: #000; overflow: hidden; }
+.duo-region { position: absolute; overflow: hidden; background: var(--wallpaper); }
+.duo-top { color: var(--text); }
+.duo-fill { position: absolute; inset: 0; overflow: auto; background: var(--paper); }
+.duo-desktop { position: absolute; inset: 0; transform: translateZ(0); overflow: hidden; }
+.duo-app-frame { position: absolute; inset: 0; overflow: auto; background: var(--paper); }
+
+.duo-bottom { display: flex; flex-direction: column; color: var(--text); background: var(--metal-grain), var(--metal); }
+.duo-bottom-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 6px 12px;
+  background: var(--toolbar);
+  border-bottom: 1px solid var(--border);
+}
+.duo-bottom-title { flex: 1; font: 700 15px / 1.2 var(--font-ui); text-align: center; }
+.duo-bottom-body { flex: 1; min-height: 0; overflow: auto; }
+.duo-desk { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; gap: 12px; padding: 12px; align-items: start; }
+.duo-desk .dock-shelf { grid-column: 1 / -1; justify-self: center; }
+.duo-switcher { display: flex; flex-direction: column; gap: 6px; min-width: 200px; }
+.duo-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font: 600 14px / 1.2 var(--font-ui);
+  color: var(--button-text);
+  background: var(--button);
+  border: 1px solid var(--button-border);
+  text-align: left;
+}
+.duo-switch[aria-pressed="true"] { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+.duo-trackpad {
+  min-height: 120px;
+  height: 100%;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.06));
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-2);
+  touch-action: none;
+}
+.duo-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: 14px;
+  height: 20px;
+  margin: -2px 0 0 -2px;
+  pointer-events: none;
+  background: #000;
+  clip-path: polygon(0 0, 0 100%, 30% 75%, 50% 100%, 65% 92%, 45% 68%, 100% 68%);
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+}
+.duo-note { font-size: 14px; color: var(--text-2); }
+
+/* Work */
+.duo-pair { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+.duo-doc { min-height: 0; overflow: auto; border-right: 1px solid var(--border-soft); }
+.duo-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
+
+/* Health */
+.duo-dials { display: flex; align-items: center; justify-content: center; gap: 40px; height: 100%; flex-wrap: wrap; padding: 12px; background: var(--paper); }
+.duo-dial { position: relative; width: 170px; height: 170px; margin: 0; }
+.duo-dial svg { width: 100%; height: 100%; }
+.duo-dial figcaption { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.duo-dial-value { font: 700 30px / 1 var(--font-num); }
+.duo-dial-label { font-size: 14px; color: var(--text-2); margin-top: 4px; }
+.duo-dials .duo-note { flex-basis: 100%; text-align: center; }
+.duo-cards { display: flex; gap: 12px; padding: 16px; overflow-x: auto; scroll-snap-type: x mandatory; height: 100%; align-items: stretch; }
+.duo-card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: var(--text);
+  text-decoration: none;
+}
+.duo-card-eyebrow { font: 700 12px / 1.2 var(--font-ui); color: var(--accent); }
+.duo-card-title { font: 700 20px / 1.2 var(--font-ui); }
+.duo-card-sub { font-size: 14px; color: var(--text-2); }
+
+/* Recipes */
+.duo-cook { display: flex; flex-direction: column; gap: 12px; height: 100%; padding: 16px 24px; background: var(--paper); }
+.duo-cook-meta { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--text-2); }
+.duo-cook-wake { font-size: 13px; }
+.duo-cook-step { flex: 1; overflow: auto; font: 600 26px / 1.35 var(--font-ui); color: var(--text); }
+.duo-cook-nav { display: flex; gap: 12px; justify-content: flex-end; }
+.duo-recipe { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px 16px; }
+.duo-checklist { display: flex; flex-direction: column; gap: 4px; }
+.duo-checklist label { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; padding: 4px 0; }
+.duo-checklist input { width: 20px; height: 20px; accent-color: var(--accent); margin-top: 1px; }
+.duo-timers { display: flex; flex-direction: column; gap: 8px; }
+.duo-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--button);
+  border: 1px solid var(--button-border);
+  color: var(--button-text);
+  font-size: 13px;
+}
+.duo-timer .site-num { font-size: 20px; font-weight: 700; }
+
+/* Food Room */
+.duo-food { display: grid; grid-template-columns: auto auto 1fr; gap: 24px; align-items: center; padding: 16px 24px; height: 100%; }
+.duo-pad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); }
+.duo-pad-btn { border-radius: 10px; background: var(--button); border: 1px solid var(--button-border); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25); touch-action: none; }
+.duo-pad-btn.is-up { grid-column: 2; grid-row: 1; }
+.duo-pad-btn.is-left { grid-column: 1; grid-row: 2; }
+.duo-pad-btn.is-right { grid-column: 3; grid-row: 2; }
+.duo-pad-btn.is-down { grid-column: 2; grid-row: 3; }
+.duo-action { width: 72px; height: 72px; border-radius: 50%; background: var(--gel); border: 1px solid var(--gel-border); color: var(--gel-text); font: 700 22px / 1 var(--font-ui); }
+.duo-food-stats { font-size: 15px; display: flex; flex-direction: column; gap: 6px; }
+.duo-food-stats p { display: flex; flex-direction: column; }
+
+/* Chess */
+.duo-chess { display: grid; grid-template-columns: 220px 1fr; gap: 16px; height: 100%; padding: 16px; background: var(--paper); }
+.duo-clocks { display: flex; flex-direction: column; gap: 8px; }
+.duo-clocks p { display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-soft); font-size: 15px; }
+.duo-clocks p[data-active] { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+.duo-clocks .site-num { font-size: 20px; font-weight: 700; }
+.duo-moves { overflow: auto; column-width: 140px; font-size: 15px; }
+
+/* Photo Booth */
+.duo-effects { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 16px; }
+.duo-effect { min-height: 56px; border-radius: 12px; background: var(--button); border: 1px solid var(--button-border); color: var(--button-text); font: 600 15px / 1.2 var(--font-ui); }
+.duo-effect[aria-checked="true"] { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+
+/* Book pose: the same halves side by side */
+[data-duo="book"] .duo-pair { grid-template-columns: 1fr; }

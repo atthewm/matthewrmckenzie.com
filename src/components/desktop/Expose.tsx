@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { computeExposeSlots, setExpose, useExpose } from "@/lib/exposeStore";
 import { FADE } from "@/lib/motion";
+import { desktopViewport } from "@/lib/viewport";
 import { Z_INDEX } from "@/lib/z-index";
 
 // ============================================================================
@@ -35,7 +36,7 @@ export default function Expose({ active, onClose }: ExposeProps) {
     const ordered = [...visible].sort((a, b) => a.zIndex - b.zIndex);
     setExpose({
       active: true,
-      slots: computeExposeSlots(ordered, window.innerWidth, window.innerHeight),
+      slots: computeExposeSlots(ordered, desktopViewport().width, desktopViewport().height),
     });
     // visible is derived from state.windows
     // eslint-disable-next-line react-hooks/exhaustive-deps

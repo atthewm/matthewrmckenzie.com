@@ -8,6 +8,7 @@ import "@/styles/aqua.css";
 import "@/styles/springboard.css";
 import "@/styles/site.css";
 import "@/styles/turntable.css";
+import "@/styles/duo.css";
 import "@/styles/board.css";
 import "@/styles/board-cards.css";
 import "@/styles/board-chrome.css";
