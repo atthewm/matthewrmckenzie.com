@@ -896,7 +896,7 @@ export default function WhoopDashboardApp() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin">
+      <div className="flex-1 overflow-y-auto scrollbar-thin" tabIndex={0} role="region" aria-label="WHOOP dashboard">
         <div className="max-w-[640px] mx-auto px-4 py-3">
           {/* Header */}
           <div className="flex items-center gap-3 mb-3">

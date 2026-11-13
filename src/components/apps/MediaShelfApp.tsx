@@ -91,7 +91,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-3">
+      <div className="flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={shelf.label}>
         {loading ? (
           <AquaLoading label={`Loading ${shelf.label}`} />
         ) : failed || items.length === 0 ? (

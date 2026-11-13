@@ -21,8 +21,23 @@ const RUNS = Number(process.env.LH_RUNS || 3);
 
 await mkdir(OUT, { recursive: true });
 const chrome = await chromeLauncher.launch({ chromePath: chromium.executablePath(), chromeFlags: ["--headless=new", "--no-sandbox"] });
+// Protected previews: put the share-link cookie in Chrome's jar over CDP and
+// keep Lighthouse from clearing it between runs.
+async function setPreviewCookie() {
+  const jwt = process.env.VERCEL_JWT;
+  if (!jwt) return false;
+  const { webSocketDebuggerUrl } = await (await fetch(`http://127.0.0.1:${chrome.port}/json/version`)).json();
+  const ws = new WebSocket(webSocketDebuggerUrl);
+  await new Promise((r) => ws.addEventListener("open", r, { once: true }));
+  const done = new Promise((r) => ws.addEventListener("message", r, { once: true }));
+  ws.send(JSON.stringify({ id: 1, method: "Storage.setCookies", params: { cookies: [{ name: "_vercel_jwt", value: jwt, domain: new URL(BASE).hostname, path: "/", secure: true, httpOnly: true }] } }));
+  await done;
+  ws.close();
+  return true;
+}
+const usingCookie = await setPreviewCookie();
 const summary = {};
-for (const p of ["/", "/about"]) {
+for (const p of (process.env.LH_PATHS || "/,/about").split(",")) {
   const scores = [];
   for (let i = 0; i < RUNS; i++) {
     const res = await lighthouse(BASE + p, {
@@ -31,8 +46,10 @@ for (const p of ["/", "/about"]) {
       onlyCategories: ["performance", "accessibility", "best-practices", "seo"],
       formFactor: "mobile",
       screenEmulation: { mobile: true, width: 412, height: 823, deviceScaleFactor: 1.75, disabled: false },
-      extraHeaders: process.env.VERCEL_JWT ? { Cookie: `_vercel_jwt=${process.env.VERCEL_JWT}` } : BYPASS ? { "x-vercel-protection-bypass": BYPASS } : undefined,
+      extraHeaders: BYPASS ? { "x-vercel-protection-bypass": BYPASS } : undefined,
+      disableStorageReset: usingCookie,
     });
+    if (!res.lhr.finalDisplayedUrl.startsWith(BASE)) throw new Error(`Landed on ${res.lhr.finalDisplayedUrl}, not the page under test`);
     const c = res.lhr.categories;
     const row = {
       performance: Math.round(c.performance.score * 100),

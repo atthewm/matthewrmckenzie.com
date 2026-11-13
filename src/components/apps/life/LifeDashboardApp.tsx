@@ -143,7 +143,7 @@ export default function LifeDashboardApp() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" tabIndex={0} role="region" aria-label="Health and diet">
         <div className="mx-auto max-w-[560px] px-4 py-3">
           <div className="mb-1 flex items-center gap-3">
             <div

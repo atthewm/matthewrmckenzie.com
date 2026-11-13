@@ -153,7 +153,7 @@ export default function NutritionApp() {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-[var(--paper-2)] p-4 text-desktop-text">
+    <div className="h-full overflow-y-auto bg-[var(--paper-2)] p-4 text-desktop-text" tabIndex={0} role="region" aria-label="Nutrition">
       <header className="mb-3 flex items-center justify-between">
         <div>
           <h1 className="text-base font-semibold">Nutrition</h1>

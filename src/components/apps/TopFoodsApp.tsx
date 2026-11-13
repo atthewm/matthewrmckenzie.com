@@ -250,7 +250,7 @@ export default function TopFoodsApp() {
 
       {!loading && !failed && foods.length > 0 && <SummaryStrip foods={foods} />}
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" tabIndex={0} role="region" aria-label="Top foods list">
         {loading ? (
           <AquaLoading label="Loading top foods" />
         ) : failed || foods.length === 0 ? (
