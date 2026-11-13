@@ -1,0 +1,282 @@
+/* ============================================================================
+   STATIC PAGES AS DOCUMENT WINDOWS
+   ============================================================================
+   /about, /work, /recipes and the rest are server-rendered for search, and
+   shown as a TextEdit or Safari 1 window open on the desktop wallpaper: a
+   title bar with traffic lights, an Aqua toolbar with a link back to the
+   desktop and the theme switch, and a paper body. Same tokens, same theme.
+   ============================================================================ */
+
+.site {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 32px 24px 48px;
+  background: var(--wallpaper);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+}
+.site-embedded { min-height: 0; padding: 16px; background: var(--paper); }
+
+.doc-window {
+  max-width: 860px;
+  margin: 0 auto;
+  border-radius: var(--radius-window);
+  border: 1px solid var(--border);
+  background: var(--window-bg);
+  box-shadow: var(--shadow-window);
+  overflow: hidden;
+}
+.doc-window.is-wide { max-width: 1100px; }
+
+.doc-titlebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--titlebar-h);
+  padding: 0 10px;
+  background: var(--titlebar);
+  border-bottom: 1px solid var(--border);
+}
+.doc-title {
+  position: absolute;
+  inset: 0 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 13px / 1 var(--font-ui);
+  color: var(--titlebar-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 16px;
+  background: var(--toolbar);
+  border-bottom: 1px solid var(--border);
+}
+.doc-nav { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; min-width: 0; }
+.doc-nav a {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font: 500 14px / 1.3 var(--font-ui);
+  color: var(--text);
+  text-decoration: none;
+}
+.doc-nav a:hover { background: var(--accent-soft); }
+.doc-nav a[aria-current="page"] { background: var(--gel); color: var(--gel-text); text-shadow: var(--gel-text-shadow); }
+
+.doc-body {
+  background: var(--paper);
+  padding: 40px 56px 48px;
+}
+.doc-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 12px 16px;
+  background: var(--pinstripe);
+  border-top: 1px solid var(--border-soft);
+  font-size: 13px;
+  color: var(--text-2);
+}
+.doc-footer nav { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.doc-footer a { color: var(--text-2); }
+.doc-footer a:hover { color: var(--text); }
+
+@media (max-width: 760px) {
+  .doc-nav { order: 3; flex-basis: 100%; }
+  .doc-toolbar { justify-content: space-between; }
+}
+
+@media (max-width: 640px) {
+  .site { padding: 12px 12px 32px; }
+  .doc-body { padding: 24px 18px 32px; }
+  .doc-title { inset: 0 70px; }
+}
+
+.site :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: 3px; }
+
+/* Type */
+.site-title { font: 700 30px / 1.15 var(--font-ui); letter-spacing: -0.01em; margin: 0 0 12px; color: var(--text); }
+.site-lede { font-size: 18px; line-height: 1.55; color: var(--text-2); margin: 0 0 24px; }
+.site-section-title { font: 700 19px / 1.3 var(--font-ui); color: var(--text); }
+.site-measure { max-width: 680px; }
+.site-num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.site-eyebrow { font: 600 13px / 1.3 var(--font-ui); color: var(--text-2); }
+.site-display { font-family: var(--font-ui); font-weight: 700; }
+.site-mono { font-family: var(--font-num); }
+.site-link { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+
+.site-prose { font-size: 16px; line-height: 1.7; color: var(--text); max-width: 680px; }
+.site-prose > :first-child { margin-top: 0; }
+.site-prose h1 { font: 700 30px / 1.15 var(--font-ui); letter-spacing: -0.01em; margin: 0 0 20px; }
+.site-prose h2 {
+  font: 700 21px / 1.3 var(--font-ui);
+  margin: 36px 0 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-soft);
+}
+.site-prose h3 { font: 700 17px / 1.4 var(--font-ui); margin: 24px 0 8px; }
+.site-prose p { margin: 0 0 16px; }
+.site-prose ul, .site-prose ol { margin: 0 0 18px; padding-left: 1.3em; }
+.site-prose ul { list-style: disc; }
+.site-prose ul > li::marker { color: var(--accent); }
+.site-prose ol { list-style: decimal; }
+.site-prose li { margin: 6px 0; padding-left: 4px; }
+.site-prose a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.site-prose strong { font-weight: 700; }
+.site-prose em { color: var(--text-2); }
+.site-prose blockquote { margin: 20px 0; padding: 4px 0 4px 18px; border-left: 3px solid var(--accent); color: var(--text); }
+.site-prose blockquote p { margin-bottom: 6px; }
+.site-prose hr { border: 0; border-top: 1px solid var(--border-soft); margin: 32px 0; }
+.site-prose code { font-family: var(--font-num); font-size: 0.88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+.site-prose table { width: 100%; border-collapse: collapse; margin: 8px 0 24px; font-size: 15px; display: block; overflow-x: auto; }
+.site-prose th, .site-prose td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border-soft); }
+.site-prose th { font-weight: 700; font-size: 13px; color: var(--text-2); }
+.site-prose td[align="right"], .site-prose th[align="right"] { text-align: right; font-variant-numeric: tabular-nums; }
+.site-prose img { max-width: 100%; height: auto; border-radius: 6px; }
+
+/* Spec lists (/hobbies) */
+.site-spec-title { font: 700 15px / 1.3 var(--font-ui); margin: 0 0 6px; }
+.site-specs { max-width: 680px; border: 1px solid var(--border-soft); border-radius: var(--radius-panel); overflow: hidden; }
+.site-specs > div { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 12px; padding: 8px 14px; border-top: 1px solid var(--border-soft); }
+.site-specs > div:first-child { border-top: 0; }
+.site-specs > div:nth-child(even) { background: var(--paper-2); }
+.site-specs dt { color: var(--text-2); font-size: 15px; }
+.site-specs dd { margin: 0; font-size: 15px; }
+.site-specs dd small { display: block; color: var(--text-2); font-size: 13px; }
+
+/* Buttons used by the food room */
+.site-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 4px 16px; border-radius: 999px; font: 600 14px / 1.2 var(--font-ui); border: 1px solid var(--button-border); background: var(--button); color: var(--button-text); }
+.site-btn-primary { background: var(--gel); border-color: var(--gel-border); color: var(--gel-text); text-shadow: var(--gel-text-shadow); }
+
+/* Companion and contact card: only on the second page or screen of the
+   iPhone Duo poses (see "Duo poses" below). */
+.duo-pose-only { display: none; }
+.doc-aside { background: var(--paper); padding: 0 56px; }
+.doc-aside .doc-cta { margin-top: 0; margin-bottom: 48px; }
+.doc-contact-card {
+  font-style: normal;
+  padding: 18px 20px;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--border-soft);
+  background: var(--paper-2);
+  max-width: 680px;
+}
+.doc-contact-name { font: 700 22px / 1.25 var(--font-ui); margin: 4px 0 2px; color: var(--text); }
+.doc-contact-line { font-size: 15px; line-height: 1.5; color: var(--text-2); margin: 6px 0 0; }
+.doc-companion .site-prose, .doc-companion { font-size: 15px; }
+
+@media (max-width: 640px) {
+  .doc-aside { padding: 0 18px; }
+  .doc-aside .doc-cta { margin-bottom: 32px; }
+}
+
+/* Closing contact panel */
+.doc-cta {
+  margin-top: 40px;
+  padding: 20px 24px;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--border-soft);
+  background: var(--pinstripe);
+  max-width: 680px;
+}
+.doc-cta p { font: 600 18px / 1.4 var(--font-ui); margin: 0 0 14px; color: var(--text); }
+
+@media print {
+  .site { background: #fff; padding: 0; }
+  .doc-window { box-shadow: none; border: 0; }
+  .doc-titlebar, .doc-toolbar, .doc-footer, .site-noprint { display: none !important; }
+}
+
+/* Brand logos (WHOOP, Eight Sleep): one file per theme */
+.brand-logo { display: inline-flex; align-items: center; }
+.brand-logo-img { width: auto; max-width: 220px; }
+.brand-logo-img.is-dark { display: none; }
+:root.dark .brand-logo-img.is-light { display: none; }
+:root.dark .brand-logo-img.is-dark { display: block; }
+
+/* ============================================================================
+   DUO POSES (reading pages)
+   ============================================================================
+   iPhone Duo, half open. Sizes come from the viewport segment environment
+   variables, never a hard-coded fold. The page's content stays on the first
+   screen or page; its companion (contact card, recipe ingredients, the
+   closing panel and footer) moves to the second, and nothing sits in the
+   fold. Without the Viewport Segments API these rules never apply and the
+   single window layout above is used.
+   ============================================================================ */
+
+@media (horizontal-viewport-segments: 2) {
+  .site { padding: 0; height: 100vh; height: 100dvh; overflow: hidden; }
+  .doc-window {
+    max-width: none;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    display: grid;
+    grid-template-columns:
+      env(viewport-segment-width 0 0, 1fr)
+      calc(env(viewport-segment-left 1 0, 0px) - env(viewport-segment-right 0 0, 0px))
+      env(viewport-segment-width 1 0, 1fr);
+    grid-template-rows: 100%;
+  }
+  .doc-main-pane { grid-column: 1; }
+  .doc-side-pane { grid-column: 3; }
+  .doc-body { padding: 20px 18px 32px; }
+  .doc-aside { padding: 20px 18px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .doc-aside .doc-cta { margin-bottom: 0; }
+  .doc-title { inset: 0 64px; }
+  .doc-nav { order: 3; flex-basis: 100%; }
+}
+
+@media (vertical-viewport-segments: 2) {
+  .site { padding: 0; height: 100vh; height: 100dvh; overflow: hidden; }
+  .doc-window {
+    max-width: none;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows:
+      env(viewport-segment-height 0 0, 1fr)
+      calc(env(viewport-segment-top 0 1, 0px) - env(viewport-segment-bottom 0 0, 0px))
+      env(viewport-segment-height 0 1, 1fr);
+  }
+  .doc-main-pane { grid-row: 1; }
+  .doc-side-pane { grid-row: 3; }
+  .doc-body { padding: 24px 32px 32px; }
+  .doc-aside {
+    padding: 16px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .doc-aside .doc-cta { margin-bottom: 0; }
+}
+
+@media (horizontal-viewport-segments: 2), (vertical-viewport-segments: 2) {
+  .doc-window { background: #000; }
+  .doc-main-pane, .doc-side-pane {
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--window-bg);
+  }
+  .doc-main-pane > main, .doc-side-pane > aside { flex: 1; min-height: 0; overflow: auto; }
+  .doc-side-pane { background: var(--paper); }
+  .duo-pose-only { display: block; }
+  [data-companion-source] { display: none; }
+  .doc-aside .doc-cta, .doc-contact-card { max-width: none; }
+}

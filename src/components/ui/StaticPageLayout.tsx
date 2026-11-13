@@ -1,106 +1,101 @@
 import React from "react";
 import Link from "next/link";
 import CtaBlock from "./CtaBlock";
+import DocNav from "./DocNav";
+import ThemeControl from "@/components/theme/ThemeControl";
+import ContactCard from "./ContactCard";
 
 // ============================================================================
 // STATIC PAGE LAYOUT
 // ============================================================================
-// Reading layout for the server-rendered routes (/about, /work, /recipes ...).
-// Uses the .site tokens in globals.css (slate and gold, shared with mckm.at).
+// The server-rendered reading routes (/about, /work, /recipes ...) shown as a
+// document window on the desktop wallpaper: title bar with traffic lights,
+// an Aqua toolbar (back to the desktop, sections, theme switch) and a paper
+// body. All text is in the HTML for search engines; nothing waits on motion.
 // ============================================================================
 
 interface StaticPageLayoutProps {
   children: React.ReactNode;
-  /** Wider column for index pages such as /recipes. */
+  /** Wider window for index pages such as /recipes. */
   wide?: boolean;
-  /** Hide the closing contact block (e.g. on /contact itself). */
+  /** Hide the closing contact panel (e.g. on /contact itself). */
   hideCta?: boolean;
+  /** Title shown in the window's title bar. */
+  title?: string;
+  /**
+   * The page's companion for the iPhone Duo poses: shown on the right page
+   * in book pose and the bottom screen in laptop pose (recipe ingredients,
+   * for example). Hidden in the normal one-window layout, where the same
+   * content already sits in the body.
+   */
+  companion?: React.ReactNode;
 }
 
-const navLinks = [
-  { href: "/about", label: "About" },
-  { href: "/work", label: "Work" },
-  { href: "/writing", label: "Writing" },
-  { href: "/recipes", label: "Recipes" },
-  { href: "/projects", label: "Projects" },
-  { href: "/contact", label: "Contact" },
-];
-
 const footerLinks = [
-  ...navLinks,
+  { href: "/kitchen", label: "Cooking" },
   { href: "/now", label: "Now" },
+  { href: "/writing", label: "Writing" },
+  { href: "/food-room", label: "Food Room" },
+  { href: "/card", label: "Card" },
   { href: "/privacy", label: "Privacy" },
 ];
 
-export default function StaticPageLayout({ children, wide = false, hideCta = false }: StaticPageLayoutProps) {
-  const column = wide ? "max-w-5xl" : "max-w-[680px]";
+export default function StaticPageLayout({ children, wide = false, hideCta = false, title = "Matthew McKenzie", companion }: StaticPageLayoutProps) {
   return (
     <div className="site">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:rounded focus:text-sm"
-        style={{ background: "var(--site-ink)", color: "var(--site-bg)" }}
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:rounded"
+        style={{ background: "var(--paper)", color: "var(--text)" }}
       >
         Skip to content
       </a>
 
-      <header className="site-noprint border-b" style={{ borderColor: "var(--site-rule)" }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Link href="/about" className="site-display text-[21px] leading-none whitespace-nowrap shrink-0">
-            Matthew McKenzie
-          </Link>
-          <Link
-            href="/"
-            className="site-mono text-[11px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full border whitespace-nowrap"
-            style={{ borderColor: "var(--site-rule)", color: "var(--site-muted)" }}
-          >
-            Open desktop
-          </Link>
-        </div>
-        <nav
-          aria-label="Main navigation"
-          className="max-w-5xl mx-auto px-4 sm:px-6 flex gap-5 overflow-x-auto scrollbar-none -mb-px"
-        >
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="py-3 text-[14px] whitespace-nowrap border-b-2 border-transparent hover:border-[var(--site-gold)] transition-colors"
-              style={{ color: "var(--site-muted)" }}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </header>
-
-      <main id="main-content" className={`${column} mx-auto px-4 sm:px-6 pt-12 pb-8 sm:pt-16`}>
-        {children}
-      </main>
-
-      {!hideCta && <CtaBlock wide={wide} />}
-
-      <footer className="site-noprint border-t mt-16" style={{ borderColor: "var(--site-rule)" }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-          <div>
-            <p className="site-display text-[19px]">Matthew McKenzie</p>
-            <p className="text-[13px] mt-1" style={{ color: "var(--site-muted)" }}>
-              Capital formation at Menlo Equities. Austin, Texas.
-            </p>
+      <div className={`doc-window ${wide ? "is-wide" : ""}`}>
+        <div className="doc-main-pane">
+        <header className="site-noprint">
+          <div className="doc-titlebar">
+            <span className="traffic" aria-hidden="true">
+              <span className="traffic-light is-close" />
+              <span className="traffic-light is-min" />
+              <span className="traffic-light is-zoom" />
+            </span>
+            <p className="doc-title">{title}</p>
           </div>
-          <nav aria-label="Footer navigation" className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-2 text-[13px]">
+          <div className="doc-toolbar">
+            <Link href="/" className="aqua-button">
+              <span aria-hidden="true">‹</span> Desktop
+            </Link>
+            <DocNav />
+            <ThemeControl size="small" />
+          </div>
+        </header>
+
+        <main id="main-content" className="doc-body">
+          {children}
+        </main>
+        </div>
+
+        {/* Second page or screen in the Duo poses; below the body otherwise. */}
+        <div className="doc-side-pane">
+          <aside className="doc-aside site-noprint" aria-label="More">
+            {companion && <div className="doc-companion duo-pose-only">{companion}</div>}
+            <ContactCard className="duo-pose-only" />
+            {!hideCta && <CtaBlock />}
+          </aside>
+
+        <footer className="doc-footer site-noprint">
+          <span>Matthew McKenzie, Menlo Equities, Austin</span>
+          <nav aria-label="Footer navigation">
             {footerLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="hover:underline" style={{ color: "var(--site-muted)" }}>
+              <Link key={l.href} href={l.href}>
                 {l.label}
               </Link>
             ))}
           </nav>
+        </footer>
         </div>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10 site-mono text-[11px]" style={{ color: "var(--site-muted)" }}>
-          &copy; {new Date().getFullYear()} Matthew McKenzie &middot; Short links by{" "}
-          <a href="https://mckm.at" className="site-link">mckm.at</a>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }

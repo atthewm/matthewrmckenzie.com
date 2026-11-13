@@ -58,7 +58,7 @@ export async function GET(req: Request) {
 
   const headers: Record<string, string> =
     def.visibility === "public" && !authed
-      ? { "Cache-Control": "public, s-maxage=900, stale-while-revalidate=3600" }
+      ? { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" }
       : { "Cache-Control": "private, no-store" };
 
   return NextResponse.json(body, { headers });

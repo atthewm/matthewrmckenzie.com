@@ -136,7 +136,7 @@ function AppearanceTab() {
             className={`
               px-3 py-1.5 rounded text-xs font-medium capitalize transition-all
               ${settings.iconSize === size
-                ? "bg-desktop-accent text-white"
+                ? "bg-desktop-accent text-on-accent"
                 : "text-desktop-text-secondary hover:text-desktop-text hover:bg-desktop-border/40"
               }
             `}

@@ -14,7 +14,8 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSecrets } from "@/lib/useSecrets";
-import { findFSItem } from "@/data/fs";
+import { findFSItem, desktopIconIds } from "@/data/fs";
+import { desktopViewport } from "@/lib/viewport";
 
 // ============================================================================
 // DESKTOP
@@ -24,13 +25,16 @@ import { findFSItem } from "@/data/fs";
 // ============================================================================
 
 const MOBILE_WELCOME_KEY = "mmck-mobile-welcomed";
+const START_HERE_KEY = "mmck-start-here-seen";
 const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 interface DesktopProps {
   contentMap: Record<string, string>;
+  /** The Duo laptop pose moves the dock to the bottom screen. */
+  hideDock?: boolean;
 }
 
-export default function Desktop({ contentMap }: DesktopProps) {
+export default function Desktop({ contentMap, hideDock = false }: DesktopProps) {
   useKeyboardShortcuts();
   const { dispatch } = useDesktop();
   const isMobile = useIsMobile();
@@ -42,25 +46,22 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const [exposeActive, setExposeActive] = useState(false);
   const [spotlightActive, setSpotlightActive] = useState(false);
 
-  // Desktop icons (right column + second column for overflow)
-  const DESKTOP_ICON_IDS = [
-    // Right column: key items
-    "now", "recipes", "health", "apple-music",
-    // Second column: projects & extras
-    "github-projects", "chess", "minesweeper", "photo-booth",
-  ];
-  const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
-
+  // Desktop icons: a Panther grid from the top right corner, filling each
+  // column down to just above the dock, then moving one column left.
+  const ICON_STORAGE_KEY = "mmck-desktop-icon-positions-v2";
   const getDefaultIconPositions = useCallback((): Record<string, { x: number; y: number }> => {
-    const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const { width: vw, height: vh } = desktopViewport();
+    const CELL_W = 96;
+    const CELL_H = 100;
+    const TOP = 34;
+    const RIGHT = 12;
+    const DOCK_ROOM = vh < 500 ? 16 : 112;
+    const rows = Math.max(1, Math.floor((vh - TOP - DOCK_ROOM) / CELL_H));
     const positions: Record<string, { x: number; y: number }> = {};
-    const col1 = DESKTOP_ICON_IDS.slice(0, 4); // right column
-    const col2 = DESKTOP_ICON_IDS.slice(4);     // second column
-    col1.forEach((id, i) => {
-      positions[id] = { x: vw - 100, y: 36 + i * 90 };
-    });
-    col2.forEach((id, i) => {
-      positions[id] = { x: vw - 200, y: 36 + i * 90 };
+    desktopIconIds.forEach((id, i) => {
+      const col = Math.floor(i / rows);
+      const row = i % rows;
+      positions[id] = { x: vw - RIGHT - CELL_W * (col + 1), y: TOP + row * CELL_H };
     });
     return positions;
   }, []);
@@ -115,6 +116,20 @@ export default function Desktop({ contentMap }: DesktopProps) {
     }
   }, [isMobile, dispatch]);
 
+  // Desktop first visit only: open Start Here once, never again after.
+  useEffect(() => {
+    if (isMobile) return;
+    if (new URLSearchParams(window.location.search).get("open")) return;
+    try {
+      if (localStorage.getItem(START_HERE_KEY)) return;
+      localStorage.setItem(START_HERE_KEY, "1");
+    } catch {
+      return;
+    }
+    const startHere = findFSItem("start-here");
+    if (startHere) dispatch({ type: "OPEN_WINDOW", payload: { fsItem: startHere } });
+  }, [isMobile, dispatch]);
+
   // Toast auto-dismiss
   useEffect(() => {
     if (!toast) return;
@@ -149,6 +164,33 @@ export default function Desktop({ contentMap }: DesktopProps) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Window > Exposé in the menu bar.
+  useEffect(() => {
+    const onExpose = () => {
+      setSpotlightActive(false);
+      setExposeActive((v) => !v);
+    };
+    window.addEventListener("mmck:expose", onExpose);
+    return () => window.removeEventListener("mmck:expose", onExpose);
+  }, []);
+
+  // Hot corner: parking the pointer in the top right corner toggles Exposé.
+  useEffect(() => {
+    let armed = true;
+    function onMove(e: PointerEvent) {
+      const inCorner = e.clientX >= window.innerWidth - 2 && e.clientY <= 2;
+      if (inCorner && armed) {
+        armed = false;
+        setSpotlightActive(false);
+        setExposeActive((v) => !v);
+      } else if (!inCorner) {
+        armed = true;
+      }
+    }
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
   }, []);
 
   // Konami code listener
@@ -256,7 +298,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
       />
 
       {/* Desktop icons (draggable, hidden on mobile) */}
-      {!isMobile && DESKTOP_ICON_IDS.map((id) => {
+      {!isMobile && desktopIconIds.map((id) => {
         const item = findFSItem(id);
         if (!item) return null;
         const pos = resolvedPositions[id] || { x: 0, y: 40 };
@@ -278,7 +320,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
       <FloatingStickies visible={stickiesVisible} />
 
       {/* Dock */}
-      <Dock onStickiesToggle={() => setStickiesVisible((v) => !v)} stickiesActive={stickiesVisible} />
+      {!hideDock && <Dock onStickiesToggle={() => setStickiesVisible((v) => !v)} stickiesActive={stickiesVisible} />}
 
       {/* Exposé overlay */}
       <Expose active={exposeActive} onClose={() => setExposeActive(false)} />

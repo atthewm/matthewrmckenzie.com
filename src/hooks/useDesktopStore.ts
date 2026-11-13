@@ -7,6 +7,7 @@
 // and localStorage persistence.
 // ============================================================================
 
+import { MOBILE_BREAKPOINT } from "@/hooks/useIsMobile";
 import {
   createContext,
   useContext,
@@ -17,6 +18,7 @@ import {
   type Dispatch,
 } from "react";
 import type { FSItem } from "@/data/fs";
+import { desktopViewport } from "@/lib/viewport";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -84,23 +86,28 @@ export const initialDesktopState: DesktopState = {
 // ---------------------------------------------------------------------------
 
 function getDefaultWindowPosition(index: number, width?: number, height?: number) {
-  if (typeof window !== "undefined" && window.innerWidth < 768) {
+  const vp = desktopViewport();
+  if (vp.width < MOBILE_BREAKPOINT) {
     // Mobile: center windows with a small cascade offset, leave room for dock
-    const winW = Math.min(width ?? 600, window.innerWidth - 4);
-    const winH = Math.min(height ?? 450, window.innerHeight - 94);
+    const winW = Math.min(width ?? 600, vp.width - 4);
+    const winH = Math.min(height ?? 450, vp.height - 94);
     const cascadeOffset = (index % 3) * 12;
     return {
-      x: Math.max(2, (window.innerWidth - winW) / 2 + cascadeOffset),
+      x: Math.max(2, (vp.width - winW) / 2 + cascadeOffset),
       y: Math.max(24, 26 + cascadeOffset),
       width: winW,
       height: winH,
     };
   }
-  const base = 80;
-  const offset = index * 30;
+  // Fit inside the visible desktop: below the menu bar, above the dock.
+  const w = Math.min(width ?? 600, vp.width - 40);
+  const h = Math.min(height ?? 450, vp.height - 22 - 96);
+  const offset = (index % 6) * 28;
   return {
-    x: base + offset,
-    y: base + offset,
+    x: Math.max(12, Math.min(80 + offset, vp.width - w - 12)),
+    y: Math.max(30, Math.min(56 + offset, vp.height - h - 90)),
+    width: w,
+    height: h,
   };
 }
 
@@ -109,15 +116,16 @@ function getDefaultWindowPosition(index: number, width?: number, height?: number
  * can still be dragged by the title bar and resized. Phones use MobileView.
  */
 function getBoardWindowGeometry() {
-  if (typeof window === "undefined" || window.innerWidth < 768) return null;
+  const vp = desktopViewport();
+  if (vp.width < MOBILE_BREAKPOINT) return null;
   const MENU_BAR = 22;
-  const DOCK = 84;
+  const DOCK = vp.height < 500 ? 8 : 84;
   const INSET = 14;
   return {
     x: INSET,
     y: MENU_BAR + INSET / 2,
-    width: window.innerWidth - INSET * 2,
-    height: window.innerHeight - MENU_BAR - DOCK - INSET / 2,
+    width: vp.width - INSET * 2,
+    height: vp.height - MENU_BAR - DOCK - INSET / 2,
   };
 }
 
@@ -214,10 +222,11 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
     }
 
     case "MAXIMIZE_WINDOW": {
-      const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+      const vp = desktopViewport();
+      const isMobileView = vp.width < MOBILE_BREAKPOINT;
       // On mobile: fit between menu bar (22px) and dock (~64px + safe area)
-      const maxY = isMobileView ? 22 : 0;
-      const dockAllowance = isMobileView ? 72 : 48;
+      const maxY = 22;
+      const dockAllowance = isMobileView ? 72 : 86;
       return {
         ...state,
         windows: state.windows.map((w) =>
@@ -228,8 +237,8 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
                 preMaximize: { x: w.x, y: w.y, width: w.width, height: w.height },
                 x: 0,
                 y: maxY,
-                width: typeof window !== "undefined" ? window.innerWidth : 1200,
-                height: typeof window !== "undefined" ? window.innerHeight - maxY - dockAllowance : 700,
+                width: vp.width,
+                height: vp.height - maxY - (vp.height < 500 ? 0 : dockAllowance),
                 zIndex: state.nextZIndex,
               }
             : w

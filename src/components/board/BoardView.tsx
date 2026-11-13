@@ -68,13 +68,44 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
   const theme = getBoardTheme(board.id);
 
   const groups = useMemo(() => buildGroups(board), [board]);
-  const layout = useMemo(() => computeLayout(groups), [groups]);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  // The board is laid out for the window it is in, once its size settles.
+  const [viewSize, setViewSize] = useState<{ width: number; height: number } | null>(null);
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    // Windows zoom open, so wait for the size to settle before laying out.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const settle = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (el.clientWidth > 0 && el.clientHeight > 0) {
+          setViewSize((v) =>
+            v && Math.abs(v.width - el.clientWidth) < 24 && Math.abs(v.height - el.clientHeight) < 24
+              ? v
+              : { width: el.clientWidth, height: el.clientHeight },
+          );
+        }
+      }, 180);
+    };
+    settle();
+    const observer = new ResizeObserver(settle);
+    observer.observe(el);
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+  const layout = useMemo(() => computeLayout(groups, viewSize ?? undefined), [groups, viewSize]);
   const items = useMemo(() => groups.flatMap((g) => g.items), [groups]);
   const itemById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
 
-  const viewportRef = useRef<HTMLDivElement>(null);
   const backpackRef = useRef<HTMLDivElement>(null);
   const { camera, cameraRef, setCamera, fit, reset, zoomBy, panBy } = useBoardCamera(viewportRef, layout, BOARD_MARGIN);
+  // Once the layout is shaped to the window, open fitted to it.
+  useEffect(() => {
+    if (viewSize) reset();
+  }, [viewSize, reset]);
 
   const [positions, setPositions] = useState<Record<string, Point>>({});
   const positionsRef = useRef(positions);
@@ -363,6 +394,7 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
             width: layout.width,
             height: layout.height,
             transform: `translate(${camera.x}px, ${camera.y}px) scale(${camera.scale})`,
+            visibility: viewSize ? "visible" : "hidden",
           }}
         >
           {layout.groups.map((g) => (
@@ -398,15 +430,15 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
           })}
         </div>
 
-        <Backpack ref={backpackRef} isOpen={draggingId !== null} isHot={overBackpack} isGulping={gulping} packedCount={packedCount} />
-
-        <p className="board-hint" data-board-ui>
-          Scroll to zoom · Drag the board to pan · Drag a card into the backpack to download it
-        </p>
-
         <div className="board-toast" role="status" aria-live="polite" data-visible={toast ? "true" : "false"}>
           {toast}
         </div>
+      </div>
+
+      {/* Bottom bar: the backpack lives here, off the canvas, so no card can sit under it. */}
+      <div className="board-statusbar" data-board-ui>
+        <p className="board-hint">Scroll to zoom and drag to pan. Drop a card in the backpack to download it.</p>
+        <Backpack ref={backpackRef} isOpen={draggingId !== null} isHot={overBackpack} isGulping={gulping} packedCount={packedCount} />
       </div>
     </div>
   );

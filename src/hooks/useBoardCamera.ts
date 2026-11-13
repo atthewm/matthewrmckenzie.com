@@ -20,10 +20,11 @@ export const MAX_SCALE = 2.5;
 const WHEEL_ZOOM_SPEED = 0.0015;
 const PINCH_WHEEL_SPEED = 0.01;
 const FIT_PADDING = 40;
-/** If the whole board fits at this zoom or better, open fitted. */
-const MIN_READABLE_FIT = 0.8;
+/** If the whole board fits at this zoom or better, open fitted. The layout is
+ * already shaped to the window, so most boards fit whole above this. */
+const MIN_READABLE_FIT = 0.6;
 const READABLE_SCALE = 0.9;
-const NARROW_VIEW = 600;
+const NARROW_VIEW = 760;
 const NARROW_SCALE = 0.8;
 /** Screen gap between the viewport edge and the first card when opening anchored. */
 const ANCHOR_INSET = 36;
@@ -47,15 +48,20 @@ export function fitCamera(viewW: number, viewH: number, worldW: number, worldH: 
 }
 
 /**
- * Opening view: fit the whole board when that is still readable, otherwise
- * open at a readable zoom anchored on the top left of the content.
+ * Opening view: fit the whole board when that is still readable. Otherwise
+ * fit the board's width to the window (the layout is already shaped to the
+ * window, so this stays readable) and anchor it at the top, so no column is
+ * ever off the right edge and the rest is a pan down.
  * `margin` is the empty world space around the content.
  */
 export function initialCamera(viewW: number, viewH: number, worldW: number, worldH: number, margin: number): Camera {
   const fitted = fitCamera(viewW, viewH, worldW, worldH);
   if (fitted.scale >= MIN_READABLE_FIT) return fitted;
-  const scale = viewW < NARROW_VIEW ? NARROW_SCALE : READABLE_SCALE;
-  return { scale, x: ANCHOR_INSET - margin * scale, y: ANCHOR_INSET - margin * scale };
+  const readable = viewW < NARROW_VIEW ? NARROW_SCALE : READABLE_SCALE;
+  const contentW = Math.max(1, worldW - margin * 2);
+  const widthFit = clampScale(Math.min(readable, (viewW - ANCHOR_INSET * 2) / contentW));
+  const x = (viewW - worldW * widthFit) / 2;
+  return { scale: widthFit, x, y: ANCHOR_INSET - margin * widthFit };
 }
 
 export function useBoardCamera(

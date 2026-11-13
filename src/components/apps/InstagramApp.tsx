@@ -64,7 +64,7 @@ export default function InstagramApp() {
           <button
             onClick={handleOpen}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded text-[12px] font-medium
-                       bg-desktop-accent text-white hover:opacity-90 transition-opacity"
+                       bg-desktop-accent text-on-accent hover:opacity-90 transition-opacity"
           >
             <Camera size={14} />
             Open Instagram

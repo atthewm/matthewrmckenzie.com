@@ -13,13 +13,19 @@
     "ship": "npm run unlock && npm run verify && npm run build && git push origin main",
     "recipes": "node scripts/build-recipe-index.mjs",
     "predev": "node scripts/build-recipe-index.mjs",
-    "prebuild": "node scripts/build-recipe-index.mjs"
+    "prebuild": "node scripts/build-recipe-index.mjs",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "qa:capture": "node scripts/qa/capture.mjs",
+    "qa:axe": "node scripts/qa/axe.mjs",
+    "qa:lighthouse": "node scripts/qa/lighthouse.mjs",
+    "qa:videos": "node scripts/qa/videos.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
     "@vercel/analytics": "^1.4.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.468.0",
+    "motion": "^14.13.0",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -28,13 +34,17 @@
     "remark-html": "^16.0.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@tailwindcss/typography": "^0.5.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.0",
+    "chrome-launcher": "^1.2.3",
     "eslint": "^9.0.0",
     "eslint-config-next": "^15.1.0",
+    "lighthouse": "^13.6.0",
+    "playwright": "^1.65.0",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.7.0"

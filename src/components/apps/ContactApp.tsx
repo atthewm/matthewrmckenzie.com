@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Send, Calendar, Mail, Link2 } from "lucide-react";
 import { useOpenInBrowser } from "@/lib/browserStore";
 import { trackEvent } from "@/lib/analytics";
+import { useDesktop } from "@/hooks/useDesktopStore";
+import { findFSItem } from "@/data/fs";
 
 // ============================================================================
 // CONTACT APP (Mac OS X 10.3 Panther Style)
@@ -11,10 +13,11 @@ import { trackEvent } from "@/lib/analytics";
 // Form + quick action buttons. Posts to /api/contact (Supabase).
 // ============================================================================
 
-const CATEGORIES = ["Investor or Allocator", "Founder or Operator", "AI and Operations", "Press or Speaking", "General"];
+const CATEGORIES = ["Investor or Allocator", "Founder or Operator", "Training or Cooking", "Press or Speaking", "General"];
 
 export default function ContactApp() {
   const openInBrowser = useOpenInBrowser();
+  const { openItem } = useDesktop();
   const [category, setCategory] = useState("General");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -86,7 +89,7 @@ export default function ContactApp() {
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
-              style={{ background: "var(--desktop-accent)", color: "white" }}
+              style={{ background: "var(--desktop-accent)", color: "var(--on-accent)" }}
             >
               <Send size={20} />
             </div>
@@ -188,9 +191,7 @@ export default function ContactApp() {
             <button
               type="submit"
               disabled={status === "sending" || !name.trim() || !email.trim() || !message.trim()}
-              className="w-full py-2 rounded text-[12px] font-medium
-                         bg-desktop-accent text-white hover:opacity-90
-                         disabled:opacity-50 transition-opacity"
+              className="aqua-button is-default is-pulsing w-full disabled:opacity-50 disabled:animate-none"
             >
               {status === "sending" ? "Sending..." : "Send Message"}
             </button>
@@ -228,7 +229,10 @@ export default function ContactApp() {
           {copied ? "Copied!" : "Email"}
         </button>
         <button
-          onClick={() => openInBrowser("https://mckm.at/", "Linktree")}
+          onClick={() => {
+            const l = findFSItem("linktree");
+            if (l) openItem(l);
+          }}
           className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-medium
                      text-desktop-text hover:bg-desktop-border/50 transition-colors"
           style={{ border: "1px solid var(--desktop-border)" }}

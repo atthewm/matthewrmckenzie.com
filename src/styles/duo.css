@@ -1,0 +1,207 @@
+/* ============================================================================
+   DUO LAYOUT (two screens)
+   ============================================================================ */
+
+.duo-root { position: fixed; inset: 0; background: #000; overflow: hidden; }
+.duo-region { position: absolute; overflow: hidden; background: var(--wallpaper); }
+.duo-top { color: var(--text); }
+.duo-fill { position: absolute; inset: 0; overflow: auto; background: var(--paper); }
+.duo-desktop { position: absolute; inset: 0; transform: translateZ(0); overflow: hidden; container: duo-desktop / inline-size; }
+/* A page of the book pose is about 320 px wide: keep the Apple menu, View
+   (the Duo Layout switch) and the clock; the rest is one tap away in Apple. */
+@container duo-desktop (max-width: 560px) {
+  .menubar-root [role="menubar"] > [data-menu]:not([data-menu="apple"]):not([data-menu="View"]),
+  .menubar-root .menubar-theme,
+  .menubar-root .menubar-title { display: none; }
+}
+.duo-app-frame { position: absolute; inset: 0; overflow: auto; background: var(--paper); }
+
+.duo-bottom { display: flex; flex-direction: column; color: var(--text); background: var(--metal-grain), var(--metal); }
+.duo-bottom-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 6px 12px;
+  background: var(--toolbar);
+  border-bottom: 1px solid var(--border);
+}
+.duo-bottom-title { flex: 1; font: 700 15px / 1.2 var(--font-ui); text-align: center; }
+.duo-bottom-body { flex: 1; min-height: 0; overflow: auto; }
+.duo-desk { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; gap: 12px; padding: 12px; align-items: start; }
+.duo-desk .dock-shelf { grid-column: 1 / -1; justify-self: center; }
+.duo-switcher { display: flex; flex-direction: column; gap: 6px; min-width: 200px; }
+.duo-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font: 600 14px / 1.2 var(--font-ui);
+  color: var(--button-text);
+  background: var(--button);
+  border: 1px solid var(--button-border);
+  text-align: left;
+}
+.duo-switch[aria-pressed="true"] { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+.duo-trackpad {
+  min-height: 120px;
+  height: 100%;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.06));
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-2);
+  touch-action: none;
+}
+.duo-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: 14px;
+  height: 20px;
+  margin: -2px 0 0 -2px;
+  pointer-events: none;
+  background: #000;
+  clip-path: polygon(0 0, 0 100%, 30% 75%, 50% 100%, 65% 92%, 45% 68%, 100% 68%);
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+}
+.duo-note { font-size: 14px; color: var(--text-2); }
+
+/* Work */
+.duo-pair { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+.duo-doc { min-height: 0; overflow: auto; border-right: 1px solid var(--border-soft); }
+.duo-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
+
+/* Health */
+.duo-dials { display: flex; align-items: center; justify-content: center; gap: 40px; height: 100%; flex-wrap: wrap; padding: 12px; background: var(--paper); }
+.duo-dial { position: relative; width: 170px; height: 170px; margin: 0; }
+.duo-dial svg { width: 100%; height: 100%; }
+.duo-dial figcaption { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.duo-dial-value { font: 700 26px / 1 var(--font-num); }
+.duo-dial-label { font-size: 14px; color: var(--text-2); margin-top: 4px; }
+.duo-dials .duo-note { flex-basis: 100%; text-align: center; }
+.duo-cards { display: flex; gap: 12px; padding: 16px; overflow-x: auto; scroll-snap-type: x mandatory; height: 100%; align-items: stretch; }
+.duo-card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: var(--text);
+  text-decoration: none;
+}
+.duo-card-eyebrow { font: 700 12px / 1.2 var(--font-ui); color: var(--accent); }
+.duo-card-title { font: 700 20px / 1.2 var(--font-ui); }
+.duo-card-sub { font-size: 14px; color: var(--text-2); }
+
+/* Recipes */
+.duo-cook { display: flex; flex-direction: column; gap: 12px; height: 100%; padding: 16px 24px; background: var(--paper); }
+.duo-cook-meta { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--text-2); }
+.duo-cook-wake { font-size: 13px; }
+.duo-cook-step { flex: 1; min-height: 0; overflow: auto; font: 600 26px / 1.35 var(--font-ui); color: var(--text); }
+.duo-cook-step.is-long { font-size: 19px; line-height: 1.45; }
+.duo-dial-value { white-space: nowrap; }
+.duo-cook-nav { display: flex; gap: 12px; justify-content: flex-end; }
+.duo-recipe { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px 16px; }
+.duo-checklist { display: flex; flex-direction: column; gap: 4px; }
+.duo-checklist label { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; padding: 4px 0; }
+.duo-checklist input { width: 20px; height: 20px; accent-color: var(--accent); margin-top: 1px; }
+.duo-timers { display: flex; flex-direction: column; gap: 8px; }
+.duo-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--button);
+  border: 1px solid var(--button-border);
+  color: var(--button-text);
+  font-size: 13px;
+}
+.duo-timer .site-num { font-size: 20px; font-weight: 700; }
+
+/* Food Room */
+.duo-food { display: grid; grid-template-columns: auto auto 1fr; gap: 24px; align-items: center; padding: 16px 24px; height: 100%; }
+.duo-pad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); }
+.duo-pad-btn { border-radius: 10px; background: var(--button); border: 1px solid var(--button-border); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25); touch-action: none; }
+.duo-pad-btn.is-up { grid-column: 2; grid-row: 1; }
+.duo-pad-btn.is-left { grid-column: 1; grid-row: 2; }
+.duo-pad-btn.is-right { grid-column: 3; grid-row: 2; }
+.duo-pad-btn.is-down { grid-column: 2; grid-row: 3; }
+.duo-action { width: 72px; height: 72px; border-radius: 50%; background: var(--gel); border: 1px solid var(--gel-border); color: var(--gel-text); font: 700 22px / 1 var(--font-ui); }
+.duo-food-stats { font-size: 15px; display: flex; flex-direction: column; gap: 6px; }
+.duo-food-stats p { display: flex; flex-direction: column; }
+
+/* Chess */
+.duo-chess { display: grid; grid-template-columns: 220px 1fr; gap: 16px; height: 100%; padding: 16px; background: var(--paper); }
+.duo-clocks { display: flex; flex-direction: column; gap: 8px; }
+.duo-clocks p { display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-soft); font-size: 15px; }
+.duo-clocks p[data-active] { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+.duo-clocks .site-num { font-size: 20px; font-weight: 700; }
+.duo-moves { overflow: auto; column-width: 140px; font-size: 15px; }
+
+/* Photo Booth */
+.duo-effects { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 16px; }
+.duo-effect { min-height: 56px; border-radius: 12px; background: var(--button); border: 1px solid var(--button-border); color: var(--button-text); font: 600 15px / 1.2 var(--font-ui); }
+.duo-effect[aria-checked="true"] { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+
+/* Contact card (Work and About companion) */
+.duo-contact { display: flex; flex-direction: column; gap: 4px; padding: 16px 16px 0; }
+.duo-contact-card {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: var(--text);
+}
+.duo-contact-name { font: 700 22px / 1.2 var(--font-ui); }
+.duo-contact-lines { margin-top: 6px; font-size: 15px; line-height: 1.45; color: var(--text-2); }
+.duo-contact-lines a { color: var(--link); }
+.duo-contact .duo-buttons { padding: 12px 0 16px; }
+[data-duo="laptop"] .duo-contact { flex-direction: row; align-items: stretch; gap: 16px; }
+[data-duo="laptop"] .duo-contact-card { flex: 1 1 50%; }
+[data-duo="laptop"] .duo-contact .duo-buttons { flex: 1 1 50%; padding: 0 0 16px; align-content: start; }
+
+/* Book pose: each half is a narrow page (about 320 px on the iPhone Duo).
+   Content stacks on the left page, its companion on the right page. */
+[data-duo="book"] .duo-pair { grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); }
+[data-duo="book"] .duo-doc { border-right: 0; border-bottom: 1px solid var(--border-soft); }
+[data-duo="book"] .duo-buttons { grid-template-columns: 1fr; padding: 12px 16px; }
+[data-duo="book"] .duo-cards { flex-direction: column; overflow-x: hidden; overflow-y: auto; scroll-snap-type: y proximity; }
+[data-duo="book"] .duo-card { flex: 0 0 auto; }
+[data-duo="book"] .duo-dials { gap: 16px; align-content: center; }
+[data-duo="book"] .duo-dial { width: 136px; height: 136px; }
+[data-duo="book"] .duo-recipe { grid-template-columns: 1fr; }
+[data-duo="book"] .duo-timers { flex-direction: row; flex-wrap: wrap; }
+[data-duo="book"] .duo-cook { padding: 16px; }
+[data-duo="book"] .duo-cook-step { font-size: 21px; }
+[data-duo="book"] .duo-cook-step.is-long { font-size: 17px; }
+[data-duo="book"] .duo-food { grid-template-columns: 1fr; justify-items: center; gap: 16px; }
+[data-duo="book"] .duo-chess { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+[data-duo="book"] .duo-effects { grid-template-columns: repeat(2, 1fr); }
+[data-duo="book"] .duo-desk { grid-template-columns: 1fr; }
+/* The right page holds the dock as a grid of apps rather than a shelf
+   shrunk to fit. */
+[data-duo="book"] .duo-desk .dock-shelf { flex-wrap: wrap; justify-content: center; align-items: center; row-gap: 10px; }
+[data-duo="book"] .duo-desk .dock-sep { display: none; }
+[data-duo="book"] .duo-switcher { min-width: 0; }

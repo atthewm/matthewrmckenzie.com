@@ -11,21 +11,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          "Inter",
-          "SF Pro Display",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "sans-serif",
-        ],
-        mono: [
-          "JetBrains Mono",
-          "SF Mono",
-          "Fira Code",
-          "monospace",
-        ],
+        sans: ['"Lucida Grande"', "-apple-system", "BlinkMacSystemFont", '"Helvetica Neue"', "sans-serif"],
+        mono: ["ui-monospace", '"SF Mono"', "Menlo", "monospace"],
       },
       colors: {
         desktop: {
@@ -38,8 +25,12 @@ const config: Config = {
           dock: "var(--desktop-dock)",
         },
         menubar: {
-          bg: "var(--menubar-bg)",
           border: "var(--menubar-border)",
+        },
+        "on-accent": "var(--on-accent)",
+        ink: {
+          DEFAULT: "var(--text)",
+          2: "var(--text-2)",
         },
       },
       // Panther system type ramp. Font-size only (no line-height tuple) so
@@ -80,6 +71,7 @@ const config: Config = {
         "fade-in": "fadeIn 0.2s ease-out",
         "slide-up": "slideUp 0.25s ease-out",
         "dock-bounce": "dockBounce 0.3s ease-out",
+        "menu-drop": "menuDrop 0.16s cubic-bezier(0.16, 1, 0.3, 1)",
       },
       keyframes: {
         windowOpen: {
@@ -104,6 +96,10 @@ const config: Config = {
         },
         slideUp: {
           "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        menuDrop: {
+          "0%": { opacity: "0", transform: "translateY(-4px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         dockBounce: {

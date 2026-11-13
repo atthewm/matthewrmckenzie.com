@@ -1,11 +1,13 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { RefreshCw, Search, Trophy, Flame, Beef, Leaf } from "lucide-react";
 import type { TopFood } from "@/data/notion/types";
 
 // ============================================================================
-// TOP FOODS — most-logged foods from the Notion meal log
+// TOP FOODS: most-logged foods from the Notion meal log
 // ============================================================================
 // PUBLIC, read-only. The API serves an anonymous rollup that is aggregated at
 // sync time: counts and average macros per food, never the underlying per-meal
@@ -39,7 +41,7 @@ function Macro({ value, unit, label }: { value: number | null; unit: string; lab
   return (
     <div className="flex flex-col items-end leading-tight" title={label}>
       <span className="text-[11px] font-semibold tabular-nums text-desktop-text">
-        {value != null ? Math.round(value * 10) / 10 : "—"}
+        {value != null ? Math.round(value * 10) / 10 : "n/a"}
       </span>
       <span className="text-[9px] uppercase tracking-wide text-desktop-text-secondary">
         {unit}
@@ -74,7 +76,7 @@ function FoodRow({ food, max }: { food: TopFood; max: number }) {
         {/* Name + frequency bar */}
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <span className="truncate text-[12px] font-medium text-desktop-text">
+            <span className="break-words text-[12px] font-medium text-desktop-text">
               {food.name}
             </span>
             {food.variants > 1 && (
@@ -137,25 +139,25 @@ function SummaryStrip({ foods }: { foods: TopFood[] }) {
           <div className="text-[11px] font-semibold tabular-nums text-desktop-text">
             {stats.logs.toLocaleString()}
           </div>
-          <div className="truncate text-[9px] text-desktop-text-secondary">entries ranked</div>
+          <div className="break-words text-[9px] text-desktop-text-secondary">entries ranked</div>
         </div>
       </div>
       <div className="flex items-center gap-1.5">
         <Beef className="h-3.5 w-3.5 shrink-0 text-desktop-text-secondary" />
         <div className="min-w-0 leading-tight">
-          <div className="truncate text-[11px] font-semibold text-desktop-text">
-            {stats.topProtein?.name ?? "—"}
+          <div className="break-words text-[11px] font-semibold text-desktop-text">
+            {stats.topProtein?.name ?? "n/a"}
           </div>
-          <div className="truncate text-[9px] text-desktop-text-secondary">most protein</div>
+          <div className="break-words text-[9px] text-desktop-text-secondary">most protein</div>
         </div>
       </div>
       <div className="flex items-center gap-1.5">
         <Leaf className="h-3.5 w-3.5 shrink-0 text-desktop-text-secondary" />
         <div className="min-w-0 leading-tight">
-          <div className="truncate text-[11px] font-semibold text-desktop-text">
-            {stats.topFiber?.name ?? "—"}
+          <div className="break-words text-[11px] font-semibold text-desktop-text">
+            {stats.topFiber?.name ?? "n/a"}
           </div>
-          <div className="truncate text-[9px] text-desktop-text-secondary">most fiber</div>
+          <div className="break-words text-[9px] text-desktop-text-secondary">most fiber</div>
         </div>
       </div>
     </div>
@@ -174,7 +176,7 @@ export default function TopFoodsApp() {
     setLoading(true);
     setFailed(false);
     try {
-      const res = await fetch("/api/notion/data?dataset=top-foods");
+      const res = await fetch("/api/notion/data?dataset=top-foods", { signal: AbortSignal.timeout(10000) });
       if (!res.ok) throw new Error(String(res.status));
       const json = await res.json();
       setFoods((json.items ?? []) as TopFood[]);
@@ -219,7 +221,7 @@ export default function TopFoodsApp() {
                 className={
                   "rounded px-2 py-0.5 text-[11px] " +
                   (sort === s.key
-                    ? "bg-desktop-accent text-white"
+                    ? "bg-desktop-accent text-on-accent"
                     : "text-desktop-text-secondary hover:bg-desktop-border")
                 }
               >
@@ -248,11 +250,9 @@ export default function TopFoodsApp() {
 
       {!loading && !failed && foods.length > 0 && <SummaryStrip foods={foods} />}
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" tabIndex={0} role="region" aria-label="Top foods list">
         {loading ? (
-          <div className="flex h-full items-center justify-center gap-2 text-sm text-desktop-text-secondary">
-            <RefreshCw className="h-4 w-4 animate-spin" /> Loading top foods…
-          </div>
+          <AquaLoading label="Loading top foods" />
         ) : failed || foods.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
             <p className="text-sm font-medium">
@@ -261,7 +261,7 @@ export default function TopFoodsApp() {
             <p className="max-w-[280px] text-xs text-desktop-text-secondary">
               {failed
                 ? "The nutrition feed is unavailable right now."
-                : "Add NOTION_TOKEN and run the sync to rank the meal log."}
+                : "This ranks everything in my meal log. It syncs from Notion once a day."}
             </p>
             <button
               onClick={load}

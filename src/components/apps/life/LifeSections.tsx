@@ -1,5 +1,17 @@
 "use client";
 
+import {
+  cleanNutritionDays,
+  dayResult,
+  nutritionStreak,
+  proteinValue,
+  proteinTargetFor,
+  fiberValue,
+  calorieTargetFor,
+  todayInAustin,
+  shortDate,
+} from "@/lib/nutrition";
+import ResultPill from "@/components/apps/ResultPill";
 import React from "react";
 import {
   Flame,
@@ -229,7 +241,7 @@ export function ActivitySection({
           <button
             type="button"
             onClick={onOpenWhoop}
-            className="rounded border border-desktop-border px-2 py-1 text-[11px] text-desktop-text hover:bg-desktop-bg"
+            className="rounded border border-desktop-border px-2 py-1 text-[11px] text-desktop-text hover:bg-[var(--paper-2)]"
           >
             Open WHOOP
           </button>
@@ -272,13 +284,11 @@ export function NutritionSection({
   days: NutritionDay[];
   onOpenNutrition: () => void;
 }) {
-  const today = days[0];
-  let streak = 0;
-  for (const d of days) {
-    if (d.hitTargets) streak++;
-    else break;
-  }
-  const recent = days.slice(0, 5);
+  const clean = cleanNutritionDays(days);
+  const todayIso = todayInAustin();
+  const today = clean[0];
+  const streak = nutritionStreak(clean, todayIso);
+  const recent = clean.slice(0, 5);
 
   return (
     <section>
@@ -297,48 +307,46 @@ export function NutritionSection({
         <div className="space-y-2">
           <div className="flex items-center justify-between rounded-lg border border-desktop-border bg-desktop-surface px-3 py-2">
             <span className="text-[11px] text-desktop-text-secondary">
-              {today?.date ?? "-"}
-              {today?.status ? ` · ${today.status}` : ""}
+              {today ? shortDate(today.date) : "No log"}
             </span>
             <span className="flex items-center gap-1 text-[11px] text-desktop-text-secondary">
-              <Flame className="h-3 w-3" /> {streak}-day streak
+              <Flame className="h-3 w-3" aria-hidden="true" /> {streak > 0 ? `${streak}-day streak` : "No streak yet"}
             </span>
           </div>
           <div className="grid grid-cols-3 gap-2 rounded-lg border border-desktop-border bg-desktop-surface p-3">
-            <MiniRing label="Calories" value={today?.calories ?? null} target={today?.calorieTarget ?? T.calories} unit="kcal" color="#e8743b" />
+            <MiniRing label="Calories" value={today?.calories ?? null} target={calorieTargetFor(today, T)} unit="kcal cap" color="#e8743b" />
             <MiniRing
               label="Protein"
-              value={today?.proteinBioavailable ?? today?.proteinGross ?? null}
-              target={today?.proteinTarget ?? T.proteinBioavailable}
-              unit="g bio"
+              value={today ? proteinValue(today) : null}
+              target={proteinTargetFor(today, T)}
+              unit="g goal"
               color="#3b82f6"
             />
-            <MiniRing label="Fiber" value={today?.fiberFood ?? today?.fiberTotal ?? null} target={T.fiber} unit="g" color="#22a06b" />
+            <MiniRing label="Fiber" value={today ? fiberValue(today) : null} target={T.fiber} unit="g goal" color="#22a06b" />
           </div>
           <div>
             <div className="mb-1 text-[10px] font-medium uppercase tracking-wide text-desktop-text-secondary">
               Recent days
             </div>
             <div className="space-y-1">
-              {recent.map((d) => (
-                <div
-                  key={d.date}
-                  className="flex items-center justify-between rounded border border-desktop-border bg-desktop-surface px-2 py-1.5 text-[11px]"
-                >
-                  <span className="w-16 shrink-0 font-medium">{d.date.slice(5)}</span>
-                  <span className="flex-1 text-desktop-text-secondary">
-                    {d.calories != null ? `${Math.round(d.calories)} kcal` : "-"} ·{" "}
-                    {d.proteinBioavailable != null ? `${Math.round(d.proteinBioavailable)}g P` : "-"} ·{" "}
-                    {d.fiberFood != null ? `${Math.round(d.fiberFood)}g fib` : "-"}
-                  </span>
-                  <span
-                    className={
-                      "ml-2 inline-block h-2.5 w-2.5 rounded-full " +
-                      (d.hitTargets ? "bg-[#22a06b]" : d.hitTargets === false ? "bg-[#e8743b]" : "bg-desktop-border")
-                    }
-                  />
-                </div>
-              ))}
+              {recent.map((d) => {
+                const protein = proteinValue(d);
+                const fiber = fiberValue(d);
+                return (
+                  <div
+                    key={d.date}
+                    className="flex items-center justify-between gap-2 rounded border border-desktop-border bg-desktop-surface px-2 py-1.5 text-[11px] tabular-nums"
+                  >
+                    <span className="w-14 shrink-0 font-medium">{shortDate(d.date)}</span>
+                    <span className="min-w-0 flex-1 truncate text-desktop-text-secondary">
+                      {d.calories != null ? `${Math.round(d.calories)} kcal` : "no calories"}
+                      {protein != null ? ` · ${Math.round(protein)} g protein` : ""}
+                      {fiber != null ? ` · ${Math.round(fiber)} g fiber` : ""}
+                    </span>
+                    <ResultPill result={dayResult(d, todayIso)} />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

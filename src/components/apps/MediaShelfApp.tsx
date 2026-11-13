@@ -1,5 +1,7 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Star, ExternalLink, RefreshCw, Film, Tv, Headphones } from "lucide-react";
 import type { FSItem } from "@/data/fs";
@@ -41,7 +43,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
     setLoading(true);
     setFailed(false);
     try {
-      const res = await fetch(`/api/notion/data?dataset=${shelf.dataset}`);
+      const res = await fetch(`/api/notion/data?dataset=${shelf.dataset}`, { signal: AbortSignal.timeout(10000) });
       if (!res.ok) throw new Error(String(res.status));
       const json = await res.json();
       setItems((json.items ?? []) as MediaItem[]);
@@ -65,7 +67,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
   }, [items, tab]);
 
   return (
-    <div className="flex h-full flex-col bg-desktop-bg text-desktop-text">
+    <div className="flex h-full flex-col bg-[var(--paper-2)] text-desktop-text">
       <header className="flex items-center justify-between border-b border-desktop-border px-4 py-2">
         <div className="flex items-center gap-2 text-sm font-semibold">
           {shelf.icon}
@@ -79,7 +81,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
               className={
                 "rounded px-2 py-0.5 text-[11px] capitalize " +
                 (tab === t
-                  ? "bg-desktop-accent text-white"
+                  ? "bg-desktop-accent text-on-accent"
                   : "text-desktop-text-secondary hover:bg-desktop-surface")
               }
             >
@@ -89,11 +91,9 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-3">
+      <div className="flex-1 overflow-y-auto p-3" tabIndex={0} role="region" aria-label={shelf.label}>
         {loading ? (
-          <div className="flex h-full items-center justify-center gap-2 text-sm text-desktop-text-secondary">
-            <RefreshCw className="h-4 w-4 animate-spin" /> Loading {shelf.label}…
-          </div>
+          <AquaLoading label={`Loading ${shelf.label}`} />
         ) : failed || items.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
             <p className="text-sm font-medium">
@@ -102,7 +102,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
             <p className="max-w-[280px] text-xs text-desktop-text-secondary">
               {failed
                 ? "The media feed is unavailable right now."
-                : "Add NOTION_TOKEN + run the sync to populate from your Media Library."}
+                : "This list syncs from my Notion media library once a day."}
             </p>
             <button
               onClick={load}
@@ -127,7 +127,7 @@ function Card({ item }: { item: MediaItem }) {
   const link = item.whereToWatch || item.externalUrl || item.trailerUrl;
   return (
     <div className="group flex flex-col overflow-hidden rounded-lg border border-desktop-border bg-desktop-surface">
-      <div className="relative aspect-[2/3] w-full bg-desktop-bg">
+      <div className="relative aspect-[2/3] w-full bg-[var(--paper-2)]">
         {item.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

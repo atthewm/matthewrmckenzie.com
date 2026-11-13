@@ -86,7 +86,7 @@ export default function LifeDashboardApp() {
 
   const load = useCallback(() => {
     setWhoopLoading(true);
-    fetch("/api/whoop/data")
+    fetch("/api/whoop/data", { signal: AbortSignal.timeout(10000) })
       .then((r) => (r.ok ? r.json() : { connected: false }))
       .catch(() => ({ connected: false }))
       .then((raw: WhoopRaw) => {
@@ -97,7 +97,7 @@ export default function LifeDashboardApp() {
       .finally(() => setWhoopLoading(false));
 
     setNutritionState("loading");
-    fetch("/api/notion/data?dataset=nutrition")
+    fetch("/api/notion/data?dataset=nutrition", { signal: AbortSignal.timeout(10000) })
       .then((r) => {
         if (!r.ok) throw new Error("nutrition feed unavailable");
         return r.json();
@@ -126,7 +126,7 @@ export default function LifeDashboardApp() {
   );
 
   return (
-    <div className="flex h-full flex-col bg-desktop-bg text-desktop-text">
+    <div className="flex h-full flex-col bg-[var(--paper-2)] text-desktop-text">
       <div
         className="flex h-[28px] shrink-0 items-center justify-between border-b px-3 text-[10px]"
         style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface)" }}
@@ -143,7 +143,7 @@ export default function LifeDashboardApp() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" tabIndex={0} role="region" aria-label="Health and diet">
         <div className="mx-auto max-w-[560px] px-4 py-3">
           <div className="mb-1 flex items-center gap-3">
             <div
@@ -153,7 +153,7 @@ export default function LifeDashboardApp() {
               <Heart size={20} className="text-desktop-text-secondary" />
             </div>
             <div>
-              <h1 className="text-base font-semibold leading-tight">Health and Diet</h1>
+              <h2 className="text-base font-semibold leading-tight">Health and Diet</h2>
               <p className="text-[11px] text-desktop-text-secondary">
                 What I eat, calories burned, and how I train. One screen.
               </p>

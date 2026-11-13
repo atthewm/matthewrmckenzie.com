@@ -1,11 +1,26 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Flame, Activity, Leaf, Lock, RefreshCw, TrendingUp } from "lucide-react";
 import {
   DEFAULT_NUTRITION_TARGETS,
   type NutritionDay,
 } from "@/data/notion/types";
+import {
+  cleanNutritionDays,
+  dayResult,
+  nutritionStreak,
+  proteinValue,
+  proteinTargetFor,
+  fiberValue,
+  calorieTargetFor,
+  todayInAustin,
+  shortDate,
+  DAY_RESULT_LABEL,
+} from "@/lib/nutrition";
+import ResultPill from "@/components/apps/ResultPill";
 
 // ============================================================================
 // NUTRITION DASHBOARD: Notion (Daily Logs) -> /api/notion/data?dataset=nutrition
@@ -78,7 +93,7 @@ export default function NutritionApp() {
   const load = useCallback(async () => {
     setState("loading");
     try {
-      const res = await fetch("/api/notion/data?dataset=nutrition");
+      const res = await fetch("/api/notion/data?dataset=nutrition", { signal: AbortSignal.timeout(10000) });
       if (res.status === 401) {
         setState("private");
         return;
@@ -88,7 +103,7 @@ export default function NutritionApp() {
         return;
       }
       const json = await res.json();
-      const items = (json.items ?? []) as NutritionDay[];
+      const items = cleanNutritionDays((json.items ?? []) as NutritionDay[]);
       setDays(items);
       setSyncedAt(json.syncedAt ?? null);
       setState(items.length ? "ready" : "empty");
@@ -103,10 +118,7 @@ export default function NutritionApp() {
 
   if (state === "loading") {
     return (
-      <Centered>
-        <RefreshCw className="h-5 w-5 animate-spin text-desktop-text-secondary" />
-        <p className="text-sm text-desktop-text-secondary">Loading nutrition…</p>
-      </Centered>
+      <AquaLoading label="Loading nutrition" />
     );
   }
 
@@ -133,11 +145,11 @@ export default function NutritionApp() {
         <p className="max-w-[280px] text-center text-xs text-desktop-text-secondary">
           {state === "error"
             ? "The nutrition feed is unavailable. Try again shortly."
-            : "Add NOTION_TOKEN + run the sync, then your Daily Logs appear here."}
+            : "Daily totals sync from my Notion log once a day."}
         </p>
         <button
           onClick={load}
-          className="mt-1 rounded border border-desktop-border px-3 py-1 text-xs text-desktop-text hover:bg-desktop-bg"
+          className="mt-1 rounded border border-desktop-border px-3 py-1 text-xs text-desktop-text hover:bg-[var(--paper-2)]"
         >
           Retry
         </button>
@@ -146,25 +158,24 @@ export default function NutritionApp() {
   }
 
   const today = days[0];
+  const todayIso = todayInAustin();
   const last7 = days.slice(0, 7);
-  let streak = 0;
-  for (const d of days) {
-    if (d.hitTargets) streak++;
-    else break;
-  }
+  const streak = nutritionStreak(days, todayIso);
+  const todayResult = today ? dayResult(today, todayIso) : "no-data";
 
   return (
-    <div className="h-full overflow-y-auto bg-desktop-bg p-4 text-desktop-text">
-      <header className="mb-3 flex items-center justify-between">
-        <div>
+    <div className="h-full overflow-y-auto bg-[var(--paper-2)] p-4 text-desktop-text" tabIndex={0} role="region" aria-label="Nutrition">
+      <header className="mb-3 flex items-center justify-between gap-2">
+        <div className="min-w-0">
           <h1 className="text-base font-semibold">Nutrition</h1>
-          <p className="text-[11px] text-desktop-text-secondary">
-            {today?.date ?? "n/a"}
-            {today?.status ? ` · ${today.status}` : ""}
+          <p className="text-[13px] text-desktop-text-secondary">
+            {today ? shortDate(today.date) : "No log"}
+            {today ? ` · ${todayResult === "in-progress" ? "logging today" : DAY_RESULT_LABEL[todayResult]}` : ""}
           </p>
         </div>
-        <div className="flex items-center gap-1 rounded-full bg-desktop-surface px-2 py-1 text-[11px] text-desktop-text-secondary">
-          <Flame className="h-3 w-3" /> {streak}-day streak
+        <div className="flex shrink-0 items-center gap-1 rounded-full bg-desktop-surface px-2 py-1 text-[13px] text-desktop-text-secondary">
+          <Flame className="h-3 w-3" aria-hidden="true" />
+          {streak > 0 ? `${streak}-day streak` : "No streak yet"}
         </div>
       </header>
 
@@ -172,66 +183,59 @@ export default function NutritionApp() {
         <Ring
           label="Calories"
           value={today?.calories ?? null}
-          target={today?.calorieTarget ?? T.calories}
-          unit="kcal"
+          target={calorieTargetFor(today, T)}
+          unit="kcal cap"
           color="#e8743b"
           icon={<Flame className="h-3 w-3 text-desktop-text-secondary" />}
         />
         <Ring
           label="Protein"
-          value={today?.proteinBioavailable ?? today?.proteinGross ?? null}
-          target={today?.proteinTarget ?? T.proteinBioavailable}
-          unit="g bio"
+          value={today ? proteinValue(today) : null}
+          target={proteinTargetFor(today, T)}
+          unit="g goal"
           color="#3b82f6"
           icon={<Activity className="h-3 w-3 text-desktop-text-secondary" />}
         />
         <Ring
           label="Fiber"
-          value={today?.fiberFood ?? today?.fiberTotal ?? null}
+          value={today ? fiberValue(today) : null}
           target={T.fiber}
-          unit="g"
+          unit="g goal"
           color="#22a06b"
           icon={<Leaf className="h-3 w-3 text-desktop-text-secondary" />}
         />
       </section>
 
       <section>
-        <div className="mb-2 flex items-center gap-1 text-xs font-medium text-desktop-text-secondary">
-          <TrendingUp className="h-3 w-3" /> Last 7 days
+        <div className="mb-2 flex items-center gap-1 text-[13px] font-medium text-desktop-text-secondary">
+          <TrendingUp className="h-3 w-3" aria-hidden="true" /> Last 7 days
         </div>
-        <div className="space-y-1">
-          {last7.map((d) => (
-            <div
-              key={d.date}
-              className="flex items-center justify-between rounded border border-desktop-border bg-desktop-surface px-2 py-1.5 text-[11px]"
-            >
-              <span className="w-20 shrink-0 font-medium">{d.date.slice(5)}</span>
-              <span className="flex-1 text-desktop-text-secondary">
-                {d.calories != null ? `${Math.round(d.calories)} kcal` : "n/a"} ·{" "}
-                {d.proteinBioavailable != null
-                  ? `${Math.round(d.proteinBioavailable)}g P`
-                  : "n/a"}{" "}
-                · {d.fiberFood != null ? `${Math.round(d.fiberFood)}g fib` : "n/a"}
-              </span>
-              <span
-                className={
-                  "ml-2 inline-block h-2.5 w-2.5 rounded-full " +
-                  (d.hitTargets
-                    ? "bg-[#22a06b]"
-                    : d.hitTargets === false
-                    ? "bg-[#e8743b]"
-                    : "bg-desktop-border")
-                }
-                title={d.hitTargets ? "Hit targets" : "Missed"}
-              />
-            </div>
-          ))}
-        </div>
+        <ul className="space-y-1">
+          {last7.map((d) => {
+            const r = dayResult(d, todayIso);
+            const protein = proteinValue(d);
+            const fiber = fiberValue(d);
+            return (
+              <li
+                key={d.date}
+                className="flex items-center justify-between gap-2 rounded border border-desktop-border bg-desktop-surface px-2 py-1.5 text-[13px] tabular-nums"
+              >
+                <span className="w-14 shrink-0 font-medium">{shortDate(d.date)}</span>
+                <span className="min-w-0 flex-1 truncate text-desktop-text-secondary">
+                  {d.calories != null ? `${Math.round(d.calories)} kcal` : "no calories"}
+                  {protein != null ? ` · ${Math.round(protein)} g protein` : ""}
+                  {fiber != null ? ` · ${Math.round(fiber)} g fiber` : ""}
+                </span>
+                <ResultPill result={r} />
+              </li>
+            );
+          })}
+        </ul>
       </section>
 
       {syncedAt && (
-        <p className="mt-3 text-center text-[10px] text-desktop-text-secondary">
-          Synced from Notion · {new Date(syncedAt).toLocaleString()}
+        <p className="mt-3 text-center text-[13px] text-desktop-text-secondary">
+          Synced from my Notion log · {new Date(syncedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
         </p>
       )}
     </div>
@@ -240,7 +244,7 @@ export default function NutritionApp() {
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-2 bg-desktop-bg p-6">
+    <div className="flex h-full flex-col items-center justify-center gap-2 bg-[var(--paper-2)] p-6">
       {children}
     </div>
   );

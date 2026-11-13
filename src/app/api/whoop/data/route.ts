@@ -19,7 +19,7 @@ export async function GET() {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("WHOOP data fetch error:", message);
     return NextResponse.json(
-      { connected: false, error: message },
+      { connected: false, error: "WHOOP data is unavailable" },
       { status: 500 },
     );
   }

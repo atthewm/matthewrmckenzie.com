@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
-import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
+import { useDesktop } from "@/hooks/useDesktopStore";
+import { useTheme } from "@/lib/theme";
+import ThemeControl from "@/components/theme/ThemeControl";
+import { readDuoPreference, setDuoPreference } from "@/lib/duo";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
-import { useOpenInBrowser } from "@/lib/browserStore";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useIsMobile, MOBILE_BREAKPOINT } from "@/hooks/useIsMobile";
 import { useShutdown } from "./ShutdownContext";
 
 // ============================================================================
@@ -38,7 +39,7 @@ function Clock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span className="text-2xs font-medium tabular-nums">{time}</span>;
+  return <span className="text-[13px] font-medium tabular-nums whitespace-nowrap">{time}</span>;
 }
 
 // ---------------------------------------------------------------------------
@@ -166,11 +167,12 @@ function MenuDropdown({
       role="menu"
       aria-label={label}
       onKeyDown={handleKeyDown}
-      className="absolute left-0 top-full mt-0 min-w-[180px] py-1 rounded-b-md shadow-lg animate-fade-in z-10"
+      className="absolute left-0 top-full mt-0 min-w-[200px] py-1 rounded-b-md shadow-lg animate-menu-drop z-10"
       style={{
-        background: "var(--desktop-surface)",
-        border: "1px solid var(--desktop-border)",
+        background: "var(--menu-bg)",
+        border: "1px solid var(--border)",
         borderTop: "none",
+        backdropFilter: "blur(16px)",
       }}
     >
       {items.map((item, i) => {
@@ -210,17 +212,17 @@ function MenuDropdown({
             }}
             disabled={item.disabled}
             className={`
-              w-full flex items-center justify-between px-4 py-1 text-2xs text-left
+              w-full flex items-center justify-between px-4 py-1 text-[13px] text-left
               transition-colors duration-75
               ${item.disabled
                 ? "text-desktop-text-secondary/50 cursor-default"
-                : "text-desktop-text hover:bg-desktop-accent hover:text-white focus:bg-desktop-accent focus:text-white focus:outline-none"
+                : "text-desktop-text hover:bg-desktop-accent hover:text-on-accent focus:bg-desktop-accent focus:text-on-accent focus:outline-none"
               }
             `}
           >
             <span>{item.label}</span>
             {item.shortcut && (
-              <span className="ml-6 text-3xs opacity-50">{item.shortcut}</span>
+              <span className="ml-6 text-[12px] opacity-50">{item.shortcut}</span>
             )}
           </button>
         );
@@ -246,7 +248,7 @@ function SubmenuItem({
   const focusFirstOnOpen = useRef(false);
 
   // On mobile, toggle on click instead of hover
-  const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+  const isMobileView = typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT;
 
   useEffect(() => {
     if (open && focusFirstOnOpen.current) {
@@ -321,14 +323,14 @@ function SubmenuItem({
         aria-expanded={open}
         tabIndex={-1}
         onKeyDown={handleTriggerKeyDown}
-        className="w-full flex items-center justify-between px-4 py-1 text-2xs
-                   text-desktop-text hover:bg-desktop-accent hover:text-white
-                   focus:bg-desktop-accent focus:text-white focus:outline-none
+        className="w-full flex items-center justify-between px-4 py-1 text-[13px]
+                   text-desktop-text hover:bg-desktop-accent hover:text-on-accent
+                   focus:bg-desktop-accent focus:text-on-accent focus:outline-none
                    transition-colors duration-75 cursor-default"
         onClick={() => { if (isMobileView) setOpen(!open); }}
       >
         <span>{item.label}</span>
-        <span className="text-3xs" aria-hidden="true">{open ? "\u25BE" : "\u25B8"}</span>
+        <span className="text-[12px]" aria-hidden="true">{open ? "\u25BE" : "\u25B8"}</span>
       </div>
       {open && (
         <div
@@ -364,14 +366,14 @@ function SubmenuItem({
                     child.action();
                     onClose();
                   }}
-                  className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-2xs text-left
-                             text-desktop-text hover:bg-desktop-accent hover:text-white
-                             focus:bg-desktop-accent focus:text-white focus:outline-none
+                  className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-[13px] text-left
+                             text-desktop-text hover:bg-desktop-accent hover:text-on-accent
+                             focus:bg-desktop-accent focus:text-on-accent focus:outline-none
                              transition-colors duration-75`}
                 >
                   <span>{child.label}</span>
                   {child.shortcut && (
-                    <span className="ml-4 text-3xs opacity-50">{child.shortcut}</span>
+                    <span className="ml-4 text-[12px] opacity-50">{child.shortcut}</span>
                   )}
                 </button>
               );
@@ -390,16 +392,16 @@ function SubmenuItem({
 
 export default function MenuBar() {
   const { state, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow } = useDesktop();
+  const { resolved: resolvedTheme, setTheme } = useTheme();
+  const [duoOn, setDuoOn] = useState(false);
+  useEffect(() => setDuoOn(readDuoPreference()), []);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
-  const themeRef = useRef<HTMLDivElement>(null);
   // Roving tab stop across the menubar triggers, plus whether an opening
   // dropdown should grab focus (keyboard) or leave it on the trigger (mouse).
   const [focusTopIndex, setFocusTopIndex] = useState(0);
   const [dropdownFocus, setDropdownFocus] = useState<"first" | "last" | null>(null);
   const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const openInBrowser = useOpenInBrowser();
   const isMobile = useIsMobile();
   const shutdown = useShutdown();
 
@@ -408,9 +410,6 @@ export default function MenuBar() {
     function handleClick(e: MouseEvent) {
       if (barRef.current && !barRef.current.contains(e.target as Node)) {
         setActiveMenu(null);
-      }
-      if (themeRef.current && !themeRef.current.contains(e.target as Node)) {
-        setShowThemeMenu(false);
       }
     }
     document.addEventListener("mousedown", handleClick);
@@ -460,11 +459,17 @@ export default function MenuBar() {
     const viewItems: MenuItem[] = [
       {
         type: "action",
-        label: state.resolvedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode",
-        action: () => dispatch({
-          type: "SET_THEME",
-          payload: { theme: state.resolvedTheme === "dark" ? "light" : "dark" },
-        }),
+        label: resolvedTheme === "dark" ? "Switch to Light Appearance" : "Switch to Dark Appearance",
+        action: () => setTheme(resolvedTheme === "dark" ? "light" : "dark"),
+      },
+      {
+        type: "action",
+        label: duoOn ? "\u2713 Duo Layout" : "Duo Layout",
+        action: () => {
+          const next = !readDuoPreference();
+          setDuoPreference(next);
+          setDuoOn(next);
+        },
       },
       { type: "separator" },
       {
@@ -510,6 +515,12 @@ export default function MenuBar() {
         disabled: !focusedWin,
       },
       { type: "separator" },
+      {
+        type: "action",
+        label: "Exposé",
+        shortcut: "F9",
+        action: () => window.dispatchEvent(new CustomEvent("mmck:expose")),
+      },
       {
         type: "action",
         label: "Tile All Windows",
@@ -631,7 +642,10 @@ export default function MenuBar() {
       {
         type: "action",
         label: "Links",
-        action: () => openInBrowser("https://mckm.at/", "Links"),
+        action: () => {
+          const l = findFSItem("linktree");
+          if (l) openItem(l);
+        },
       },
       { type: "separator" },
       {
@@ -656,7 +670,7 @@ export default function MenuBar() {
     ];
 
     return { "\uF8FF": osItems, File: fileItems, Edit: editItems, View: viewItems, Window: windowItems, Help: helpItems };
-  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems, openInBrowser, shutdown]);
+  }, [state, focusedWin, hasWindows, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow, rootItems, shutdown, duoOn, resolvedTheme, setTheme]);
 
   const menus = buildMenus();
 
@@ -731,11 +745,6 @@ export default function MenuBar() {
     }
   }
 
-  const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
-    { value: "light", label: "Light", icon: <Sun size={13} /> },
-    { value: "dark", label: "Dark", icon: <Moon size={13} /> },
-    { value: "system", label: "System", icon: <Monitor size={13} /> },
-  ];
 
   // Focused window title for the apple menu area
   const activeTitle = focusedWin ? focusedWin.title : "";
@@ -743,20 +752,21 @@ export default function MenuBar() {
   return (
     <div
       ref={barRef}
-      className="fixed top-0 left-0 right-0 h-menubar z-menubar
+      className="menubar-root fixed top-0 left-0 right-0 h-menubar z-menubar
                   flex items-center justify-between px-3
                   border-b select-none"
       style={{
         background: "var(--menubar-bg)",
         borderBottomColor: "var(--menubar-border)",
         backdropFilter: "saturate(180%) blur(20px)",
+        color: "var(--text)",
       }}
     >
       {/* Left: app name + menu items */}
       <div className="flex items-center gap-0 min-w-0">
         <div role="menubar" aria-label="Application menus" className="flex items-center gap-0">
           {visibleMenuKeys.map((name, index) => (
-            <div key={name} role="none" className="relative shrink-0">
+            <div key={name} role="none" className="relative shrink-0" data-menu={name === "\uF8FF" ? "apple" : name}>
               <button
                 ref={(el) => { triggerRefs.current[index] = el; }}
                 role="menuitem"
@@ -765,15 +775,21 @@ export default function MenuBar() {
                 tabIndex={index === activeTopIndex ? 0 : -1}
                 onFocus={() => setFocusTopIndex(index)}
                 onKeyDown={(e) => handleTriggerKeyDown(e, index)}
-                className={`text-2xs px-2 py-0.5 rounded
+                className={`text-[13px] px-2 py-0.5 rounded
                            transition-colors duration-75 text-desktop-text
                            focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-desktop-accent
                            ${name === "\uF8FF" ? "font-bold tracking-wide" : "font-normal"}
-                           ${activeMenu === name ? "bg-desktop-accent text-white" : "hover:bg-desktop-accent/20"}`}
+                           ${activeMenu === name ? "bg-desktop-accent text-on-accent" : "hover:bg-desktop-accent/20"}`}
                 onMouseDown={() => openMenuFromMouse(activeMenu === name ? null : name)}
                 onMouseEnter={() => { if (activeMenu) openMenuFromMouse(name); }}
               >
-                {name === "\uF8FF" ? (isMobile ? "MCK_OS" : "McKenzie OS") : name}
+                {name === "\uF8FF" ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/icons/panther/apple-logo.png" alt="" width={15} height={15} className="menubar-apple" />
+                    McKenzie OS
+                  </span>
+                ) : name}
               </button>
               {activeMenu === name && (
                 <MenuDropdown
@@ -791,60 +807,15 @@ export default function MenuBar() {
 
         {/* Active window title (subtle, like classic Mac) - hidden on mobile */}
         {activeTitle && !isMobile && (
-          <span className="text-2xs text-desktop-text-secondary ml-4 truncate max-w-[200px]">
+          <span className="menubar-title text-[13px] text-desktop-text-secondary ml-4 truncate max-w-[200px]">
             {activeTitle}
           </span>
         )}
       </div>
 
       {/* Right: theme toggle + clock */}
-      <div className="flex items-center gap-2">
-        <div ref={themeRef} className="relative">
-          <button
-            onClick={() => setShowThemeMenu(!showThemeMenu)}
-            className="p-0.5 rounded hover:bg-desktop-border/50 transition-colors"
-            aria-label="Change theme"
-            aria-haspopup="menu"
-            aria-expanded={showThemeMenu}
-          >
-            {state.resolvedTheme === "dark" ? (
-              <Moon size={12} />
-            ) : (
-              <Sun size={12} />
-            )}
-          </button>
-          {showThemeMenu && (
-            <div
-              className="absolute right-0 top-full mt-1
-                          bg-desktop-surface border border-desktop-border
-                          rounded-lg shadow-xl py-1 min-w-[110px] animate-fade-in"
-            >
-              {themes.map((t) => (
-                <button
-                  key={t.value}
-                  onClick={() => {
-                    dispatch({
-                      type: "SET_THEME",
-                      payload: { theme: t.value },
-                    });
-                    setShowThemeMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-1 text-2xs
-                    hover:bg-desktop-accent hover:text-white transition-colors
-                    ${
-                      state.theme === t.value
-                        ? "text-desktop-accent font-medium"
-                        : "text-desktop-text"
-                    }`}
-                >
-                  {t.icon}
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
+      <div className="flex shrink-0 items-center gap-2">
+        {!isMobile && <span className="menubar-theme"><ThemeControl size="small" /></span>}
         <Clock />
       </div>
     </div>

@@ -187,38 +187,32 @@ export default function ZenBackground() {
 }
 
 // ---------------------------------------------------------------------------
-// Default gradient (classic Mac blue/teal)
+// Default wallpaper: the blue Panther desktop by day, the same shapes under a
+// navy sky at night. Built from token gradients and two SVG light ribbons.
+// The oversized layer drifts very slowly (see .wallpaper-drift).
 // ---------------------------------------------------------------------------
 
 function DefaultGradient() {
   return (
-    <>
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 20% 20%, rgba(140, 180, 220, 0.6) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(120, 160, 190, 0.4) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(160, 195, 215, 0.3) 0%, transparent 70%),
-            var(--desktop-bg)
-          `,
-        }}
-      />
-      <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+    <div className="absolute inset-[-6%] wallpaper-drift" aria-hidden="true">
+      <div className="absolute inset-0" style={{ background: "var(--wallpaper)" }} />
+      <div className="absolute inset-0" style={{ background: "var(--wallpaper-streaks)" }} />
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
+          <linearGradient id="wp-ribbon-a" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="var(--wallpaper-ribbon)" stopOpacity="0" />
+            <stop offset="0.45" stopColor="var(--wallpaper-ribbon)" stopOpacity="0.32" />
+            <stop offset="1" stopColor="var(--wallpaper-ribbon)" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="wp-ribbon-b" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="var(--wallpaper-ribbon)" stopOpacity="0" />
+            <stop offset="0.6" stopColor="var(--wallpaper-ribbon)" stopOpacity="0.2" />
+            <stop offset="1" stopColor="var(--wallpaper-ribbon)" stopOpacity="0" />
+          </linearGradient>
         </defs>
-        <rect width="100%" height="100%" filter="url(#noise)" />
+        <path d="M-100 620 C 300 420, 700 760, 1100 520 S 1600 380, 1750 470 L 1750 560 C 1500 470, 1300 640, 1000 640 S 400 560, -100 720 Z" fill="url(#wp-ribbon-a)" />
+        <path d="M-100 700 C 400 560, 800 860, 1200 650 S 1600 560, 1750 600 L 1750 640 C 1450 620, 1250 760, 950 760 S 300 680, -100 760 Z" fill="url(#wp-ribbon-b)" />
       </svg>
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.08) 100%)",
-        }}
-      />
-    </>
+    </div>
   );
 }

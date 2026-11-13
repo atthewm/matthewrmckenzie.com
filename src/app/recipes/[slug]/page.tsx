@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
+import { splitProse } from "@/lib/prose";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import { getContent } from "@/lib/content";
 import { recipes, getRecipeBySlug } from "@/content/recipes/index";
@@ -27,6 +28,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+const COMPANION_HEADING = /ingredient|equipment|you.?ll need/i;
+
+function splitCompanion(html: string): { articleHtml: string; companionHtml: string } {
+  const { title, intro, sections } = splitProse(html);
+  if (!sections.some((sec) => COMPANION_HEADING.test(sec.heading))) return { articleHtml: html, companionHtml: "" };
+  const parts: string[] = [];
+  const companion: string[] = [];
+  if (title) parts.push(`<h1>${title}</h1>`);
+  if (intro) parts.push(intro);
+  for (const sec of sections) {
+    const block = `<h2 id="${sec.id}">${sec.heading}</h2>${sec.html}`;
+    if (COMPANION_HEADING.test(sec.heading)) {
+      parts.push(`<div data-companion-source>${block}</div>`);
+      companion.push(block.replace(` id="${sec.id}"`, ""));
+    } else {
+      parts.push(`<div>${block}</div>`);
+    }
+  }
+  return { articleHtml: parts.join("\n"), companionHtml: companion.join("\n") };
+}
+
 export default async function RecipePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const recipe = getRecipeBySlug(slug);
@@ -36,6 +58,10 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
   const index = recipes.findIndex((r) => r.slug === slug);
   const next = recipes[(index + 1) % recipes.length];
 
+  // In the iPhone Duo poses the ingredients sit on the second page or screen,
+  // beside the steps. Each h2 section gets a wrapper so the pose can move it.
+  const { articleHtml, companionHtml } = splitCompanion(content.html);
+
   const facts = [
     { label: "Yield", value: recipe.yield },
     { label: "Time", value: recipe.totalTime },
@@ -43,7 +69,17 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
   ].filter((f) => f.value);
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout
+      title={recipe.title}
+      companion={
+        companionHtml ? (
+          <section aria-label="Ingredients">
+            <p className="site-eyebrow">{recipe.title}</p>
+            <div className="site-prose" dangerouslySetInnerHTML={{ __html: companionHtml }} />
+          </section>
+        ) : undefined
+      }
+    >
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: SITE },
@@ -53,7 +89,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
       />
       <JsonLd data={recipeSchema(recipe, content.raw)} />
 
-      <Link href="/recipes" className="site-noprint site-mono text-[11px] uppercase tracking-[0.12em]" style={{ color: "var(--site-muted)" }}>
+      <Link href="/recipes" className="site-noprint site-mono text-[13px] uppercase tracking-[0.12em]" style={{ color: "var(--site-muted)" }}>
         &larr; All recipes
       </Link>
 
@@ -68,7 +104,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         <dl className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-7 rounded-xl overflow-hidden border" style={{ borderColor: "var(--site-rule)", background: "var(--site-rule)" }}>
           {facts.map((f) => (
             <div key={f.label} className="px-4 py-3" style={{ background: "var(--site-surface)" }}>
-              <dt className="site-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: "var(--site-muted)" }}>{f.label}</dt>
+              <dt className="site-mono text-[13px] uppercase tracking-[0.14em]" style={{ color: "var(--site-muted)" }}>{f.label}</dt>
               <dd className="text-[14px] mt-1 leading-snug">{f.value}</dd>
             </div>
           ))}
@@ -76,14 +112,14 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         <div className="site-noprint flex gap-4 mt-4 text-[13px]">
           <a href={`/recipes/${slug}.md`} download className="site-link">Download as text</a>
           {recipe.tags.length > 0 && (
-            <span className="site-mono text-[11px] self-center" style={{ color: "var(--site-muted)" }}>
+            <span className="site-mono text-[13px] self-center" style={{ color: "var(--site-muted)" }}>
               {recipe.tags.join(" · ")}
             </span>
           )}
         </div>
       </header>
 
-      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: content.html }} />
+      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: articleHtml }} />
 
       {next && next.slug !== slug && (
         <nav aria-label="Next recipe" className="site-noprint mt-14 pt-6 border-t" style={{ borderColor: "var(--site-rule)" }}>

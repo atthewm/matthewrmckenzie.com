@@ -23,7 +23,7 @@ import {
 import { siteConfig } from "@/lib/config";
 
 // ============================================================================
-// RECIPES — card grid index over src/content/recipes
+// RECIPES: card grid index over src/content/recipes
 // ============================================================================
 // Replaces the plain Finder list for the Recipes folder. Filter by category or
 // search, then open a card to launch the existing RecipeViewer window (the
@@ -106,7 +106,7 @@ function RecipeCard({ recipe, onOpen }: { recipe: RecipeMeta; onOpen: () => void
                  hover:border-desktop-accent
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-desktop-bg">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--paper-2)]">
         <CardArt recipe={recipe} />
       </div>
 
@@ -162,12 +162,12 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
   ];
 
   return (
-    <div className="flex h-full flex-col bg-desktop-bg text-desktop-text">
+    <div className="flex h-full flex-col bg-[var(--paper-2)] text-desktop-text">
       <header className="shrink-0 border-b border-desktop-border">
         <div className="flex items-center justify-between gap-2 px-3 py-2">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <UtensilsCrossed className="h-4 w-4" />
-            Recipes
+            Cooking and Baking
           </div>
           <div className="flex flex-wrap justify-end gap-1">
             {filters.map((f) => (
@@ -177,7 +177,7 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
                 className={
                   "rounded px-2 py-0.5 text-[11px] " +
                   (category === f.id
-                    ? "bg-desktop-accent text-white"
+                    ? "bg-desktop-accent text-on-accent"
                     : "text-desktop-text-secondary hover:bg-desktop-surface")
                 }
               >
@@ -186,6 +186,11 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
             ))}
           </div>
         </div>
+
+        <p className="px-3 pb-2 text-[11px] leading-relaxed text-desktop-text-secondary">
+          Sourdough from my own rye starter, jam, and high protein versions of everyday
+          meals. Each one is tested and written down so the results repeat.
+        </p>
 
         <div className="px-3 pb-2">
           <label className="relative block">

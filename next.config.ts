@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async redirects() {
+    return [
+      // The Projects page was retired in Nov 2026; its useful parts live on /work.
+      { source: "/projects", destination: "/work", permanent: true },
+      // The desktop lives at / again; keep old /desktop links working.
+      { source: "/desktop", destination: "/", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

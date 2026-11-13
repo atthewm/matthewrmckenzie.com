@@ -30,7 +30,7 @@ const Backpack = forwardRef<HTMLDivElement, BackpackProps>(function Backpack(
       data-state={state}
       aria-hidden
     >
-      <svg viewBox="0 0 96 104" width="84" height="92">
+      <svg viewBox="0 0 96 104" width="34" height="37">
         {/* straps */}
         <path d="M30 22 C30 8, 66 8, 66 22" fill="none" stroke="#5a3a22" strokeWidth="6" strokeLinecap="round" />
         {/* body */}

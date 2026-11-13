@@ -6,7 +6,7 @@ import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Work | Capital Formation, Investor Relations, Growth Strategy",
-  description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses. AI operations tooling.",
+  description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses.",
   alternates: { canonical: "https://matthewrmckenzie.com/work" },
   openGraph: {
     images: ["/opengraph-image"],
@@ -19,7 +19,7 @@ export default async function WorkPage() {
   const content = await getContent("work");
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout title="Work">
       <JsonLd data={breadcrumbSchema([
         { name: "Home", url: "https://matthewrmckenzie.com" },
         { name: "Work", url: "https://matthewrmckenzie.com/work" },

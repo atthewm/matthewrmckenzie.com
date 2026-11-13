@@ -57,7 +57,7 @@ export const defaultSettings: SettingsState = {
   uiSoundsEnabled: false,
 
   fontFamily: "system",
-  fontSize: 14,
+  fontSize: 15,
   lineHeight: 1.6,
   highContrast: false,
 
@@ -120,7 +120,7 @@ export function loadSettings(): SettingsState | null {
 export function getFontFamilyCSS(family: FontFamily): string {
   switch (family) {
     case "system":
-      return 'var(--font-inter), "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      return "var(--font-ui)";
     case "Georgia":
       return "Georgia, 'Times New Roman', serif";
     case "Times":

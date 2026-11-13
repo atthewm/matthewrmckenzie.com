@@ -1,0 +1,274 @@
+/* ============================================================================
+   McKENZIE OS TOKENS
+   ============================================================================
+   One token file for both appearances, used by the desktop, the phone
+   springboard and every static page. Components read these variables (or the
+   Tailwind colors mapped to them); no component hard-codes a color.
+
+   Light = Aqua (Blue): blue gel controls, pinstripe chrome, white paper, the
+   blue Panther wallpaper.
+   Dark = Graphite at night: graphite gel controls, a night wallpaper, dark
+   pinstripe and warm off-white text.
+
+   The theme is set before first paint by the inline script in the root
+   layout (src/lib/theme.ts), which puts .dark and data-theme on <html>.
+   Every text pair below was checked for WCAG AA (4.5:1 body, 3:1 large).
+   ============================================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* Type */
+  --font-ui: "Lucida Grande", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-num: ui-monospace, "SF Mono", Menlo, monospace;
+  --text-body: 15px;
+  --text-small: 13px;
+  --text-label: 12px;
+
+  /* Spacing, 4 px scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Chrome geometry */
+  --menubar-h: 22px;
+  --titlebar-h: 24px;
+  --toolbar-h: 40px;
+  --radius-window: 10px;
+  --radius-control: 6px;
+  --radius-panel: 8px;
+  --dock-h: 72px;
+
+  /* Motion (CSS side; springs live in src/lib/motion.ts) */
+  --duration-fast: 150ms;
+  --duration-normal: 260ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Ink */
+  --text: #1c1c1e;
+  --text-2: #45454a;
+  --text-3: #5e5e64;
+  --link: #1a56c2;
+  --accent: #1d5fd1;
+  --accent-soft: rgba(29, 95, 209, 0.12);
+  --on-accent: #ffffff;
+  --focus-ring: #2f7bf5;
+  --danger: #c4261d;
+  --success: #1f7a3a;
+
+  /* Surfaces */
+  --paper: #ffffff;
+  --paper-2: #f6f6f7;
+  --window-bg: #ececec;
+  --pinstripe: repeating-linear-gradient(180deg, #eeeeee 0 2px, #f5f5f5 2px 4px);
+  --border: #a9a9b0;
+  --border-soft: #d3d3d8;
+  --shadow-window: 0 18px 50px rgba(0, 0, 0, 0.32), 0 3px 10px rgba(0, 0, 0, 0.18);
+  --shadow-window-inactive: 0 8px 26px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(0, 0, 0, 0.1);
+
+  /* Title bars and toolbars: Panther light metal */
+  --titlebar: linear-gradient(180deg, #f4f4f4 0%, #dcdcdc 52%, #d1d1d1 53%, #dadada 100%);
+  --titlebar-inactive: linear-gradient(180deg, #f6f6f6 0%, #ececec 100%);
+  --titlebar-text: #1c1c1e;
+  --titlebar-text-inactive: #5e5e64;
+  --toolbar: linear-gradient(180deg, #e9e9e9 0%, #d6d6d6 100%);
+  --metal: linear-gradient(180deg, #e8e9eb 0%, #c9ccd1 100%);
+  --metal-grain: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, rgba(0, 0, 0, 0.03) 1px 2px);
+
+  /* Gel controls: Aqua blue */
+  --gel: linear-gradient(180deg, #8ebcf7 0%, #3d7fe3 46%, #1e5fcc 50%, #2d73de 78%, #5d9cf0 100%);
+  --gel-border: #154a9f;
+  --gel-text: #ffffff;
+  --gel-text-shadow: 0 -1px 0 rgba(4, 30, 80, 0.45);
+  --gel-glow: rgba(64, 140, 255, 0.55);
+  --button: linear-gradient(180deg, #ffffff 0%, #ededed 48%, #e2e2e2 50%, #f2f2f2 100%);
+  --button-border: #8e8e93;
+  --button-text: #1c1c1e;
+
+  /* Menu bar, menus, dock */
+  --menubar-bg: linear-gradient(180deg, rgba(252, 252, 252, 0.96) 0%, rgba(232, 232, 232, 0.96) 100%);
+  --menubar-border: #a7a7ab;
+  --menu-bg: rgba(250, 250, 250, 0.97);
+  --menu-hover: #1d5fd1;
+  --menu-hover-text: #ffffff;
+  --dock-bg: rgba(255, 255, 255, 0.32);
+  --dock-border: rgba(255, 255, 255, 0.55);
+  --dock-shelf: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.18) 100%);
+  --dock-dot: #ffffff;
+  --dock-dot-glow: rgba(120, 190, 255, 0.95);
+
+  /* Desktop icon labels */
+  --icon-label: #ffffff;
+  --icon-label-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 5px rgba(0, 0, 0, 0.55);
+  --icon-selected-bg: #1d5fd1;
+  --icon-selected-text: #ffffff;
+  --icon-selected-box: rgba(0, 0, 0, 0.28);
+
+  /* Wallpaper: the blue Panther desktop, built from gradients (no image) */
+  --wallpaper-base: #2a62bd;
+  --wallpaper:
+    radial-gradient(120% 90% at 28% 30%, rgba(160, 205, 255, 0.55) 0%, rgba(160, 205, 255, 0) 55%),
+    radial-gradient(90% 70% at 85% 85%, rgba(20, 60, 150, 0.55) 0%, rgba(20, 60, 150, 0) 60%),
+    linear-gradient(160deg, #6ea3e6 0%, #3d79d0 42%, #2a62bd 70%, #1f4ea3 100%);
+  --wallpaper-streaks:
+    radial-gradient(60% 18% at 45% 48%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(45% 12% at 62% 62%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+
+  --wallpaper-ribbon: #ffffff;
+
+  /* Springboard (phone) */
+  --status-bar: rgba(0, 0, 0, 0.35);
+  --status-text: #ffffff;
+  --springboard-dock: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 100%);
+
+  /* iPhone OS 1 navigation bar */
+  --navbar: linear-gradient(180deg, #9fb2cc 0%, #6c86aa 50%, #5d79a0 51%, #4e6b93 100%);
+  --navbar-button: linear-gradient(180deg, #7d95b8 0%, #4f6c94 50%, #43608a 51%, #3d5a83 100%);
+  --navbar-border: #2d4466;
+
+  /* Skeletons */
+  --skeleton: #e3e3e7;
+  --progress-track: #d8d8dc;
+  --progress-fill: repeating-linear-gradient(-45deg, #4c8ff0 0 8px, #7fb0f5 8px 16px);
+
+  /* iTunes 4 LCD */
+  --lcd: linear-gradient(180deg, #f1f5e4 0%, #dfe6c9 100%);
+  --lcd-border: #8a8f78;
+  --lcd-text: #1d2112;
+
+  /* Board / pinboard */
+  --cork: #c39a6b;
+}
+
+:root.dark,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --text: #eee8dd;
+  --text-2: #c7c0b4;
+  --text-3: #aaa397;
+  --link: #a9c4ee;
+  --accent: #8fb0e6;
+  --accent-soft: rgba(143, 176, 230, 0.16);
+  --on-accent: #0b1424;
+  --focus-ring: #9fc0f5;
+  --danger: #ff8a80;
+  --success: #7fd69a;
+
+  --paper: #222327;
+  --paper-2: #2a2b30;
+  --window-bg: #2b2d31;
+  --pinstripe: repeating-linear-gradient(180deg, #2c2e33 0 2px, #28292e 2px 4px);
+  --border: #5a5d65;
+  --border-soft: #414349;
+  --shadow-window: 0 20px 56px rgba(0, 0, 0, 0.6), 0 3px 10px rgba(0, 0, 0, 0.45);
+  --shadow-window-inactive: 0 10px 30px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.35);
+
+  --titlebar: linear-gradient(180deg, #5a5d64 0%, #45474d 52%, #3c3e44 53%, #43454b 100%);
+  --titlebar-inactive: linear-gradient(180deg, #3e4045 0%, #35373b 100%);
+  --titlebar-text: #f1ece3;
+  --titlebar-text-inactive: #b7b0a4;
+  --toolbar: linear-gradient(180deg, #43454b 0%, #36383d 100%);
+  --metal: linear-gradient(180deg, #4d5057 0%, #33353a 100%);
+  --metal-grain: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, rgba(0, 0, 0, 0.06) 1px 2px);
+
+  /* Graphite gel */
+  --gel: linear-gradient(180deg, #e2e6eb 0%, #aeb6c1 46%, #8f99a6 50%, #a0aab6 78%, #c4cbd4 100%);
+  --gel-border: #59616c;
+  --gel-text: #0d1014;
+  --gel-text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  --gel-glow: rgba(190, 200, 214, 0.55);
+  --button: linear-gradient(180deg, #5d6067 0%, #4a4d53 50%, #44474d 51%, #50535a 100%);
+  --button-border: #24262a;
+  --button-text: #f1ece3;
+
+  --menubar-bg: linear-gradient(180deg, rgba(64, 66, 71, 0.96) 0%, rgba(44, 46, 50, 0.96) 100%);
+  --menubar-border: #1d1e21;
+  --menu-bg: rgba(42, 43, 47, 0.97);
+  --menu-hover: #8fb0e6;
+  --menu-hover-text: #0b1424;
+  --dock-bg: rgba(28, 30, 34, 0.5);
+  --dock-border: rgba(255, 255, 255, 0.16);
+  --dock-shelf: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+  --dock-dot: #e8edf5;
+  --dock-dot-glow: rgba(200, 215, 240, 0.85);
+
+  --icon-selected-bg: #8fb0e6;
+  --icon-selected-text: #0b1424;
+  --icon-selected-box: rgba(255, 255, 255, 0.14);
+
+  /* Night wallpaper: the same Panther shapes under a navy sky */
+  --wallpaper-base: #0d1626;
+  --wallpaper:
+    radial-gradient(120% 90% at 28% 30%, rgba(90, 120, 175, 0.4) 0%, rgba(90, 120, 175, 0) 55%),
+    radial-gradient(90% 70% at 85% 85%, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 60%),
+    linear-gradient(160deg, #26385a 0%, #172540 42%, #0f1a2e 70%, #0a1220 100%);
+  --wallpaper-streaks:
+    radial-gradient(60% 18% at 45% 48%, rgba(170, 190, 230, 0.1) 0%, rgba(170, 190, 230, 0) 70%),
+    radial-gradient(45% 12% at 62% 62%, rgba(170, 190, 230, 0.07) 0%, rgba(170, 190, 230, 0) 70%);
+
+  --wallpaper-ribbon: #9fb6e0;
+
+  --status-bar: rgba(0, 0, 0, 0.5);
+  --springboard-dock: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%);
+
+  --navbar: linear-gradient(180deg, #5f636b 0%, #44474e 50%, #3a3d43 51%, #33363b 100%);
+  --navbar-button: linear-gradient(180deg, #6a6e76 0%, #4b4e55 50%, #42454b 51%, #3c3f45 100%);
+  --navbar-border: #1a1b1e;
+
+  --skeleton: #36383e;
+  --progress-track: #3a3c42;
+  --progress-fill: repeating-linear-gradient(-45deg, #8f99a6 0 8px, #b6bec9 8px 16px);
+
+  --lcd: linear-gradient(180deg, #2e3424 0%, #232819 100%);
+  --lcd-border: #11140c;
+  --lcd-text: #e6ecd3;
+
+  --cork: #6d5236;
+}
+
+/* ----------------------------------------------------------------------------
+   Legacy names. The desktop apps were written against --desktop-* and the
+   reading pages against --site-*; both now resolve to the tokens above, so
+   every surface follows the same theme.
+   ---------------------------------------------------------------------------- */
+:root {
+  --desktop-bg: var(--wallpaper-base);
+  --desktop-surface: var(--paper);
+  --desktop-surface-raised: var(--paper-2);
+  --desktop-border: var(--border-soft);
+  --desktop-text: var(--text);
+  --desktop-text-secondary: var(--text-2);
+  --desktop-accent: var(--accent);
+  --desktop-dock: var(--dock-bg);
+  --window-title-focused: var(--titlebar);
+  --window-title-unfocused: var(--titlebar-inactive);
+  --window-title-text: var(--titlebar-text);
+  --window-title-text-inactive: var(--titlebar-text-inactive);
+  --user-font-family: var(--font-ui);
+  --user-font-size: 15px;
+  --user-line-height: 1.55;
+
+  --site-bg: var(--window-bg);
+  --site-surface: var(--paper);
+  --site-ink: var(--text);
+  --site-muted: var(--text-2);
+  --site-rule: var(--border-soft);
+  --site-gold: var(--accent);
+  --site-gold-soft: var(--accent-soft);
+  --site-link: var(--link);
+  --site-monofont: var(--font-num);
+  --site-serif: var(--font-ui);
+  --site-col-gap: 24px;
+
+  /* Old font variable names now point at the system stack: no web fonts. */
+  --font-inter: var(--font-ui);
+  --font-display: var(--font-ui);
+  --font-mono: var(--font-num);
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { logChessMove, resetChessLog } from "@/lib/duoStores";
 
 // ============================================================================
 // CHESS (Mac OS X Panther Style)
@@ -333,6 +334,7 @@ export default function ChessApp() {
       if (piece.type === "P" && to[0] === 7) nb[to[0]][to[1]] = { color: "b", type: "Q" };
       setBoard(nb);
       setLastMove([from, to]);
+      logChessMove("b", piece.type, from, to);
       setTurn("w");
       if (!checkGameEnd(nb, "w")) {
         setStatus("Your turn (White)");
@@ -362,6 +364,7 @@ export default function ChessApp() {
         setSelected(null);
         setLegalMoves([]);
         setLastMove([selected, [r, c]]);
+        logChessMove("w", piece.type, selected, [r, c]);
         setTurn("b");
         checkGameEnd(nb, "b");
         return;
@@ -391,10 +394,26 @@ export default function ChessApp() {
     setStatus("Your turn (White)");
     setGameOver(false);
     setLastMove(null);
+    resetChessLog();
     thinkingRef.current = false;
   }, []);
 
-  const cellSize = 52;
+  // The board fits its pane: a desktop window, a phone, or the bottom
+  // screen of the Duo laptop pose.
+  const boardAreaRef = useRef<HTMLDivElement>(null);
+  const [cellSize, setCellSize] = useState(52);
+  useEffect(() => {
+    const el = boardAreaRef.current;
+    if (!el) return;
+    const fit = () => {
+      const side = Math.min(el.clientWidth, el.clientHeight) - 16;
+      setCellSize(Math.max(24, Math.min(52, Math.floor(side / 8))));
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <div className="flex flex-col h-full" style={{ background: "var(--desktop-surface)" }}>
@@ -416,7 +435,7 @@ export default function ChessApp() {
       </div>
 
       {/* Board */}
-      <div className="flex-1 overflow-auto flex items-center justify-center p-2">
+      <div ref={boardAreaRef} className="flex-1 min-h-0 overflow-auto flex items-center justify-center p-2">
         <div style={{ display: "grid", gridTemplateColumns: `repeat(8, ${cellSize}px)`, borderRadius: 4, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.15)" }}>
           {board.map((row, r) =>
             row.map((piece, c) => {

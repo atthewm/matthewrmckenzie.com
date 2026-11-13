@@ -1,0 +1,126 @@
+/* ============================================================================
+   TURNTABLE (Turntable app and its Duo halves)
+   ============================================================================ */
+
+.tt-app { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--metal); }
+.tt-deck {
+  position: relative;
+  flex-shrink: 0;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.tt-platter {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #3a3d42 0%, #1f2125 70%, #8b9097 71%, #5d6168 74%, #2b2d31 76%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+.tt-record { position: relative; width: 236px; height: 236px; border-radius: 50%; }
+.tt-grooves { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tt-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle, #e85d4a 0%, #b62d1f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tt-label img { width: 100%; height: 100%; object-fit: cover; }
+.tt-label-text { padding: 8px; font: 700 12px / 1.15 var(--font-ui); color: #fff; text-align: center; }
+.tt-spindle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #b7bcc3 60%, #6d737b 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+.tt-arm { position: absolute; top: 14px; left: calc(50% + 70px); width: 120px; height: 260px; filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.45)); }
+.tt-speed { position: absolute; left: 16px; bottom: 14px; display: flex; gap: 6px; }
+.tt-speed span {
+  min-width: 34px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-align: center;
+  font: 600 12px / 1.4 var(--font-num);
+  color: var(--text);
+  background: var(--button);
+  border: 1px solid var(--button-border);
+}
+.tt-speed span[data-on] { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+
+.tt-library { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 12px; overflow: auto; }
+.tt-transport { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.tt-buttons { display: flex; align-items: center; gap: 6px; }
+.tt-round {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--button-text);
+  background: var(--button);
+  border: 1px solid var(--button-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.tt-round svg { width: 16px; height: 16px; }
+.tt-round.is-main { width: 46px; height: 46px; }
+.tt-round.is-main svg { width: 20px; height: 20px; }
+.tt-round.is-on { background: var(--gel); color: var(--gel-text); border-color: var(--gel-border); }
+.tt-round:focus-visible, .tt-row:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+/* iTunes 4 LCD */
+.tt-lcd {
+  flex: 1;
+  min-width: 200px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-align: center;
+  background: var(--lcd);
+  border: 1px solid var(--lcd-border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25);
+  color: var(--lcd-text);
+}
+.tt-lcd-title { font: 700 15px / 1.3 var(--font-ui); }
+.tt-lcd-sub { font: 400 13px / 1.35 var(--font-ui); }
+
+.tt-embed { display: flex; flex-direction: column; gap: 6px; }
+.tt-embed iframe { width: 100%; max-width: 660px; height: 175px; border: 0; border-radius: 10px; overflow: hidden; background: var(--paper); }
+.tt-note { font-size: 13px; color: var(--text-2); }
+
+.tt-list { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--paper); }
+.tt-list li:nth-child(even) .tt-row { background: var(--paper-2); }
+.tt-row {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 7px 12px;
+  text-align: left;
+  font-size: 15px;
+  color: var(--text);
+}
+.tt-row[aria-current="true"], .tt-list li:nth-child(even) .tt-row[aria-current="true"] { background: var(--gel); color: var(--gel-text); text-shadow: var(--gel-text-shadow); }
+.tt-row[aria-current="true"] .tt-desc { color: var(--gel-text); }
+.tt-num { width: 22px; flex-shrink: 0; font-family: var(--font-num); font-size: 13px; text-align: right; }
+.tt-name { font-weight: 600; }
+.tt-desc { color: var(--text-2); font-size: 13px; }
+.tt-library.is-compact .tt-lcd { min-width: 150px; }

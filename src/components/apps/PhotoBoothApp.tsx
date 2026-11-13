@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
+import { photoEffect, type PhotoEffect } from "@/lib/duoStores";
 
 // ============================================================================
 // PHOTO BOOTH APP
@@ -9,9 +10,9 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 // Effects are applied via CSS filters and canvas manipulation.
 // ============================================================================
 
-type Effect = "none" | "sepia" | "noir" | "thermal" | "comic" | "mirror" | "vintage" | "x-ray";
+type Effect = PhotoEffect;
 
-const effects: { id: Effect; label: string }[] = [
+export const effects: { id: Effect; label: string }[] = [
   { id: "none", label: "Normal" },
   { id: "sepia", label: "Sepia" },
   { id: "noir", label: "Noir" },
@@ -47,11 +48,13 @@ interface Snapshot {
   timestamp: number;
 }
 
-export default function PhotoBoothApp() {
+/** In the Duo laptop pose the camera sits on top and the effects grid below. */
+export default function PhotoBoothApp({ part = "all" }: { part?: "all" | "camera"; contentHtml?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const [activeEffect, setActiveEffect] = useState<Effect>("none");
+  const activeEffect = photoEffect.use();
+  const setActiveEffect = photoEffect.set;
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [cameraReady, setCameraReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -246,7 +249,7 @@ export default function PhotoBoothApp() {
       </div>
 
       {/* Effects bar */}
-      <div
+      {part === "all" && <div
         className="shrink-0 flex gap-1 px-3 py-2 overflow-x-auto"
         style={{ background: "rgba(30,30,30,0.95)" }}
       >
@@ -264,7 +267,7 @@ export default function PhotoBoothApp() {
             {fx.label}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* Controls bar */}
       <div

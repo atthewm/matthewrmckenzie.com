@@ -1,5 +1,7 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Heart,
@@ -718,7 +720,7 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
       {/* Profile */}
       {profile && (
         <p className="text-[10px] text-desktop-text-secondary text-center pt-3 pb-2">
-          {profile.first_name} {profile.last_name} -- WHOOP Developer API v1
+          {profile.first_name} {profile.last_name}, WHOOP Developer API v1
         </p>
       )}
     </div>
@@ -783,11 +785,26 @@ export default function WhoopDashboardApp() {
   const [dashData, setDashData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [disconnecting, setDisconnecting] = useState(false);
+  // Account controls show only when the server says this is the owner.
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/whoop/status", { cache: "no-store", signal: AbortSignal.timeout(8000) })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (alive) setIsOwner(j?.owner === true);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/whoop/data");
+      const res = await fetch("/api/whoop/data", { signal: AbortSignal.timeout(10000) });
       if (res.ok) {
         const data: DashboardResponse = await res.json();
         setDashData(data);
@@ -861,7 +878,7 @@ export default function WhoopDashboardApp() {
           WHOOP Dashboard
         </span>
         <div className="flex items-center gap-2">
-          {!loading && isConnected && (
+          {isOwner && !loading && isConnected && (
             <button
               onClick={() => fetchData()}
               className="flex items-center gap-1 px-1.5 py-0.5 rounded
@@ -871,7 +888,7 @@ export default function WhoopDashboardApp() {
               <RefreshCw size={10} />
             </button>
           )}
-          {!loading && isConnected ? (
+          {!isOwner ? null : !loading && isConnected ? (
             <button
               onClick={handleDisconnect}
               disabled={disconnecting}
@@ -894,7 +911,7 @@ export default function WhoopDashboardApp() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin">
+      <div className="flex-1 overflow-y-auto scrollbar-thin" tabIndex={0} role="region" aria-label="WHOOP dashboard">
         <div className="max-w-[640px] mx-auto px-4 py-3">
           {/* Header */}
           <div className="flex items-center gap-3 mb-3">
@@ -908,9 +925,9 @@ export default function WhoopDashboardApp() {
               <Activity size={20} className="text-desktop-text-secondary" />
             </div>
             <div>
-              <h1 className="text-[14px] font-semibold text-desktop-text leading-tight">
+              <h2 className="text-[14px] font-semibold text-desktop-text leading-tight">
                 WHOOP Dashboard
-              </h1>
+              </h2>
               <p className="text-[11px] text-desktop-text-secondary">
                 {isConnected &&
                 (dashData as LiveDashboardData).profile
@@ -922,11 +939,7 @@ export default function WhoopDashboardApp() {
 
           {/* Main content */}
           {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <span className="text-[12px] text-desktop-text-secondary">
-                Loading WHOOP data...
-              </span>
-            </div>
+            <AquaLoading label="Loading WHOOP data" lines={6} />
           ) : isConnected ? (
             <LiveDashboard data={dashData as LiveDashboardData} />
           ) : (
@@ -956,7 +969,7 @@ export default function WhoopDashboardApp() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium
-                         bg-desktop-accent text-white hover:opacity-90 transition-opacity"
+                         bg-desktop-accent text-on-accent hover:opacity-90 transition-opacity"
             >
               <ExternalLink size={10} />
               Join WHOOP

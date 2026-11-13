@@ -7,7 +7,6 @@ import {
   initialDesktopState,
   loadState,
   usePersistence,
-  useThemeResolver,
   type DesktopContextValue,
 } from "@/hooks/useDesktopStore";
 import type { FSItem } from "@/data/fs";
@@ -36,17 +35,7 @@ export default function DesktopProvider({ children }: { children: React.ReactNod
   // Persist state changes
   usePersistence(state);
 
-  // Resolve theme
-  useThemeResolver(state.theme, dispatch);
-
-  // Apply theme class to document
-  useEffect(() => {
-    if (state.resolvedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [state.resolvedTheme]);
+  // Appearance is owned by src/lib/theme.ts (shared with the static pages).
 
   // Action helpers
   const openItem = useCallback(
@@ -111,7 +100,7 @@ export default function DesktopProvider({ children }: { children: React.ReactNod
   // Don't render until hydrated to prevent flash
   if (!hydrated) {
     return (
-      <div className="fixed inset-0" style={{ background: "#e8e8e8" }} />
+      <div className="fixed inset-0" style={{ background: "var(--wallpaper-base)" }} />
     );
   }
 

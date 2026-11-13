@@ -7,6 +7,7 @@ import { useSettings } from "@/hooks/useSettingsStore";
 import { PantherIcon } from "./PantherIcons";
 import { trackEvent } from "@/lib/analytics";
 import { Z_INDEX } from "@/lib/z-index";
+import { setLaunchOrigin } from "@/lib/motion";
 
 // ============================================================================
 // DESKTOP ICON (Mac OS X 10.3 Panther) - Draggable
@@ -30,6 +31,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
   const dragOffset = useRef({ x: 0, y: 0 });
   const didDrag = useRef(false);
+  const artRef = useRef<HTMLSpanElement>(null);
 
   const handleOpen = useCallback(() => {
     if (didDrag.current) return; // Ignore if we just finished dragging
@@ -38,6 +40,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
       window.open(item.href, "_blank", "noopener,noreferrer");
       return;
     }
+    setLaunchOrigin(item.id, artRef.current);
     openItem(item);
   }, [item, openItem]);
 
@@ -72,7 +75,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
   }, [dragging, dragPos, item.id, onDragEnd]);
 
   // Icon sizes based on settings
-  const sizeMap = { small: 40, medium: 48, large: 56 };
+  const sizeMap = { small: 44, medium: 52, large: 60 };
   const boxSize = sizeMap[settings.iconSize];
 
   const currentX = dragPos?.x ?? x;
@@ -80,12 +83,8 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
 
   return (
     <button
-      className={`
-        absolute flex flex-col items-center gap-1 p-1.5 rounded w-[80px]
-        focus-visible:outline-none
-        transition-shadow duration-100 group
-        ${dragging ? "opacity-80" : ""}
-      `}
+      className={`desktop-icon absolute flex flex-col items-center gap-1 w-[88px] focus-visible:outline-none ${dragging ? "opacity-80" : ""}`}
+      data-selected={selected || undefined}
       style={{
         left: currentX,
         top: currentY,
@@ -102,6 +101,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
         }
       }}
       onClick={() => { if (!didDrag.current) setSelected(true); }}
+      onFocus={() => setSelected(true)}
       onBlur={() => setSelected(false)}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
@@ -109,33 +109,10 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
       aria-label={`Open ${item.name}`}
       title={item.description || item.name}
     >
-      {/* Panther PNG icon */}
-      <div
-        className="relative flex items-center justify-center group-hover:scale-105 transition-transform duration-150"
-        style={{
-          width: boxSize,
-          height: boxSize,
-          filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
-        }}
-      >
+      <span ref={artRef} className="desktop-icon-art" style={{ width: boxSize + 8, height: boxSize + 8 }}>
         <PantherIcon itemId={item.id} size={boxSize} />
-      </div>
-
-      {/* Label */}
-      <span
-        className={`
-          text-3xs font-medium text-center leading-tight line-clamp-2 px-1 py-0.5 rounded
-          ${selected
-            ? "bg-desktop-accent text-white"
-            : "text-desktop-text"
-          }
-        `}
-        style={{
-          textShadow: selected ? "none" : "0 1px 2px rgba(255,255,255,0.5)",
-        }}
-      >
-        {item.name}
       </span>
+      <span className="desktop-icon-label">{item.name}</span>
     </button>
   );
 }
