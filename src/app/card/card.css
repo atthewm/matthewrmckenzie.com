@@ -8,32 +8,27 @@
    ============================================================================ */
 
 .card-stage {
-  --c-bg: #1c2329;
-  --c-bg-2: #20282e;
-  --c-panel: #29333a;
-  --c-panel-2: #323d45;
-  --c-ink: #e8ecee;
-  --c-ink-2: #9aa7ad;
-  --c-ink-3: #717e85;
-  --c-line: #3a454c;
-  --c-line-2: #46525a;
-  --c-gold: #d9be6b;
-  --c-gold-2: #f0dda0;
-  --c-gold-tint: rgba(217, 190, 107, 0.14);
+  --c-bg: var(--paper);
+  --c-bg-2: var(--paper);
+  --c-panel: var(--paper-2);
+  --c-panel-2: var(--window-bg);
+  --c-ink: var(--text);
+  --c-ink-2: var(--text-2);
+  --c-ink-3: var(--text-2);
+  --c-line: var(--border-soft);
+  --c-line-2: var(--border);
+  --c-gold: var(--accent);
+  --c-gold-2: var(--accent);
+  --c-gold-tint: var(--accent-soft);
 
-  --c-serif: var(--font-marcellus), "Cormorant Garamond", Georgia, serif;
-  --c-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  --c-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --c-serif: var(--font-ui);
+  --c-sans: var(--font-ui);
+  --c-mono: var(--font-num);
 
-  min-height: 100dvh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 40px 18px 56px;
-  background: radial-gradient(120% 80% at 50% -10%, var(--c-bg-2), var(--c-bg) 62%), var(--c-bg);
   color: var(--c-ink);
   font-family: var(--c-sans);
-  -webkit-font-smoothing: antialiased;
 }
 
 .card-panel {
@@ -43,7 +38,7 @@
   border: 1px solid var(--c-line);
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
   position: relative;
 }
 
@@ -96,7 +91,7 @@
 .card-company {
   margin-top: 5px;
   font-family: var(--c-mono);
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--c-ink-3);
@@ -137,17 +132,17 @@
 }
 
 .card-btn--primary {
-  background: var(--c-gold);
-  border-color: var(--c-gold);
-  color: #1c2329;
+  background: var(--gel);
+  border-color: var(--gel-border);
+  color: var(--gel-text);
+  text-shadow: var(--gel-text-shadow);
   font-weight: 600;
 }
 
 .card-btn--primary:hover,
 .card-btn--primary:focus-visible {
-  background: var(--c-gold-2);
-  border-color: var(--c-gold-2);
-  color: #1c2329;
+  filter: brightness(1.06);
+  color: var(--gel-text);
 }
 
 .card-btn svg {
@@ -159,13 +154,13 @@
 .card-btn-sub {
   margin-left: auto;
   font-family: var(--c-mono);
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--c-ink-3);
 }
 
 .card-btn--primary .card-btn-sub {
-  color: rgba(28, 35, 41, 0.62);
+  color: var(--gel-text);
 }
 
 /* ---- Sections ---- */
@@ -177,7 +172,7 @@
 
 .card-section-label {
   font-family: var(--c-mono);
-  font-size: 9.5px;
+  font-size: 12px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--c-ink-3);
@@ -203,7 +198,7 @@
 
 .card-office-city {
   font-family: var(--c-mono);
-  font-size: 9.5px;
+  font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--c-gold);
@@ -262,7 +257,7 @@
   justify-content: space-between;
   gap: 12px;
   font-family: var(--c-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--c-ink-3);
 }

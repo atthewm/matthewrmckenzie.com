@@ -22,7 +22,7 @@ export default function RecipesPage() {
   })).filter((g) => g.items.length > 0);
 
   return (
-    <StaticPageLayout wide>
+    <StaticPageLayout title="Recipes" wide>
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: "https://matthewrmckenzie.com" },
@@ -41,7 +41,7 @@ export default function RecipesPage() {
             <a
               key={g.category}
               href={`#${g.category.toLowerCase()}`}
-              className="site-mono text-[11px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full border"
+              className="site-mono text-[13px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full border"
               style={{ borderColor: "var(--site-rule)", color: "var(--site-muted)" }}
             >
               {g.category} &middot; {g.items.length}
@@ -65,7 +65,7 @@ export default function RecipesPage() {
                   <span className="block text-[14px] leading-snug mt-1" style={{ color: "var(--site-muted)" }}>
                     {r.subtitle}
                   </span>
-                  <span className="block site-mono text-[11px] mt-2" style={{ color: "var(--site-gold)" }}>
+                  <span className="block site-mono text-[13px] mt-2" style={{ color: "var(--site-gold)" }}>
                     {r.yield}
                     {r.source === "Family recipe card" ? " · Family card" : ""}
                   </span>

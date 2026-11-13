@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
-import { Marcellus } from "next/font/google";
 import { profile } from "@/config/profile";
 import "./card.css";
-
-const marcellus = Marcellus({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-  variable: "--font-marcellus",
-});
 
 export const metadata: Metadata = {
   // `absolute` opts out of the root layout's "%s | Matthew McKenzie" template,
@@ -35,5 +27,5 @@ export default function CardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={marcellus.variable}>{children}</div>;
+  return <>{children}</>;
 }

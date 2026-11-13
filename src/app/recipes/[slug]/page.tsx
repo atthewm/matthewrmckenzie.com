@@ -43,7 +43,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
   ].filter((f) => f.value);
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout title={recipe.title}>
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: SITE },
@@ -53,7 +53,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
       />
       <JsonLd data={recipeSchema(recipe, content.raw)} />
 
-      <Link href="/recipes" className="site-noprint site-mono text-[11px] uppercase tracking-[0.12em]" style={{ color: "var(--site-muted)" }}>
+      <Link href="/recipes" className="site-noprint site-mono text-[13px] uppercase tracking-[0.12em]" style={{ color: "var(--site-muted)" }}>
         &larr; All recipes
       </Link>
 
@@ -68,7 +68,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         <dl className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-7 rounded-xl overflow-hidden border" style={{ borderColor: "var(--site-rule)", background: "var(--site-rule)" }}>
           {facts.map((f) => (
             <div key={f.label} className="px-4 py-3" style={{ background: "var(--site-surface)" }}>
-              <dt className="site-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: "var(--site-muted)" }}>{f.label}</dt>
+              <dt className="site-mono text-[13px] uppercase tracking-[0.14em]" style={{ color: "var(--site-muted)" }}>{f.label}</dt>
               <dd className="text-[14px] mt-1 leading-snug">{f.value}</dd>
             </div>
           ))}
@@ -76,7 +76,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         <div className="site-noprint flex gap-4 mt-4 text-[13px]">
           <a href={`/recipes/${slug}.md`} download className="site-link">Download as text</a>
           {recipe.tags.length > 0 && (
-            <span className="site-mono text-[11px] self-center" style={{ color: "var(--site-muted)" }}>
+            <span className="site-mono text-[13px] self-center" style={{ color: "var(--site-muted)" }}>
               {recipe.tags.join(" · ")}
             </span>
           )}

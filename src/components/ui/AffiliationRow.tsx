@@ -33,7 +33,7 @@ export default function AffiliationRow() {
               {a.name}
             </a>
             {a.period ? (
-              <span className="text-[12px]" style={{ color: "var(--site-muted)" }}>
+              <span className="text-[13px]" style={{ color: "var(--site-muted)" }}>
                 {a.period}
               </span>
             ) : null}

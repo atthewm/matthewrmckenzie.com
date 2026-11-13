@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd from "@/components/ui/JsonLd";
 import { profile, phoneE164 } from "@/config/profile";
 
@@ -46,7 +47,8 @@ const icon = {
 
 export default function CardPage() {
   return (
-    <main className="card-stage">
+    <StaticPageLayout title="Business Card" hideCta>
+      <div className="card-stage">
       <JsonLd data={cardPersonSchema} />
 
       <article className="card-panel">
@@ -169,6 +171,7 @@ export default function CardPage() {
           </a>
         </footer>
       </article>
-    </main>
+      </div>
+    </StaticPageLayout>
   );
 }

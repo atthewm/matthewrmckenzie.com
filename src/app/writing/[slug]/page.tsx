@@ -104,7 +104,7 @@ export default async function EssayPage({
     : null;
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout title={title}>
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: "https://matthewrmckenzie.com" },
