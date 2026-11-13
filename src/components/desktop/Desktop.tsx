@@ -164,6 +164,33 @@ export default function Desktop({ contentMap }: DesktopProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Window > Exposé in the menu bar.
+  useEffect(() => {
+    const onExpose = () => {
+      setSpotlightActive(false);
+      setExposeActive((v) => !v);
+    };
+    window.addEventListener("mmck:expose", onExpose);
+    return () => window.removeEventListener("mmck:expose", onExpose);
+  }, []);
+
+  // Hot corner: parking the pointer in the top right corner toggles Exposé.
+  useEffect(() => {
+    let armed = true;
+    function onMove(e: PointerEvent) {
+      const inCorner = e.clientX >= window.innerWidth - 2 && e.clientY <= 2;
+      if (inCorner && armed) {
+        armed = false;
+        setSpotlightActive(false);
+        setExposeActive((v) => !v);
+      } else if (!inCorner) {
+        armed = true;
+      }
+    }
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+
   // Konami code listener
   useEffect(() => {
     const buffer: string[] = [];

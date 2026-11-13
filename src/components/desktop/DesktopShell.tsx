@@ -10,6 +10,7 @@ import Screensaver from "./Screensaver";
 import { playStartupChime } from "@/lib/startupChime";
 import { playShutdown } from "@/lib/soundEffects";
 import { ShutdownProvider } from "./ShutdownContext";
+import { MotionConfig } from "motion/react";
 
 // ============================================================================
 // BOOT SEQUENCE (Retro Mac Startup)
@@ -220,6 +221,7 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
   }
 
   return (
+    <MotionConfig reducedMotion="user">
     <ShutdownProvider value={handleShutdown}>
       <DesktopProvider>
         <SettingsProvider>
@@ -230,5 +232,6 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
         </SettingsProvider>
       </DesktopProvider>
     </ShutdownProvider>
+    </MotionConfig>
   );
 }

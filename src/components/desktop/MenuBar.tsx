@@ -507,6 +507,12 @@ export default function MenuBar() {
       { type: "separator" },
       {
         type: "action",
+        label: "Exposé",
+        shortcut: "F9",
+        action: () => window.dispatchEvent(new CustomEvent("mmck:expose")),
+      },
+      {
+        type: "action",
         label: "Tile All Windows",
         action: () => {
           const visible = state.windows.filter((w) => !w.isMinimized);

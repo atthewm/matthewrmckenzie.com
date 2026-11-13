@@ -1,5 +1,7 @@
 "use client";
 
+import { getExpose } from "@/lib/exposeStore";
+
 import { useEffect } from "react";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { findFSItem } from "@/data/fs";
@@ -63,6 +65,8 @@ export function useKeyboardShortcuts() {
 
       // Esc → close focused window
       if (e.key === "Escape") {
+        // Esc leaves Exposé first; it only closes a window outside Exposé.
+        if (getExpose().active) return;
         e.preventDefault();
         closeWindow(focusedId);
         return;

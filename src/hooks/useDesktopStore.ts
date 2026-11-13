@@ -216,8 +216,8 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
     case "MAXIMIZE_WINDOW": {
       const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
       // On mobile: fit between menu bar (22px) and dock (~64px + safe area)
-      const maxY = isMobileView ? 22 : 0;
-      const dockAllowance = isMobileView ? 72 : 48;
+      const maxY = 22;
+      const dockAllowance = isMobileView ? 72 : 86;
       return {
         ...state,
         windows: state.windows.map((w) =>

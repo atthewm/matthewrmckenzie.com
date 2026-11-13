@@ -4,6 +4,7 @@ import React from "react";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { findFSItem } from "@/data/fs";
 import { PantherIcon } from "@/components/desktop/PantherIcons";
+import { setLaunchOrigin } from "@/lib/motion";
 
 // ============================================================================
 // START HERE
@@ -30,9 +31,11 @@ const tips = [
 export default function StartHereApp() {
   const { openItem } = useDesktop();
 
-  const open = (id: string) => {
+  const open = (id: string, el?: HTMLElement | null) => {
     const item = findFSItem(id);
-    if (item) openItem(item);
+    if (!item) return;
+    setLaunchOrigin(id, el?.querySelector("[data-icon]") ?? el);
+    openItem(item);
   };
 
   return (
@@ -46,7 +49,7 @@ export default function StartHereApp() {
         {quickLinks.map((card) => (
           <button
             key={card.id}
-            onClick={() => open(card.id)}
+            onClick={(e) => open(card.id, e.currentTarget)}
             className="aqua-tile flex items-center gap-3 p-3 text-left"
           >
             <PantherIcon itemId={card.id} size={40} />
@@ -58,13 +61,13 @@ export default function StartHereApp() {
         ))}
       </div>
 
-      <h3 className="text-[13px] font-semibold text-desktop-text-secondary mt-5 mb-2">Also here</h3>
+      <h3 className="text-[13px] font-semibold text-desktop-text-secondary mt-5 mb-2">More to open</h3>
       <div className="flex flex-wrap gap-2">
         {exploreLinks.map((id) => {
           const item = findFSItem(id);
           if (!item) return null;
           return (
-            <button key={id} onClick={() => open(id)} className="aqua-chip">
+            <button key={id} onClick={(e) => open(id, e.currentTarget)} className="aqua-chip">
               <PantherIcon itemId={id} size={22} />
               {item.name}
             </button>

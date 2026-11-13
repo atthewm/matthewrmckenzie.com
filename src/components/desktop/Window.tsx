@@ -1,17 +1,24 @@
 "use client";
 
-import React, { useCallback, useRef, useEffect, useState } from "react";
+import React, { useCallback, useRef, useEffect, useLayoutEffect, useState } from "react";
+import { motion, useAnimate, useReducedMotion } from "motion/react";
 import { useDesktop, type WindowState } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { playWindowClose, playMinimize } from "@/lib/soundEffects";
+import { springs, FADE, GENIE_DURATION, peekLaunchOrigin, dockRectFor, dockCenterRect, type OriginRect } from "@/lib/motion";
+import { useExpose, setExpose, getExpose } from "@/lib/exposeStore";
+import { Z_INDEX } from "@/lib/z-index";
 
 // ============================================================================
-// WINDOW COMPONENT (Mac OS X 10.3 Panther Aqua)
+// WINDOW (Aqua, remastered)
 // ============================================================================
-// Brushed metal title bar with glossy gradient, rounded 10px corners,
-// Aqua traffic lights with gloss highlight, soft drop shadow.
-// Drag from title bar, resize from edges/corners.
+// Light metal title bar, gel traffic lights, token shadows. Motion:
+//   open      zooms out of the icon or dock item that launched it
+//   close     zooms back into that origin
+//   minimize  a Genie (clip-path funnel plus transform) into the dock
+//   Exposé    springs into a grid slot and back
+// Only transform, opacity and clip-path animate. With reduced motion every
+// one of these becomes a short crossfade.
 // ============================================================================
 
 interface WindowProps {
@@ -19,72 +26,199 @@ interface WindowProps {
   children: React.ReactNode;
 }
 
-type ResizeDirection =
-  | "n" | "s" | "e" | "w"
-  | "ne" | "nw" | "se" | "sw"
-  | null;
+type ResizeDirection = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw" | null;
 
 const RESIZE_HANDLE_SIZE = 6;
-// Local to the window's own stacking context (the window root sets a z-index),
-// so this only needs to beat in-window content, not the global z-index scale.
 const RESIZE_HANDLE_Z_INDEX = 10;
 const MIN_WIDTH = 320;
 const MIN_HEIGHT = 200;
+const MENU_BAR = 22;
+const FULL_CLIP = "polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%)";
+
+/** Transform that maps the window's box onto a small origin rect. */
+function towards(win: { x: number; y: number; width: number; height: number }, o: OriginRect) {
+  const scale = Math.max(0.06, Math.min(o.width / win.width, o.height / win.height));
+  return {
+    x: o.x + o.width / 2 - (win.x + win.width / 2),
+    y: o.y + o.height / 2 - (win.y + win.height / 2),
+    scale,
+  };
+}
 
 export default function Window({ windowState, children }: WindowProps) {
   const { state, dispatch, closeWindow, minimizeWindow, toggleMaximize, focusWindow } = useDesktop();
   const { settings } = useSettings();
-  const windowRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = !!useReducedMotion() || settings.reduceMotion;
+  const [scope, animate] = useAnimate<HTMLDivElement>();
   const isFocused = state.focusedWindowId === windowState.id;
-  const isMobile = useIsMobile();
+  const expose = useExpose();
+  const slot = expose.active ? expose.slots[windowState.id] : undefined;
 
-  // Drag state
   const isDragging = useRef(false);
   const dragOffset = useRef({ x: 0, y: 0 });
-
-  // Resize state
   const isResizing = useRef(false);
   const resizeDir = useRef<ResizeDirection>(null);
   const resizeStart = useRef({ x: 0, y: 0, winX: 0, winY: 0, winW: 0, winH: 0 });
-
-  // Closing & minimizing animations
-  const [isClosing, setIsClosing] = useState(false);
-  const [isMinimizing, setIsMinimizing] = useState(false);
-  const [isRestoring, setIsRestoring] = useState(false);
+  const origin = useRef<OriginRect | undefined>(peekLaunchOrigin(windowState.fsItemId));
+  const busy = useRef(false);
+  const [minimizing, setMinimizing] = useState(false);
   const prevMinimized = useRef(windowState.isMinimized);
+  const geometryRef = useRef({ x: windowState.x, y: windowState.y, width: windowState.width, height: windowState.height });
+  geometryRef.current = { x: windowState.x, y: windowState.y, width: windowState.width, height: windowState.height };
+
+  // OPEN: zoom out of the launch origin. The start pose is written straight to
+  // the element before paint, so the window never flashes at full size.
+  useLayoutEffect(() => {
+    const el = scope.current;
+    if (!el) return;
+    if (reduceMotion) {
+      el.style.opacity = "0";
+      animate(el, { opacity: 1 }, FADE);
+      return;
+    }
+    const o = origin.current;
+    const from = o ? towards(geometryRef.current, o) : { x: 0, y: 12, scale: 0.92 };
+    el.style.transform = `translateX(${from.x}px) translateY(${from.y}px) scale(${from.scale})`;
+    el.style.opacity = o ? "0.6" : "0";
+    animate(el, { x: [from.x, 0], y: [from.y, 0], scale: [from.scale, 1], opacity: 1 }, springs.window);
+    // Mount only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // EXPOSÉ: spring into the grid slot, and back out.
+  const hadSlot = useRef(false);
+  useEffect(() => {
+    const el = scope.current;
+    if (!el || windowState.isMinimized || busy.current) return;
+    const t = reduceMotion ? FADE : springs.window;
+    if (slot) {
+      hadSlot.current = true;
+      animate(el, { x: slot.dx, y: slot.dy, scale: slot.scale }, t);
+    } else if (hadSlot.current) {
+      hadSlot.current = false;
+      animate(el, { x: 0, y: 0, scale: 1 }, t);
+    }
+  }, [slot, animate, scope, reduceMotion, windowState.isMinimized]);
 
   const handleWindowPointerDown = useCallback(() => {
+    if (getExpose().active) {
+      focusWindow(windowState.id);
+      setExpose({ active: false, slots: {} });
+      return;
+    }
     if (!isFocused) focusWindow(windowState.id);
   }, [isFocused, focusWindow, windowState.id]);
 
-  // -- CLOSE (defined early so focus trap can reference it) --
-  const handleClose = useCallback(() => {
+  // CLOSE: zoom back into the origin (or the dock item), then remove.
+  const handleClose = useCallback(async () => {
+    if (busy.current) return;
+    busy.current = true;
     if (settings.uiSoundsEnabled) playWindowClose();
-    setIsClosing(true);
-    setTimeout(() => closeWindow(windowState.id), 150);
-  }, [closeWindow, windowState.id, settings.uiSoundsEnabled]);
-
-  // -- FOCUS MANAGEMENT --
-  // Move DOM focus into the window when it becomes the focused window
-  useEffect(() => {
-    if (isFocused && windowRef.current) {
-      if (!windowRef.current.contains(document.activeElement)) {
-        windowRef.current.focus({ preventScroll: true });
+    const el = scope.current;
+    if (el) {
+      if (reduceMotion) {
+        await animate(el, { opacity: 0 }, FADE);
+      } else {
+        const target = origin.current ?? dockRectFor(windowState.fsItemId);
+        const to = target ? towards(geometryRef.current, target) : { x: 0, y: 8, scale: 0.9 };
+        await animate(el, { x: to.x, y: to.y, scale: to.scale, opacity: 0 }, { ...springs.window, opacity: { duration: 0.24 } });
       }
     }
-  }, [isFocused]);
+    closeWindow(windowState.id);
+  }, [animate, scope, closeWindow, windowState.id, windowState.fsItemId, reduceMotion, settings.uiSoundsEnabled]);
 
-  // Trap Tab focus within the focused dialog window; Escape closes
+  // MINIMIZE: Genie into the dock.
+  const genieFrames = useCallback(() => {
+    const t = dockRectFor(windowState.fsItemId) ?? dockCenterRect();
+    const g = geometryRef.current;
+    const lx = ((t.x - g.x) / g.width) * 100;
+    const rx = ((t.x + t.width - g.x) / g.width) * 100;
+    const funnel = `polygon(0% 0%, 100% 0%, ${100 - (100 - rx) * 0.35}% 50%, ${rx}% 100%, ${lx}% 100%, ${lx * 0.35}% 50%)`;
+    const pinch = `polygon(${lx * 0.8}% 0%, ${100 - (100 - rx) * 0.8}% 0%, ${rx}% 50%, ${rx}% 100%, ${lx}% 100%, ${lx}% 50%)`;
+    const dy = t.y + t.height / 2 - (g.y + g.height);
+    return { funnel, pinch, dy, scaleY: Math.max(0.05, t.height / g.height) };
+  }, [windowState.fsItemId]);
+
+  const handleMinimize = useCallback(async () => {
+    if (busy.current) return;
+    busy.current = true;
+    if (settings.uiSoundsEnabled) playMinimize();
+    setMinimizing(true);
+    const el = scope.current;
+    if (el) {
+      if (reduceMotion) {
+        await animate(el, { opacity: 0 }, FADE);
+      } else {
+        const g = genieFrames();
+        el.style.transformOrigin = "50% 100%";
+        await animate(
+          el,
+          {
+            clipPath: [FULL_CLIP, g.funnel, g.pinch],
+            y: [0, g.dy * 0.15, g.dy],
+            scaleY: [1, 0.85, g.scaleY],
+            opacity: [1, 1, 0.15],
+          },
+          { duration: GENIE_DURATION, ease: [0.55, 0, 0.7, 1], times: [0, 0.45, 1] },
+        );
+      }
+    }
+    minimizeWindow(windowState.id);
+    setMinimizing(false);
+    busy.current = false;
+  }, [animate, scope, genieFrames, minimizeWindow, windowState.id, reduceMotion, settings.uiSoundsEnabled]);
+
+  // RESTORE: Genie back out of the dock.
+  useLayoutEffect(() => {
+    const was = prevMinimized.current;
+    prevMinimized.current = windowState.isMinimized;
+    if (!(was && !windowState.isMinimized)) return;
+    const el = scope.current;
+    if (!el) return;
+    if (reduceMotion) {
+      el.style.clipPath = FULL_CLIP;
+      el.style.transform = "none";
+      el.style.opacity = "0";
+      animate(el, { opacity: 1 }, FADE);
+      return;
+    }
+    const g = genieFrames();
+    el.style.transformOrigin = "50% 100%";
+    el.style.clipPath = g.pinch;
+    animate(
+      el,
+      {
+        clipPath: [g.pinch, g.funnel, FULL_CLIP],
+        y: [g.dy, g.dy * 0.15, 0],
+        scaleY: [g.scaleY, 0.85, 1],
+        opacity: [0.15, 1, 1],
+      },
+      { duration: GENIE_DURATION, ease: [0.3, 0, 0.45, 1], times: [0, 0.55, 1] },
+    ).then(() => {
+      el.style.transformOrigin = "50% 50%";
+    });
+  }, [windowState.isMinimized, animate, scope, genieFrames, reduceMotion]);
+
+  // FOCUS MANAGEMENT
+  useEffect(() => {
+    const el = scope.current;
+    if (isFocused && el && !el.contains(document.activeElement)) {
+      el.focus({ preventScroll: true });
+    }
+  }, [isFocused, scope]);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "Escape") {
+        if (getExpose().active) return;
         e.stopPropagation();
         handleClose();
         return;
       }
-      if (e.key !== "Tab" || !windowRef.current) return;
-      const focusable = windowRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      const el = scope.current;
+      if (e.key !== "Tab" || !el) return;
+      const focusable = el.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
       );
       if (focusable.length === 0) return;
       const first = focusable[0];
@@ -97,19 +231,20 @@ export default function Window({ windowState, children }: WindowProps) {
         first.focus();
       }
     },
-    [handleClose]
+    [handleClose, scope],
   );
 
-  // -- DRAG --
+  // DRAG: direct manipulation, the window follows the pointer.
   const handleDragStart = useCallback(
     (e: React.PointerEvent) => {
-      if (windowState.isMaximized) return;
+      if (windowState.isMaximized || getExpose().active) return;
+      if ((e.target as HTMLElement).closest("button")) return;
       isDragging.current = true;
       dragOffset.current = { x: e.clientX - windowState.x, y: e.clientY - windowState.y };
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       e.preventDefault();
     },
-    [windowState.x, windowState.y, windowState.isMaximized]
+    [windowState.x, windowState.y, windowState.isMaximized],
   );
 
   const handleDragMove = useCallback(
@@ -120,31 +255,36 @@ export default function Window({ windowState, children }: WindowProps) {
         payload: {
           id: windowState.id,
           x: e.clientX - dragOffset.current.x,
-          y: Math.max(0, e.clientY - dragOffset.current.y),
+          y: Math.max(MENU_BAR, e.clientY - dragOffset.current.y),
         },
       });
     },
-    [dispatch, windowState.id]
+    [dispatch, windowState.id],
   );
 
-  const handleDragEnd = useCallback(() => { isDragging.current = false; }, []);
+  const handleDragEnd = useCallback(() => {
+    isDragging.current = false;
+  }, []);
 
-  // -- RESIZE --
+  // RESIZE
   const handleResizeStart = useCallback(
     (e: React.PointerEvent, direction: ResizeDirection) => {
       if (windowState.isMaximized) return;
       isResizing.current = true;
       resizeDir.current = direction;
       resizeStart.current = {
-        x: e.clientX, y: e.clientY,
-        winX: windowState.x, winY: windowState.y,
-        winW: windowState.width, winH: windowState.height,
+        x: e.clientX,
+        y: e.clientY,
+        winX: windowState.x,
+        winY: windowState.y,
+        winW: windowState.width,
+        winH: windowState.height,
       };
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
       e.preventDefault();
       e.stopPropagation();
     },
-    [windowState]
+    [windowState],
   );
 
   const handleResizeMove = useCallback(
@@ -156,11 +296,19 @@ export default function Window({ windowState, children }: WindowProps) {
       let { winX: x, winY: y, winW: w, winH: h } = resizeStart.current;
       if (dir.includes("e")) w = Math.max(MIN_WIDTH, w + dx);
       if (dir.includes("s")) h = Math.max(MIN_HEIGHT, h + dy);
-      if (dir.includes("w")) { const nw = Math.max(MIN_WIDTH, w - dx); x += w - nw; w = nw; }
-      if (dir.includes("n")) { const nh = Math.max(MIN_HEIGHT, h - dy); y = Math.max(0, y + (h - nh)); h = nh; }
+      if (dir.includes("w")) {
+        const nw = Math.max(MIN_WIDTH, w - dx);
+        x += w - nw;
+        w = nw;
+      }
+      if (dir.includes("n")) {
+        const nh = Math.max(MIN_HEIGHT, h - dy);
+        y = Math.max(MENU_BAR, y + (h - nh));
+        h = nh;
+      }
       dispatch({ type: "RESIZE_WINDOW", payload: { id: windowState.id, width: w, height: h, x, y } });
     },
-    [dispatch, windowState.id]
+    [dispatch, windowState.id],
   );
 
   const handleResizeEnd = useCallback(() => {
@@ -177,109 +325,44 @@ export default function Window({ windowState, children }: WindowProps) {
     };
   }, [handleResizeMove, handleResizeEnd]);
 
-  const handleTitleDoubleClick = useCallback(() => {
-    toggleMaximize(windowState.id);
-  }, [toggleMaximize, windowState.id]);
-
-  // Mobile fullscreen: push history state when maximized, pop to exit
-  useEffect(() => {
-    if (!isMobile || !windowState.isMaximized) return;
-
-    // Push a state so the browser back button can exit fullscreen
-    const stateKey = { ui: "fullscreen", windowId: windowState.id };
-    history.pushState(stateKey, "");
-
-    const onPopState = () => {
-      // Exit fullscreen on back
-      dispatch({ type: "UNMAXIMIZE_WINDOW", payload: { id: windowState.id } });
-    };
-
-    window.addEventListener("popstate", onPopState);
-    return () => {
-      window.removeEventListener("popstate", onPopState);
-    };
-  }, [isMobile, windowState.isMaximized, windowState.id, dispatch]);
-
-  const handleExitFullscreen = useCallback(() => {
-    dispatch({ type: "UNMAXIMIZE_WINDOW", payload: { id: windowState.id } });
-    // Also go back in history to clean up the pushed state
-    if (isMobile) history.back();
-  }, [dispatch, windowState.id, isMobile]);
-
-  // Genie minimize: animate out then hide
-  const handleMinimize = useCallback(() => {
-    if (settings.uiSoundsEnabled) playMinimize();
-    setIsMinimizing(true);
-    setTimeout(() => {
-      setIsMinimizing(false);
-      minimizeWindow(windowState.id);
-    }, 350);
-  }, [minimizeWindow, windowState.id]);
-
-  // Detect restore (was minimized, now isn't)
-  useEffect(() => {
-    if (prevMinimized.current && !windowState.isMinimized) {
-      setIsRestoring(true);
-      const t = setTimeout(() => setIsRestoring(false), 300);
-      return () => clearTimeout(t);
-    }
-    prevMinimized.current = windowState.isMinimized;
-  }, [windowState.isMinimized]);
-
-  if (windowState.isMinimized && !isMinimizing) return null;
+  if (windowState.isMinimized && !minimizing) return null;
 
   const cursorMap: Record<string, string> = {
-    n: "cursor-n-resize", s: "cursor-s-resize",
-    e: "cursor-e-resize", w: "cursor-w-resize",
-    ne: "cursor-ne-resize", nw: "cursor-nw-resize",
-    se: "cursor-se-resize", sw: "cursor-sw-resize",
+    n: "cursor-n-resize",
+    s: "cursor-s-resize",
+    e: "cursor-e-resize",
+    w: "cursor-w-resize",
+    ne: "cursor-ne-resize",
+    nw: "cursor-nw-resize",
+    se: "cursor-se-resize",
+    sw: "cursor-sw-resize",
   };
 
-  const focusedShadow = "var(--shadow-window)";
-  const unfocusedShadow = "var(--shadow-window-inactive)";
-
-  // Title bar gradient from CSS vars
-  const titleBarBg = isFocused
-    ? "var(--window-title-focused)"
-    : "var(--window-title-unfocused)";
-
   return (
-    <div
-      ref={windowRef}
+    <motion.div
+      ref={scope}
       role="dialog"
       aria-label={windowState.title}
-      aria-modal={isFocused}
       tabIndex={-1}
+      data-window-id={windowState.fsItemId}
       onKeyDown={handleKeyDown}
-      className={`
-        fixed select-none flex flex-col overflow-hidden outline-none
-        ${windowState.isMaximized ? "rounded-none" : ""}
-        ${isClosing ? "animate-window-close" : isMinimizing ? "animate-window-minimize" : isRestoring ? "animate-window-restore" : "animate-window-open"}
-      `}
+      className="fixed select-none flex flex-col overflow-hidden outline-none"
       style={{
-        left: isMobile && !windowState.isMaximized
-          ? Math.max(0, Math.min(windowState.x, window.innerWidth - Math.min(windowState.width, window.innerWidth - 4)))
-          : windowState.x,
-        top: isMobile && !windowState.isMaximized
-          ? Math.max(22, Math.min(windowState.y, window.innerHeight - 120))
-          : windowState.y,
-        width: isMobile && !windowState.isMaximized
-          ? Math.min(windowState.width, window.innerWidth - 4)
-          : windowState.width,
-        height: isMobile && !windowState.isMaximized
-          ? Math.min(windowState.height, window.innerHeight - 94)
-          : windowState.height,
-        zIndex: windowState.zIndex,
+        left: windowState.x,
+        top: windowState.y,
+        width: windowState.width,
+        height: windowState.height,
+        zIndex: slot ? Z_INDEX.expose + 1 + slot.order : windowState.zIndex,
         borderRadius: windowState.isMaximized ? 0 : "var(--radius-window)",
-        boxShadow: isFocused ? focusedShadow : unfocusedShadow,
+        boxShadow: isFocused ? "var(--shadow-window)" : "var(--shadow-window-inactive)",
         border: "1px solid var(--border)",
+        background: "var(--window-bg)",
       }}
       onPointerDown={handleWindowPointerDown}
     >
-      {/* RESIZE HANDLES (hidden on mobile) */}
-      {!windowState.isMaximized && !isMobile && (
+      {!windowState.isMaximized && (
         <>
-          {(["n","s","e","w","ne","nw","se","sw"] as ResizeDirection[]).map((dir) => {
+          {(["n", "s", "e", "w", "ne", "nw", "se", "sw"] as ResizeDirection[]).map((dir) => {
             if (!dir) return null;
             const s: React.CSSProperties = { position: "absolute", zIndex: RESIZE_HANDLE_Z_INDEX };
             if (dir.includes("n")) { s.top = 0; s.height = RESIZE_HANDLE_SIZE; }
@@ -297,67 +380,50 @@ export default function Window({ windowState, children }: WindowProps) {
         </>
       )}
 
-      {/* TITLE BAR - Panther Aqua brushed metal */}
       <div
-        className={`
-          flex items-center px-2.5 shrink-0
-          ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}
-        `}
+        className={`window-titlebar flex items-center px-2.5 shrink-0 ${windowState.isMaximized ? "" : "cursor-grab active:cursor-grabbing"}`}
         style={{
           height: "var(--titlebar-h)",
-          background: titleBarBg,
+          background: isFocused ? "var(--titlebar)" : "var(--titlebar-inactive)",
           borderBottom: "1px solid var(--border)",
+          touchAction: "none",
         }}
         onPointerDown={handleDragStart}
         onPointerMove={handleDragMove}
         onPointerUp={handleDragEnd}
-        onDoubleClick={handleTitleDoubleClick}
+        onDoubleClick={() => toggleMaximize(windowState.id)}
       >
-        {/* Traffic lights */}
         <div className={`traffic mr-3 z-20 ${isFocused ? "" : "is-inactive"}`}>
           <button onClick={handleClose} aria-label="Close window" className="traffic-light is-close" />
           <button onClick={handleMinimize} aria-label="Minimize window" className="traffic-light is-min" />
-          <button onClick={() => toggleMaximize(windowState.id)} aria-label={windowState.isMaximized ? "Restore window" : "Zoom window"} className="traffic-light is-zoom" />
+          <button
+            onClick={() => toggleMaximize(windowState.id)}
+            aria-label={windowState.isMaximized ? "Restore window" : "Zoom window"}
+            className="traffic-light is-zoom"
+          />
         </div>
-
-        {/* Title */}
         <div
           className="flex-1 text-center text-[13px] font-semibold truncate pointer-events-none"
-          style={{
-            color: isFocused ? "var(--titlebar-text)" : "var(--titlebar-text-inactive)",
-          }}
+          style={{ color: isFocused ? "var(--titlebar-text)" : "var(--titlebar-text-inactive)" }}
         >
           {windowState.title}
         </div>
-
-        {/* Exit fullscreen button on mobile */}
-        {isMobile && windowState.isMaximized ? (
-          <button
-            onClick={handleExitFullscreen}
-            className="shrink-0 text-3xs font-medium px-2 py-0.5 rounded z-20
-                       hover:bg-black/5 active:bg-black/10 transition-colors"
-            style={{ color: isFocused ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.3)" }}
-          >
-            Exit
-          </button>
-        ) : (
-          <div className="w-[54px]" />
-        )}
+        <div className="w-[60px]" />
       </div>
 
-      {/* WINDOW BODY */}
       <div
-        className="flex-1 overflow-auto scrollbar-thin"
+        className="window-body flex-1 overflow-auto scrollbar-thin"
         style={{
           background: "var(--paper)",
           fontFamily: "var(--user-font-family)",
           fontSize: "var(--user-font-size)",
           lineHeight: "var(--user-line-height)",
           color: "var(--text)",
+          pointerEvents: slot ? "none" : undefined,
         }}
       >
         {children}
       </div>
-    </div>
+    </motion.div>
   );
 }

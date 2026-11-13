@@ -1,324 +1,212 @@
 "use client";
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef } from "react";
+import {
+  motion,
+  useAnimate,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+  type MotionValue,
+} from "motion/react";
 import { dockItemIds, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { getPantherIcon } from "./PantherIcons";
-import { useIsMobile } from "@/hooks/useIsMobile";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { PantherIcon } from "./PantherIcons";
 import { trackEvent } from "@/lib/analytics";
+import { springs, setLaunchOrigin } from "@/lib/motion";
 
 // ============================================================================
-// DOCK - Mac OS X 10.3 Panther Style Launcher
+// DOCK
 // ============================================================================
-// Primary navigation dock fixed to bottom center. Glossy Aqua icons,
-// glassy translucent shelf. Single click to open/focus. Hover magnification.
-// Active dot indicators.
+// Glass shelf at the bottom of the desktop. Hover magnification follows the
+// pointer on a snappy spring, an app bounces while it opens, and open apps
+// get a glowing dot. Keyboard: a roving tab stop with arrow keys (WAI-ARIA
+// toolbar). Reduced motion turns magnification and the bounce off.
 // ============================================================================
 
-// ---------------------------------------------------------------------------
-// Tooltip component
-// ---------------------------------------------------------------------------
+const ICON = 48;
+const MAX_SCALE = 1.55;
+const REACH = 140;
 
 function DockTooltip({ label, visible }: { label: string; visible: boolean }) {
   return (
-    <div
-      className={`
-        absolute -top-8 left-1/2 -translate-x-1/2
-        px-2 py-0.5 rounded
-        text-2xs font-medium text-white whitespace-nowrap
-        pointer-events-none transition-all duration-150
-        ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"}
-      `}
-      style={{
-        background: "rgba(30, 30, 30, 0.85)",
-        backdropFilter: "blur(8px)",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
-        border: "1px solid rgba(255,255,255,0.1)",
-      }}
+    <span
+      className="dock-tooltip"
+      style={{ opacity: visible ? 1 : 0, transform: `translate(-50%, ${visible ? 0 : 4}px)` }}
+      aria-hidden="true"
     >
       {label}
-    </div>
+    </span>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Single dock icon
-// ---------------------------------------------------------------------------
-
 interface DockIconProps {
   item: FSItem;
+  mouseX: MotionValue<number>;
   isOpen: boolean;
-  isFocused: boolean;
-  hoveredIndex: number | null;
-  myIndex: number;
-  onHover: (index: number | null) => void;
-  onClick: () => void;
-  /** Roving tabindex: only the active item is a tab stop. */
   tabIndex: number;
-  /** Toggle state for window-backed items; undefined for plain links. */
   pressed?: boolean;
+  reduceMotion: boolean;
+  onActivate: (item: FSItem, el: HTMLElement | null, bounce: () => void) => void;
   onFocus: () => void;
   buttonRef: (el: HTMLButtonElement | null) => void;
 }
 
-function DockIcon({
-  item,
-  isOpen,
-  isFocused,
-  hoveredIndex,
-  myIndex,
-  onHover,
-  onClick,
-  tabIndex,
-  pressed,
-  onFocus,
-  buttonRef,
-  compact,
-  reduceMotion,
-}: DockIconProps & { compact?: boolean; reduceMotion?: boolean }) {
-  const PantherIcon = getPantherIcon(item.id);
+function DockIcon({ item, mouseX, isOpen, tabIndex, pressed, reduceMotion, onActivate, onFocus, buttonRef }: DockIconProps) {
+  const ref = useRef<HTMLButtonElement | null>(null);
+  const [artScope, animate] = useAnimate<HTMLSpanElement>();
+  const [hovered, setHovered] = useState(false);
 
-  const iconBox = compact ? 34 : 44;
-  const iconSize = compact ? 28 : 38;
+  const distance = useTransform(mouseX, (x) => {
+    const el = ref.current;
+    if (!el || x === Infinity) return REACH * 2;
+    const r = el.getBoundingClientRect();
+    return x - (r.left + r.width / 2);
+  });
+  const target = useTransform(distance, [-REACH, 0, REACH], [1, MAX_SCALE, 1], { clamp: true });
+  const scale = useSpring(target, springs.snappy);
+  const lift = useTransform(scale, (s) => -(s - 1) * 22);
 
-  // Magnification: full scale at hovered, slightly less for neighbors.
-  // Disabled when the user prefers reduced motion.
-  let scale = 1;
-  if (!reduceMotion && hoveredIndex !== null) {
-    const distance = Math.abs(hoveredIndex - myIndex);
-    if (distance === 0) scale = 1.4;
-    else if (distance === 1) scale = 1.18;
-    else if (distance === 2) scale = 1.06;
-  }
-
-  const isHovered = hoveredIndex === myIndex;
+  const bounce = useCallback(() => {
+    if (reduceMotion || !artScope.current) return;
+    animate(artScope.current, { y: [0, -18, 0, -9, 0, -3, 0] }, { duration: 1.1, ease: "easeOut" });
+  }, [animate, artScope, reduceMotion]);
 
   return (
-    <button
-      ref={buttonRef}
-      className="relative flex flex-col items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent focus-visible:ring-offset-1 rounded"
-      style={{
-        transition: "transform 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        transform: `scale(${scale}) translateY(${scale > 1 ? -(scale - 1) * 22 : 0}px)`,
-        transformOrigin: "bottom center",
+    <motion.button
+      ref={(el) => {
+        ref.current = el;
+        buttonRef(el);
       }}
-      onMouseEnter={() => onHover(myIndex)}
-      onMouseLeave={() => onHover(null)}
-      onClick={onClick}
-      onFocus={onFocus}
+      data-dock-id={item.id}
+      className="dock-item relative flex flex-col items-center rounded-lg"
+      style={reduceMotion ? undefined : { scale, y: lift, transformOrigin: "50% 100%" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => {
+        setHovered(true);
+        onFocus();
+      }}
+      onBlur={() => setHovered(false)}
+      onClick={() => onActivate(item, ref.current, bounce)}
       tabIndex={tabIndex}
       aria-pressed={pressed}
       aria-label={`Open ${item.name}`}
     >
-      {!compact && <DockTooltip label={item.name} visible={isHovered} />}
-
-      {/* Panther Aqua Icon */}
-      <div
-        className="relative flex items-center justify-center"
-        style={{
-          width: iconBox,
-          height: iconBox,
-          filter: isHovered
-            ? "drop-shadow(0 3px 8px rgba(0,0,0,0.35))"
-            : "drop-shadow(0 1px 4px rgba(0,0,0,0.2))",
-          transition: "filter 150ms ease",
-        }}
-      >
-        <PantherIcon size={iconSize} />
-      </div>
-
-      {/* Active indicator dot */}
-      <span
-        className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 transition-all duration-200"
-        style={{
-          width: 5,
-          height: 5,
-          borderRadius: "50%",
-          background: "var(--dock-dot)",
-          boxShadow: `0 0 6px 1px var(--dock-dot-glow)`,
-          opacity: isOpen ? 1 : 0,
-        }}
-      />
-    </button>
+      <DockTooltip label={item.name} visible={hovered} />
+      <span ref={artScope} className="flex items-center justify-center" style={{ width: ICON, height: ICON }}>
+        <PantherIcon itemId={item.id} size={ICON - 4} />
+      </span>
+      <span className="dock-dot" style={{ opacity: isOpen ? 1 : 0 }} aria-hidden="true" />
+    </motion.button>
   );
 }
-
-// ---------------------------------------------------------------------------
-// Separator
-// ---------------------------------------------------------------------------
-
-function DockSeparator() {
-  return (
-    <div
-      className="self-center mx-1"
-      style={{
-        width: 1,
-        height: 32,
-        background: "var(--dock-border)",
-      }}
-    />
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Main Dock
-// ---------------------------------------------------------------------------
 
 interface DockProps {
   onStickiesToggle?: () => void;
   stickiesActive?: boolean;
+  /** Larger, in-flow dock for the bottom screen of the Duo laptop pose. */
+  large?: boolean;
 }
 
-export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {}) {
+export default function Dock({ onStickiesToggle, stickiesActive, large = false }: DockProps = {}) {
   const { state, openItem, focusWindow, restoreWindow } = useDesktop();
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const dockRef = useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile();
-  const reduceMotion = useReducedMotion();
-
-  // Roving tabindex (WAI-ARIA toolbar pattern): one item is the tab stop,
-  // arrow keys move focus between items.
+  const reduceMotion = !!useReducedMotion();
+  const mouseX = useMotionValue(Infinity);
   const [rovingIndex, setRovingIndex] = useState(0);
   const itemButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Build resolved dock items (skip separators for indexing purposes)
-  const dockEntries: { type: "item" | "separator"; item?: FSItem; itemIndex?: number }[] = [];
-  let itemCounter = 0;
-  for (const entry of dockItemIds) {
-    if (entry === "|") {
-      // Skip separators on mobile to save space
-      if (!isMobile) dockEntries.push({ type: "separator" });
-    } else {
-      const fsItem = findFSItem(entry);
-      if (fsItem) {
-        dockEntries.push({ type: "item", item: fsItem, itemIndex: itemCounter });
-        itemCounter++;
-      }
+  const entries: ({ type: "sep" } | { type: "item"; item: FSItem; index: number })[] = [];
+  let count = 0;
+  for (const id of dockItemIds) {
+    if (id === "|") {
+      entries.push({ type: "sep" });
+      continue;
     }
+    const item = findFSItem(id);
+    if (item) entries.push({ type: "item", item, index: count++ });
   }
-
-  const handleHover = useCallback((index: number | null) => {
-    setHoveredIndex(index);
-  }, []);
-
-  // Reset hover when mouse leaves dock entirely
-  const handleDockLeave = useCallback(() => {
-    setHoveredIndex(null);
-  }, []);
-
-  const itemCount = itemCounter;
-  // Keep the tab stop valid when the item list shrinks (mobile layout).
-  const activeRovingIndex = Math.min(rovingIndex, Math.max(0, itemCount - 1));
+  const active = Math.min(rovingIndex, Math.max(0, count - 1));
 
   const focusItemAt = useCallback((index: number) => {
     setRovingIndex(index);
     itemButtonRefs.current[index]?.focus();
   }, []);
 
-  const handleToolbarKeyDown = useCallback(
+  const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (itemCount === 0) return;
-      switch (e.key) {
-        case "ArrowRight":
-          e.preventDefault();
-          focusItemAt((activeRovingIndex + 1) % itemCount);
-          break;
-        case "ArrowLeft":
-          e.preventDefault();
-          focusItemAt((activeRovingIndex - 1 + itemCount) % itemCount);
-          break;
-        case "Home":
-          e.preventDefault();
-          focusItemAt(0);
-          break;
-        case "End":
-          e.preventDefault();
-          focusItemAt(itemCount - 1);
-          break;
+      if (count === 0) return;
+      const moves: Record<string, number> = {
+        ArrowRight: (active + 1) % count,
+        ArrowLeft: (active - 1 + count) % count,
+        Home: 0,
+        End: count - 1,
+      };
+      if (e.key in moves) {
+        e.preventDefault();
+        focusItemAt(moves[e.key]);
       }
     },
-    [itemCount, activeRovingIndex, focusItemAt]
+    [count, active, focusItemAt],
   );
 
-  const handleClick = useCallback((item: FSItem) => {
-    trackEvent("app_opened", { app: item.id, source: "dock" });
-    // Stickies: toggle floating stickies instead of opening a window
-    if (item.id === "stickies" && onStickiesToggle) {
-      onStickiesToggle();
-      return;
-    }
-    // If link, open externally
-    if (item.type === "link" && item.href) {
-      window.open(item.href, "_blank", "noopener,noreferrer");
-      return;
-    }
-    // If already open, focus or restore
-    const existingWindow = state.windows.find((w) => w.fsItemId === item.id);
-    if (existingWindow) {
-      if (existingWindow.isMinimized) {
-        restoreWindow(existingWindow.id);
-      } else {
-        focusWindow(existingWindow.id);
+  const activate = useCallback(
+    (item: FSItem, el: HTMLElement | null, bounce: () => void) => {
+      trackEvent("app_opened", { app: item.id, source: "dock" });
+      if (item.id === "stickies" && onStickiesToggle) {
+        onStickiesToggle();
+        return;
       }
-      return;
-    }
-    // Open new
-    openItem(item);
-  }, [state.windows, openItem, focusWindow, restoreWindow, onStickiesToggle]);
+      if (item.type === "link" && item.href) {
+        window.open(item.href, "_blank", "noopener,noreferrer");
+        return;
+      }
+      const existing = state.windows.find((w) => w.fsItemId === item.id);
+      if (existing) {
+        if (existing.isMinimized) restoreWindow(existing.id);
+        else focusWindow(existing.id);
+        return;
+      }
+      bounce();
+      setLaunchOrigin(item.id, el);
+      openItem(item);
+    },
+    [state.windows, openItem, focusWindow, restoreWindow, onStickiesToggle],
+  );
 
   return (
     <div
-      ref={dockRef}
       role="toolbar"
       aria-label="Dock"
       aria-orientation="horizontal"
-      onKeyDown={handleToolbarKeyDown}
-      className={`fixed left-1/2 -translate-x-1/2 z-dock
-                  flex items-end
-                  rounded-2xl animate-fade-in
-                  ${isMobile
-                    ? "bottom-0 px-1.5 pt-1 pb-[calc(4px+env(safe-area-inset-bottom))] max-w-[calc(100%-8px)] overflow-x-auto scrollbar-none"
-                    : "bottom-1.5 px-2.5 pt-1.5 pb-1.5"
-                  }`}
-      style={{
-        background: "var(--dock-shelf), var(--dock-bg)",
-        border: "1px solid var(--dock-border)",
-        boxShadow: "0 6px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.35)",
-        backdropFilter: "blur(28px)",
-        WebkitBackdropFilter: "blur(28px)",
-        ...(isMobile ? { borderRadius: "16px 16px 0 0", borderBottom: "none" } : {}),
-      }}
-      onMouseLeave={handleDockLeave}
+      onKeyDown={onKeyDown}
+      onMouseMove={(e) => mouseX.set(e.clientX)}
+      onMouseLeave={() => mouseX.set(Infinity)}
+      className={`dock-shelf ${large ? "is-large" : ""}`}
     >
-      {dockEntries.map((entry, i) => {
-        if (entry.type === "separator") {
-          return <DockSeparator key={`sep-${i}`} />;
-        }
-
-        const item = entry.item!;
+      {entries.map((entry, i) => {
+        if (entry.type === "sep") return <span key={`sep-${i}`} className="dock-sep" aria-hidden="true" />;
+        const { item, index } = entry;
         const isOpen = item.id === "stickies" ? !!stickiesActive : state.windows.some((w) => w.fsItemId === item.id);
-        const isFocused = item.id === "stickies" ? !!stickiesActive : state.windows.some(
-          (w) => w.fsItemId === item.id && state.focusedWindowId === w.id && !w.isMinimized
-        );
-
-        const itemIndex = entry.itemIndex!;
+        const isFocused =
+          item.id === "stickies"
+            ? !!stickiesActive
+            : state.windows.some((w) => w.fsItemId === item.id && state.focusedWindowId === w.id && !w.isMinimized);
         return (
           <DockIcon
             key={item.id}
             item={item}
+            mouseX={mouseX}
             isOpen={isOpen}
-            isFocused={isFocused}
-            hoveredIndex={isMobile ? null : hoveredIndex}
-            myIndex={itemIndex}
-            onHover={isMobile ? () => {} : handleHover}
-            onClick={() => handleClick(item)}
-            tabIndex={itemIndex === activeRovingIndex ? 0 : -1}
+            tabIndex={index === active ? 0 : -1}
             pressed={item.type === "link" ? undefined : isFocused}
-            onFocus={() => setRovingIndex(itemIndex)}
-            buttonRef={(el) => { itemButtonRefs.current[itemIndex] = el; }}
-            compact={isMobile}
             reduceMotion={reduceMotion}
+            onActivate={activate}
+            onFocus={() => setRovingIndex(index)}
+            buttonRef={(el) => {
+              itemButtonRefs.current[index] = el;
+            }}
           />
         );
       })}

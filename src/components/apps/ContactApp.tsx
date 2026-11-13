@@ -191,9 +191,7 @@ export default function ContactApp() {
             <button
               type="submit"
               disabled={status === "sending" || !name.trim() || !email.trim() || !message.trim()}
-              className="w-full py-2 rounded text-[12px] font-medium
-                         bg-desktop-accent text-on-accent hover:opacity-90
-                         disabled:opacity-50 transition-opacity"
+              className="aqua-button is-default is-pulsing w-full disabled:opacity-50 disabled:animate-none"
             >
               {status === "sending" ? "Sending..." : "Send Message"}
             </button>
