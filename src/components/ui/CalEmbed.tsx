@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import AquaLoading from "./AquaLoading";
 import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
@@ -12,6 +13,24 @@ import { trackEvent } from "@/lib/analytics";
 export default function CalEmbed() {
   const containerRef = useRef<HTMLDivElement>(null);
   const loadedRef = useRef(false);
+  const [ready, setReady] = useState(false);
+  const [slow, setSlow] = useState(false);
+
+  // Show a skeleton until Cal.com's iframe arrives, and a direct link if it
+  // has not arrived after 8 seconds, so the box is never just blank.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new MutationObserver(() => {
+      if (el.querySelector("iframe")) setReady(true);
+    });
+    obs.observe(el, { childList: true, subtree: true });
+    const t = window.setTimeout(() => setSlow(true), 8000);
+    return () => {
+      obs.disconnect();
+      window.clearTimeout(t);
+    };
+  }, []);
 
   useEffect(() => {
     if (loadedRef.current) return;
@@ -52,9 +71,22 @@ export default function CalEmbed() {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="rounded-lg border border-desktop-border overflow-hidden min-h-[520px] sm:min-h-[560px] lg:min-h-[640px]"
-    />
+    <div className="relative rounded-lg border border-desktop-border overflow-hidden min-h-[520px] sm:min-h-[560px] lg:min-h-[640px]">
+      {!ready && (
+        <div className="absolute inset-x-0 top-0">
+          <AquaLoading label="Loading the calendar" lines={3} />
+          {slow && (
+            <p className="px-5 text-[15px] text-desktop-text">
+              The calendar is taking a while. You can also{" "}
+              <a className="underline" href="https://cal.com/mattmck/site" target="_blank" rel="noopener noreferrer">
+                book a time on cal.com
+              </a>
+              .
+            </p>
+          )}
+        </div>
+      )}
+      <div ref={containerRef} className="relative min-h-[520px] sm:min-h-[560px] lg:min-h-[640px]" />
+    </div>
   );
 }

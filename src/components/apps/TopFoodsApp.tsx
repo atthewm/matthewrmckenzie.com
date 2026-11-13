@@ -76,7 +76,7 @@ function FoodRow({ food, max }: { food: TopFood; max: number }) {
         {/* Name + frequency bar */}
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <span className="truncate text-[12px] font-medium text-desktop-text">
+            <span className="break-words text-[12px] font-medium text-desktop-text">
               {food.name}
             </span>
             {food.variants > 1 && (
@@ -139,25 +139,25 @@ function SummaryStrip({ foods }: { foods: TopFood[] }) {
           <div className="text-[11px] font-semibold tabular-nums text-desktop-text">
             {stats.logs.toLocaleString()}
           </div>
-          <div className="truncate text-[9px] text-desktop-text-secondary">entries ranked</div>
+          <div className="break-words text-[9px] text-desktop-text-secondary">entries ranked</div>
         </div>
       </div>
       <div className="flex items-center gap-1.5">
         <Beef className="h-3.5 w-3.5 shrink-0 text-desktop-text-secondary" />
         <div className="min-w-0 leading-tight">
-          <div className="truncate text-[11px] font-semibold text-desktop-text">
+          <div className="break-words text-[11px] font-semibold text-desktop-text">
             {stats.topProtein?.name ?? "n/a"}
           </div>
-          <div className="truncate text-[9px] text-desktop-text-secondary">most protein</div>
+          <div className="break-words text-[9px] text-desktop-text-secondary">most protein</div>
         </div>
       </div>
       <div className="flex items-center gap-1.5">
         <Leaf className="h-3.5 w-3.5 shrink-0 text-desktop-text-secondary" />
         <div className="min-w-0 leading-tight">
-          <div className="truncate text-[11px] font-semibold text-desktop-text">
+          <div className="break-words text-[11px] font-semibold text-desktop-text">
             {stats.topFiber?.name ?? "n/a"}
           </div>
-          <div className="truncate text-[9px] text-desktop-text-secondary">most fiber</div>
+          <div className="break-words text-[9px] text-desktop-text-secondary">most fiber</div>
         </div>
       </div>
     </div>

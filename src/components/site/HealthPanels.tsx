@@ -20,7 +20,7 @@ const panels = [
 
 export default function HealthPanels() {
   return (
-    <div className="mt-10 grid gap-8">
+    <div className="mt-10 grid gap-8" style={{ gridTemplateColumns: "minmax(0, 1fr)" }}>
       {panels.map(({ id, title, height, App }) => (
         <section key={id} aria-labelledby={`panel-${id}`}>
           <h2 id={`panel-${id}`} className="site-section-title">{title}</h2>
