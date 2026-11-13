@@ -12,7 +12,7 @@ import { isOwnerRequest, NO_STORE } from "@/lib/owner";
 
 export async function POST(request: Request) {
   if (!isOwnerRequest(request)) {
-    return NextResponse.json({ error: "Not found" }, { status: 404, headers: NO_STORE });
+    return NextResponse.json({ error: "Forbidden" }, { status: 403, headers: NO_STORE });
   }
   try {
     await Promise.all([clearTokens(), clearDashboardCache()]);
