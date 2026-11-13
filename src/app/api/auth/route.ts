@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { OWNER_COOKIE, OWNER_MAX_AGE, ownerCookieValue } from "@/lib/owner";
 
 // ---------------------------------------------------------------------------
 // Credentials are read from environment variables so they never live in code.
@@ -45,6 +46,16 @@ export async function POST(request: Request) {
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 30,
       });
+      // Owner flag: only the admin account gets it, and only with a secret set.
+      const owner = isAdmin ? ownerCookieValue() : null;
+      if (owner) {
+        response.cookies.set(OWNER_COOKIE, owner, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: OWNER_MAX_AGE,
+        });
+      }
       return response;
     }
 
