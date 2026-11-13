@@ -78,7 +78,7 @@ export const fileSystem: FSItem[] = [
   { id: "stickies", name: "Stickies", type: "app", icon: "StickyNote", appComponent: "StickiesApp", description: "Sticky notes for quick thoughts.", defaultSize: { width: 520, height: 400 } },
   { id: "settings", name: "Settings", type: "app", icon: "Settings", appComponent: "SettingsApp", description: "Appearance, sound, and typography settings.", defaultSize: { width: 420, height: 540 } },
   { id: "browser", name: "Browser", type: "app", icon: "Globe", appComponent: "BrowserApp", description: "In-OS web browser.", defaultSize: { width: 800, height: 600 } },
-  { id: "start-here", name: "Start Here", type: "app", icon: "Sparkles", appComponent: "StartHereApp", description: "Welcome! Start here to explore.", defaultSize: { width: 420, height: 400 }, children: [
+  { id: "start-here", name: "Start Here", type: "app", icon: "Sparkles", appComponent: "StartHereApp", description: "A quick tour of the site.", defaultSize: { width: 560, height: 600 }, children: [
     { id: "readme", name: "README", type: "document", icon: "FileText", contentPath: "readme.md", description: "Welcome to matthewrmckenzie.com.", defaultSize: { width: 560, height: 480 } },
     { id: "linkedin", name: "LinkedIn", type: "link", icon: "Linkedin", href: "https://www.linkedin.com/in/mrmckenzie/", description: "Connect on LinkedIn." },
     { id: "github", name: "GitHub", type: "link", icon: "Github", href: "https://github.com/atthewm", description: "View code on GitHub." },

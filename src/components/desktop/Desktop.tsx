@@ -24,6 +24,7 @@ import { findFSItem } from "@/data/fs";
 // ============================================================================
 
 const MOBILE_WELCOME_KEY = "mmck-mobile-welcomed";
+const START_HERE_KEY = "mmck-start-here-seen";
 const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 interface DesktopProps {
@@ -113,6 +114,20 @@ export default function Desktop({ contentMap }: DesktopProps) {
     if (readme) {
       dispatch({ type: "OPEN_WINDOW", payload: { fsItem: readme } });
     }
+  }, [isMobile, dispatch]);
+
+  // Desktop first visit only: open Start Here once, never again after.
+  useEffect(() => {
+    if (isMobile) return;
+    if (new URLSearchParams(window.location.search).get("open")) return;
+    try {
+      if (localStorage.getItem(START_HERE_KEY)) return;
+      localStorage.setItem(START_HERE_KEY, "1");
+    } catch {
+      return;
+    }
+    const startHere = findFSItem("start-here");
+    if (startHere) dispatch({ type: "OPEN_WINDOW", payload: { fsItem: startHere } });
   }, [isMobile, dispatch]);
 
   // Toast auto-dismiss

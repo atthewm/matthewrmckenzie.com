@@ -392,3 +392,31 @@
   .site { background: #fff; }
   .site-noprint { display: none !important; }
 }
+
+/* ============================================================================
+   START HERE TILES AND CHIPS
+   ============================================================================ */
+
+.aqua-tile {
+  border-radius: 10px;
+  background: var(--desktop-surface-raised);
+  border: 1px solid var(--desktop-border);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.aqua-tile:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); }
+.aqua-tile:active { transform: scale(0.98); }
+.aqua-tile:focus-visible, .aqua-chip:focus-visible { outline: 2px solid var(--desktop-accent); outline-offset: 2px; }
+
+.aqua-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 12px 4px 6px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--desktop-text);
+  background: var(--desktop-surface-raised);
+  border: 1px solid var(--desktop-border);
+}
+.aqua-chip:hover { border-color: var(--desktop-accent); }

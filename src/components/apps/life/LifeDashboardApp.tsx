@@ -153,7 +153,7 @@ export default function LifeDashboardApp() {
               <Heart size={20} className="text-desktop-text-secondary" />
             </div>
             <div>
-              <h1 className="text-base font-semibold leading-tight">Health and Diet</h1>
+              <h2 className="text-base font-semibold leading-tight">Health and Diet</h2>
               <p className="text-[11px] text-desktop-text-secondary">
                 What I eat, calories burned, and how I train. One screen.
               </p>

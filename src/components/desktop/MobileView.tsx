@@ -26,11 +26,17 @@ export default function MobileView({ contentMap }: MobileViewProps) {
   const { state, openItem, closeWindow, dispatch } = useDesktop();
   const rootItems = getRootItems();
   const startedRef = useRef(false);
+  const homeRef = useRef<HTMLDivElement>(null);
 
-  // Start every phone visit on the home screen; honor ?open=<id> deep links.
+  // Start every phone visit on the home screen, scrolled to the very top
+  // (browsers otherwise restore an old scroll offset past the header), and
+  // honor ?open=<id> deep links.
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    homeRef.current?.scrollTo(0, 0);
     dispatch({ type: "CLOSE_ALL_WINDOWS" });
     const id = new URLSearchParams(window.location.search).get("open");
     const item = id ? findFSItem(id) : undefined;
@@ -86,14 +92,14 @@ export default function MobileView({ contentMap }: MobileViewProps) {
   }
 
   return (
-    <div className="fixed inset-0 overflow-y-auto" style={{ background: "#151619", color: "#ecebe7" }}>
+    <div ref={homeRef} className="fixed inset-0 overflow-y-auto" style={{ background: "#151619", color: "#ecebe7" }}>
       <div className="safe-area-top px-5 pt-10 pb-10 max-w-md mx-auto">
         <p style={{ color: "#cfae6b" }} className="font-mono text-[11px] uppercase tracking-[0.16em]">
           {profile.company} &middot; {profile.primaryCity}
         </p>
-        <h1 className="text-[34px] leading-[1.05] mt-3" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>
+        <p className="text-[34px] leading-[1.05] mt-3" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>
           {profile.fullName}
-        </h1>
+        </p>
         <p className="text-[15px] mt-2 leading-snug" style={{ color: "#a3a4aa" }}>
           {profile.title}. Private wealth, family offices, and RIAs.
         </p>

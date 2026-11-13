@@ -908,9 +908,9 @@ export default function WhoopDashboardApp() {
               <Activity size={20} className="text-desktop-text-secondary" />
             </div>
             <div>
-              <h1 className="text-[14px] font-semibold text-desktop-text leading-tight">
+              <h2 className="text-[14px] font-semibold text-desktop-text leading-tight">
                 WHOOP Dashboard
-              </h1>
+              </h2>
               <p className="text-[11px] text-desktop-text-secondary">
                 {isConnected &&
                 (dashData as LiveDashboardData).profile

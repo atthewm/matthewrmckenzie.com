@@ -74,7 +74,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 export default function HobbiesApp() {
   return (
     <div className="h-full overflow-auto bg-desktop-surface p-5">
-      <h1 className="text-[17px] font-semibold text-desktop-text mb-1">Hobbies</h1>
+      <h2 className="text-[17px] font-semibold text-desktop-text mb-1">Hobbies</h2>
       <p className="text-2xs text-desktop-text-secondary mb-5">
         The things that keep me sharp outside the desk.
       </p>

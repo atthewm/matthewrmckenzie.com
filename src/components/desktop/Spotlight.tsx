@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { flattenFS, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { getPantherIconPath } from "./PantherIcons";
+import { PantherIcon } from "./PantherIcons";
 import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
@@ -160,7 +160,6 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
         {results.length > 0 ? (
           <div className="max-h-[320px] overflow-y-auto py-1">
             {results.map((item, i) => {
-              const iconPath = getPantherIconPath(item.id);
               const isSelected = i === selectedIndex;
 
               return (
@@ -174,14 +173,7 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
                   onClick={() => openItem(item)}
                   onMouseEnter={() => setSelectedIndex(i)}
                 >
-                  <img
-                    src={iconPath}
-                    alt=""
-                    width={28}
-                    height={28}
-                    draggable={false}
-                    style={{ objectFit: "contain" }}
-                  />
+                  <PantherIcon itemId={item.id} size={28} />
                   <div className="flex-1 min-w-0">
                     <div className="text-title font-medium truncate">{item.name}</div>
                     {item.description && (

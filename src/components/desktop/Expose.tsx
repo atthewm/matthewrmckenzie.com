@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo, useEffect } from "react";
 import { useDesktop, type WindowState } from "@/hooks/useDesktopStore";
-import { getPantherIconPath } from "./PantherIcons";
+import { PantherIcon } from "./PantherIcons";
 
 // ============================================================================
 // EXPOSÉ (Mac OS X 10.3 Panther)
@@ -130,7 +130,6 @@ export default function Expose({ active, onClose }: ExposeProps) {
 
       {/* Window thumbnails */}
       {layout.map((thumb) => {
-        const iconPath = getPantherIconPath(thumb.win.fsItemId);
 
         return (
           <button
@@ -180,14 +179,7 @@ export default function Expose({ active, onClose }: ExposeProps) {
               </div>
               {/* Body placeholder */}
               <div className="flex-1 flex items-center justify-center" style={{ opacity: 0.5 }}>
-                <img
-                  src={iconPath}
-                  alt=""
-                  width={Math.max(24, 48 * thumb.scale)}
-                  height={Math.max(24, 48 * thumb.scale)}
-                  style={{ opacity: 0.4 }}
-                  draggable={false}
-                />
+                <span style={{ opacity: 0.4 }}><PantherIcon itemId={thumb.win.fsItemId} size={Math.max(24, Math.round(48 * thumb.scale))} /></span>
               </div>
             </div>
 

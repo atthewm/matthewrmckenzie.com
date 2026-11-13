@@ -74,7 +74,7 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
           }}
         />
 
-        <h1 className="text-base font-semibold text-desktop-text mt-3">McKenzie OS</h1>
+        <h2 className="text-base font-semibold text-desktop-text mt-3">McKenzie OS</h2>
         <p className="text-[11px] text-desktop-text-secondary mt-0.5">
           Version 2.0 &middot; Matthew McKenzie
         </p>
