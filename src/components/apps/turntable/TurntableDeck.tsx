@@ -25,7 +25,8 @@ export default function TurntableDeck() {
   const playlist = appleMusicPlaylists[index];
 
   const rotation = useMotionValue(0);
-  const speed = useSpring(0, { stiffness: 18, damping: 12, mass: 1 });
+  // Ambient: the platter eases up and down on the soft spring.
+  const speed = useSpring(0, springs.soft);
   const last = useRef<number | null>(null);
 
   React.useEffect(() => {

@@ -90,9 +90,12 @@
 .doc-footer a { color: var(--text-2); }
 .doc-footer a:hover { color: var(--text); }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .doc-nav { order: 3; flex-basis: 100%; }
   .doc-toolbar { justify-content: space-between; }
+}
+
+@media (max-width: 640px) {
   .site { padding: 12px 12px 32px; }
   .doc-body { padding: 24px 18px 32px; }
   .doc-title { inset: 0 70px; }

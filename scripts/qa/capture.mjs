@@ -25,6 +25,7 @@
 
 import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 
@@ -35,6 +36,7 @@ const OUT =
   (args.find((a) => a.startsWith("--out=")) || "").slice(6) ||
   path.join(homedir(), "screenshots/round-4/matthewrmckenzie.com/design-mckenzie-os-remastered");
 const BYPASS = process.env.VERCEL_BYPASS || "";
+const SKIP_EXISTING = args.includes("--skip-existing");
 
 const STATIC = ["/about", "/work", "/health", "/kitchen", "/recipes", "/recipes/city-loaf-master-recipe", "/hobbies", "/contact", "/now", "/writing", "/food-room", "/card", "/privacy"];
 
@@ -192,9 +194,31 @@ async function shoot(page, session, file, full) {
   }
 }
 
+async function gotoWithRetry(page, url, tries = 3) {
+  for (let i = 1; ; i++) {
+    try {
+      return await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
+    } catch (e) {
+      if (i >= tries) throw e;
+      await page.waitForTimeout(3000 * i);
+    }
+  }
+}
+
 async function runState(browser, sizeName, size, theme, state, kind) {
   const view = `${sizeName}-${theme}`;
   if (ONLY && !`${view}/${state.name}`.includes(ONLY)) return;
+  if (SKIP_EXISTING && existsSync(fileFor(view, state.name))) return;
+  try {
+    await runStateInner(browser, sizeName, size, theme, state, kind, view);
+  } catch (e) {
+    report.shots.push({ view, state: state.name, kind, file: null, errors: [String(e.message || e).slice(0, 200)], horizontalOverflow: false, ellipsis: [], smallText: [], dashes: [], stuckLoading: [], duplicateIcons: [] });
+    console.log(`${view} ${state.name} FAILED ${String(e.message || e).slice(0, 120)}`);
+  }
+  await writeFile(path.join(OUT, "report.partial.json"), JSON.stringify(report, null, 2)).catch(() => {});
+}
+
+async function runStateInner(browser, sizeName, size, theme, state, kind, view) {
   const ctx = await newContext(browser, size, theme, state.fresh);
   const page = await ctx.newPage();
   const errors = [];
@@ -219,7 +243,7 @@ async function runState(browser, sizeName, size, theme, state, kind) {
     report.duoMethod = report.duoMethod || note;
   }
   const url = kind === "static" ? `${BASE}${state.name}` : `${BASE}/${state.open ? `?open=${state.open}` : ""}${size.fold && note === "?duo=1 fallback" ? (state.open ? "&duo=1" : "?duo=1") : ""}`;
-  await page.goto(url, { waitUntil: "domcontentloaded" });
+  await gotoWithRetry(page, url);
   await settle(page, kind === "static" ? 900 : 1600);
 
   if (kind !== "static") {
@@ -257,6 +281,7 @@ async function runState(browser, sizeName, size, theme, state, kind) {
   await ctx.close();
 }
 
+await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 for (const theme of ["light", "dark"]) {
   for (const [sizeName, size] of Object.entries(SIZES)) {
