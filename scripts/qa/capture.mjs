@@ -139,7 +139,7 @@ async function checks(page, viewName) {
     out.ellipsis = ellipsis.slice(0, 10);
     out.smallText = small.slice(0, 10);
     const text = document.body.innerText || "";
-    out.dashes = (text.match(/.{0,20}[–—].{0,20}/g) || []).slice(0, 5);
+    out.dashes = (text.match(/.{0,20}[\u2013\u2014].{0,20}/g) || []).slice(0, 5);
     out.stuckLoading = /Loading[^\n]{0,30}/.test(text) ? (text.match(/Loading[^\n]{0,30}/g) || []).slice(0, 3) : [];
     // The same item may sit on the desktop and in the dock; count per surface.
     const perSurface = (sel) => {

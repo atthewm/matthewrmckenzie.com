@@ -28,7 +28,7 @@ function url(file) {
   return `${RAW}/${rel}`;
 }
 
-let out = intro.trim() + "\n\n## Screenshots\n\nLight on the left, dark on the right. Click any image for full size.\n";
+let out = intro.trim() + "\n\n## Screenshots\n\nLight on the left, dark on the right. Click any image to open it full size.\n";
 for (const g of groups) {
   for (const size of g.sizes) {
     const light = report.shots.filter((s) => s.view === `${size}-light`);
@@ -37,7 +37,7 @@ for (const g of groups) {
     for (const s of light) {
       const dark = report.shots.find((d) => d.view === `${size}-dark` && d.state === s.state);
       const w = size === "desktop" || size === "duo-laptop" ? 360 : 180;
-      const cell = (shot) => (shot ? `<a href="${url(shot.file)}"><img src="${url(shot.file)}" width="${w}"></a>` : "missing");
+      const cell = (shot) => (shot ? `<img src="${url(shot.file)}" width="${w}">` : "missing");
       out += `| \`${s.state}\` | ${cell(s)} | ${cell(dark)} |\n`;
     }
     out += `\n</details>\n`;
