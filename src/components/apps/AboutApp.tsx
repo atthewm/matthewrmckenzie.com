@@ -158,7 +158,7 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
           />
         ) : (
           <p className="text-sm text-desktop-text-secondary leading-relaxed">
-            Builder &middot; Thinker &middot; Maker
+            Capital formation at Menlo Equities. Training and cooking on the side.
           </p>
         )}
       </div>

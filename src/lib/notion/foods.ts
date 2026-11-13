@@ -1,5 +1,5 @@
 // ============================================================================
-// NOTION SYNC — TOP FOODS AGGREGATION
+// NOTION SYNC: TOP FOODS AGGREGATION
 // ============================================================================
 // Turns raw Meal Entries rows into an anonymous, ranked "most logged foods"
 // table. This runs at sync time on the server and only the aggregate leaves the
@@ -96,12 +96,12 @@ export function foodKey(raw: string): string {
 
   // "Chicken breast (grilled)" / "Popcorn (35g = 150 cal)" -> drop the aside.
   s = s.replace(/\([^)]*\)/g, " ");
-  // An unclosed "(" (truncated titles) — drop the tail too.
+  // An unclosed "(" (truncated titles): drop the tail too.
   s = s.replace(/\(.*$/, " ");
   // "Chicken breast, grilled" -> keep the head noun only.
   s = s.split(",")[0];
   // "ProMix whey isolate shake - PRE-WORKOUT" -> drop the trailing qualifier.
-  s = s.split(/\s+[-–—]\s+/)[0];
+  s = s.split(/\s+[-\u2013\u2014]\s+/)[0];
   // Leading quantity: "3 large whole eggs", "150g chicken", "1/2 cup oats".
   s = stripLeadingQuantity(s);
 
@@ -142,7 +142,7 @@ export function displayName(raw: string): string {
   const base = (raw || "")
     .replace(/\([^)]*\)/g, " ")
     .replace(/\(.*$/, " ")
-    .split(/\s+[-–—]\s+/)[0];
+    .split(/\s+[-\u2013\u2014]\s+/)[0];
   const cleaned = stripLeadingQuantity(base)
     .replace(/\s+/g, " ")
     .replace(/[\s,]+$/, "")

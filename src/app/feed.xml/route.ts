@@ -53,22 +53,27 @@ export async function GET() {
       title: "About Matthew McKenzie",
       link: `${SITE_URL}/about`,
       description:
-        "Capital formation, private wealth, and AI operations tooling. Senior Vice President, Capital Formation at Menlo Equities.",
+        "Capital formation and private wealth. Senior Vice President, Capital Formation at Menlo Equities.",
       pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
     },
     {
       title: "Work: Capital Formation, Investor Relations, Growth Strategy",
       link: `${SITE_URL}/work`,
       description:
-        "Capabilities in capital formation, investor relations, growth strategy, and AI operations tooling for real asset backed businesses.",
+        "Capabilities in capital formation, investor relations, and growth strategy for real asset backed businesses.",
       pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
     },
     {
-      title: "Projects: AI Operations Tooling and Platforms",
-      link: `${SITE_URL}/projects`,
-      description:
-        "mckm.at, McKenzie OS, Eight Sleep integrations, and more.",
-      pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
+      title: "Health and Fitness",
+      link: `${SITE_URL}/health`,
+      description: "How I train, recover, sleep, and eat.",
+      pubDate: "Sat, 07 Nov 2026 00:00:00 GMT",
+    },
+    {
+      title: "Cooking and Baking",
+      link: `${SITE_URL}/kitchen`,
+      description: "Sourdough from a rye starter, jam, and high protein recipes, tested and written down.",
+      pubDate: "Sat, 07 Nov 2026 00:00:00 GMT",
     },
   ];
 
@@ -77,7 +82,7 @@ export async function GET() {
   <channel>
     <title>Matthew McKenzie</title>
     <link>${SITE_URL}</link>
-    <description>Capital formation, growth strategy, and AI operations tooling for real asset backed businesses.</description>
+    <description>Capital formation at Menlo Equities, plus health, fitness, cooking, and baking.</description>
     <language>en-us</language>
     <lastBuildDate>${now}</lastBuildDate>
     <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>

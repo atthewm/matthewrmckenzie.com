@@ -26,22 +26,25 @@ ${profile.priorBio}
 
 ${profile.educationBio}
 
-He also builds his own software: the mckm.at link shortener and data room platform, this site (a desktop operating system built with Next.js), and a personal health data stack using WHOOP and Eight Sleep.
+Outside of work he trains for strength and endurance, tracks recovery and sleep with WHOOP and Eight Sleep, and cooks and bakes.
 
 ## Topics
 
 1. Capital formation and investor relations for private real estate.
 2. Private wealth partnerships with family offices, RIAs, and high net worth investors.
-3. Tracked document sharing and data rooms for investor relations (mckm.at).
-4. Baking and recipe development, including sourdough and high-protein desserts.
+3. Health and fitness: training, recovery, sleep, and nutrition.
+4. Cooking and baking and recipe development, including sourdough and high-protein desserts.
 
 ## Key Pages
 
 - About: ${SITE}/about
 - Work: ${SITE}/work
-- Projects: ${SITE}/projects
-- Writing: ${SITE}/writing
+- Health: ${SITE}/health
+- Kitchen: ${SITE}/kitchen
 - Recipes: ${SITE}/recipes
+- Hobbies: ${SITE}/hobbies
+- Now: ${SITE}/now
+- Writing: ${SITE}/writing
 - Contact: ${SITE}/contact
 
 ## Recipes
@@ -50,8 +53,8 @@ ${recipeLines}
 
 ## Background
 
-- ${profile.title}, ${profile.company} (2026 to present)
-- ${previousCompany.title}, ${previousCompany.name} (${previousCompany.start} to ${previousCompany.end})
+- Current: ${profile.title}, ${profile.company} (2026 to present)
+- Past: ${previousCompany.title}, ${previousCompany.name} (2016 to 2026)
 
 ## Social
 

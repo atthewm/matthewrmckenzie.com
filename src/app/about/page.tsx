@@ -6,12 +6,12 @@ import AffiliationRow from "@/components/ui/AffiliationRow";
 import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
-  title: "About | Capital Formation and AI Operations",
-  description: "Senior Vice President, Capital Formation at Menlo Equities in Austin. Private wealth partnerships with high net worth investors, family offices, and RIAs.",
+  title: "About | Capital Formation, Health, and Cooking",
+  description: "Senior Vice President, Capital Formation at Menlo Equities. Private wealth partnerships with high net worth investors, family offices, and RIAs. Outside of work: training, recovery, sourdough, and recipes.",
   alternates: { canonical: "https://matthewrmckenzie.com/about" },
   openGraph: {
-    title: "About | Capital Formation and AI Operations",
-    description: "Senior Vice President, Capital Formation at Menlo Equities in Austin. Private wealth partnerships with high net worth investors, family offices, and RIAs.",
+    title: "About | Capital Formation, Health, and Cooking",
+    description: "Senior Vice President, Capital Formation at Menlo Equities. Private wealth partnerships with high net worth investors, family offices, and RIAs. Outside of work: training, recovery, sourdough, and recipes.",
   },
 };
 

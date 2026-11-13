@@ -5,7 +5,8 @@ import { findFSItem, type FSItem } from "@/data/fs";
 import type { WindowState } from "@/hooks/useDesktopStore";
 import BoardView from "@/components/board/BoardView";
 import AboutApp from "@/components/apps/AboutApp";
-import ProjectsApp from "@/components/apps/ProjectsApp";
+import WorkOverviewApp from "@/components/apps/WorkOverviewApp";
+import FoodRoomApp from "@/components/apps/FoodRoomApp";
 import ContactApp from "@/components/apps/ContactApp";
 import GalleryApp from "@/components/apps/GalleryApp";
 import MarkdownViewer from "@/components/apps/MarkdownViewer";
@@ -31,8 +32,6 @@ import PhotoBoothApp from "@/components/apps/PhotoBoothApp";
 import IChatApp from "@/components/apps/IChatApp";
 import ChessApp from "@/components/apps/ChessApp";
 import MinesweeperApp from "@/components/apps/MinesweeperApp";
-import UrlShortenerApp from "@/components/apps/UrlShortenerApp";
-import GitHubApp from "@/components/apps/GitHubApp";
 import WhatsNewApp from "@/components/apps/WhatsNewApp";
 import NutritionApp from "@/components/apps/NutritionApp";
 import MediaShelfApp from "@/components/apps/MediaShelfApp";
@@ -49,7 +48,8 @@ interface WindowContentProps {
 
 const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; fsItem?: FSItem }>> = {
   AboutApp,
-  ProjectsApp,
+  WorkOverviewApp,
+  FoodRoomApp,
   ContactApp,
   GalleryApp,
   SettingsApp,
@@ -74,8 +74,6 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   IChatApp,
   ChessApp,
   MinesweeperApp,
-  UrlShortenerApp,
-  GitHubApp,
   WhatsNewApp,
   NutritionApp,
   MediaShelfApp,

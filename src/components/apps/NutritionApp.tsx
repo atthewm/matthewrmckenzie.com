@@ -133,7 +133,7 @@ export default function NutritionApp() {
         <p className="max-w-[280px] text-center text-xs text-desktop-text-secondary">
           {state === "error"
             ? "The nutrition feed is unavailable. Try again shortly."
-            : "Add NOTION_TOKEN + run the sync, then your Daily Logs appear here."}
+            : "Daily totals sync from my Notion log every hour. Check back shortly."}
         </p>
         <button
           onClick={load}
@@ -157,7 +157,7 @@ export default function NutritionApp() {
     <div className="h-full overflow-y-auto bg-desktop-bg p-4 text-desktop-text">
       <header className="mb-3 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold">Nutrition</h2>
+          <h1 className="text-base font-semibold">Nutrition</h1>
           <p className="text-[11px] text-desktop-text-secondary">
             {today?.date ?? "n/a"}
             {today?.status ? ` · ${today.status}` : ""}

@@ -54,7 +54,7 @@ export default function OGImage() {
             textAlign: "center",
           }}
         >
-          Menlo Equities · Private Wealth · AI Operations
+          Menlo Equities · Capital Formation · Private Wealth
         </div>
         <div
           style={{

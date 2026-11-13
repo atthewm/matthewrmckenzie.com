@@ -3,16 +3,16 @@
 import React from "react";
 
 // ============================================================================
-// PROJECTS APP (McKenzie OS Panther Style)
+// WORK OVERVIEW (the Work Overview document window)
 // ============================================================================
 // Clean document viewer with subtle toolbar and well-styled prose.
 // ============================================================================
 
-interface ProjectsAppProps {
+interface WorkOverviewAppProps {
   contentHtml?: string;
 }
 
-export default function ProjectsApp({ contentHtml }: ProjectsAppProps) {
+export default function WorkOverviewApp({ contentHtml }: WorkOverviewAppProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}

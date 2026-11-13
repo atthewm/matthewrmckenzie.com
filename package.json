@@ -13,7 +13,8 @@
     "ship": "npm run unlock && npm run verify && npm run build && git push origin main",
     "recipes": "node scripts/build-recipe-index.mjs",
     "predev": "node scripts/build-recipe-index.mjs",
-    "prebuild": "node scripts/build-recipe-index.mjs"
+    "prebuild": "node scripts/build-recipe-index.mjs",
+    "test": "node --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",

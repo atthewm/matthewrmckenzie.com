@@ -44,6 +44,12 @@ export const personSchema = {
       "@type": "CollegeOrUniversity",
       name: "Villanova University",
     },
+    {
+      // Past employer, 2016 to 2026.
+      "@type": "Organization",
+      name: "Civitas Capital Group",
+      url: "https://civitascapital.com",
+    },
   ],
   knowsAbout: [
     "Capital Formation",
@@ -53,8 +59,8 @@ export const personSchema = {
     "Registered Investment Advisors",
     "Real Estate Investment",
     "Alternative Investments",
-    "AI Operations",
-    "MCP Servers",
+    "Strength Training",
+    "Sourdough Baking",
   ],
   sameAs: [
     "https://www.linkedin.com/in/mrmckenzie/",
@@ -69,7 +75,7 @@ export const websiteSchema = {
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
   description:
-    "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
+    "Personal site of Matthew McKenzie. Capital formation at Menlo Equities, plus health, fitness, cooking, and baking.",
   publisher: {
     "@type": "Person",
     name: "Matthew McKenzie",
@@ -86,10 +92,10 @@ export const profilePageSchema = {
     url: "https://matthewrmckenzie.com",
     jobTitle: "Senior Vice President, Capital Formation",
     description:
-      "Capital formation across the private wealth channel at Menlo Equities, working with high net worth investors, family offices, and RIAs. Also builds AI operations tooling.",
+      "Capital formation across the private wealth channel at Menlo Equities, working with high net worth investors, family offices, and RIAs.",
   },
   dateCreated: "2026-01-01",
-  dateModified: "2026-09-01",
+  dateModified: "2026-11-12",
 };
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {
