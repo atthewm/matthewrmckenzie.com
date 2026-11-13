@@ -219,7 +219,7 @@ export default function TopFoodsApp() {
                 className={
                   "rounded px-2 py-0.5 text-[11px] " +
                   (sort === s.key
-                    ? "bg-desktop-accent text-white"
+                    ? "bg-desktop-accent text-on-accent"
                     : "text-desktop-text-secondary hover:bg-desktop-border")
                 }
               >

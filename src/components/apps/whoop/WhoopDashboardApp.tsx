@@ -956,7 +956,7 @@ export default function WhoopDashboardApp() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium
-                         bg-desktop-accent text-white hover:opacity-90 transition-opacity"
+                         bg-desktop-accent text-on-accent hover:opacity-90 transition-opacity"
             >
               <ExternalLink size={10} />
               Join WHOOP

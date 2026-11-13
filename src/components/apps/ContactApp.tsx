@@ -89,7 +89,7 @@ export default function ContactApp() {
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
-              style={{ background: "var(--desktop-accent)", color: "white" }}
+              style={{ background: "var(--desktop-accent)", color: "var(--on-accent)" }}
             >
               <Send size={20} />
             </div>
@@ -192,7 +192,7 @@ export default function ContactApp() {
               type="submit"
               disabled={status === "sending" || !name.trim() || !email.trim() || !message.trim()}
               className="w-full py-2 rounded text-[12px] font-medium
-                         bg-desktop-accent text-white hover:opacity-90
+                         bg-desktop-accent text-on-accent hover:opacity-90
                          disabled:opacity-50 transition-opacity"
             >
               {status === "sending" ? "Sending..." : "Send Message"}

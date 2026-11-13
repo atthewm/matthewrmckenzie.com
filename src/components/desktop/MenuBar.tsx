@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
-import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
+import { useDesktop } from "@/hooks/useDesktopStore";
+import { useTheme } from "@/lib/theme";
+import ThemeControl from "@/components/theme/ThemeControl";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
 import { useOpenInBrowser } from "@/lib/browserStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -214,7 +215,7 @@ function MenuDropdown({
               transition-colors duration-75
               ${item.disabled
                 ? "text-desktop-text-secondary/50 cursor-default"
-                : "text-desktop-text hover:bg-desktop-accent hover:text-white focus:bg-desktop-accent focus:text-white focus:outline-none"
+                : "text-desktop-text hover:bg-desktop-accent hover:text-on-accent focus:bg-desktop-accent focus:text-on-accent focus:outline-none"
               }
             `}
           >
@@ -322,8 +323,8 @@ function SubmenuItem({
         tabIndex={-1}
         onKeyDown={handleTriggerKeyDown}
         className="w-full flex items-center justify-between px-4 py-1 text-2xs
-                   text-desktop-text hover:bg-desktop-accent hover:text-white
-                   focus:bg-desktop-accent focus:text-white focus:outline-none
+                   text-desktop-text hover:bg-desktop-accent hover:text-on-accent
+                   focus:bg-desktop-accent focus:text-on-accent focus:outline-none
                    transition-colors duration-75 cursor-default"
         onClick={() => { if (isMobileView) setOpen(!open); }}
       >
@@ -365,8 +366,8 @@ function SubmenuItem({
                     onClose();
                   }}
                   className={`w-full flex items-center justify-between ${isMobileView ? "px-6" : "px-4"} py-1 text-2xs text-left
-                             text-desktop-text hover:bg-desktop-accent hover:text-white
-                             focus:bg-desktop-accent focus:text-white focus:outline-none
+                             text-desktop-text hover:bg-desktop-accent hover:text-on-accent
+                             focus:bg-desktop-accent focus:text-on-accent focus:outline-none
                              transition-colors duration-75`}
                 >
                   <span>{child.label}</span>
@@ -390,10 +391,9 @@ function SubmenuItem({
 
 export default function MenuBar() {
   const { state, dispatch, openItem, closeWindow, toggleMaximize, minimizeWindow } = useDesktop();
+  const { resolved: resolvedTheme, setTheme } = useTheme();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
-  const themeRef = useRef<HTMLDivElement>(null);
   // Roving tab stop across the menubar triggers, plus whether an opening
   // dropdown should grab focus (keyboard) or leave it on the trigger (mouse).
   const [focusTopIndex, setFocusTopIndex] = useState(0);
@@ -408,9 +408,6 @@ export default function MenuBar() {
     function handleClick(e: MouseEvent) {
       if (barRef.current && !barRef.current.contains(e.target as Node)) {
         setActiveMenu(null);
-      }
-      if (themeRef.current && !themeRef.current.contains(e.target as Node)) {
-        setShowThemeMenu(false);
       }
     }
     document.addEventListener("mousedown", handleClick);
@@ -460,11 +457,8 @@ export default function MenuBar() {
     const viewItems: MenuItem[] = [
       {
         type: "action",
-        label: state.resolvedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode",
-        action: () => dispatch({
-          type: "SET_THEME",
-          payload: { theme: state.resolvedTheme === "dark" ? "light" : "dark" },
-        }),
+        label: resolvedTheme === "dark" ? "Switch to Light Appearance" : "Switch to Dark Appearance",
+        action: () => setTheme(resolvedTheme === "dark" ? "light" : "dark"),
       },
       { type: "separator" },
       {
@@ -734,11 +728,6 @@ export default function MenuBar() {
     }
   }
 
-  const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
-    { value: "light", label: "Light", icon: <Sun size={13} /> },
-    { value: "dark", label: "Dark", icon: <Moon size={13} /> },
-    { value: "system", label: "System", icon: <Monitor size={13} /> },
-  ];
 
   // Focused window title for the apple menu area
   const activeTitle = focusedWin ? focusedWin.title : "";
@@ -772,7 +761,7 @@ export default function MenuBar() {
                            transition-colors duration-75 text-desktop-text
                            focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-desktop-accent
                            ${name === "\uF8FF" ? "font-bold tracking-wide" : "font-normal"}
-                           ${activeMenu === name ? "bg-desktop-accent text-white" : "hover:bg-desktop-accent/20"}`}
+                           ${activeMenu === name ? "bg-desktop-accent text-on-accent" : "hover:bg-desktop-accent/20"}`}
                 onMouseDown={() => openMenuFromMouse(activeMenu === name ? null : name)}
                 onMouseEnter={() => { if (activeMenu) openMenuFromMouse(name); }}
               >
@@ -802,52 +791,7 @@ export default function MenuBar() {
 
       {/* Right: theme toggle + clock */}
       <div className="flex items-center gap-2">
-        <div ref={themeRef} className="relative">
-          <button
-            onClick={() => setShowThemeMenu(!showThemeMenu)}
-            className="p-0.5 rounded hover:bg-desktop-border/50 transition-colors"
-            aria-label="Change theme"
-            aria-haspopup="menu"
-            aria-expanded={showThemeMenu}
-          >
-            {state.resolvedTheme === "dark" ? (
-              <Moon size={12} />
-            ) : (
-              <Sun size={12} />
-            )}
-          </button>
-          {showThemeMenu && (
-            <div
-              className="absolute right-0 top-full mt-1
-                          bg-desktop-surface border border-desktop-border
-                          rounded-lg shadow-xl py-1 min-w-[110px] animate-fade-in"
-            >
-              {themes.map((t) => (
-                <button
-                  key={t.value}
-                  onClick={() => {
-                    dispatch({
-                      type: "SET_THEME",
-                      payload: { theme: t.value },
-                    });
-                    setShowThemeMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-1 text-2xs
-                    hover:bg-desktop-accent hover:text-white transition-colors
-                    ${
-                      state.theme === t.value
-                        ? "text-desktop-accent font-medium"
-                        : "text-desktop-text"
-                    }`}
-                >
-                  {t.icon}
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
+        {!isMobile && <ThemeControl size="small" />}
         <Clock />
       </div>
     </div>

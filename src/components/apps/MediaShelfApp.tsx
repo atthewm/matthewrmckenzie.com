@@ -79,7 +79,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
               className={
                 "rounded px-2 py-0.5 text-[11px] capitalize " +
                 (tab === t
-                  ? "bg-desktop-accent text-white"
+                  ? "bg-desktop-accent text-on-accent"
                   : "text-desktop-text-secondary hover:bg-desktop-surface")
               }
             >

@@ -241,7 +241,7 @@ export default function GuestbookApp() {
                   type="submit"
                   disabled={status === "sending" || !name.trim() || !message.trim()}
                   className="self-end px-3 py-1.5 rounded text-[11px] font-medium
-                             bg-desktop-accent text-white hover:opacity-90
+                             bg-desktop-accent text-on-accent hover:opacity-90
                              disabled:opacity-50 transition-opacity"
                 >
                   <Send size={12} />

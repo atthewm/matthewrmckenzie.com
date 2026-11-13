@@ -231,7 +231,7 @@ function EmbedFallback({ url, title }: { url: string; title: string }) {
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded text-[12px] font-medium
-                     bg-desktop-accent text-white hover:opacity-90 transition-opacity"
+                     bg-desktop-accent text-on-accent hover:opacity-90 transition-opacity"
         >
           <ExternalLink size={12} />
           Open in new tab

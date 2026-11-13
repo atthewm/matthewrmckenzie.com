@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import CtaBlock from "./CtaBlock";
+import ThemeControl from "@/components/theme/ThemeControl";
 
 // ============================================================================
 // STATIC PAGE LAYOUT
@@ -51,6 +52,7 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
           <Link href="/about" className="site-display text-[21px] leading-none whitespace-nowrap shrink-0">
             Matthew McKenzie
           </Link>
+          <ThemeControl size="small" />
           <Link
             href="/"
             className="site-mono text-[11px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full border whitespace-nowrap"

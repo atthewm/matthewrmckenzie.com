@@ -168,7 +168,7 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
                   className="w-full flex items-center gap-3 px-4 py-2 text-left transition-colors duration-75"
                   style={{
                     background: isSelected ? "var(--desktop-accent)" : "transparent",
-                    color: isSelected ? "white" : "var(--desktop-text)",
+                    color: isSelected ? "var(--on-accent)" : "var(--desktop-text)",
                   }}
                   onClick={() => openItem(item)}
                   onMouseEnter={() => setSelectedIndex(i)}

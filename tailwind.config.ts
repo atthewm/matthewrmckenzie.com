@@ -11,21 +11,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          "Inter",
-          "SF Pro Display",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "sans-serif",
-        ],
-        mono: [
-          "JetBrains Mono",
-          "SF Mono",
-          "Fira Code",
-          "monospace",
-        ],
+        sans: ['"Lucida Grande"', "-apple-system", "BlinkMacSystemFont", '"Helvetica Neue"', "sans-serif"],
+        mono: ["ui-monospace", '"SF Mono"', "Menlo", "monospace"],
       },
       colors: {
         desktop: {
@@ -38,8 +25,12 @@ const config: Config = {
           dock: "var(--desktop-dock)",
         },
         menubar: {
-          bg: "var(--menubar-bg)",
           border: "var(--menubar-border)",
+        },
+        "on-accent": "var(--on-accent)",
+        ink: {
+          DEFAULT: "var(--text)",
+          2: "var(--text-2)",
         },
       },
       // Panther system type ramp. Font-size only (no line-height tuple) so

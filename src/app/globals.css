@@ -2,49 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ============================================================================
-   THEME VARIABLES - McKenzie OS (Mac OS X 10.3 Panther Aqua)
-   ============================================================================ */
-
-:root {
-  --desktop-bg: #4A7DC7;
-  --desktop-surface: #FFFFFF;
-  --desktop-border: #D2D2D7;
-  --desktop-text: #1A1A1A;
-  --desktop-text-secondary: #4A4A50;
-  --desktop-accent: #2F6AE5;
-  --desktop-dock: rgba(255,255,255,0.25);
-  --menubar-bg: rgba(241,241,241,0.92);
-  --menubar-border: #B0B0B0;
-  --window-title-focused: linear-gradient(180deg, #E8E8E8 0%, #CFCFCF 45%, #B8B8B8 55%, #C8C8C8 100%);
-  --window-title-unfocused: linear-gradient(180deg, #F0F0F0 0%, #E8E8E8 100%);
-  --window-title-text: rgba(0,0,0,0.85);
-  --window-title-text-inactive: rgba(0,0,0,0.45);
-  --desktop-surface-raised: rgba(0,0,0,0.02);
-
-  /* User-configurable typography (defaults, overridden by SettingsProvider) */
-  --user-font-family: "Lucida Grande", "Lucida Sans Unicode", "Helvetica Neue",
-    Helvetica, Arial, sans-serif;
-  --user-font-size: 13px;
-  --user-line-height: 1.5;
-}
-
-.dark {
-  --desktop-bg: #1E2530;
-  --desktop-surface: #2E2E32;
-  --desktop-border: #48484A;
-  --desktop-text: #F0F0F0;
-  --desktop-text-secondary: #98989D;
-  --desktop-accent: #5BA3FF;
-  --desktop-dock: rgba(40,40,44,0.35);
-  --menubar-bg: rgba(40,40,44,0.92);
-  --menubar-border: #444448;
-  --window-title-focused: linear-gradient(180deg, #4A4A4E 0%, #3A3A3E 45%, #323236 55%, #3E3E42 100%);
-  --window-title-unfocused: linear-gradient(180deg, #3A3A3E 0%, #323236 100%);
-  --window-title-text: rgba(255,255,255,0.85);
-  --window-title-text-inactive: rgba(255,255,255,0.5);
-  --desktop-surface-raised: rgba(255,255,255,0.03);
-}
 
 /* ============================================================================
    BASE STYLES
@@ -57,9 +14,15 @@
   }
 
   body {
-    @apply bg-desktop-bg text-desktop-text;
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "Helvetica Neue",
-      Helvetica, Arial, sans-serif;
+    background: var(--wallpaper-base);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: var(--text-body);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
   }
 
   /* Prevent text selection during drag */
@@ -246,13 +209,7 @@
    ============================================================================ */
 
 .high-contrast {
-  --desktop-text: #000000;
-  --desktop-text-secondary: #333333;
-}
-
-.dark.high-contrast {
-  --desktop-text: #ffffff;
-  --desktop-text-secondary: #cccccc;
+  --text-2: var(--text);
 }
 
 /* ============================================================================
@@ -297,35 +254,14 @@
    ============================================================================ */
 
 .site {
-  --site-bg: #f4f2ee;
-  --site-surface: #fbfaf8;
-  --site-ink: #1c1d20;
-  --site-muted: #5d5f66;
-  --site-rule: #dcd8d0;
-  --site-gold: #9a7a3c;
-  --site-gold-soft: rgba(154, 122, 60, 0.12);
-  --site-link: #2e4a6b;
   background: var(--site-bg);
   color: var(--site-ink);
-  font-family: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-ui);
   min-height: 100vh;
 }
 
-@media (prefers-color-scheme: dark) {
-  .site {
-    --site-bg: #151619;
-    --site-surface: #1c1d21;
-    --site-ink: #ecebe7;
-    --site-muted: #a3a4aa;
-    --site-rule: #2e3036;
-    --site-gold: #cfae6b;
-    --site-gold-soft: rgba(207, 174, 107, 0.12);
-    --site-link: #a9c3e2;
-  }
-}
-
-.site-display { font-family: var(--font-display), Georgia, serif; font-weight: 400; }
-.site-mono { font-family: var(--font-mono), ui-monospace, monospace; }
+.site-display { font-family: var(--font-ui); font-weight: 600; }
+.site-mono { font-family: var(--font-num); }
 .site-eyebrow {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px;

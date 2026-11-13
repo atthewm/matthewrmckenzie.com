@@ -126,7 +126,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
         className={`
           text-3xs font-medium text-center leading-tight line-clamp-2 px-1 py-0.5 rounded
           ${selected
-            ? "bg-desktop-accent text-white"
+            ? "bg-desktop-accent text-on-accent"
             : "text-desktop-text"
           }
         `}
