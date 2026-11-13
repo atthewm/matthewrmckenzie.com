@@ -3,7 +3,16 @@
   "crons": [
     {
       "path": "/api/notion/sync",
-      "schedule": "0 * * * *"
+      "schedule": "0 12 * * *"
     }
-  ]
+  ],
+  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skip build for non-main branch $VERCEL_GIT_COMMIT_REF\"; exit 0; fi",
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "**": false,
+      "qa-assets/**": false,
+      "screenshots/**": false
+    }
+  }
 }
