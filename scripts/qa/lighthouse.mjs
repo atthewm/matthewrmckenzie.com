@@ -61,7 +61,7 @@ for (const p of (process.env.LH_PATHS || "/,/about").split(",")) {
       cls: res.lhr.audits["cumulative-layout-shift"].displayValue,
     };
     scores.push(row);
-    await writeFile(path.join(OUT, `${p === "/" ? "home" : p.slice(1)}-run${i + 1}.html`), res.report);
+    await writeFile(path.join(OUT, `${p === "/" ? "home" : p.slice(1).replace(/\//g, "__")}-run${i + 1}.html`), res.report);
     console.log(p, `run ${i + 1}`, JSON.stringify(row));
   }
   const median = (k) => scores.map((s) => s[k]).sort((a, b) => a - b)[Math.floor(scores.length / 2)];

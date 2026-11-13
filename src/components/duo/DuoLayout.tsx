@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { findFSItem } from "@/data/fs";
 import { recipes } from "@/content/recipes/index";
@@ -74,6 +74,21 @@ export default function DuoLayout({ duo, contentMap }: { duo: Exclude<DuoState, 
   const reduce = useReducedMotion();
   const first = duo.mode === "laptop" ? duo.top : duo.left;
   const second = duo.mode === "laptop" ? duo.bottom : duo.right;
+
+  // ?open=<id> links: the desktop handles them when it is on screen; when a
+  // restored app fills the first screen instead, open the item here.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("open");
+    if (!id) return;
+    const item = findFSItem(id);
+    if (item) dispatch({ type: "OPEN_WINDOW", payload: { fsItem: item } });
+    params.delete("open");
+    const rest = params.toString();
+    window.history.replaceState({}, "", rest ? `/?${rest}` : "/");
+    // mount only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Windows, boards, icons and Exposé measure the top screen, not the page.
   setDesktopViewport({ width: first.width, height: first.height });
