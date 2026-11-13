@@ -1,0 +1,423 @@
+{
+  "base": "https://matthewrmckenziecom-git-design-m-b062ab-matts-projects-04ccac35.vercel.app",
+  "at": "2026-11-13T04:22:11.741Z",
+  "blocking": 0,
+  "results": [
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/about",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/work",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/health",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/kitchen",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/recipes",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/recipes/city-loaf-master-recipe",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/hobbies",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/contact",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/now",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/writing",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/food-room",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/card",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "desktop",
+      "path": "/privacy",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/about",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/work",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/health",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/kitchen",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/recipes",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/recipes/city-loaf-master-recipe",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/hobbies",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/contact",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/now",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/writing",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/food-room",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/card",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "light",
+      "view": "iphone",
+      "path": "/privacy",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/about",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/work",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/health",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/kitchen",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/recipes",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/recipes/city-loaf-master-recipe",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/hobbies",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/contact",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/now",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/writing",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/food-room",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/card",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "desktop",
+      "path": "/privacy",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/about",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/work",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/health",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/kitchen",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/recipes",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/recipes/city-loaf-master-recipe",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/hobbies",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/contact",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/now",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/writing",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/food-room",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/card",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    },
+    {
+      "theme": "dark",
+      "view": "iphone",
+      "path": "/privacy",
+      "serious": [],
+      "other": [],
+      "incomplete": 1
+    }
+  ]
+}
