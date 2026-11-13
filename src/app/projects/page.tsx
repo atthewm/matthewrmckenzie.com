@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: "mckm.at, McKenzie OS, Eight Sleep integrations, and other projects by Matthew McKenzie.",
   alternates: { canonical: "https://matthewrmckenzie.com/projects" },
   openGraph: {
+    images: ["/opengraph-image"],
     title: "Projects | AI Operations Tooling, Platforms, Open Source",
     description: "mckm.at, McKenzie OS, Eight Sleep integrations, and other projects by Matthew McKenzie.",
   },

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: "Privacy policy for matthewrmckenzie.com. How data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
   alternates: { canonical: "/privacy" },
   openGraph: {
+    images: ["/opengraph-image"],
     title: "Privacy Policy | Your Data & Rights",
     description: "Privacy policy for matthewrmckenzie.com. How data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
   },
