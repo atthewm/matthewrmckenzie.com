@@ -249,9 +249,36 @@
 /* Readability floor inside windows and phone apps. Older apps were written
    with 9 to 11 px utility classes; these lift them to the type scale
    (13 px small text, 12 px only for labels) and body copy to 15 px. */
+.aqua-panel .text-\[9px\], .aqua-panel .text-\[10px\], .aqua-panel .text-4xs, .aqua-panel .text-3xs,
+.duo-region .text-\[9px\], .duo-region .text-\[10px\], .duo-region .text-4xs, .duo-region .text-3xs,
 .window-body .text-\[9px\], .window-body .text-\[10px\], .window-body .text-4xs, .window-body .text-3xs,
 .app-screen .text-\[9px\], .app-screen .text-\[10px\], .app-screen .text-4xs, .app-screen .text-3xs { font-size: 12px; }
+.aqua-panel .text-\[11px\], .aqua-panel .text-2xs, .aqua-panel .text-\[12px\], .aqua-panel .text-xs,
+.duo-region .text-\[11px\], .duo-region .text-2xs, .duo-region .text-\[12px\], .duo-region .text-xs,
 .window-body .text-\[11px\], .window-body .text-2xs, .window-body .text-\[12px\], .window-body .text-xs,
 .app-screen .text-\[11px\], .app-screen .text-2xs, .app-screen .text-\[12px\], .app-screen .text-xs { font-size: 13px; }
 .window-body p, .window-body li, .app-screen p, .app-screen li { font-size: max(15px, 1em); }
 .window-body .allow-small p, .window-body p.allow-small, .app-screen p.allow-small { font-size: inherit; }
+
+/* Start Here tiles and chips */
+.aqua-tile {
+  border-radius: 10px;
+  background: var(--paper-2);
+  border: 1px solid var(--border-soft);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.aqua-tile:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); }
+.aqua-tile:active { transform: scale(0.98); }
+.aqua-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 12px 4px 6px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--paper-2);
+  border: 1px solid var(--border-soft);
+}
+.aqua-chip:hover { border-color: var(--accent); }

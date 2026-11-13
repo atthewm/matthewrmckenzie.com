@@ -3,15 +3,19 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
-import Desktop from "./Desktop";
-import MobileView from "./MobileView";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Screensaver from "./Screensaver";
 import { playStartupChime } from "@/lib/startupChime";
 import { playShutdown } from "@/lib/soundEffects";
 import { ShutdownProvider } from "./ShutdownContext";
 import { MotionConfig } from "motion/react";
-import DuoLayout from "@/components/duo/DuoLayout";
+import dynamic from "next/dynamic";
+
+// The three layouts are separate chunks: a phone never downloads the desktop
+// and only a folded Duo downloads the two screen layout.
+const Desktop = dynamic(() => import("./Desktop"), { ssr: false, loading: () => <div className="fixed inset-0" style={{ background: "var(--wallpaper)" }} /> });
+const MobileView = dynamic(() => import("./MobileView"), { ssr: false, loading: () => <div className="fixed inset-0" style={{ background: "var(--wallpaper)" }} /> });
+const DuoLayout = dynamic(() => import("@/components/duo/DuoLayout"), { ssr: false });
 import { useDuo } from "@/lib/duo";
 import { setDesktopViewport } from "@/lib/viewport";
 
@@ -221,7 +225,7 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
 
   if (!mounted) {
     return (
-      <div className="fixed inset-0" style={{ background: "#e8e8e8" }} />
+      <div className="fixed inset-0" style={{ background: "var(--wallpaper)" }} />
     );
   }
 

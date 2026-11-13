@@ -173,7 +173,16 @@ export default function MobileView({ contentMap }: MobileViewProps) {
   const homeRef = useRef<HTMLDivElement>(null);
   const pagerRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(0);
-  const [locked, setLocked] = useState(false);
+  // Decided on first render (this view is client only) so a first visit
+  // never flashes the springboard before the lock screen.
+  const [locked, setLocked] = useState(() => {
+    try {
+      if (new URLSearchParams(window.location.search).get("open")) return false;
+      return !localStorage.getItem(UNLOCK_KEY);
+    } catch {
+      return false;
+    }
+  });
 
   // Start every visit on the home screen at the very top (browsers otherwise
   // restore an old offset past the header), honor ?open=<id>, and show the
@@ -190,12 +199,6 @@ export default function MobileView({ contentMap }: MobileViewProps) {
     if (item) {
       openItem(item);
       window.history.replaceState({}, "", "/");
-      return;
-    }
-    try {
-      if (!localStorage.getItem(UNLOCK_KEY)) setLocked(true);
-    } catch {
-      // No storage: skip the lock screen.
     }
   }, [dispatch, openItem]);
 
@@ -239,6 +242,9 @@ export default function MobileView({ contentMap }: MobileViewProps) {
     <div ref={homeRef} className="springboard">
       <StatusBar />
       <h2 className="sr-only">Home screen</h2>
+      {/* While the lock screen is up, the icons wait: they spring in on unlock. */}
+      {!locked && (
+      <>
       <div ref={pagerRef} className="sb-pager" onScroll={onPagerScroll}>
         {pages.map((items, p) => (
           <div key={p} className="sb-page" aria-label={`Page ${p + 1} of ${pages.length}`} role="group">
@@ -258,6 +264,8 @@ export default function MobileView({ contentMap }: MobileViewProps) {
           <AppTile key={item.id} item={item} index={i} onOpen={open} />
         ))}
       </nav>
+      </>
+      )}
 
       <AnimatePresence>{locked && <SlideToUnlock key="lock" onUnlock={() => setLocked(false)} />}</AnimatePresence>
 

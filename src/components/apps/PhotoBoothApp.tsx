@@ -49,7 +49,7 @@ interface Snapshot {
 }
 
 /** In the Duo laptop pose the camera sits on top and the effects grid below. */
-export default function PhotoBoothApp({ part = "all" }: { part?: "all" | "camera"; contentHtml?: string } = {}) {
+export default function PhotoBoothApp({ part = "all" }: { part?: "all" | "camera"; contentHtml?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);

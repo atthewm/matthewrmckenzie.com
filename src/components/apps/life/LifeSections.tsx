@@ -229,7 +229,7 @@ export function ActivitySection({
           <button
             type="button"
             onClick={onOpenWhoop}
-            className="rounded border border-desktop-border px-2 py-1 text-[11px] text-desktop-text hover:bg-desktop-bg"
+            className="rounded border border-desktop-border px-2 py-1 text-[11px] text-desktop-text hover:bg-[var(--paper-2)]"
           >
             Open WHOOP
           </button>

@@ -106,7 +106,7 @@ function RecipeCard({ recipe, onOpen }: { recipe: RecipeMeta; onOpen: () => void
                  hover:border-desktop-accent
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desktop-accent"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-desktop-bg">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--paper-2)]">
         <CardArt recipe={recipe} />
       </div>
 
@@ -162,7 +162,7 @@ export default function RecipesApp({ fsItem }: { fsItem?: FSItem }) {
   ];
 
   return (
-    <div className="flex h-full flex-col bg-desktop-bg text-desktop-text">
+    <div className="flex h-full flex-col bg-[var(--paper-2)] text-desktop-text">
       <header className="shrink-0 border-b border-desktop-border">
         <div className="flex items-center justify-between gap-2 px-3 py-2">
           <div className="flex items-center gap-2 text-sm font-semibold">

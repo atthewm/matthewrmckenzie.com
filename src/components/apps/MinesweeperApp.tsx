@@ -269,7 +269,7 @@ export default function MinesweeperApp() {
                     ? cell.isMine
                       ? "#ff6b6b"
                       : "var(--desktop-surface)"
-                    : "var(--desktop-bg)",
+                    : "var(--paper-2)",
                   color: cell.isRevealed && !cell.isMine
                     ? NUMBER_COLORS[cell.adjacentMines] || "transparent"
                     : "var(--desktop-text)",

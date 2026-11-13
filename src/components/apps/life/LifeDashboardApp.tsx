@@ -126,7 +126,7 @@ export default function LifeDashboardApp() {
   );
 
   return (
-    <div className="flex h-full flex-col bg-desktop-bg text-desktop-text">
+    <div className="flex h-full flex-col bg-[var(--paper-2)] text-desktop-text">
       <div
         className="flex h-[28px] shrink-0 items-center justify-between border-b px-3 text-[10px]"
         style={{ borderColor: "var(--desktop-border)", background: "var(--desktop-surface)" }}

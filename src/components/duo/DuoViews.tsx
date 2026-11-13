@@ -69,10 +69,12 @@ function Dial({ label, value, max, unit }: { label: string; value: number | null
     <figure className="duo-dial">
       <svg viewBox="0 0 140 140" aria-hidden="true">
         <circle cx="70" cy="70" r={r} fill="none" stroke="var(--progress-track)" strokeWidth="12" strokeDasharray={`${c} 999`} transform="rotate(135 70 70)" strokeLinecap="round" />
-        <circle cx="70" cy="70" r={r} fill="none" stroke="var(--accent)" strokeWidth="12" strokeDasharray={`${c * pct} 999`} transform="rotate(135 70 70)" strokeLinecap="round" />
+        {value != null && (
+          <circle cx="70" cy="70" r={r} fill="none" stroke="var(--accent)" strokeWidth="12" strokeDasharray={`${c * pct} 999`} transform="rotate(135 70 70)" strokeLinecap="round" />
+        )}
       </svg>
       <figcaption>
-        <span className="duo-dial-value">{value == null ? "None" : `${Math.round(value * 10) / 10}${unit ?? ""}`}</span>
+        <span className="duo-dial-value">{value == null ? "No data" : `${Math.round(value * 10) / 10}${unit ?? ""}`}</span>
         <span className="duo-dial-label">{label}</span>
       </figcaption>
     </figure>
@@ -188,12 +190,13 @@ export function RecipeTop({ slug }: { slug: string }) {
   return (
     <div className="duo-cook">
       <p className="duo-cook-meta">
-        {title} {steps.length > 0 && `. Step ${Math.min(step, steps.length - 1) + 1} of ${steps.length}`}
+        {title}
+        {steps.length > 0 && `, step ${Math.min(step, steps.length - 1) + 1} of ${steps.length}`}
         <span className="duo-cook-wake">
           {wake === "on" ? "Screen stays on" : wake === "unsupported" ? "This browser cannot keep the screen on" : ""}
         </span>
       </p>
-      <p className="duo-cook-step">{text === null ? "Loading the recipe" : cur ?? "This recipe has no numbered steps."}</p>
+      <p className={`duo-cook-step ${cur && cur.length > 140 ? "is-long" : ""}`}>{text === null ? "Loading the recipe" : cur ?? "This recipe has no numbered steps."}</p>
       <div className="duo-cook-nav">
         <button type="button" className="aqua-button is-large" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>
           Previous step

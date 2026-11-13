@@ -168,3 +168,10 @@
   .doc-window { box-shadow: none; border: 0; }
   .doc-titlebar, .doc-toolbar, .doc-footer, .site-noprint { display: none !important; }
 }
+
+/* Brand logos (WHOOP, Eight Sleep): one file per theme */
+.brand-logo { display: inline-flex; align-items: center; }
+.brand-logo-img { width: auto; max-width: 220px; }
+.brand-logo-img.is-dark { display: none; }
+:root.dark .brand-logo-img.is-light { display: none; }
+:root.dark .brand-logo-img.is-dark { display: block; }

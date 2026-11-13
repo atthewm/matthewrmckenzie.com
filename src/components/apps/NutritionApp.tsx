@@ -136,7 +136,7 @@ export default function NutritionApp() {
         </p>
         <button
           onClick={load}
-          className="mt-1 rounded border border-desktop-border px-3 py-1 text-xs text-desktop-text hover:bg-desktop-bg"
+          className="mt-1 rounded border border-desktop-border px-3 py-1 text-xs text-desktop-text hover:bg-[var(--paper-2)]"
         >
           Retry
         </button>
@@ -153,7 +153,7 @@ export default function NutritionApp() {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-desktop-bg p-4 text-desktop-text">
+    <div className="h-full overflow-y-auto bg-[var(--paper-2)] p-4 text-desktop-text">
       <header className="mb-3 flex items-center justify-between">
         <div>
           <h1 className="text-base font-semibold">Nutrition</h1>
@@ -239,7 +239,7 @@ export default function NutritionApp() {
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-2 bg-desktop-bg p-6">
+    <div className="flex h-full flex-col items-center justify-center gap-2 bg-[var(--paper-2)] p-6">
       {children}
     </div>
   );

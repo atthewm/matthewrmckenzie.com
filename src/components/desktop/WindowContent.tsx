@@ -3,44 +3,53 @@
 import React from "react";
 import { findFSItem, type FSItem } from "@/data/fs";
 import type { WindowState } from "@/hooks/useDesktopStore";
+import dynamic from "next/dynamic";
 import BoardView from "@/components/board/BoardView";
-import AboutApp from "@/components/apps/AboutApp";
-import WorkOverviewApp from "@/components/apps/WorkOverviewApp";
-import FoodRoomApp from "@/components/apps/FoodRoomApp";
-import TurntableApp from "@/components/apps/TurntableApp";
-import ContactApp from "@/components/apps/ContactApp";
-import GalleryApp from "@/components/apps/GalleryApp";
-import MarkdownViewer from "@/components/apps/MarkdownViewer";
-import SettingsApp from "@/components/settings/SettingsApp";
-import SoundCloudPlayer from "@/components/players/SoundCloudPlayer";
-import YouTubeWinampPlayer from "@/components/players/YouTubeWinampPlayer";
-import ZunePlayer from "@/components/players/ZunePlayer";
-import AppleMusicFolder from "@/components/apps/AppleMusicFolder";
-import ResumeApp from "@/components/apps/ResumeApp";
-import RecipeViewer from "@/components/apps/RecipeViewer";
-import InstagramApp from "@/components/apps/InstagramApp";
-import BrowserApp from "@/components/apps/BrowserApp";
-import WhoopDashboardApp from "@/components/apps/whoop/WhoopDashboardApp";
-import WhoopSplitApp from "@/components/apps/whoop/WhoopSplitApp";
-import GetWhoopApp from "@/components/apps/whoop/GetWhoopApp";
-import StartHereApp from "@/components/apps/StartHereApp";
-import TerminalApp from "@/components/apps/TerminalApp";
-import StickiesApp from "@/components/apps/StickiesApp";
-import GuestbookApp from "@/components/apps/GuestbookApp";
-import LinktreeApp from "@/components/apps/LinktreeApp";
-import ScheduleApp from "@/components/apps/ScheduleApp";
-import PhotoBoothApp from "@/components/apps/PhotoBoothApp";
-import IChatApp from "@/components/apps/IChatApp";
-import ChessApp from "@/components/apps/ChessApp";
-import MinesweeperApp from "@/components/apps/MinesweeperApp";
-import WhatsNewApp from "@/components/apps/WhatsNewApp";
-import NutritionApp from "@/components/apps/NutritionApp";
-import MediaShelfApp from "@/components/apps/MediaShelfApp";
-import TopFoodsApp from "@/components/apps/TopFoodsApp";
-import RecipesApp from "@/components/apps/RecipesApp";
-import LifeDashboardApp from "@/components/apps/life/LifeDashboardApp";
-import BusinessCardApp from "@/components/apps/BusinessCardApp";
-import HobbiesApp from "@/components/apps/HobbiesApp";
+import AquaLoading from "@/components/ui/AquaLoading";
+
+// Each app is its own chunk, loaded when its window first opens.
+function Loading() {
+  return <AquaLoading label="Opening" lines={3} />;
+}
+
+const AboutApp = dynamic(() => import("@/components/apps/AboutApp"), { loading: Loading });
+const WorkOverviewApp = dynamic(() => import("@/components/apps/WorkOverviewApp"), { loading: Loading });
+const FoodRoomApp = dynamic(() => import("@/components/apps/FoodRoomApp"), { loading: Loading });
+const TurntableApp = dynamic(() => import("@/components/apps/TurntableApp"), { loading: Loading });
+const ContactApp = dynamic(() => import("@/components/apps/ContactApp"), { loading: Loading });
+const GalleryApp = dynamic(() => import("@/components/apps/GalleryApp"), { loading: Loading });
+const MarkdownViewer = dynamic(() => import("@/components/apps/MarkdownViewer"), { loading: Loading });
+const SettingsApp = dynamic(() => import("@/components/settings/SettingsApp"), { loading: Loading });
+const SoundCloudPlayer = dynamic(() => import("@/components/players/SoundCloudPlayer"), { loading: Loading });
+const YouTubeWinampPlayer = dynamic(() => import("@/components/players/YouTubeWinampPlayer"), { loading: Loading });
+const ZunePlayer = dynamic(() => import("@/components/players/ZunePlayer"), { loading: Loading });
+const AppleMusicFolder = dynamic(() => import("@/components/apps/AppleMusicFolder"), { loading: Loading });
+const ResumeApp = dynamic(() => import("@/components/apps/ResumeApp"), { loading: Loading });
+const RecipeViewer = dynamic(() => import("@/components/apps/RecipeViewer"), { loading: Loading });
+const InstagramApp = dynamic(() => import("@/components/apps/InstagramApp"), { loading: Loading });
+const BrowserApp = dynamic(() => import("@/components/apps/BrowserApp"), { loading: Loading });
+const WhoopDashboardApp = dynamic(() => import("@/components/apps/whoop/WhoopDashboardApp"), { loading: Loading });
+const WhoopSplitApp = dynamic(() => import("@/components/apps/whoop/WhoopSplitApp"), { loading: Loading });
+const GetWhoopApp = dynamic(() => import("@/components/apps/whoop/GetWhoopApp"), { loading: Loading });
+const StartHereApp = dynamic(() => import("@/components/apps/StartHereApp"), { loading: Loading });
+const TerminalApp = dynamic(() => import("@/components/apps/TerminalApp"), { loading: Loading });
+const StickiesApp = dynamic(() => import("@/components/apps/StickiesApp"), { loading: Loading });
+const GuestbookApp = dynamic(() => import("@/components/apps/GuestbookApp"), { loading: Loading });
+const LinktreeApp = dynamic(() => import("@/components/apps/LinktreeApp"), { loading: Loading });
+const ScheduleApp = dynamic(() => import("@/components/apps/ScheduleApp"), { loading: Loading });
+const PhotoBoothApp = dynamic(() => import("@/components/apps/PhotoBoothApp"), { loading: Loading });
+const IChatApp = dynamic(() => import("@/components/apps/IChatApp"), { loading: Loading });
+const ChessApp = dynamic(() => import("@/components/apps/ChessApp"), { loading: Loading });
+const MinesweeperApp = dynamic(() => import("@/components/apps/MinesweeperApp"), { loading: Loading });
+const WhatsNewApp = dynamic(() => import("@/components/apps/WhatsNewApp"), { loading: Loading });
+const NutritionApp = dynamic(() => import("@/components/apps/NutritionApp"), { loading: Loading });
+const MediaShelfApp = dynamic(() => import("@/components/apps/MediaShelfApp"), { loading: Loading });
+const TopFoodsApp = dynamic(() => import("@/components/apps/TopFoodsApp"), { loading: Loading });
+const RecipesApp = dynamic(() => import("@/components/apps/RecipesApp"), { loading: Loading });
+const LifeDashboardApp = dynamic(() => import("@/components/apps/life/LifeDashboardApp"), { loading: Loading });
+const BusinessCardApp = dynamic(() => import("@/components/apps/BusinessCardApp"), { loading: Loading });
+const HobbiesApp = dynamic(() => import("@/components/apps/HobbiesApp"), { loading: Loading });
+
 
 interface WindowContentProps {
   windowState: WindowState;

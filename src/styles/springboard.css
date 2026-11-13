@@ -146,14 +146,14 @@
 }
 .app-title {
   flex: 1;
+  min-width: 0;
   text-align: center;
   font: 700 17px / 1.2 var(--font-ui);
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.45);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
+@media (max-width: 400px) { .app-title { font-size: 15px; } }
 .app-back {
   min-width: 72px;
   min-height: 32px;

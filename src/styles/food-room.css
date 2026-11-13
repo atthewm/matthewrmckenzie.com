@@ -83,7 +83,7 @@
   left: 6%;
   top: 7%;
   font-family: var(--site-monofont);
-  font-size: clamp(9px, 1.3vw, 13px);
+  font-size: clamp(12px, 1.3vw, 13px);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #ecebe7;
@@ -122,7 +122,7 @@
   background: #1c1d20;
   color: #f4f2ee;
   font-family: var(--site-monofont);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
@@ -169,7 +169,7 @@
 .food-card-head { display: flex; align-items: flex-start; gap: 12px; padding-bottom: 12px; border-bottom: 3px double var(--site-gold); }
 .food-card-rank {
   font-family: var(--site-monofont);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--site-muted);
@@ -182,7 +182,7 @@
   margin: 2px 0 0;
   overflow-wrap: anywhere;
 }
-.food-card-level { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-family: var(--site-monofont); font-size: 11px; color: var(--site-muted); }
+.food-card-level { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-family: var(--site-monofont); font-size: 12px; color: var(--site-muted); }
 .food-card-level b { font-weight: 600; color: var(--site-ink); border: 1px solid var(--site-rule); padding: 1px 6px; border-radius: 2px; }
 .food-meter { flex: 1; height: 6px; background: var(--site-rule); border-radius: 1px; overflow: hidden; }
 .food-meter > span { display: block; height: 100%; background: var(--site-gold); }
@@ -204,7 +204,7 @@
 .food-stat { display: grid; grid-template-columns: 2.6rem 1fr 5rem; align-items: center; gap: 8px; font-family: var(--site-monofont); font-size: 12px; font-variant-numeric: tabular-nums; }
 .food-stat-tag { font-weight: 600; letter-spacing: 0.06em; }
 .food-stat-value { text-align: right; }
-.food-card-note { margin: 8px 0 0; font-size: 11px; line-height: 1.5; color: var(--site-muted); }
+.food-card-note { margin: 8px 0 0; font-size: 12px; line-height: 1.5; color: var(--site-muted); }
 .food-facts { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; margin: 16px 0 0; padding-top: 12px; border-top: 1px solid var(--site-rule); font-size: 13px; }
 .food-facts dt { color: var(--site-muted); }
 .food-facts dd { margin: 0; text-align: right; font-family: var(--site-monofont); font-variant-numeric: tabular-nums; }
@@ -264,7 +264,7 @@
 .food-tips strong { display: block; font-weight: 600; }
 .food-tips span { color: var(--site-muted); }
 
-.food-trend-axis { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; font-family: var(--site-monofont); font-size: 11px; color: var(--site-muted); }
+.food-trend-axis { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; font-family: var(--site-monofont); font-size: 12px; color: var(--site-muted); }
 
 .food-room-prompt .only-wide { display: none; }
 @media (min-width: 641px) {

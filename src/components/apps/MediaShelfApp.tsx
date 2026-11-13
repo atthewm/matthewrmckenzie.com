@@ -67,7 +67,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
   }, [items, tab]);
 
   return (
-    <div className="flex h-full flex-col bg-desktop-bg text-desktop-text">
+    <div className="flex h-full flex-col bg-[var(--paper-2)] text-desktop-text">
       <header className="flex items-center justify-between border-b border-desktop-border px-4 py-2">
         <div className="flex items-center gap-2 text-sm font-semibold">
           {shelf.icon}
@@ -127,7 +127,7 @@ function Card({ item }: { item: MediaItem }) {
   const link = item.whereToWatch || item.externalUrl || item.trailerUrl;
   return (
     <div className="group flex flex-col overflow-hidden rounded-lg border border-desktop-border bg-desktop-surface">
-      <div className="relative aspect-[2/3] w-full bg-desktop-bg">
+      <div className="relative aspect-[2/3] w-full bg-[var(--paper-2)]">
         {item.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
