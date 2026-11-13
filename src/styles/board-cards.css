@@ -41,8 +41,9 @@
 }
 
 .card-eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--board-accent);
@@ -53,16 +54,15 @@
   line-height: 1.14;
   color: var(--board-ink);
 }
-.card-sub { font-size: 12.5px; line-height: 1.38; color: var(--board-ink-muted); }
+.card-sub { font-size: 13px; line-height: 1.38; color: var(--board-ink-muted); }
 .card-meta {
   margin-top: auto;
   padding-top: 6px;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10.5px;
+  font-size: 12px;
+  line-height: 1.35;
   color: var(--board-ink-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 /* Recipe: ruled index card, tinted by category */
@@ -85,10 +85,8 @@
 }
 .card-index .card-title-display {
   margin-top: 14px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 19px;
+  line-height: 1.2;
   flex-shrink: 0;
 }
 .card-index .card-sub {
@@ -116,8 +114,8 @@
   text-transform: uppercase;
   color: var(--gymlog-ink);
 }
-.card-file { margin-top: 6px; font-family: var(--font-mono), monospace; font-size: 10.5px; color: var(--gymlog-muted); }
-.card-quote { margin-top: 12px; font-size: 12.5px; line-height: 1.38; font-style: italic; color: var(--board-ink-muted); }
+.card-file { margin-top: 6px; font-family: var(--font-num); font-size: 12px; overflow-wrap: anywhere; color: var(--gymlog-muted); }
+.card-quote { margin-top: 12px; font-size: 13px; line-height: 1.38; font-style: italic; color: var(--board-ink-muted); }
 
 /* Document: paper sheet with faux text */
 .card-paper { padding: 18px 18px; }
@@ -147,11 +145,10 @@
   padding-top: 11px;
   text-align: center;
   font-family: var(--font-display), Georgia, serif;
-  font-size: 16px;
+  font-size: 15px;
+  line-height: 1.25;
   color: var(--board-ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 /* --------------------------------------------------------------------------

@@ -3,41 +3,37 @@
    Toolbar, backpack, hint, and toast that sit over every pinboard.
    ========================================================================== */
 
-/* Backpack drop target */
+/* Backpack drop target, in the board's bottom bar (never over a card) */
 .board-backpack {
-  position: absolute;
-  right: 26px;
-  bottom: 26px;
-  z-index: 3;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 10px 12px 8px;
-  border-radius: 18px;
-  background: var(--board-chrome);
-  border: 1px solid var(--board-chrome-border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  gap: 8px;
+  padding: 2px 12px 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--button);
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
   pointer-events: none;
 }
-.board-backpack[data-state="open"] { transform: scale(1.08) translateY(-4px); }
-.board-backpack[data-state="hot"] {
-  transform: scale(1.22) translateY(-8px);
-  box-shadow: 0 0 0 4px var(--board-accent), 0 14px 34px rgba(0, 0, 0, 0.35);
-}
+.board-backpack[data-state="open"] { transform: scale(1.06); box-shadow: 0 0 0 3px var(--accent-soft); }
+.board-backpack[data-state="hot"] { transform: scale(1.14); box-shadow: 0 0 0 3px var(--accent); }
 .board-backpack .backpack-flap { transform-origin: 48px 22px; transition: transform 220ms ease; }
 .board-backpack[data-state="open"] .backpack-flap,
 .board-backpack[data-state="hot"] .backpack-flap { transform: rotateX(70deg) translateY(-8px); }
 .board-backpack.is-gulping { animation: backpack-gulp 520ms cubic-bezier(0.16, 1, 0.3, 1); }
 .reduce-motion .board-backpack,
 .reduce-motion .board-backpack .backpack-flap { transition: none; animation: none; }
-.board-backpack-label {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--board-chrome-ink);
+.board-backpack-label { font: 600 13px / 1.2 var(--font-ui); color: var(--button-text); white-space: nowrap; }
+.board-statusbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 4px 12px;
+  background: var(--toolbar);
+  border-top: 1px solid var(--border);
 }
 @keyframes backpack-gulp {
   0% { transform: scale(1); }
@@ -46,78 +42,64 @@
   100% { transform: scale(1); }
 }
 
-/* Chrome */
+/* Aqua toolbar */
 .board-toolbar {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 12px;
-  height: 34px;
-  padding: 0 10px;
-  border-bottom: 1px solid var(--desktop-border);
-  background: var(--desktop-surface-raised);
-  color: var(--desktop-text);
+  min-height: var(--toolbar-h);
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--toolbar);
+  color: var(--text);
 }
 .board-tab {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 9px;
+  gap: 6px;
+  min-height: 26px;
+  padding: 2px 12px 2px 6px;
   border-radius: 999px;
-  font-size: 11px;
+  font: 500 13px / 1.2 var(--font-ui);
   white-space: nowrap;
-  color: var(--desktop-text);
-  transition: background-color 120ms ease;
+  color: var(--button-text);
+  border: 1px solid var(--button-border);
+  background: var(--button);
 }
-.board-tab:hover { background: rgba(127, 127, 127, 0.16); }
-.board-tab[aria-current="page"] { background: var(--desktop-accent); color: #fff; }
-.board-tab:focus-visible, .board-tool:focus-visible { outline: 2px solid var(--desktop-accent); outline-offset: 1px; }
+.board-tab[aria-current="page"] { background: var(--gel); border-color: var(--gel-border); color: var(--gel-text); text-shadow: var(--gel-text-shadow); font-weight: 600; }
+.board-tab:focus-visible, .board-tool:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
 .board-tagline {
   flex: 1;
   min-width: 0;
-  font-size: 11px;
-  color: var(--desktop-text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 13px;
+  color: var(--text-2);
   text-align: center;
 }
 .board-tool {
-  width: 24px;
-  height: 22px;
+  width: 28px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
-  color: var(--desktop-text);
+  border-radius: 6px;
+  color: var(--button-text);
+  border: 1px solid var(--button-border);
+  background: var(--button);
 }
-.board-tool:hover { background: rgba(127, 127, 127, 0.16); }
-.board-tool:active { background: rgba(127, 127, 127, 0.28); }
+.board-tool:active { filter: brightness(0.9); }
 .board-zoom-readout {
-  min-width: 40px;
+  min-width: 44px;
   text-align: center;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10px;
-  color: var(--desktop-text-secondary);
+  font-family: var(--font-num);
+  font-size: 12px;
+  color: var(--text-2);
 }
 
-.board-hint {
-  position: absolute;
-  left: 22px;
-  bottom: 22px;
-  z-index: 3;
-  max-width: calc(100% - 180px);
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 10.5px;
-  color: var(--board-chrome-ink);
-  background: var(--board-chrome);
-  border: 1px solid var(--board-chrome-border);
-  pointer-events: none;
-}
+.board-hint { font-size: 13px; color: var(--text-2); }
 @media (max-width: 767px) {
   .board-hint, .board-tagline { display: none; }
-  .board-backpack { right: 14px; bottom: 14px; }
+  .board-statusbar { justify-content: flex-end; }
 }
 
 .board-toast {

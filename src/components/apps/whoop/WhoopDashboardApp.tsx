@@ -1,5 +1,7 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Heart,
@@ -787,7 +789,7 @@ export default function WhoopDashboardApp() {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/whoop/data");
+      const res = await fetch("/api/whoop/data", { signal: AbortSignal.timeout(10000) });
       if (res.ok) {
         const data: DashboardResponse = await res.json();
         setDashData(data);
@@ -922,11 +924,7 @@ export default function WhoopDashboardApp() {
 
           {/* Main content */}
           {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <span className="text-[12px] text-desktop-text-secondary">
-                Loading WHOOP data...
-              </span>
-            </div>
+            <AquaLoading label="Loading WHOOP data" lines={6} />
           ) : isConnected ? (
             <LiveDashboard data={dashData as LiveDashboardData} />
           ) : (

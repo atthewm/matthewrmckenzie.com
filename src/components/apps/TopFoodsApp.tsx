@@ -1,5 +1,7 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { RefreshCw, Search, Trophy, Flame, Beef, Leaf } from "lucide-react";
 import type { TopFood } from "@/data/notion/types";
@@ -174,7 +176,7 @@ export default function TopFoodsApp() {
     setLoading(true);
     setFailed(false);
     try {
-      const res = await fetch("/api/notion/data?dataset=top-foods");
+      const res = await fetch("/api/notion/data?dataset=top-foods", { signal: AbortSignal.timeout(10000) });
       if (!res.ok) throw new Error(String(res.status));
       const json = await res.json();
       setFoods((json.items ?? []) as TopFood[]);
@@ -250,9 +252,7 @@ export default function TopFoodsApp() {
 
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="flex h-full items-center justify-center gap-2 text-sm text-desktop-text-secondary">
-            <RefreshCw className="h-4 w-4 animate-spin" /> Loading top foods…
-          </div>
+          <AquaLoading label="Loading top foods" />
         ) : failed || foods.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
             <p className="text-sm font-medium">

@@ -398,15 +398,15 @@ export default function BoardView({ item: board, contentMap, windowId, onOpen }:
           })}
         </div>
 
-        <Backpack ref={backpackRef} isOpen={draggingId !== null} isHot={overBackpack} isGulping={gulping} packedCount={packedCount} />
-
-        <p className="board-hint" data-board-ui>
-          Scroll to zoom · Drag the board to pan · Drag a card into the backpack to download it
-        </p>
-
         <div className="board-toast" role="status" aria-live="polite" data-visible={toast ? "true" : "false"}>
           {toast}
         </div>
+      </div>
+
+      {/* Bottom bar: the backpack lives here, off the canvas, so no card can sit under it. */}
+      <div className="board-statusbar" data-board-ui>
+        <p className="board-hint">Scroll to zoom and drag to pan. Drop a card in the backpack to download it.</p>
+        <Backpack ref={backpackRef} isOpen={draggingId !== null} isHot={overBackpack} isGulping={gulping} packedCount={packedCount} />
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Flame, Activity, Leaf, Lock, RefreshCw, TrendingUp } from "lucide-react";
 import {
@@ -78,7 +80,7 @@ export default function NutritionApp() {
   const load = useCallback(async () => {
     setState("loading");
     try {
-      const res = await fetch("/api/notion/data?dataset=nutrition");
+      const res = await fetch("/api/notion/data?dataset=nutrition", { signal: AbortSignal.timeout(10000) });
       if (res.status === 401) {
         setState("private");
         return;
@@ -103,10 +105,7 @@ export default function NutritionApp() {
 
   if (state === "loading") {
     return (
-      <Centered>
-        <RefreshCw className="h-5 w-5 animate-spin text-desktop-text-secondary" />
-        <p className="text-sm text-desktop-text-secondary">Loading nutrition…</p>
-      </Centered>
+      <AquaLoading label="Loading nutrition" />
     );
   }
 

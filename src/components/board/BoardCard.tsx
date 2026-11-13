@@ -45,14 +45,18 @@ function Fastener({ type, color }: { type: BoardFastener; color: string }) {
   );
 }
 
+/** First clause of a yield line, so the card never needs an ellipsis. */
+function shortYield(y: string): string {
+  return y.split(/\s\(|;|,\s(?=[A-Z])/)[0].trim();
+}
+
 function RecipeFace({ item }: { item: FSItem }) {
   const meta = getRecipeBySlug(item.id);
   return (
     <div className="card-face card-index" data-tint={meta?.category.toLowerCase()}>
       <p className="card-eyebrow">{meta?.category ?? "Recipe"}</p>
       <h3 className="card-title-display">{meta?.title ?? item.name}</h3>
-      {meta?.subtitle && <p className="card-sub">{meta.subtitle}</p>}
-      <p className="card-meta">{[meta?.yield, meta?.totalTime].filter(Boolean).join(" · ")}</p>
+      {meta?.yield && <p className="card-meta">{shortYield(meta.yield)}</p>}
     </div>
   );
 }

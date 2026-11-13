@@ -21,7 +21,7 @@ const WHEEL_ZOOM_SPEED = 0.0015;
 const PINCH_WHEEL_SPEED = 0.01;
 const FIT_PADDING = 40;
 /** If the whole board fits at this zoom or better, open fitted. */
-const MIN_READABLE_FIT = 0.8;
+const MIN_READABLE_FIT = 0.72;
 const READABLE_SCALE = 0.9;
 const NARROW_VIEW = 600;
 const NARROW_SCALE = 0.8;

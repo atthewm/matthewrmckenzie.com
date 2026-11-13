@@ -1,5 +1,7 @@
 "use client";
 
+import AquaLoading from "@/components/ui/AquaLoading";
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Star, ExternalLink, RefreshCw, Film, Tv, Headphones } from "lucide-react";
 import type { FSItem } from "@/data/fs";
@@ -41,7 +43,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
     setLoading(true);
     setFailed(false);
     try {
-      const res = await fetch(`/api/notion/data?dataset=${shelf.dataset}`);
+      const res = await fetch(`/api/notion/data?dataset=${shelf.dataset}`, { signal: AbortSignal.timeout(10000) });
       if (!res.ok) throw new Error(String(res.status));
       const json = await res.json();
       setItems((json.items ?? []) as MediaItem[]);
@@ -91,9 +93,7 @@ export default function MediaShelfApp({ fsItem }: { fsItem?: FSItem }) {
 
       <div className="flex-1 overflow-y-auto p-3">
         {loading ? (
-          <div className="flex h-full items-center justify-center gap-2 text-sm text-desktop-text-secondary">
-            <RefreshCw className="h-4 w-4 animate-spin" /> Loading {shelf.label}…
-          </div>
+          <AquaLoading label={`Loading ${shelf.label}`} />
         ) : failed || items.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
             <p className="text-sm font-medium">

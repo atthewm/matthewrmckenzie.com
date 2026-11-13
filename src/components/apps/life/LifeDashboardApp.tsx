@@ -86,7 +86,7 @@ export default function LifeDashboardApp() {
 
   const load = useCallback(() => {
     setWhoopLoading(true);
-    fetch("/api/whoop/data")
+    fetch("/api/whoop/data", { signal: AbortSignal.timeout(10000) })
       .then((r) => (r.ok ? r.json() : { connected: false }))
       .catch(() => ({ connected: false }))
       .then((raw: WhoopRaw) => {
@@ -97,7 +97,7 @@ export default function LifeDashboardApp() {
       .finally(() => setWhoopLoading(false));
 
     setNutritionState("loading");
-    fetch("/api/notion/data?dataset=nutrition")
+    fetch("/api/notion/data?dataset=nutrition", { signal: AbortSignal.timeout(10000) })
       .then((r) => {
         if (!r.ok) throw new Error("nutrition feed unavailable");
         return r.json();
