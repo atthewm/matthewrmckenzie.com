@@ -31,7 +31,7 @@ for (const p of ["/", "/about"]) {
       onlyCategories: ["performance", "accessibility", "best-practices", "seo"],
       formFactor: "mobile",
       screenEmulation: { mobile: true, width: 412, height: 823, deviceScaleFactor: 1.75, disabled: false },
-      extraHeaders: BYPASS ? { "x-vercel-protection-bypass": BYPASS } : undefined,
+      extraHeaders: process.env.VERCEL_JWT ? { Cookie: `_vercel_jwt=${process.env.VERCEL_JWT}` } : BYPASS ? { "x-vercel-protection-bypass": BYPASS } : undefined,
     });
     const c = res.lhr.categories;
     const row = {

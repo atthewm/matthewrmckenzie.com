@@ -39,6 +39,15 @@ async function saveVideo(page, ctx, name) {
   await rename(src, path.join(OUT, name));
 }
 
+
+// Protected Vercel previews: set VERCEL_JWT to the _vercel_jwt cookie from a
+// share link (see the Vercel share URL), and it is added to every context.
+async function authorize(ctx, base) {
+  const jwt = process.env.VERCEL_JWT;
+  if (!jwt) return;
+  await ctx.addCookies([{ name: "_vercel_jwt", value: jwt, domain: new URL(base).hostname, path: "/", secure: true, httpOnly: true, sameSite: "Lax" }]);
+}
+
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 
@@ -46,6 +55,7 @@ const browser = await chromium.launch();
 {
   const size = { width: 1440, height: 900 };
   const ctx = await browser.newContext({ viewport: size, recordVideo: { dir: OUT, size }, colorScheme: "light", extraHTTPHeaders: headers });
+  await authorize(ctx, BASE);
   await ctx.addInitScript(() => {
     if (!localStorage.getItem("mmck-theme")) localStorage.setItem("mmck-theme", "light");
   });
@@ -117,6 +127,7 @@ const browser = await chromium.launch();
 {
   const size = { width: 951, height: 620 };
   const ctx = await browser.newContext({ viewport: size, recordVideo: { dir: OUT, size }, colorScheme: "light", extraHTTPHeaders: headers });
+  await authorize(ctx, BASE);
   await ctx.addInitScript(() => {
     sessionStorage.setItem("mmck-booted", "1");
     localStorage.setItem("mmck-start-here-seen", "1");

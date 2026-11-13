@@ -68,6 +68,15 @@ const PHONE_STATES = [
   { name: "app-contact", open: "contact" },
 ];
 
+
+// Protected Vercel previews: set VERCEL_JWT to the _vercel_jwt cookie from a
+// share link (see the Vercel share URL), and it is added to every context.
+async function authorize(ctx, base) {
+  const jwt = process.env.VERCEL_JWT;
+  if (!jwt) return;
+  await ctx.addCookies([{ name: "_vercel_jwt", value: jwt, domain: new URL(base).hostname, path: "/", secure: true, httpOnly: true, sameSite: "Lax" }]);
+}
+
 const report = { base: BASE, startedAt: new Date().toISOString(), duoMethod: null, shots: [] };
 
 function fileFor(view, name) {
@@ -151,6 +160,7 @@ async function newContext(browser, size, theme, fresh) {
     hasTouch: !!size.mobile,
     extraHTTPHeaders: BYPASS ? { "x-vercel-protection-bypass": BYPASS, "x-vercel-set-bypass-cookie": "true" } : undefined,
   });
+  await authorize(ctx, BASE);
   await ctx.addInitScript(
     ([t, f]) => {
       try {
