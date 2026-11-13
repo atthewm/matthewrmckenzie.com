@@ -1,159 +1,276 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef } from "react";
-import Link from "next/link";
-import { ArrowLeft, Mail, Calendar, Contact } from "lucide-react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useAnimate, useReducedMotion } from "motion/react";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { profile } from "@/config/profile";
 import { PantherIcon } from "./PantherIcons";
 import WindowContent from "./WindowContent";
 import BoardView from "@/components/board/BoardView";
+import SlideToUnlock, { UNLOCK_KEY } from "./SlideToUnlock";
+import { springs, FADE, setLaunchOrigin, peekLaunchOrigin } from "@/lib/motion";
 
 // ============================================================================
-// MOBILE VIEW
+// PHONE: iPhone OS 1 SPRINGBOARD
 // ============================================================================
-// Phone layout: a home screen of apps, and each opened item full screen.
-// Shares the desktop store, so anything that calls openItem (Spotlight, Start
-// Here, folder lists, ?open= links) shows up here. Back closes the top window.
+// Under 768 px the desktop becomes a springboard: status bar, glossy rounded
+// icons in a 4 column grid across swipeable pages with page dots, and a dock
+// of four (Work, Health, Recipes, Contact). The first visit shows slide to
+// unlock once. Each app opens full screen with a top bar and a back button,
+// zooming out of its icon and back into it. It shares the desktop store, so
+// Spotlight, ?open= links and Start Here all work here too.
 // ============================================================================
 
 interface MobileViewProps {
   contentMap: Record<string, string>;
 }
 
-export default function MobileView({ contentMap }: MobileViewProps) {
-  const { state, openItem, closeWindow, dispatch } = useDesktop();
-  const rootItems = getRootItems();
-  const startedRef = useRef(false);
-  const homeRef = useRef<HTMLDivElement>(null);
+const DOCK_IDS = ["work", "health", "recipes", "contact"];
+const ROW_HEIGHT = 100;
 
-  // Start every phone visit on the home screen, scrolled to the very top
-  // (browsers otherwise restore an old scroll offset past the header), and
-  // honor ?open=<id> deep links.
+/** Gel tile colors, picked per app so neighbors differ. */
+const TILES = [
+  ["#7fb4f7", "#1f5fcf"],
+  ["#9adf7c", "#2f8f2a"],
+  ["#ffd67a", "#d78a0b"],
+  ["#ff9d8f", "#c7362a"],
+  ["#c6b0f5", "#6a47c7"],
+  ["#8fe3e0", "#1b8f8a"],
+  ["#f7f7f7", "#a9b0b9"],
+  ["#5d6570", "#1d2228"],
+];
+function tileFor(id: string) {
+  let h = 0;
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return TILES[h % TILES.length];
+}
+
+function useClock() {
+  const [t, setT] = useState("");
   useEffect(() => {
-    if (startedRef.current) return;
-    startedRef.current = true;
-    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    window.scrollTo(0, 0);
-    homeRef.current?.scrollTo(0, 0);
-    dispatch({ type: "CLOSE_ALL_WINDOWS" });
-    const id = new URLSearchParams(window.location.search).get("open");
-    const item = id ? findFSItem(id) : undefined;
-    if (item) {
-      openItem(item);
-      window.history.replaceState({}, "", "/");
-    }
-  }, [dispatch, openItem]);
+    const tick = () => setT(new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }));
+    tick();
+    const id = window.setInterval(tick, 30_000);
+    return () => window.clearInterval(id);
+  }, []);
+  return t;
+}
 
-  const top = useMemo(
-    () =>
-      [...state.windows]
-        .filter((w) => !w.isMinimized)
-        .sort((a, b) => b.zIndex - a.zIndex)[0],
-    [state.windows],
+function StatusBar() {
+  const time = useClock();
+  return (
+    <div className="status-bar" aria-hidden="true">
+      <span>McKenzie</span>
+      <span className="font-semibold">{time}</span>
+      <span className="status-battery">
+        <span />
+      </span>
+    </div>
   );
-  const currentItem = top ? findFSItem(top.fsItemId) : undefined;
+}
 
-  function open(item: FSItem) {
-    if (item.type === "link" && item.href) {
-      window.open(item.href, "_blank", "noopener,noreferrer");
+function AppTile({ item, index, onOpen }: { item: FSItem; index: number; onOpen: (item: FSItem, el: HTMLElement) => void }) {
+  const reduce = useReducedMotion();
+  const [a, b] = tileFor(item.id);
+  return (
+    <motion.button
+      type="button"
+      className="sb-app"
+      onClick={(e) => onOpen(item, e.currentTarget.querySelector(".sb-tile") as HTMLElement)}
+      aria-label={`Open ${item.name}`}
+      initial={reduce ? false : { scale: 0.6 }}
+      animate={{ scale: 1 }}
+      transition={reduce ? FADE : { ...springs.snappy, delay: 0.02 * index }}
+      whileTap={{ scale: 0.92 }}
+    >
+      <span className="sb-tile" style={{ background: `linear-gradient(180deg, ${a} 0%, ${b} 100%)` }}>
+        <PantherIcon itemId={item.id} size={44} />
+      </span>
+      <span className="sb-label">{item.shortName ?? item.name}</span>
+    </motion.button>
+  );
+}
+
+function AppScreen({
+  item,
+  top,
+  contentMap,
+  onBack,
+  onOpen,
+}: {
+  item: FSItem;
+  top: NonNullable<ReturnType<typeof useDesktop>["state"]["windows"][number]>;
+  contentMap: Record<string, string>;
+  onBack: () => void;
+  onOpen: (item: FSItem) => void;
+}) {
+  const reduce = useReducedMotion();
+  const [scope, animate] = useAnimate<HTMLDivElement>();
+  const origin = useRef(peekLaunchOrigin(item.id));
+
+  // Zoom out of the icon (start pose written before paint).
+  useLayoutEffect(() => {
+    const el = scope.current;
+    if (!el) return;
+    const o = origin.current;
+    if (reduce || !o) {
+      el.style.opacity = "0";
+      animate(el, { opacity: 1 }, FADE);
       return;
     }
-    openItem(item);
-  }
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const s = o.width / vw;
+    const x = o.x + o.width / 2 - vw / 2;
+    const y = o.y + o.height / 2 - vh / 2;
+    el.style.transform = `translateX(${x}px) translateY(${y}px) scale(${s})`;
+    animate(el, { x: [x, 0], y: [y, 0], scale: [s, 1], borderRadius: ["40px", "0px"] }, springs.window);
+    // mount only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (top && currentItem) {
-    return (
-      <div className="fixed inset-0 bg-desktop-surface flex flex-col z-50">
-        <div className="flex items-center h-12 px-2 border-b border-desktop-border shrink-0 safe-area-top">
-          <button
-            onClick={() => closeWindow(top.id)}
-            className="flex items-center gap-1 text-desktop-accent text-sm px-2 py-2"
-            aria-label="Go back"
-          >
-            <ArrowLeft size={18} />
-            Back
-          </button>
-          <div className="flex-1 text-center text-sm font-semibold text-desktop-text truncate px-2">
-            {currentItem.name}
-          </div>
-          <div className="w-16" />
-        </div>
-        <div className={`flex-1 overscroll-contain ${currentItem.type === "folder" ? "overflow-hidden" : "overflow-auto"}`}>
-          {currentItem.type === "folder" ? (
-            <BoardView item={currentItem} contentMap={contentMap} onOpen={open} />
-          ) : (
-            <WindowContent windowState={top} contentMap={contentMap} />
-          )}
-        </div>
-      </div>
-    );
+  async function back() {
+    const el = scope.current;
+    const o = origin.current;
+    if (el) {
+      if (reduce || !o) await animate(el, { opacity: 0 }, FADE);
+      else {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        await animate(
+          el,
+          { x: o.x + o.width / 2 - vw / 2, y: o.y + o.height / 2 - vh / 2, scale: o.width / vw, opacity: 0 },
+          { ...springs.window, opacity: { duration: 0.25 } },
+        );
+      }
+    }
+    onBack();
   }
 
   return (
-    <div ref={homeRef} className="fixed inset-0 overflow-y-auto" style={{ background: "#151619", color: "#ecebe7" }}>
-      <div className="safe-area-top px-5 pt-10 pb-10 max-w-md mx-auto">
-        <p style={{ color: "#cfae6b" }} className="font-mono text-[11px] uppercase tracking-[0.16em]">
-          {profile.company} &middot; {profile.primaryCity}
-        </p>
-        <p className="text-[34px] leading-[1.05] mt-3" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>
-          {profile.fullName}
-        </p>
-        <p className="text-[15px] mt-2 leading-snug" style={{ color: "#a3a4aa" }}>
-          {profile.title}. Private wealth, family offices, and RIAs.
-        </p>
-
-        <div className="grid grid-cols-3 gap-2 mt-6">
-          <QuickAction href="/card" label="Save contact" icon={<Contact size={16} />} />
-          <QuickAction href="/contact" label="Email" icon={<Mail size={16} />} />
-          <QuickAction href={profile.scheduleUrl} label="Schedule" icon={<Calendar size={16} />} external />
-        </div>
-
-        <div className="mt-9 flex items-baseline justify-between">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em]" style={{ color: "#a3a4aa" }}>
-            McKenzie OS
-          </p>
-          <Link href="/about" className="text-[12px] underline underline-offset-4" style={{ color: "#a3a4aa" }}>
-            Reading view
-          </Link>
-        </div>
-        <div className="grid grid-cols-4 gap-y-5 gap-x-2 mt-4">
-          {rootItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => open(item)}
-              className="flex flex-col items-center gap-1.5 min-w-0"
-              aria-label={`Open ${item.name}`}
-            >
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center border active:scale-95 transition-transform"
-                   style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.08)" }}>
-                <PantherIcon itemId={item.id} size={36} />
-              </div>
-              <span className="text-[11px] text-center leading-tight w-full truncate" style={{ color: "#ecebe7" }}>
-                {item.name}
-              </span>
-            </button>
-          ))}
-        </div>
+    <div ref={scope} className="app-screen" role="dialog" aria-label={item.name}>
+      <div className="app-navbar">
+        <button type="button" className="app-back" onClick={back}>
+          <span aria-hidden="true">‹</span> Home
+        </button>
+        <h2 className="app-title">{item.name}</h2>
+        <span className="w-[72px]" aria-hidden="true" />
+      </div>
+      <div className={`app-body ${item.type === "folder" ? "overflow-hidden" : "overflow-auto"}`}>
+        {item.type === "folder" ? (
+          <BoardView item={item} contentMap={contentMap} onOpen={onOpen} />
+        ) : (
+          <WindowContent windowState={top} contentMap={contentMap} />
+        )}
       </div>
     </div>
   );
 }
 
-function QuickAction({ href, label, icon, external = false }: { href: string; label: string; icon: React.ReactNode; external?: boolean }) {
-  const cls = "flex flex-col items-center justify-center gap-1.5 h-16 rounded-xl border text-[12px] active:scale-[0.98] transition-transform";
-  const style = { borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.04)", color: "#ecebe7" };
-  return external ? (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>
-      {icon}
-      {label}
-    </a>
-  ) : (
-    <Link href={href} className={cls} style={style}>
-      {icon}
-      {label}
-    </Link>
+export default function MobileView({ contentMap }: MobileViewProps) {
+  const { state, openItem, closeWindow, dispatch } = useDesktop();
+  const startedRef = useRef(false);
+  const homeRef = useRef<HTMLDivElement>(null);
+  const pagerRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(0);
+  const [locked, setLocked] = useState(false);
+
+  // Start every visit on the home screen at the very top (browsers otherwise
+  // restore an old offset past the header), honor ?open=<id>, and show the
+  // lock screen on the first visit only.
+  useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    dispatch({ type: "CLOSE_ALL_WINDOWS" });
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("open");
+    const item = id ? findFSItem(id) : undefined;
+    if (item) {
+      openItem(item);
+      window.history.replaceState({}, "", "/");
+      return;
+    }
+    try {
+      if (!localStorage.getItem(UNLOCK_KEY)) setLocked(true);
+    } catch {
+      // No storage: skip the lock screen.
+    }
+  }, [dispatch, openItem]);
+
+  // Rows per page from the screen height: status bar, dots and dock take
+  // about 170 px; each icon row is 100 px.
+  const [perPage] = useState(() => {
+    const rows = Math.max(3, Math.min(6, Math.floor((window.innerHeight - 170) / ROW_HEIGHT)));
+    return rows * 4;
+  });
+  const pages = useMemo(() => {
+    const root = getRootItems().filter((i) => !DOCK_IDS.includes(i.id));
+    const more = findFSItem("more")?.children ?? [];
+    const all = [...root, ...more];
+    const out: FSItem[][] = [];
+    for (let i = 0; i < all.length; i += perPage) out.push(all.slice(i, i + perPage));
+    return out;
+  }, [perPage]);
+  const dockItems = DOCK_IDS.map((id) => findFSItem(id)).filter(Boolean) as FSItem[];
+
+  const top = useMemo(
+    () => [...state.windows].filter((w) => !w.isMinimized).sort((a, b) => b.zIndex - a.zIndex)[0],
+    [state.windows],
+  );
+  const currentItem = top ? findFSItem(top.fsItemId) : undefined;
+
+  function open(item: FSItem, el?: HTMLElement | null) {
+    if (item.type === "link" && item.href) {
+      window.open(item.href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (el) setLaunchOrigin(item.id, el);
+    openItem(item);
+  }
+
+  function onPagerScroll() {
+    const el = pagerRef.current;
+    if (el) setPage(Math.round(el.scrollLeft / el.clientWidth));
+  }
+
+  return (
+    <div ref={homeRef} className="springboard">
+      <StatusBar />
+      <h2 className="sr-only">Home screen</h2>
+      <div ref={pagerRef} className="sb-pager" onScroll={onPagerScroll}>
+        {pages.map((items, p) => (
+          <div key={p} className="sb-page" aria-label={`Page ${p + 1} of ${pages.length}`} role="group">
+            {items.map((item, i) => (
+              <AppTile key={item.id} item={item} index={i} onOpen={open} />
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="sb-dots" aria-hidden="true">
+        {pages.map((_, p) => (
+          <span key={p} data-active={p === page || undefined} />
+        ))}
+      </div>
+      <nav className="sb-dock" aria-label="Dock">
+        {dockItems.map((item, i) => (
+          <AppTile key={item.id} item={item} index={i} onOpen={open} />
+        ))}
+      </nav>
+
+      <AnimatePresence>{locked && <SlideToUnlock key="lock" onUnlock={() => setLocked(false)} />}</AnimatePresence>
+
+      {top && currentItem && (
+        <AppScreen
+          key={top.id}
+          item={currentItem}
+          top={top}
+          contentMap={contentMap}
+          onBack={() => closeWindow(top.id)}
+          onOpen={(i) => open(i)}
+        />
+      )}
+    </div>
   );
 }
-

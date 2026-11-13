@@ -127,6 +127,11 @@
   --status-text: #ffffff;
   --springboard-dock: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 100%);
 
+  /* iPhone OS 1 navigation bar */
+  --navbar: linear-gradient(180deg, #9fb2cc 0%, #6c86aa 50%, #5d79a0 51%, #4e6b93 100%);
+  --navbar-button: linear-gradient(180deg, #7d95b8 0%, #4f6c94 50%, #43608a 51%, #3d5a83 100%);
+  --navbar-border: #2d4466;
+
   /* Skeletons */
   --skeleton: #e3e3e7;
   --progress-track: #d8d8dc;
@@ -207,6 +212,10 @@
 
   --status-bar: rgba(0, 0, 0, 0.5);
   --springboard-dock: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%);
+
+  --navbar: linear-gradient(180deg, #5f636b 0%, #44474e 50%, #3a3d43 51%, #33363b 100%);
+  --navbar-button: linear-gradient(180deg, #6a6e76 0%, #4b4e55 50%, #42454b 51%, #3c3f45 100%);
+  --navbar-border: #1a1b1e;
 
   --skeleton: #36383e;
   --progress-track: #3a3c42;

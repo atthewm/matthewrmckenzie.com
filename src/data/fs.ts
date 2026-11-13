@@ -6,6 +6,8 @@ export type FSItemType = "folder" | "app" | "document" | "link";
 export interface FSItem {
   id: string;
   name: string;
+  /** Shorter label for tight spots such as the phone springboard. */
+  shortName?: string;
   type: FSItemType;
   icon: string;
   children?: FSItem[];
@@ -65,7 +67,7 @@ export const fileSystem: FSItem[] = [
   { id: "hobbies", name: "Hobbies", type: "app", icon: "Trophy", appComponent: "HobbiesApp", staticRoute: "/hobbies", description: "Training, tennis, cooking, DJing, photography and Rematch.", defaultSize: { width: 580, height: 660 } },
   { id: "turntable", name: "Turntable", type: "app", icon: "Disc3", appComponent: "TurntableApp", description: "My Apple Music playlists on a turntable.", defaultSize: { width: 720, height: 600 } },
   { id: "contact", name: "Contact", type: "app", icon: "Mail", appComponent: "ContactApp", staticRoute: "/contact", description: "Get in touch.", defaultSize: { width: 500, height: 560 } },
-  { id: "card", name: "Business Card", type: "app", icon: "Contact", appComponent: "BusinessCardApp", staticRoute: "/card", description: "Digital business card. Save contact, call, or email.", defaultSize: { width: 400, height: 640 } },
+  { id: "card", name: "Business Card", shortName: "Card", type: "app", icon: "Contact", appComponent: "BusinessCardApp", staticRoute: "/card", description: "Digital business card. Save contact, call, or email.", defaultSize: { width: 400, height: 640 } },
   { id: "linktree", name: "Links", type: "app", icon: "Link", appComponent: "LinktreeApp", description: "All links in one place.", defaultSize: { width: 420, height: 620 } },
   { id: "now", name: "Now", type: "document", icon: "Zap", contentPath: "now.md", staticRoute: "/now", description: "What I'm up to right now.", defaultSize: { width: 520, height: 460 } },
   { id: "more", name: "More", type: "folder", icon: "Folder", description: "Music, photos, media, games, and desktop extras.", children: [
