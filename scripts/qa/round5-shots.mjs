@@ -34,6 +34,7 @@ const OUT = opt("out") || path.resolve("qa-out");
 const ONLY = opt("only");
 const AXE = args.includes("--axe");
 const STATES = args.includes("--states");
+const REPORT_NAME = opt("theme") ? `report-${opt("theme")}.json` : "report.json";
 const ROUTES = (opt("routes") || "/,/about,/work,/contact,/now,/writing,/recipes,/recipes/city-loaf-master-recipe,/privacy,/card")
   .split(",")
   .filter(Boolean);
@@ -218,7 +219,7 @@ async function shot(browser, viewName, v, theme, target, report) {
 }
 
 async function contactSheets(browser, report) {
-  const dir = path.join(OUT, "sheets");
+  const dir = path.join(OUT, opt("theme") ? `sheets-${opt("theme")}` : "sheets");
   await mkdir(dir, { recursive: true });
   const pages = [...new Set(report.shots.map((s) => s.page))];
   const ctx = await browser.newContext({ viewport: { width: 1800, height: 1000 } });
@@ -246,11 +247,11 @@ const THEMES = opt("theme") ? [opt("theme")] : ["light", "dark"];
 for (const theme of THEMES) {
   for (const [viewName, v] of Object.entries(VIEWS)) {
     for (const t of targets) await shot(browser, viewName, v, theme, t, report);
-    await writeFile(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
+    await writeFile(path.join(OUT, REPORT_NAME), JSON.stringify(report, null, 2));
   }
 }
 await contactSheets(browser, report);
 await browser.close();
 report.finishedAt = new Date().toISOString();
-await writeFile(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
-console.log(`${report.shots.length} shots. Report: ${path.join(OUT, "report.json")}`);
+await writeFile(path.join(OUT, REPORT_NAME), JSON.stringify(report, null, 2));
+console.log(`${report.shots.length} shots. Report: ${path.join(OUT, REPORT_NAME)}`);

@@ -29,12 +29,20 @@ const GROUPS = [
 ];
 
 const label = (p) => (p === "/" ? "home" : p.startsWith("/?open=") ? `app: ${p.slice(7)}` : p);
-const img = (s, w) => (s?.file ? `<a href="${BLOB}/${s.file}?raw=true"><img src="${BLOB}/${s.file}?raw=true" width="${w}"></a>` : "missing");
+const img = (s, w) => (s?.file ? `<img src="${BLOB}/${s.file}?raw=true" width="${w}">` : "missing");
+// GitHub caps a PR body at 65,536 characters: the views marked inline get
+// tables here, the rest are linked as folders on the qa-assets branch.
+const INLINE = new Set(["duo-laptop", "duo-book", "duo-outer-portrait", "desktop", "iphone"]);
+const TREE = "https://github.com/atthewm/matthewrmckenzie.com/tree/qa-assets/mckenzie-os-remastered/round-5/after";
 
 let out = intro.trim() + "\n\n## Screenshots\n\nDuo first. Light on the left, dark on the right. Click any image for full size. Taken from a local production build (`next build`, `next start`) because Vercel previews are off on the Hobby plan.\n";
 for (const [view, title, open, w] of GROUPS) {
   const light = shots.filter((s) => s.viewName === view && s.theme === "light" && s.file);
   if (!light.length) continue;
+  if (!INLINE.has(view)) {
+    out += `\n- **${title}:** [light](${TREE}/${view}-light), [dark](${TREE}/${view}-dark) (${light.length} shots each)\n`;
+    continue;
+  }
   // App states first in the poses (that is where the two screen layouts live).
   light.sort((a, b) => Number(!a.page.startsWith("/?open")) - Number(!b.page.startsWith("/?open")));
   out += `\n<details${open ? " open" : ""}><summary><strong>${title}</strong> (${light.length} pages and app states)</summary>\n\n| Page | Light | Dark |\n|---|---|---|\n`;
