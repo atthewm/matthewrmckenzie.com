@@ -3,6 +3,7 @@ import Link from "next/link";
 import CtaBlock from "./CtaBlock";
 import DocNav from "./DocNav";
 import ThemeControl from "@/components/theme/ThemeControl";
+import ContactCard from "./ContactCard";
 
 // ============================================================================
 // STATIC PAGE LAYOUT
@@ -21,6 +22,13 @@ interface StaticPageLayoutProps {
   hideCta?: boolean;
   /** Title shown in the window's title bar. */
   title?: string;
+  /**
+   * The page's companion for the iPhone Duo poses: shown on the right page
+   * in book pose and the bottom screen in laptop pose (recipe ingredients,
+   * for example). Hidden in the normal one-window layout, where the same
+   * content already sits in the body.
+   */
+  companion?: React.ReactNode;
 }
 
 const footerLinks = [
@@ -32,7 +40,7 @@ const footerLinks = [
   { href: "/privacy", label: "Privacy" },
 ];
 
-export default function StaticPageLayout({ children, wide = false, hideCta = false, title = "Matthew McKenzie" }: StaticPageLayoutProps) {
+export default function StaticPageLayout({ children, wide = false, hideCta = false, title = "Matthew McKenzie", companion }: StaticPageLayoutProps) {
   return (
     <div className="site">
       <a
@@ -44,6 +52,7 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
       </a>
 
       <div className={`doc-window ${wide ? "is-wide" : ""}`}>
+        <div className="doc-main-pane">
         <header className="site-noprint">
           <div className="doc-titlebar">
             <span className="traffic" aria-hidden="true">
@@ -64,8 +73,16 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
 
         <main id="main-content" className="doc-body">
           {children}
-          {!hideCta && <CtaBlock />}
         </main>
+        </div>
+
+        {/* Second page or screen in the Duo poses; below the body otherwise. */}
+        <div className="doc-side-pane">
+          <aside className="doc-aside site-noprint" aria-label="More">
+            {companion && <div className="doc-companion duo-pose-only">{companion}</div>}
+            <ContactCard className="duo-pose-only" />
+            {!hideCta && <CtaBlock />}
+          </aside>
 
         <footer className="doc-footer site-noprint">
           <span>Matthew McKenzie, Menlo Equities, Austin</span>
@@ -77,6 +94,7 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
             ))}
           </nav>
         </footer>
+        </div>
       </div>
     </div>
   );

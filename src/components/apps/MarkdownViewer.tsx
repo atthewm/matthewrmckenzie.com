@@ -1,5 +1,6 @@
 "use client";
 
+import { MOBILE_BREAKPOINT } from "@/hooks/useIsMobile";
 import React, { useEffect, useRef } from "react";
 
 // ============================================================================
@@ -22,7 +23,7 @@ export default function MarkdownViewer({ html, className = "", title }: Markdown
   // On mobile: rewrite all links to open in new tabs so they don't trap navigation
   useEffect(() => {
     if (!contentRef.current) return;
-    const isMobile = window.innerWidth < 768;
+    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
     if (!isMobile) return;
 
     const links = contentRef.current.querySelectorAll("a[href]");

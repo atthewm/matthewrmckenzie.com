@@ -6,7 +6,7 @@ import { useTheme } from "@/lib/theme";
 import ThemeControl from "@/components/theme/ThemeControl";
 import { readDuoPreference, setDuoPreference } from "@/lib/duo";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useIsMobile, MOBILE_BREAKPOINT } from "@/hooks/useIsMobile";
 import { useShutdown } from "./ShutdownContext";
 
 // ============================================================================
@@ -39,7 +39,7 @@ function Clock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span className="text-[13px] font-medium tabular-nums">{time}</span>;
+  return <span className="text-[13px] font-medium tabular-nums whitespace-nowrap">{time}</span>;
 }
 
 // ---------------------------------------------------------------------------
@@ -248,7 +248,7 @@ function SubmenuItem({
   const focusFirstOnOpen = useRef(false);
 
   // On mobile, toggle on click instead of hover
-  const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+  const isMobileView = typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT;
 
   useEffect(() => {
     if (open && focusFirstOnOpen.current) {
@@ -752,7 +752,7 @@ export default function MenuBar() {
   return (
     <div
       ref={barRef}
-      className="fixed top-0 left-0 right-0 h-menubar z-menubar
+      className="menubar-root fixed top-0 left-0 right-0 h-menubar z-menubar
                   flex items-center justify-between px-3
                   border-b select-none"
       style={{
@@ -766,7 +766,7 @@ export default function MenuBar() {
       <div className="flex items-center gap-0 min-w-0">
         <div role="menubar" aria-label="Application menus" className="flex items-center gap-0">
           {visibleMenuKeys.map((name, index) => (
-            <div key={name} role="none" className="relative shrink-0">
+            <div key={name} role="none" className="relative shrink-0" data-menu={name === "\uF8FF" ? "apple" : name}>
               <button
                 ref={(el) => { triggerRefs.current[index] = el; }}
                 role="menuitem"
@@ -807,15 +807,15 @@ export default function MenuBar() {
 
         {/* Active window title (subtle, like classic Mac) - hidden on mobile */}
         {activeTitle && !isMobile && (
-          <span className="text-[13px] text-desktop-text-secondary ml-4 truncate max-w-[200px]">
+          <span className="menubar-title text-[13px] text-desktop-text-secondary ml-4 truncate max-w-[200px]">
             {activeTitle}
           </span>
         )}
       </div>
 
       {/* Right: theme toggle + clock */}
-      <div className="flex items-center gap-2">
-        {!isMobile && <ThemeControl size="small" />}
+      <div className="flex shrink-0 items-center gap-2">
+        {!isMobile && <span className="menubar-theme"><ThemeControl size="small" /></span>}
         <Clock />
       </div>
     </div>

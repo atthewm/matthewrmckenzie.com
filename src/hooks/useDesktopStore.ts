@@ -7,6 +7,7 @@
 // and localStorage persistence.
 // ============================================================================
 
+import { MOBILE_BREAKPOINT } from "@/hooks/useIsMobile";
 import {
   createContext,
   useContext,
@@ -86,7 +87,7 @@ export const initialDesktopState: DesktopState = {
 
 function getDefaultWindowPosition(index: number, width?: number, height?: number) {
   const vp = desktopViewport();
-  if (vp.width < 768) {
+  if (vp.width < MOBILE_BREAKPOINT) {
     // Mobile: center windows with a small cascade offset, leave room for dock
     const winW = Math.min(width ?? 600, vp.width - 4);
     const winH = Math.min(height ?? 450, vp.height - 94);
@@ -116,7 +117,7 @@ function getDefaultWindowPosition(index: number, width?: number, height?: number
  */
 function getBoardWindowGeometry() {
   const vp = desktopViewport();
-  if (vp.width < 768) return null;
+  if (vp.width < MOBILE_BREAKPOINT) return null;
   const MENU_BAR = 22;
   const DOCK = vp.height < 500 ? 8 : 84;
   const INSET = 14;
@@ -222,7 +223,7 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
 
     case "MAXIMIZE_WINDOW": {
       const vp = desktopViewport();
-      const isMobileView = vp.width < 768;
+      const isMobileView = vp.width < MOBILE_BREAKPOINT;
       // On mobile: fit between menu bar (22px) and dock (~64px + safe area)
       const maxY = 22;
       const dockAllowance = isMobileView ? 72 : 86;

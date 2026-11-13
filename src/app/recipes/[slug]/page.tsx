@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
+import { splitProse } from "@/lib/prose";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import { getContent } from "@/lib/content";
 import { recipes, getRecipeBySlug } from "@/content/recipes/index";
@@ -23,8 +24,29 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${recipe.title} | Recipes`,
     description: recipe.subtitle,
     alternates: { canonical: `${SITE}/recipes/${slug}` },
-    openGraph: { title: recipe.title, description: recipe.subtitle, type: "article" },
+    openGraph: { title: recipe.title, description: recipe.subtitle, type: "article", images: ["/opengraph-image"] },
   };
+}
+
+const COMPANION_HEADING = /ingredient|equipment|you.?ll need/i;
+
+function splitCompanion(html: string): { articleHtml: string; companionHtml: string } {
+  const { title, intro, sections } = splitProse(html);
+  if (!sections.some((sec) => COMPANION_HEADING.test(sec.heading))) return { articleHtml: html, companionHtml: "" };
+  const parts: string[] = [];
+  const companion: string[] = [];
+  if (title) parts.push(`<h1>${title}</h1>`);
+  if (intro) parts.push(intro);
+  for (const sec of sections) {
+    const block = `<h2 id="${sec.id}">${sec.heading}</h2>${sec.html}`;
+    if (COMPANION_HEADING.test(sec.heading)) {
+      parts.push(`<div data-companion-source>${block}</div>`);
+      companion.push(block.replace(` id="${sec.id}"`, ""));
+    } else {
+      parts.push(`<div>${block}</div>`);
+    }
+  }
+  return { articleHtml: parts.join("\n"), companionHtml: companion.join("\n") };
 }
 
 export default async function RecipePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -36,6 +58,10 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
   const index = recipes.findIndex((r) => r.slug === slug);
   const next = recipes[(index + 1) % recipes.length];
 
+  // In the iPhone Duo poses the ingredients sit on the second page or screen,
+  // beside the steps. Each h2 section gets a wrapper so the pose can move it.
+  const { articleHtml, companionHtml } = splitCompanion(content.html);
+
   const facts = [
     { label: "Yield", value: recipe.yield },
     { label: "Time", value: recipe.totalTime },
@@ -43,7 +69,17 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
   ].filter((f) => f.value);
 
   return (
-    <StaticPageLayout title={recipe.title}>
+    <StaticPageLayout
+      title={recipe.title}
+      companion={
+        companionHtml ? (
+          <section aria-label="Ingredients">
+            <p className="site-eyebrow">{recipe.title}</p>
+            <div className="site-prose" dangerouslySetInnerHTML={{ __html: companionHtml }} />
+          </section>
+        ) : undefined
+      }
+    >
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: SITE },
@@ -83,7 +119,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         </div>
       </header>
 
-      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: content.html }} />
+      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: articleHtml }} />
 
       {next && next.slug !== slug && (
         <nav aria-label="Next recipe" className="site-noprint mt-14 pt-6 border-t" style={{ borderColor: "var(--site-rule)" }}>

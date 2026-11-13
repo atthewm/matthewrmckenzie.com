@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   motion,
   useAnimate,
@@ -116,6 +116,28 @@ export default function Dock({ onStickiesToggle, stickiesActive, large = false }
   const mouseX = useMotionValue(Infinity);
   const [rovingIndex, setRovingIndex] = useState(0);
   const itemButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  // Panther shrinks the dock to fit the screen. Measure the natural width
+  // (transforms do not change offsetWidth) and scale the shelf to fit.
+  const shelfRef = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState(1);
+  useEffect(() => {
+    const el = shelfRef.current;
+    if (!el) return;
+    const measure = () => {
+      const room = large ? (el.parentElement?.clientWidth ?? window.innerWidth) - 8 : window.innerWidth - 16;
+      const natural = el.offsetWidth;
+      setFit(natural > 0 ? Math.min(1, room / natural) : 1);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    if (el.parentElement) ro.observe(el.parentElement);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [large]);
 
   const entries: ({ type: "sep" } | { type: "item"; item: FSItem; index: number })[] = [];
   let count = 0;
@@ -183,7 +205,9 @@ export default function Dock({ onStickiesToggle, stickiesActive, large = false }
       onKeyDown={onKeyDown}
       onMouseMove={(e) => mouseX.set(e.clientX)}
       onMouseLeave={() => mouseX.set(Infinity)}
+      ref={shelfRef}
       className={`dock-shelf ${large ? "is-large" : ""}`}
+      style={{ "--dock-fit": fit } as React.CSSProperties}
     >
       {entries.map((entry, i) => {
         if (entry.type === "sep") return <span key={`sep-${i}`} className="dock-sep" aria-hidden="true" />;

@@ -35,11 +35,36 @@ export function WorkTop({ contentMap }: { contentMap: Record<string, string> }) 
   );
 }
 
-export function WorkBottom() {
+/** The companion for Work and About: a contact card with the ways to reach me. */
+export function ContactCard() {
   const { openItem } = useDesktop();
+  const office = profile.offices[0];
+  return (
+    <div className="duo-contact">
+      <address className="duo-contact-card">
+        <p className="duo-card-eyebrow">{profile.company}</p>
+        <p className="duo-contact-name">{profile.fullName}</p>
+        <p className="duo-card-sub">{profile.title}</p>
+        <p className="duo-contact-lines">
+          {office.street}
+          <br />
+          {office.locality}, Texas {office.postalCode}
+        </p>
+        <p className="duo-contact-lines">
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          <br />
+          <a href={`tel:+1${profile.directPhone.replace(/\D/g, "")}`} className="site-num">{profile.directPhone}</a>
+        </p>
+      </address>
+      <WorkButtons openCard={() => openById(openItem, "card")} />
+    </div>
+  );
+}
+
+function WorkButtons({ openCard }: { openCard: () => void }) {
   return (
     <div className="duo-buttons">
-      <button type="button" className="aqua-button is-large is-default" onClick={() => openById(openItem, "card")}>
+      <button type="button" className="aqua-button is-large is-default" onClick={openCard}>
         Business Card
       </button>
       <a className="aqua-button is-large" href={profile.scheduleUrl} target="_blank" rel="noopener noreferrer">

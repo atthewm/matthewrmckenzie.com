@@ -167,6 +167,15 @@ function AppScreen({
   );
 }
 
+const SPRINGBOARD_CHROME = 180;
+
+export function springboardGrid(width: number, height: number): { cols: number; rows: number } {
+  const landscape = width > height && width >= 520;
+  const cols = landscape ? 6 : 4;
+  const rows = Math.max(1, Math.min(6, Math.floor((height - SPRINGBOARD_CHROME) / ROW_HEIGHT)));
+  return { cols, rows };
+}
+
 export default function MobileView({ contentMap }: MobileViewProps) {
   const { state, openItem, closeWindow, dispatch } = useDesktop();
   const startedRef = useRef(false);
@@ -202,12 +211,20 @@ export default function MobileView({ contentMap }: MobileViewProps) {
     }
   }, [dispatch, openItem]);
 
-  // Rows per page from the screen height: status bar, dots and dock take
-  // about 170 px; each icon row is 100 px.
-  const [perPage] = useState(() => {
-    const rows = Math.max(3, Math.min(6, Math.floor((window.innerHeight - 170) / ROW_HEIGHT)));
-    return rows * 4;
-  });
+  // A page is a grid that always fits the screen, so nothing scrolls up
+  // and down: 4 columns in portrait (4 x 4 on the iPhone Duo outer screen,
+  // as on iPhone OS 1), 6 in landscape. Status bar, page dots, dock and
+  // padding take about 180 px; each icon row is 100 px.
+  const [grid, setGrid] = useState(() => springboardGrid(window.innerWidth, window.innerHeight));
+  useEffect(() => {
+    const update = () => {
+      const next = springboardGrid(window.innerWidth, window.innerHeight);
+      setGrid((g) => (g.cols === next.cols && g.rows === next.rows ? g : next));
+    };
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  const perPage = grid.cols * grid.rows;
   const pages = useMemo(() => {
     const root = getRootItems().filter((i) => !DOCK_IDS.includes(i.id));
     const more = findFSItem("more")?.children ?? [];
@@ -247,7 +264,7 @@ export default function MobileView({ contentMap }: MobileViewProps) {
       <>
       <div ref={pagerRef} className="sb-pager" onScroll={onPagerScroll}>
         {pages.map((items, p) => (
-          <div key={p} className="sb-page" aria-label={`Page ${p + 1} of ${pages.length}`} role="group">
+          <div key={p} className="sb-page" style={{ "--sb-cols": grid.cols } as React.CSSProperties} aria-label={`Page ${p + 1} of ${pages.length}`} role="group">
             {items.map((item, i) => (
               <AppTile key={item.id} item={item} index={i} onOpen={open} />
             ))}

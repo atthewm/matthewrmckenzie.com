@@ -157,6 +157,28 @@
 .site-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 4px 16px; border-radius: 999px; font: 600 14px / 1.2 var(--font-ui); border: 1px solid var(--button-border); background: var(--button); color: var(--button-text); }
 .site-btn-primary { background: var(--gel); border-color: var(--gel-border); color: var(--gel-text); text-shadow: var(--gel-text-shadow); }
 
+/* Companion and contact card: only on the second page or screen of the
+   iPhone Duo poses (see "Duo poses" below). */
+.duo-pose-only { display: none; }
+.doc-aside { background: var(--paper); padding: 0 56px; }
+.doc-aside .doc-cta { margin-top: 0; margin-bottom: 48px; }
+.doc-contact-card {
+  font-style: normal;
+  padding: 18px 20px;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--border-soft);
+  background: var(--paper-2);
+  max-width: 680px;
+}
+.doc-contact-name { font: 700 22px / 1.25 var(--font-ui); margin: 4px 0 2px; color: var(--text); }
+.doc-contact-line { font-size: 15px; line-height: 1.5; color: var(--text-2); margin: 6px 0 0; }
+.doc-companion .site-prose, .doc-companion { font-size: 15px; }
+
+@media (max-width: 640px) {
+  .doc-aside { padding: 0 18px; }
+  .doc-aside .doc-cta { margin-bottom: 32px; }
+}
+
 /* Closing contact panel */
 .doc-cta {
   margin-top: 40px;
@@ -180,3 +202,81 @@
 .brand-logo-img.is-dark { display: none; }
 :root.dark .brand-logo-img.is-light { display: none; }
 :root.dark .brand-logo-img.is-dark { display: block; }
+
+/* ============================================================================
+   DUO POSES (reading pages)
+   ============================================================================
+   iPhone Duo, half open. Sizes come from the viewport segment environment
+   variables, never a hard-coded fold. The page's content stays on the first
+   screen or page; its companion (contact card, recipe ingredients, the
+   closing panel and footer) moves to the second, and nothing sits in the
+   fold. Without the Viewport Segments API these rules never apply and the
+   single window layout above is used.
+   ============================================================================ */
+
+@media (horizontal-viewport-segments: 2) {
+  .site { padding: 0; height: 100vh; height: 100dvh; overflow: hidden; }
+  .doc-window {
+    max-width: none;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    display: grid;
+    grid-template-columns:
+      env(viewport-segment-width 0 0, 1fr)
+      calc(env(viewport-segment-left 1 0, 0px) - env(viewport-segment-right 0 0, 0px))
+      env(viewport-segment-width 1 0, 1fr);
+    grid-template-rows: 100%;
+  }
+  .doc-main-pane { grid-column: 1; }
+  .doc-side-pane { grid-column: 3; }
+  .doc-body { padding: 20px 18px 32px; }
+  .doc-aside { padding: 20px 18px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .doc-aside .doc-cta { margin-bottom: 0; }
+  .doc-title { inset: 0 64px; }
+  .doc-nav { order: 3; flex-basis: 100%; }
+}
+
+@media (vertical-viewport-segments: 2) {
+  .site { padding: 0; height: 100vh; height: 100dvh; overflow: hidden; }
+  .doc-window {
+    max-width: none;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows:
+      env(viewport-segment-height 0 0, 1fr)
+      calc(env(viewport-segment-top 0 1, 0px) - env(viewport-segment-bottom 0 0, 0px))
+      env(viewport-segment-height 0 1, 1fr);
+  }
+  .doc-main-pane { grid-row: 1; }
+  .doc-side-pane { grid-row: 3; }
+  .doc-body { padding: 24px 32px 32px; }
+  .doc-aside {
+    padding: 16px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .doc-aside .doc-cta { margin-bottom: 0; }
+}
+
+@media (horizontal-viewport-segments: 2), (vertical-viewport-segments: 2) {
+  .doc-window { background: #000; }
+  .doc-main-pane, .doc-side-pane {
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--window-bg);
+  }
+  .doc-main-pane > main, .doc-side-pane > aside { flex: 1; min-height: 0; overflow: auto; }
+  .doc-side-pane { background: var(--paper); }
+  .duo-pose-only { display: block; }
+  [data-companion-source] { display: none; }
+  .doc-aside .doc-cta, .doc-contact-card { max-width: none; }
+}

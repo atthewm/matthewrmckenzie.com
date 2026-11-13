@@ -21,7 +21,7 @@ import PhotoBoothApp from "@/components/apps/PhotoBoothApp";
 import Trackpad from "./Trackpad";
 import {
   WorkTop,
-  WorkBottom,
+  ContactCard,
   HealthTop,
   HealthBottom,
   RecipeTop,
@@ -42,9 +42,13 @@ import {
 // side by side, never across the fold.
 // ============================================================================
 
-type AppKey = "desktop" | "turntable" | "work" | "health" | "recipes" | "food-room" | "chess" | "photo-booth" | "other";
+type AppKey = "desktop" | "turntable" | "work" | "about" | "health" | "recipes" | "food-room" | "chess" | "photo-booth" | "other";
 
 const WORK_IDS = new Set(["work", "resume", "work-overview"]);
+const ABOUT_IDS = new Set(["about", "card", "contact"]);
+/** Book pose reads content left, companion right. Where the laptop pose puts
+ * the companion on top (the record, the chess clocks), the halves swap. */
+const BOOK_SWAP = new Set<AppKey>(["turntable", "chess"]);
 const HEALTH_IDS = new Set(["health", "health-overview", "life", "whoop-dashboard", "nutrition", "top-foods", "whoop-splits", "get-whoop"]);
 const RECIPE_SLUGS = new Set(recipes.map((r) => r.slug));
 
@@ -52,6 +56,7 @@ function classify(fsItemId: string | undefined): AppKey {
   if (!fsItemId) return "desktop";
   if (fsItemId === "turntable") return "turntable";
   if (WORK_IDS.has(fsItemId)) return "work";
+  if (ABOUT_IDS.has(fsItemId)) return "about";
   if (HEALTH_IDS.has(fsItemId) || fsItemId.startsWith("whoop-split-")) return "health";
   if (fsItemId === "recipes" || RECIPE_SLUGS.has(fsItemId)) return "recipes";
   if (fsItemId === "food-room") return "food-room";
@@ -84,6 +89,12 @@ export default function DuoLayout({ duo, contentMap }: { duo: Exclude<DuoState, 
         return <TurntableDeck />;
       case "work":
         return <WorkTop contentMap={contentMap} />;
+      case "about":
+        return focused ? (
+          <div className="duo-app-frame">
+            <WindowContent windowState={focused} contentMap={contentMap} />
+          </div>
+        ) : null;
       case "health":
         return <HealthTop />;
       case "recipes":
@@ -110,7 +121,8 @@ export default function DuoLayout({ duo, contentMap }: { duo: Exclude<DuoState, 
       case "turntable":
         return <TurntablePlaylist compact />;
       case "work":
-        return <WorkBottom />;
+      case "about":
+        return <ContactCard />;
       case "health":
         return <HealthBottom />;
       case "recipes":
@@ -127,23 +139,26 @@ export default function DuoLayout({ duo, contentMap }: { duo: Exclude<DuoState, 
   })();
 
   const t = reduce ? FADE : springs.window;
+  const swap = duo.mode === "book" && BOOK_SWAP.has(app) && bottom != null;
+  const firstContent = swap ? bottom : top;
+  const secondContent = swap ? top : bottom;
 
   return (
     <div className="duo-root" data-duo={duo.mode} data-duo-forced={duo.forced || undefined}>
       <h2 className="sr-only">Two screen layout</h2>
-      <section className="duo-region duo-top" style={regionStyle(first)} aria-label={`Top screen: ${appName}`}>
+      <section className="duo-region duo-top" style={regionStyle(first)} aria-label={`${duo.mode === "book" ? "Left" : "Top"} screen: ${appName}`}>
         {app === "desktop" ? (
           <div className="duo-desktop">
             <Desktop contentMap={contentMap} hideDock />
           </div>
         ) : (
           <motion.div key={app} className="duo-fill" initial={{ opacity: 0.4, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={t}>
-            {top}
+            {firstContent}
           </motion.div>
         )}
       </section>
 
-      <section className="duo-region duo-bottom metal" style={regionStyle(second)} aria-label="Bottom screen">
+      <section className="duo-region duo-bottom metal" style={regionStyle(second)} aria-label={duo.mode === "book" ? "Right screen" : "Bottom screen"}>
         <div className="duo-bottom-bar">
           <button
             type="button"
@@ -161,9 +176,9 @@ export default function DuoLayout({ duo, contentMap }: { duo: Exclude<DuoState, 
           )}
         </div>
 
-        {bottom ? (
+        {secondContent ? (
           <motion.div key={app} className="duo-bottom-body" initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} transition={t}>
-            {bottom}
+            {secondContent}
           </motion.div>
         ) : (
           <div className="duo-bottom-body duo-desk">
@@ -186,7 +201,7 @@ export default function DuoLayout({ duo, contentMap }: { duo: Exclude<DuoState, 
                 ))
               )}
             </div>
-            {app === "desktop" && <Trackpad topRect={first} />}
+            {app === "desktop" && duo.mode === "laptop" && <Trackpad topRect={first} />}
           </div>
         )}
       </section>
