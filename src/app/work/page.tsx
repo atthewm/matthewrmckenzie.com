@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses. AI operations tooling.",
   alternates: { canonical: "https://matthewrmckenzie.com/work" },
   openGraph: {
+    images: ["/opengraph-image"],
     title: "Work | Capital Formation, Investor Relations, Growth Strategy",
     description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses.",
   },

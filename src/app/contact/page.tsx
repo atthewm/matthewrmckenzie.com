@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description: "Reach Matthew McKenzie about capital formation, investor partnerships, growth strategy, or AI operations tooling. Schedule a call or send a message.",
   alternates: { canonical: "https://matthewrmckenzie.com/contact" },
   openGraph: {
+    images: ["/opengraph-image"],
     title: "Contact | Investor Relations, Capital Formation, Collaboration",
     description: "Reach Matthew McKenzie about capital formation, investor partnerships, growth strategy, or AI operations tooling. Schedule a call or send a message.",
   },
