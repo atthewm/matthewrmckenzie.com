@@ -103,7 +103,17 @@ async function checks(page) {
       if (foldRect) {
         const r = el.getBoundingClientRect();
         const hit = r.right > foldRect.x0 && r.left < foldRect.x1 && r.bottom > foldRect.y0 && r.top < foldRect.y1;
-        if (hit && r.top >= 0 && r.bottom <= innerHeight) underFold.push(label);
+        // Scrolled out of a pane that ends at the fold: clipped, not under it.
+        let clipped = false;
+        for (let p = el.parentElement; p && !clipped; p = p.parentElement) {
+          const o = getComputedStyle(p);
+          if (/(hidden|auto|scroll|clip)/.test(o.overflow + o.overflowX + o.overflowY)) {
+            const pr = p.getBoundingClientRect();
+            const paneHits = pr.right > foldRect.x0 && pr.left < foldRect.x1 && pr.bottom > foldRect.y0 && pr.top < foldRect.y1;
+            if (!paneHits) clipped = true;
+          }
+        }
+        if (hit && !clipped) underFold.push(label);
       }
     }
     out.smallText = small.slice(0, 12);
@@ -232,7 +242,8 @@ await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 const targets = ROUTES.map((r) => ({ name: r, url: r }));
 if (STATES) for (const a of APP_STATES) targets.push({ name: `/?open=${a}`, url: `/?open=${a}`, app: true });
-for (const theme of ["light", "dark"]) {
+const THEMES = opt("theme") ? [opt("theme")] : ["light", "dark"];
+for (const theme of THEMES) {
   for (const [viewName, v] of Object.entries(VIEWS)) {
     for (const t of targets) await shot(browser, viewName, v, theme, t, report);
     await writeFile(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));

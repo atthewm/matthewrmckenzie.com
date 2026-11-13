@@ -105,12 +105,17 @@
   background: rgba(28, 29, 32, 0.85);
   color: #f4f2ee;
   font-family: var(--site-monofont);
-  font-size: clamp(9px, 1vw, 11px);
+  font-size: clamp(12px, 1vw, 13px);
+  /* Hover and focus label: hidden (not just transparent) until needed. */
   opacity: 0;
-  transition: opacity var(--duration-fast) ease;
+  visibility: hidden;
+  transition: opacity var(--duration-fast) ease, visibility 0s linear var(--duration-fast);
 }
 .food-room-item:hover .food-room-label,
-.food-room-item:focus-visible .food-room-label { opacity: 1; }
+.food-room-item:focus-visible .food-room-label { opacity: 1; visibility: visible; transition-delay: 0s; }
+@media (prefers-reduced-motion: reduce) {
+  .food-room-label { transition: none; }
+}
 
 .food-room-prompt {
   position: absolute;
