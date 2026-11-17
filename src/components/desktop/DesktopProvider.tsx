@@ -108,12 +108,9 @@ export default function DesktopProvider({ children }: { children: React.ReactNod
     toggleMaximize,
   };
 
-  // Don't render until hydrated to prevent flash
-  if (!hydrated) {
-    return (
-      <div className="fixed inset-0" style={{ background: "#e8e8e8" }} />
-    );
-  }
+  // Don't render until hydrated to prevent flash. The server-rendered home
+  // intro stays visible underneath until the desktop is ready to cover it.
+  if (!hydrated) return null;
 
   return (
     <DesktopContext.Provider value={contextValue}>

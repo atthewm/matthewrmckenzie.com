@@ -5,12 +5,12 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
-  title: "Work | Capital Formation, Investor Relations, Growth Strategy",
-  description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses. AI operations tooling.",
+  title: "Work",
+  description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses.",
   alternates: { canonical: "https://matthewrmckenzie.com/work" },
   openGraph: {
     images: ["/opengraph-image"],
-    title: "Work | Capital Formation, Investor Relations, Growth Strategy",
+    title: "Work | Matthew McKenzie",
     description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses.",
   },
 };

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { fileSystem, findFSItem, type FSItem } from "@/data/fs";
+import { publicTree, findFSItem, type FSItem } from "@/data/fs";
 
 // ============================================================================
 // TERMINAL APP (Mac OS X 10.3 Panther Style)
@@ -36,7 +36,9 @@ function buildPathMap(
 }
 
 const ROOT_PATH = "/Users/matt/Desktop";
-const pathMap = buildPathMap(fileSystem);
+// Owner-only apps (Life) are left out of the virtual disk for everyone.
+const terminalTree = publicTree();
+const pathMap = buildPathMap(terminalTree);
 
 function resolvePath(current: string, target: string): string {
   if (target === "/") return ROOT_PATH;
@@ -56,7 +58,7 @@ function resolvePath(current: string, target: string): string {
 }
 
 function getChildren(path: string): FSItem[] {
-  if (path === ROOT_PATH) return fileSystem;
+  if (path === ROOT_PATH) return terminalTree;
   const entry = pathMap.get(path);
   return entry?.children ?? [];
 }

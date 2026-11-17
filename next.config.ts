@@ -1,10 +1,24 @@
 import type { NextConfig } from "next";
 
+// Old URLs that still get requests. Each one answers with a single 308 hop.
+// The site has no projects section; that work now lives on /work.
+const LEGACY_REDIRECTS: ReadonlyArray<{ source: string; destination: string }> = [
+  { source: "/health", destination: "/" },
+  { source: "/kitchen", destination: "/" },
+  { source: "/food-room", destination: "/" },
+  { source: "/desktop", destination: "/" },
+  { source: "/hobbies", destination: "/about" },
+  { source: "/projects", destination: "/work" },
+];
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+  },
+  async redirects() {
+    return LEGACY_REDIRECTS.map((redirect) => ({ ...redirect, permanent: true }));
   },
   async headers() {
     return [

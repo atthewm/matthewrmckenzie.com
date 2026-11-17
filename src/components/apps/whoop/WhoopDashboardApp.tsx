@@ -17,6 +17,7 @@ import {
   whoopReferral,
   type WhoopScreenshot,
 } from "@/data/whoop/dashboard";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 
 // ============================================================================
 // WHOOP DASHBOARD -- Mac OS X 10.3 Panther Aesthetic
@@ -28,13 +29,15 @@ import {
 // ---------------------------------------------------------------------------
 // Types for live API data
 // ---------------------------------------------------------------------------
+// Visitors get the public view from /api/whoop/data: the headline scores and
+// the day, strain and calories of recent workouts (src/lib/whoop/public.ts).
+// The owner gets the full payload. Every detail field is therefore optional
+// here, and a section only renders when its data is present.
 
 interface LiveDashboardData {
   connected: true;
   lastSynced: string;
   profile: {
-    user_id: number;
-    email: string;
     first_name: string;
     last_name: string;
   } | null;
@@ -44,39 +47,25 @@ interface LiveDashboardData {
     max_heart_rate: number;
   } | null;
   latestRecovery: {
-    cycle_id: number;
-    sleep_id: number;
-    user_id: number;
-    score_state: string;
     score?: {
-      user_calibrating: boolean;
       recovery_score: number;
-      resting_heart_rate: number;
-      hrv_rmssd_milli: number;
+      resting_heart_rate?: number;
+      hrv_rmssd_milli?: number;
       spo2_percentage?: number;
       skin_temp_celsius?: number;
     };
   } | null;
   latestCycle: {
-    id: number;
-    start: string;
-    end: string | null;
-    score_state: string;
     score?: {
       strain: number;
       kilojoule: number;
-      average_heart_rate: number;
-      max_heart_rate: number;
+      average_heart_rate?: number;
+      max_heart_rate?: number;
     };
   } | null;
   latestSleep: {
-    id: number;
-    start: string;
-    end: string;
-    score_state: string;
-    nap: boolean;
     score?: {
-      stage_summary: {
+      stage_summary?: {
         total_in_bed_time_milli: number;
         total_awake_time_milli: number;
         total_light_sleep_time_milli: number;
@@ -85,7 +74,7 @@ interface LiveDashboardData {
         sleep_cycle_count: number;
         disturbance_count: number;
       };
-      sleep_needed: {
+      sleep_needed?: {
         baseline_milli: number;
         need_from_sleep_debt_milli: number;
         need_from_recent_strain_milli: number;
@@ -99,16 +88,14 @@ interface LiveDashboardData {
   } | null;
   recentWorkouts: Array<{
     id: number;
-    start: string;
-    end: string;
-    sport_id: number;
-    score_state: string;
+    /** Full payload: when the workout began. */
+    start?: string;
+    /** Public view: the calendar day only, YYYY-MM-DD. */
+    day?: string;
     score?: {
       strain: number;
-      average_heart_rate: number;
-      max_heart_rate: number;
       kilojoule: number;
-      percent_recorded: number;
+      max_heart_rate?: number;
     };
   }>;
 }
@@ -140,6 +127,15 @@ function formatTimeAgo(isoString: string): string {
   if (hrs < 24) return `${hrs}h ago`;
   const days = Math.floor(hrs / 24);
   return `${days}d ago`;
+}
+
+/** "Nov 16" from a full timestamp (owner) or a bare YYYY-MM-DD day (public). */
+function workoutDateLabel(workout: { start?: string; day?: string }): string {
+  const format = (date: Date) => date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  if (workout.start) return format(new Date(workout.start));
+  const [year, month, day] = (workout.day ?? "").split("-").map(Number);
+  // Built from parts so the day is not shifted by the viewer's time zone.
+  return year && month && day ? format(new Date(year, month - 1, day)) : "--";
 }
 
 function metersToFeetInches(m: number): string {
@@ -393,6 +389,12 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
   const cycle = latestCycle?.score;
   const sleep = latestSleep?.score;
   const recov = recovery ? recoveryLabel(recovery.recovery_score) : null;
+  // The public view has scores only, so the detail tables stay hidden there.
+  const hasRecoveryDetails = recovery?.resting_heart_rate != null || recovery?.hrv_rmssd_milli != null;
+  const hasStrainDetails = cycle?.average_heart_rate != null || cycle?.max_heart_rate != null;
+  const stages = sleep?.stage_summary;
+  const sleepNeeded = sleep?.sleep_needed;
+  const showMaxHr = recentWorkouts.some((w) => w.score?.max_heart_rate != null);
 
   return (
     <div>
@@ -453,7 +455,7 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
       </div>
 
       {/* Recovery Details */}
-      {recovery && (
+      {recovery && hasRecoveryDetails && (
         <>
           <SectionHeader>Recovery Details</SectionHeader>
           <DetailCard>
@@ -461,16 +463,20 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
               label="Recovery Score"
               value={`${Math.round(recovery.recovery_score)}%`}
             />
-            <DetailRow
-              label="Resting Heart Rate"
-              value={`${Math.round(recovery.resting_heart_rate)} bpm`}
-              mono
-            />
-            <DetailRow
-              label="Heart Rate Variability"
-              value={`${Math.round(recovery.hrv_rmssd_milli)} ms`}
-              mono
-            />
+            {recovery.resting_heart_rate != null && (
+              <DetailRow
+                label="Resting Heart Rate"
+                value={`${Math.round(recovery.resting_heart_rate)} bpm`}
+                mono
+              />
+            )}
+            {recovery.hrv_rmssd_milli != null && (
+              <DetailRow
+                label="Heart Rate Variability"
+                value={`${Math.round(recovery.hrv_rmssd_milli)} ms`}
+                mono
+              />
+            )}
             {recovery.spo2_percentage != null && (
               <DetailRow
                 label="Blood Oxygen (SpO2)"
@@ -490,7 +496,7 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
       )}
 
       {/* Strain Details */}
-      {cycle && (
+      {cycle && hasStrainDetails && (
         <>
           <SectionHeader>Strain Details</SectionHeader>
           <DetailCard>
@@ -504,22 +510,26 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
               value={`${Math.round(cycle.kilojoule * 0.239006)} kcal`}
               mono
             />
-            <DetailRow
-              label="Average Heart Rate"
-              value={`${Math.round(cycle.average_heart_rate)} bpm`}
-              mono
-            />
-            <DetailRow
-              label="Max Heart Rate"
-              value={`${Math.round(cycle.max_heart_rate)} bpm`}
-              mono
-            />
+            {cycle.average_heart_rate != null && (
+              <DetailRow
+                label="Average Heart Rate"
+                value={`${Math.round(cycle.average_heart_rate)} bpm`}
+                mono
+              />
+            )}
+            {cycle.max_heart_rate != null && (
+              <DetailRow
+                label="Max Heart Rate"
+                value={`${Math.round(cycle.max_heart_rate)} bpm`}
+                mono
+              />
+            )}
           </DetailCard>
         </>
       )}
 
       {/* Sleep Details */}
-      {sleep && (
+      {sleep && stages && (
         <>
           <SectionHeader>Sleep Details</SectionHeader>
           <DetailCard>
@@ -546,43 +556,43 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
             )}
             <DetailRow
               label="Time in Bed"
-              value={msToHours(sleep.stage_summary.total_in_bed_time_milli)}
+              value={msToHours(stages.total_in_bed_time_milli)}
               mono
             />
             <DetailRow
               label="Awake Time"
-              value={msToHours(sleep.stage_summary.total_awake_time_milli)}
+              value={msToHours(stages.total_awake_time_milli)}
               mono
             />
             <DetailRow
               label="Light Sleep"
               value={msToHours(
-                sleep.stage_summary.total_light_sleep_time_milli
+                stages.total_light_sleep_time_milli
               )}
               mono
             />
             <DetailRow
               label="Deep (SWS) Sleep"
               value={msToHours(
-                sleep.stage_summary.total_slow_wave_sleep_time_milli
+                stages.total_slow_wave_sleep_time_milli
               )}
               mono
             />
             <DetailRow
               label="REM Sleep"
               value={msToHours(
-                sleep.stage_summary.total_rem_sleep_time_milli
+                stages.total_rem_sleep_time_milli
               )}
               mono
             />
             <DetailRow
               label="Sleep Cycles"
-              value={String(sleep.stage_summary.sleep_cycle_count)}
+              value={String(stages.sleep_cycle_count)}
               mono
             />
             <DetailRow
               label="Disturbances"
-              value={String(sleep.stage_summary.disturbance_count)}
+              value={String(stages.disturbance_count)}
               mono
             />
             {sleep.respiratory_rate != null && (
@@ -592,17 +602,17 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
                 mono
               />
             )}
-            <DetailRow
-              label="Sleep Need (Baseline)"
-              value={msToHours(sleep.sleep_needed.baseline_milli)}
-              mono
-            />
-            {sleep.sleep_needed.need_from_sleep_debt_milli > 0 && (
+            {sleepNeeded && (
+              <DetailRow
+                label="Sleep Need (Baseline)"
+                value={msToHours(sleepNeeded.baseline_milli)}
+                mono
+              />
+            )}
+            {sleepNeeded && sleepNeeded.need_from_sleep_debt_milli > 0 && (
               <DetailRow
                 label="Sleep Debt Need"
-                value={msToHours(
-                  sleep.sleep_needed.need_from_sleep_debt_milli
-                )}
+                value={msToHours(sleepNeeded.need_from_sleep_debt_milli)}
                 mono
               />
             )}
@@ -658,9 +668,11 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
               <span className="text-[10px] font-semibold text-desktop-text-secondary w-[25%] text-right">
                 Calories
               </span>
-              <span className="text-[10px] font-semibold text-desktop-text-secondary w-[25%] text-right">
-                Max HR
-              </span>
+              {showMaxHr && (
+                <span className="text-[10px] font-semibold text-desktop-text-secondary w-[25%] text-right">
+                  Max HR
+                </span>
+              )}
             </div>
             {recentWorkouts.map((w, i) => (
               <div
@@ -675,10 +687,7 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
                 }}
               >
                 <span className="text-[11px] text-desktop-text w-[30%]">
-                  {new Date(w.start).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {workoutDateLabel(w)}
                 </span>
                 <span
                   className="text-[11px] font-semibold text-desktop-text w-[20%] text-right"
@@ -700,15 +709,17 @@ function LiveDashboard({ data }: { data: LiveDashboardData }) {
                     ? `${Math.round(w.score.kilojoule * 0.239006)}`
                     : "--"}
                 </span>
-                <span
-                  className="text-[11px] text-desktop-text w-[25%] text-right"
-                  style={{
-                    fontFamily: "Menlo, Monaco, monospace",
-                    fontSize: 10,
-                  }}
-                >
-                  {w.score ? `${w.score.max_heart_rate}` : "--"}
-                </span>
+                {showMaxHr && (
+                  <span
+                    className="text-[11px] text-desktop-text w-[25%] text-right"
+                    style={{
+                      fontFamily: "Menlo, Monaco, monospace",
+                      fontSize: 10,
+                    }}
+                  >
+                    {w.score?.max_heart_rate != null ? `${w.score.max_heart_rate}` : "--"}
+                  </span>
+                )}
               </div>
             ))}
           </DetailCard>
@@ -768,7 +779,7 @@ function StaticDashboard({
       })}
 
       <p className="text-[9px] text-desktop-text-secondary text-center pt-3 pb-4">
-        Source: WHOOP app screenshots (Feb 2026)
+        Snapshot from WHOOP app screenshots, February 2026
       </p>
     </>
   );
@@ -783,11 +794,15 @@ export default function WhoopDashboardApp() {
   const [dashData, setDashData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [disconnecting, setDisconnecting] = useState(false);
+  const { owner, ready } = useOwnerSession();
 
   const fetchData = useCallback(async () => {
+    // Wait until we know who is looking: the owner reads the full feed, which
+    // is never cached; everyone else reads the cached public view.
+    if (!ready) return;
     try {
       setLoading(true);
-      const res = await fetch("/api/whoop/data");
+      const res = await fetch(owner ? "/api/whoop/data?scope=owner" : "/api/whoop/data");
       if (res.ok) {
         const data: DashboardResponse = await res.json();
         setDashData(data);
@@ -799,7 +814,7 @@ export default function WhoopDashboardApp() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [owner, ready]);
 
   useEffect(() => {
     fetchData();

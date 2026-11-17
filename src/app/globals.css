@@ -324,6 +324,11 @@
   }
 }
 
+/* Home intro (HomeIntro.tsx): the first paint of "/", in a fixed layer that the
+   desktop covers once it mounts. Covered links leave the tab order. */
+.home-intro { position: fixed; inset: 0; overflow-y: auto; }
+html[data-desktop-ready] .home-intro-nav { visibility: hidden; }
+
 .site-display { font-family: var(--font-display), Georgia, serif; font-weight: 400; }
 .site-mono { font-family: var(--font-mono), ui-monospace, monospace; }
 .site-eyebrow {

@@ -1,26 +1,45 @@
 // ============================================================================
 // GET /api/whoop/data
 // ============================================================================
-// Returns aggregated WHOOP dashboard data. Serves cached data when fresh,
-// otherwise fetches from the WHOOP API. Returns { connected: false } when
-// no valid tokens exist.
+// WHOOP dashboard data, served from the hourly cache when fresh.
+//
+//   /api/whoop/data              the public view: headline scores only (see
+//                                src/lib/whoop/public.ts). Ignores cookies, so
+//                                the CDN can hold it for every visitor.
+//   /api/whoop/data?scope=owner  the full payload, for the owner cookie only.
+//                                Never cached.
+//
+// Two URLs rather than one that varies by cookie: a shared cache can then
+// never hand the owner's data to a visitor, whatever it keys on.
 // ============================================================================
 
 import { NextResponse } from "next/server";
 import { fetchDashboardData } from "@/lib/whoop/client";
+import { toPublicWhoop } from "@/lib/whoop/public";
+import { isOwnerRequest, NO_STORE } from "@/lib/owner";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+const PUBLIC_CACHE = { "Cache-Control": "public, s-maxage=900, stale-while-revalidate=3600" } as const;
+
+export async function GET(request: Request) {
+  const ownerScope = new URL(request.url).searchParams.get("scope") === "owner";
+  if (ownerScope && !isOwnerRequest(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403, headers: NO_STORE });
+  }
+
   try {
     const data = await fetchDashboardData();
-    return NextResponse.json(data);
+    return ownerScope
+      ? NextResponse.json(data, { headers: NO_STORE })
+      : NextResponse.json(toPublicWhoop(data), { headers: PUBLIC_CACHE });
   } catch (error) {
+    // The detail stays in the server log: it can name configuration.
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("WHOOP data fetch error:", message);
     return NextResponse.json(
-      { connected: false, error: message },
-      { status: 500 },
+      { connected: false, error: "WHOOP data is unavailable" },
+      { status: 500, headers: NO_STORE },
     );
   }
 }

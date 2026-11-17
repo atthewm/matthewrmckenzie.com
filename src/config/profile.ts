@@ -4,9 +4,11 @@
 // Every page, metadata block, schema object, and the digital business card
 // reads from here. Update the role in one place and the whole site follows.
 //
-// PRIVACY NOTE: `mobile` is deliberately NOT rendered anywhere in the public
-// HTML. It is written only into the downloadable vCard, so people who meet
-// Matthew and save the contact get it, while scrapers crawling the page do not.
+// PRIVACY NOTE: the personal mobile number is not in this file, or anywhere
+// else in the repository (which is public). It comes from a server
+// environment variable, read only by the vCard route through
+// src/lib/owner-contact.ts, so it never reaches page HTML or client
+// JavaScript. Everything below is safe to render publicly.
 // ============================================================================
 
 export const profile = {
@@ -21,16 +23,14 @@ export const profile = {
   email: "mckenzie@menloequities.com",
   /** Direct office line: safe to render publicly. */
   directPhone: "512-277-6116",
-  /** Personal mobile: vCard only. Never render in public HTML. */
-  mobile: "904-434-4444",
 
   offices: [
     {
       city: "Austin",
-      street: "816 Congress Avenue, Suite 1130",
+      street: "510 Baylor Street",
       locality: "Austin",
       region: "TX",
-      postalCode: "78701",
+      postalCode: "78703",
     },
     {
       city: "Menlo Park",
@@ -70,8 +70,7 @@ export const previousCompany = {
   end: "2026",
 } as const;
 
-/** Full E.164 forms for tel: links and vCard fields. */
+/** Full E.164 form of the public office line, for tel: links and the vCard. */
 export const phoneE164 = {
   direct: "+15122776116",
-  mobile: "+19044344444",
 } as const;
