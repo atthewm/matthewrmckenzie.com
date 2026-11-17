@@ -8,65 +8,86 @@ import { OWNER_COOKIE, ownerCookieValue } from "@/lib/owner";
 
 const OWNER_SECRET = "owner-secret-owner-secret-owner-secret-00";
 
-/** A full WHOOP payload with made-up values in every private field. */
+/**
+ * A full WHOOP payload. Every value is an obvious placeholder (a test name,
+ * round numbers), never anyone's real data. The private values are also
+ * distinct from the public ones, so the leak test below can tell them apart.
+ */
 const FULL = {
   connected: true,
   lastSynced: "2026-11-17T11:00:00.000Z",
-  profile: { user_id: 987654, email: "private@example.com", first_name: "Matthew", last_name: "McKenzie" },
-  bodyMeasurement: { height_meter: 1.83, weight_kilogram: 81.6, max_heart_rate: 183 },
+  profile: { user_id: 1000, email: "test@example.com", first_name: "Test", last_name: "User" },
+  bodyMeasurement: { height_meter: 1.5, weight_kilogram: 50, max_heart_rate: 200 },
   latestRecovery: {
-    cycle_id: 111,
-    sleep_id: 222,
-    user_id: 987654,
+    cycle_id: 101,
+    sleep_id: 202,
+    user_id: 1000,
     score_state: "SCORED",
-    score: { user_calibrating: false, recovery_score: 71, resting_heart_rate: 44, hrv_rmssd_milli: 61.5, spo2_percentage: 97.2, skin_temp_celsius: 33.9 },
+    score: { user_calibrating: false, recovery_score: 70, resting_heart_rate: 40, hrv_rmssd_milli: 60, spo2_percentage: 95, skin_temp_celsius: 30 },
   },
   latestCycle: {
-    id: 111,
-    user_id: 987654,
-    start: "2026-11-17T05:30:00.000Z",
+    id: 101,
+    user_id: 1000,
+    start: "2026-11-17T05:00:00.000Z",
     end: null,
     score_state: "SCORED",
-    score: { strain: 12.4, kilojoule: 9000, average_heart_rate: 62, max_heart_rate: 151 },
+    score: { strain: 10, kilojoule: 8000, average_heart_rate: 65, max_heart_rate: 150 },
   },
   latestSleep: {
-    id: 222,
-    user_id: 987654,
-    start: "2026-11-16T04:10:00.000Z",
-    end: "2026-11-16T11:40:00.000Z",
+    id: 202,
+    user_id: 1000,
+    start: "2026-11-16T04:00:00.000Z",
+    end: "2026-11-16T12:00:00.000Z",
     score_state: "SCORED",
     nap: false,
     score: {
       stage_summary: {
-        total_in_bed_time_milli: 27000000,
+        total_in_bed_time_milli: 28800000,
         total_awake_time_milli: 1800000,
         total_no_data_time_milli: 0,
-        total_light_sleep_time_milli: 12000000,
-        total_slow_wave_sleep_time_milli: 6000000,
+        total_light_sleep_time_milli: 14400000,
+        total_slow_wave_sleep_time_milli: 5400000,
         total_rem_sleep_time_milli: 7200000,
-        sleep_cycle_count: 5,
-        disturbance_count: 9,
+        sleep_cycle_count: 4,
+        disturbance_count: 12,
       },
-      sleep_needed: { baseline_milli: 27500000, need_from_sleep_debt_milli: 600000, need_from_recent_strain_milli: 300000, need_from_recent_nap_milli: 0 },
-      respiratory_rate: 14.8,
-      sleep_performance_percentage: 88,
-      sleep_consistency_percentage: 79,
-      sleep_efficiency_percentage: 93,
+      sleep_needed: { baseline_milli: 27000000, need_from_sleep_debt_milli: 600000, need_from_recent_strain_milli: 300000, need_from_recent_nap_milli: 0 },
+      respiratory_rate: 15,
+      sleep_performance_percentage: 90,
+      sleep_consistency_percentage: 80,
+      sleep_efficiency_percentage: 95,
     },
   },
   recentWorkouts: [
     {
-      id: 333,
-      user_id: 987654,
-      start: "2026-11-17T01:15:00.000Z",
-      end: "2026-11-17T02:05:00.000Z",
+      id: 303,
+      user_id: 1000,
+      start: "2026-11-17T01:00:00.000Z",
+      end: "2026-11-17T02:00:00.000Z",
       timezone_offset: "-06:00",
-      sport_id: 45,
+      sport_id: 1,
       score_state: "SCORED",
-      score: { strain: 9.8, average_heart_rate: 128, max_heart_rate: 171, kilojoule: 1900, percent_recorded: 100 },
+      score: { strain: 8, average_heart_rate: 120, max_heart_rate: 170, kilojoule: 2000, percent_recorded: 100 },
     },
   ],
 } as unknown as WhoopDashboardData;
+
+/** Every value in the payload that only the owner may see (0 and false are left out: too common). */
+const PRIVATE_VALUES: unknown[] = [
+  "test@example.com", "Test", "User", 1000, 1.5, 50, 200, 101, 202, 303, 1,
+  40, 60, 95, 30, 65, 150, 28800000, 1800000, 14400000, 5400000, 7200000, 4, 12,
+  27000000, 600000, 300000, 15, 80, 120, 170, 100,
+  "2026-11-17T05:00:00.000Z", "2026-11-16T04:00:00.000Z", "2026-11-16T12:00:00.000Z",
+  "2026-11-17T01:00:00.000Z", "2026-11-17T02:00:00.000Z", "-06:00", "SCORED",
+];
+
+/** Every leaf value in a parsed JSON body. */
+function leaves(value: unknown, into: unknown[] = []): unknown[] {
+  if (Array.isArray(value)) value.forEach((v) => leaves(v, into));
+  else if (value && typeof value === "object") Object.values(value).forEach((v) => leaves(v, into));
+  else into.push(value);
+  return into;
+}
 
 function get(path: string, cookie?: string): Request {
   return new Request(`https://matthewrmckenzie.com${path}`, { headers: cookie ? { cookie } : {} });
@@ -92,17 +113,21 @@ describe("GET /api/whoop/data (public view)", () => {
       lastSynced: "2026-11-17T11:00:00.000Z",
       profile: null,
       bodyMeasurement: null,
-      latestRecovery: { score: { recovery_score: 71 } },
-      latestCycle: { score: { strain: 12.4, kilojoule: 9000 } },
-      latestSleep: { score: { sleep_performance_percentage: 88 } },
-      recentWorkouts: [{ id: 0, day: "2026-11-16", score: { strain: 9.8, kilojoule: 1900 } }],
+      latestRecovery: { score: { recovery_score: 70 } },
+      latestCycle: { score: { strain: 10, kilojoule: 8000 } },
+      latestSleep: { score: { sleep_performance_percentage: 90 } },
+      recentWorkouts: [{ id: 0, day: "2026-11-16", score: { strain: 8, kilojoule: 2000 } }],
     });
   });
 
   test("leaks no private value anywhere in the body", async () => {
-    const body = await (await GET(get("/api/whoop/data"))).text();
-    for (const secret of ["private@example.com", "987654", "Matthew", "81.6", "1.83", "33.9", "97.2", "61.5", "14.8", "27000000", "T01:15", "T04:10", "\"44\"", ":44,", "171", "151", "183"]) {
-      expect(body, secret).not.toContain(secret);
+    const text = await (await GET(get("/api/whoop/data"))).text();
+    for (const word of ["test@example.com", "Test", "User", "T01:00", "T02:00", "T04:00", "T05:00", "T12:00"]) {
+      expect(text, word).not.toContain(word);
+    }
+    const values = leaves(JSON.parse(text));
+    for (const value of PRIVATE_VALUES) {
+      expect(values, String(value)).not.toContain(value);
     }
   });
 

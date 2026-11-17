@@ -23,6 +23,8 @@ export default function GatePage() {
       if (res.ok) {
         router.push("/");
         router.refresh();
+      } else if (res.status === 429) {
+        setError("Too many attempts. Try again in a few minutes.");
       } else {
         setError("Access denied");
       }

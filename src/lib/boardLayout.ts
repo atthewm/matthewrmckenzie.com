@@ -6,7 +6,7 @@
 // BoardView scales and translates the world onto the screen.
 // ============================================================================
 
-import { findFSItem, type FSItem } from "@/data/fs";
+import { findFSItem, isListed, type FSItem } from "@/data/fs";
 import { recipes as recipeIndex, RECIPE_CATEGORIES } from "@/content/recipes/index";
 
 export type CardKind = "recipe" | "split" | "paper" | "folder" | "link" | "polaroid";
@@ -84,15 +84,24 @@ export function cardKind(item: FSItem): CardKind {
   return "polaroid";
 }
 
-function pinnedRefs(folder: FSItem): FSItem[] {
+function pinnedRefs(folder: FSItem, isOwner: boolean): FSItem[] {
   return (folder.pins ?? [])
     .map((id) => findFSItem(id))
-    .filter((i): i is FSItem => Boolean(i));
+    .filter((i): i is FSItem => i !== undefined && isListed(i, isOwner));
 }
 
-/** Split a folder into labeled groups. Recipes group by category; nested folders become their own group. */
-export function buildGroups(folder: FSItem): BoardGroup[] {
-  const children = (folder.children ?? []).filter((c) => !c.hidden);
+/** What a board shows of a folder: not hidden, and not owner only unless the viewer is the owner. */
+function shown(items: FSItem[] | undefined, isOwner: boolean): FSItem[] {
+  return (items ?? []).filter((c) => !c.hidden && isListed(c, isOwner));
+}
+
+/**
+ * Split a folder into labeled groups. Recipes group by category; nested
+ * folders become their own group. Owner-only items are left out unless
+ * `isOwner` is true.
+ */
+export function buildGroups(folder: FSItem, isOwner = false): BoardGroup[] {
+  const children = shown(folder.children, isOwner);
 
   if (folder.id === "recipes") {
     const byId = new Map(children.map((c) => [c.id, c]));
@@ -105,13 +114,13 @@ export function buildGroups(folder: FSItem): BoardGroup[] {
     })).filter((g) => g.items.length > 0);
   }
 
-  const loose = [...children.filter((c) => c.type !== "folder"), ...pinnedRefs(folder)];
+  const loose = [...children.filter((c) => c.type !== "folder"), ...pinnedRefs(folder, isOwner)];
   const nested = children
     .filter((c) => c.type === "folder")
     .map((sub) => ({
       id: `sub-${sub.id}`,
       label: sub.name,
-      items: (sub.children ?? []).filter((c) => !c.hidden),
+      items: shown(sub.children, isOwner),
     }))
     .filter((g) => g.items.length > 0);
 

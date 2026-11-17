@@ -10,8 +10,19 @@ import {
 } from "./fs";
 
 describe("owner-only items", () => {
-  test("Life is marked owner only", () => {
+  test("Life and Nutrition are marked owner only", () => {
     expect(findFSItem("life")?.ownerOnly).toBe(true);
+    expect(findFSItem("nutrition")?.ownerOnly).toBe(true);
+  });
+
+  test("are exactly Life and Nutrition: the combined health and diet views", () => {
+    expect(flattenFS().filter((i) => i.ownerOnly).map((i) => i.id).sort()).toEqual(["life", "nutrition"]);
+  });
+
+  test("Nutrition is dropped from the public tree, inside Health", () => {
+    const health = publicTree().find((i) => i.id === "health");
+    expect(health?.children?.map((i) => i.id)).not.toContain("nutrition");
+    expect(health?.children?.map((i) => i.id)).toContain("whoop-dashboard");
   });
 
   test("are left out of the root listing unless the viewer is the owner", () => {

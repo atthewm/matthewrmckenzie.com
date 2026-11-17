@@ -6,11 +6,14 @@ import {
   DEFAULT_NUTRITION_TARGETS,
   type NutritionDay,
 } from "@/data/notion/types";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 
 // ============================================================================
 // NUTRITION DASHBOARD: Notion (Daily Logs) -> /api/notion/data?dataset=nutrition
 // ============================================================================
-// PRIVATE app: the API returns 401 unless the admin gate cookie is present.
+// PRIVATE app, like Life: listed only for the signed-in owner (ownerOnly in
+// fs.ts), it loads nothing for anyone else, and the API refuses the dataset
+// with a 401 without the owner cookie.
 // Mirrors the WHOOP dashboard's panel idiom and the Nutrition OS targets.
 // ============================================================================
 
@@ -71,14 +74,16 @@ function Ring({
 }
 
 export default function NutritionApp() {
+  const { owner, ready } = useOwnerSession();
   const [state, setState] = useState<LoadState>("loading");
   const [days, setDays] = useState<NutritionDay[]>([]);
   const [syncedAt, setSyncedAt] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (!owner) return;
     setState("loading");
     try {
-      const res = await fetch("/api/notion/data?dataset=nutrition");
+      const res = await fetch("/api/notion/data?dataset=nutrition", { cache: "no-store" });
       if (res.status === 401) {
         setState("private");
         return;
@@ -95,13 +100,22 @@ export default function NutritionApp() {
     } catch {
       setState("error");
     }
-  }, []);
+  }, [owner]);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  if (state === "loading") {
+  if (ready && !owner) {
+    return (
+      <Centered>
+        <Lock className="h-6 w-6 text-desktop-text-secondary" />
+        <p className="text-sm font-medium text-desktop-text">Nutrition is private.</p>
+      </Centered>
+    );
+  }
+
+  if (!ready || state === "loading") {
     return (
       <Centered>
         <RefreshCw className="h-5 w-5 animate-spin text-desktop-text-secondary" />
@@ -116,8 +130,8 @@ export default function NutritionApp() {
         <Lock className="h-6 w-6 text-desktop-text-secondary" />
         <p className="text-sm font-medium text-desktop-text">Private dashboard</p>
         <p className="max-w-[280px] text-center text-xs text-desktop-text-secondary">
-          Your daily nutrition logs are admin-only. Sign in via the gate to view
-          calories, protein, and streaks here.
+          Your daily nutrition logs are owner-only. Sign in again at the gate to
+          view calories, protein, and streaks here.
         </p>
       </Centered>
     );

@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 // OWNER SESSION (client)
 // ============================================================================
 // Tells the desktop whether this browser is signed in as Matt, so owner-only
-// things (the Life app, the full WHOOP feed, guestbook moderation) can show.
+// things (the Life and Nutrition apps, the full WHOOP feed, guestbook
+// moderation) can show.
 //
 // The real cookies are httpOnly and invisible here. Signing in at /gate also
 // sets a readable hint cookie; only browsers that carry it ask /api/auth who
@@ -17,7 +18,7 @@ import { useEffect, useState } from "react";
 export interface OwnerSession {
   /** Carries the admin cookie: guestbook moderation, private Notion fields. */
   admin: boolean;
-  /** Carries the owner cookie: Life, the full WHOOP feed, WHOOP controls. */
+  /** Carries the owner cookie: Life, Nutrition, the full WHOOP feed, WHOOP controls. */
   owner: boolean;
 }
 

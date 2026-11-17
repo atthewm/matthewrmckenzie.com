@@ -12,10 +12,7 @@ export function getNotionToken(): string | null {
   return process.env.NOTION_TOKEN || null;
 }
 
-/** Shared secret that protects the /api/notion/sync endpoint. */
-export function getCronSecret(): string | null {
-  return process.env.NOTION_SYNC_SECRET || null;
-}
+// /api/notion/sync is guarded by CRON_SECRET alone (see that route).
 
 export function isNotionConfigured(): boolean {
   return Boolean(getNotionToken());

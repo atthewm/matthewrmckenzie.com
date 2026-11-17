@@ -1,13 +1,19 @@
 // ============================================================================
 // POST/GET /api/notion/sync : scheduled Notion -> Supabase sync
 // ============================================================================
-// Triggered by Vercel Cron (see vercel.json) or manually with the shared
-// secret. Protected so the public cannot trigger expensive syncs.
+// Triggered by Vercel Cron (see vercel.json) or by hand. Every request, the
+// status report included, must carry `Authorization: Bearer <CRON_SECRET>`,
+// which is what Vercel sends on each cron run when CRON_SECRET is set on the
+// project. It is compared in constant time. Nothing else is accepted: not an
+// x-vercel-cron header (anyone can send one), and not a secret in the query
+// string (query strings end up in logs). With CRON_SECRET unset or shorter
+// than 16 characters every request is refused.
 //
 //   Manual:  curl -X POST https://matthewrmckenzie.com/api/notion/sync \
-//              -H "Authorization: Bearer $NOTION_SYNC_SECRET"
+//              -H "Authorization: Bearer $CRON_SECRET"
 //   One DB:  .../api/notion/sync?only=films
 //   Rebuild: .../api/notion/sync?mode=full
+//   Status:  .../api/notion/sync?status=1
 //
 // The scheduled run is incremental: each dataset asks Notion only for rows
 // edited since its last successful run. Once a week (and on the first run)
@@ -16,7 +22,8 @@
 // ============================================================================
 
 import { NextResponse } from "next/server";
-import { getCronSecret, isNotionConfigured } from "@/lib/notion/config";
+import { safeEqual } from "@/lib/cookies";
+import { isNotionConfigured } from "@/lib/notion/config";
 import {
   getServiceClient,
   readRecentRuns,
@@ -35,21 +42,18 @@ export const dynamic = "force-dynamic";
 // Incremental runs finish in seconds.
 export const maxDuration = 300;
 
+const MIN_CRON_SECRET_LENGTH = 16;
+const NO_STORE = { "Cache-Control": "private, no-store" } as const;
+
+/** Vercel's documented cron guard, in constant time, and nothing else. */
 function authorized(req: Request): boolean {
-  const auth = req.headers.get("authorization") || "";
+  const secret = process.env.CRON_SECRET ?? "";
+  if (secret.length < MIN_CRON_SECRET_LENGTH) return false;
+  return safeEqual(req.headers.get("authorization") ?? "", `Bearer ${secret}`);
+}
 
-  // Vercel Cron requests carry this header and originate from Vercel infra;
-  // `x-vercel-*` headers are stripped from inbound public requests.
-  if (req.headers.get("x-vercel-cron")) return true;
-
-  // Vercel also signs cron invocations with CRON_SECRET when it is set.
-  const vercelSecret = process.env.CRON_SECRET;
-  if (vercelSecret && auth === `Bearer ${vercelSecret}`) return true;
-
-  const secret = getCronSecret();
-  if (!secret) return false; // no secret configured -> refuse manual triggers
-  const fromQuery = new URL(req.url).searchParams.get("secret");
-  return auth === `Bearer ${secret}` || fromQuery === secret;
+function json(body: unknown, status = 200) {
+  return NextResponse.json(body, { status, headers: NO_STORE });
 }
 
 /**
@@ -69,7 +73,7 @@ async function recordConfigFailure(error: string) {
 
 async function handle(req: Request) {
   if (!authorized(req)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    return json({ error: "unauthorized" }, 401);
   }
 
   const url = new URL(req.url);
@@ -77,33 +81,31 @@ async function handle(req: Request) {
   // `?status=1` reports what the cron has been doing without triggering a run.
   // It is answered before the config guards below on purpose: a misconfigured
   // deployment is exactly when someone reaches for this, and gating it behind
-  // the checks it is meant to explain would make it useless.
+  // the checks it is meant to explain would make it useless. It still sits
+  // behind the same secret as everything else.
   if (url.searchParams.get("status")) {
     const [runs, state] = await Promise.all([
       readRecentRuns(),
       readSyncState(DATASET_LIST.map((d) => d.key)),
     ]);
-    return NextResponse.json({ runs, state });
+    return json({ runs, state });
   }
 
   if (!isNotionConfigured()) {
     const error = "NOTION_TOKEN not configured";
     await recordConfigFailure(error);
-    return NextResponse.json({ error }, { status: 503 });
+    return json({ error }, 503);
   }
   if (!getServiceClient()) {
     // Nothing to record against: the run log lives in the database this key
     // would have opened.
-    return NextResponse.json(
-      { error: "SUPABASE_SERVICE_ROLE_KEY not configured" },
-      { status: 503 }
-    );
+    return json({ error: "SUPABASE_SERVICE_ROLE_KEY not configured" }, 503);
   }
 
   const only = url.searchParams.get("only") || undefined;
   const mode = parseRequestedMode(url.searchParams.get("mode"));
   const summary = await runSync(only, { mode });
-  return NextResponse.json(summary, { status: summary.ok ? 200 : 207 });
+  return json(summary, summary.ok ? 200 : 207);
 }
 
 export async function POST(req: Request) {

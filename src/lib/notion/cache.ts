@@ -9,8 +9,8 @@
 // Everything degrades gracefully when env vars are absent.
 // ============================================================================
 
-// @ts-ignore - types provided by @supabase/supabase-js at runtime
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { CacheRow } from "./datasets";
 import type { DatasetSyncState } from "./incremental";
 
@@ -38,15 +38,9 @@ const BATCH_SIZE = 500;
 /** Ids travel in the query string of a delete, so those batches stay small. */
 const DELETE_BATCH_SIZE = 100;
 
-let cached: SupabaseClient | null | undefined;
-
 /** Service-role client for reads + writes. Null when not configured. */
 export function getServiceClient(): SupabaseClient | null {
-  if (cached !== undefined) return cached;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  cached = url && key ? createClient(url, key, { auth: { persistSession: false } }) : null;
-  return cached;
+  return getSupabaseAdmin();
 }
 
 /** Number of rows currently cached for a dataset. */

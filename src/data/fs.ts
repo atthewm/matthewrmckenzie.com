@@ -42,7 +42,7 @@ export const fileSystem: FSItem[] = [
   { id: "life", name: "Life", type: "app", icon: "Activity", appComponent: "LifeDashboardApp", ownerOnly: true, description: "Unified Health and Diet dashboard: what I eat, calories burned, and workouts.", defaultSize: { width: 560, height: 720 } },
   { id: "health", name: "Health", type: "folder", icon: "Heart", description: "WHOOP health metrics, workout splits, and fitness data.", children: [
     { id: "whoop-dashboard", name: "WHOOP Dashboard", type: "app", icon: "Activity", appComponent: "WhoopDashboardApp", description: "Health and fitness dashboard powered by WHOOP.", defaultSize: { width: 520, height: 640 } },
-    { id: "nutrition", name: "Nutrition", type: "app", icon: "Activity", appComponent: "NutritionApp", description: "Daily macros, targets, and streaks (private, synced from Notion).", defaultSize: { width: 560, height: 680 } },
+    { id: "nutrition", name: "Nutrition", type: "app", icon: "Activity", appComponent: "NutritionApp", ownerOnly: true, description: "Daily macros, targets, and streaks (private, synced from Notion).", defaultSize: { width: 560, height: 680 } },
     { id: "whoop-splits", name: "WHOOP Splits", type: "folder", icon: "FolderHeart", description: "Strength Trainer workout splits.", children: [
       { id: "whoop-split-arms-abs", name: "GunsAndGuts.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Arms & Abs split.", defaultSize: { width: 380, height: 480 } },
       { id: "whoop-split-back", name: "BatCaveBack.whoop", type: "app", icon: "Dumbbell", appComponent: "WhoopSplitApp", description: "Back split.", defaultSize: { width: 380, height: 480 } },
@@ -137,7 +137,9 @@ export function getRootItems(showHidden = false, isOwner = false): FSItem[] {
 // ---------------------------------------------------------------------------
 // Dock items - defines what appears in the bottom dock and in what order.
 // Each entry is an fsItem id. A "|" string represents a visual separator.
-// Owner-only entries ("life") are dropped by the Dock for everyone else.
+// Owner-only entries ("life") are dropped by the Dock for everyone else, and
+// owner-only items inside a folder ("nutrition" in Health) are left off that
+// folder's board (src/lib/boardLayout.ts).
 // ---------------------------------------------------------------------------
 
 export const dockItemIds: (string | "|")[] = [

@@ -103,16 +103,16 @@ function hitTargets(d: NutritionDay, t: NutritionTargets): boolean | null {
 // ---------------------------------------------------------------------------
 
 export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
-  // -- Nutrition (PUBLIC) ----------------------------------------------------
-  // Public exposes only daily macro totals (calories, protein, fat, carbs,
-  // fiber, targets, and the hitTargets flag). The transform emits everything
-  // into `data` with no privateData, so nothing sensitive is served. If a
-  // body-weight, medical, or PII field is ever added here, put it in
-  // privateData so it stays admin-only behind the gate cookie.
+  // -- Nutrition (PRIVATE) ---------------------------------------------------
+  // A day by day diet log: calories, protein, fat, carbs, fiber, targets and
+  // the hitTargets flag. Next to the WHOOP feed it shows intake against
+  // calories burned, which is exactly the combined health and diet picture
+  // that stays private. /api/notion/data serves it only to the owner cookie,
+  // never cached; everyone else gets a 401.
   nutrition: {
     key: "nutrition",
     label: "Nutrition",
-    visibility: "public",
+    visibility: "private",
     databaseId: NOTION_DB.nutrition,
     transform: (page, _ctx) => {
       const date = getDate(page, "Log Date") || getTitle(page, "Date", { raw: true });
