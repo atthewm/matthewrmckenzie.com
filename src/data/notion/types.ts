@@ -7,7 +7,8 @@
 // know about Notion internals.
 //
 // Visibility split:
-//   - `data`         -> safe to show publicly
+//   - a "private" dataset is served only to the owner cookie, never cached
+//   - `data`         -> safe to show publicly (in a "public" dataset)
 //   - `privateData`  -> only returned to an authenticated admin (gate cookie)
 // ============================================================================
 
@@ -22,8 +23,7 @@ export type NotionDatasetKey =
 export type Visibility = "public" | "private";
 
 // ---------------------------------------------------------------------------
-// Nutrition (public): daily macro totals from Daily Logs. No body-weight,
-// medical, or PII fields belong here; if added, route them to privateData.
+// Nutrition (private, owner only): daily macro totals from Daily Logs.
 // ---------------------------------------------------------------------------
 
 export interface NutritionDay {

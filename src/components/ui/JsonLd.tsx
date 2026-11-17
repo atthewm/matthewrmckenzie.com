@@ -53,8 +53,6 @@ export const personSchema = {
     "Registered Investment Advisors",
     "Real Estate Investment",
     "Alternative Investments",
-    "AI Operations",
-    "MCP Servers",
   ],
   sameAs: [
     "https://www.linkedin.com/in/mrmckenzie/",
@@ -69,13 +67,20 @@ export const websiteSchema = {
   name: "Matthew McKenzie",
   url: "https://matthewrmckenzie.com",
   description:
-    "Personal site of Matthew McKenzie. Capital formation, growth strategy, and real asset backed consumer platforms.",
+    "Personal site of Matthew McKenzie, Senior Vice President, Capital Formation at Menlo Equities.",
   publisher: {
     "@type": "Person",
     name: "Matthew McKenzie",
     url: "https://matthewrmckenzie.com",
   },
 };
+
+/**
+ * ProfilePage belongs on the two pages that are profiles: / and /about. It is
+ * rendered by those pages, not by the root layout. dateModified is the day the
+ * site was built, since these modules are evaluated once, at build time.
+ */
+const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 export const profilePageSchema = {
   "@context": "https://schema.org",
@@ -86,10 +91,10 @@ export const profilePageSchema = {
     url: "https://matthewrmckenzie.com",
     jobTitle: "Senior Vice President, Capital Formation",
     description:
-      "Capital formation across the private wealth channel at Menlo Equities, working with high net worth investors, family offices, and RIAs. Also builds AI operations tooling.",
+      "Capital formation across the private wealth channel at Menlo Equities, working with high net worth investors, family offices, and RIAs.",
   },
   dateCreated: "2026-01-01",
-  dateModified: "2026-09-01",
+  dateModified: BUILD_DATE,
 };
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {

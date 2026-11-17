@@ -49,7 +49,6 @@ const releases: Release[] = [
     changes: [
       { text: "GitHub Projects app: filterable showcase of all public repos", type: "feature" },
       { text: "Link Bio upgrade: sectioned links page with Social, Projects, and Connect", type: "feature" },
-      { text: "Updated About bio with MCP and AI operations work", type: "polish" },
       { text: "Terminal commands: github, gh, repos, links, bio", type: "tool" },
       { text: "GitHub app on desktop icons and Start Here explore row", type: "polish" },
       { text: "Links app added to dock for easy discovery", type: "polish" },

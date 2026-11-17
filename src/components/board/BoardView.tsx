@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { FSItem } from "@/data/fs";
 import { getRootItems } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useBoardCamera, zoomAround, type Camera } from "@/hooks/useBoardCamera";
 import { BOARD_MARGIN, buildGroups, cardKind, computeLayout, hashString } from "@/lib/boardLayout";
@@ -64,10 +65,12 @@ function distance(a: Point, b: Point) {
 
 export default function BoardView({ item: board, contentMap, windowId, onOpen }: BoardViewProps) {
   const { openItem, closeWindow } = useDesktop();
+  const { owner } = useOwnerSession();
   const reducedMotion = useReducedMotion();
   const theme = getBoardTheme(board.id);
 
-  const groups = useMemo(() => buildGroups(board), [board]);
+  // Owner-only items (Nutrition in Health) appear only once the owner is confirmed.
+  const groups = useMemo(() => buildGroups(board, owner), [board, owner]);
   const layout = useMemo(() => computeLayout(groups), [groups]);
   const items = useMemo(() => groups.flatMap((g) => g.items), [groups]);
   const itemById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);

@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from "react";
-import { flattenFS, type FSItem } from "@/data/fs";
+import { flattenFS, isListed, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 import { getPantherIconPath } from "./PantherIcons";
 import { trackEvent } from "@/lib/analytics";
 
@@ -23,13 +24,14 @@ export default function Spotlight({ active, onClose }: SpotlightProps) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { owner } = useOwnerSession();
 
-  // All searchable items
+  // All searchable items (owner-only apps are searchable by the owner alone)
   const allItems = useMemo(() => {
     return flattenFS().filter(
-      (item) => !item.hidden && item.type !== "link"
+      (item) => !item.hidden && item.type !== "link" && isListed(item, owner)
     );
-  }, []);
+  }, [owner]);
 
   // Filter results
   const results = useMemo(() => {

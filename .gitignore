@@ -35,3 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 docs/archive/**/SCREENSHOTS.zip
+
+# upload set built by scripts/backgrounds-to-r2.mjs
+/.r2-backgrounds/

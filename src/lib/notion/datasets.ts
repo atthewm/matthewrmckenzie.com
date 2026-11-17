@@ -25,6 +25,7 @@ import {
   getUrl,
   getFileUrl,
   getRelationIds,
+  normalizeDashes,
   parseStars,
 } from "./properties";
 import type {
@@ -65,6 +66,11 @@ export interface DatasetDef {
   /** Row cap for this database. Defaults to the client's own limit. */
   maxRows?: number;
   /**
+   * Relation lookups the mapping reads from SyncContext. The sync only pays
+   * for a lookup table when a dataset that needs it has rows to map.
+   */
+  needs?: ReadonlyArray<"people" | "days">;
+  /**
    * Per-row mapping: one Notion page becomes one cache row. Most datasets use
    * this. Exactly one of `transform` or `aggregate` must be set.
    */
@@ -97,19 +103,19 @@ function hitTargets(d: NutritionDay, t: NutritionTargets): boolean | null {
 // ---------------------------------------------------------------------------
 
 export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
-  // -- Nutrition (PUBLIC) ----------------------------------------------------
-  // Public exposes only daily macro totals (calories, protein, fat, carbs,
-  // fiber, targets, and the hitTargets flag). The transform emits everything
-  // into `data` with no privateData, so nothing sensitive is served. If a
-  // body-weight, medical, or PII field is ever added here, put it in
-  // privateData so it stays admin-only behind the gate cookie.
+  // -- Nutrition (PRIVATE) ---------------------------------------------------
+  // A day by day diet log: calories, protein, fat, carbs, fiber, targets and
+  // the hitTargets flag. Next to the WHOOP feed it shows intake against
+  // calories burned, which is exactly the combined health and diet picture
+  // that stays private. /api/notion/data serves it only to the owner cookie,
+  // never cached; everyone else gets a 401.
   nutrition: {
     key: "nutrition",
     label: "Nutrition",
-    visibility: "public",
+    visibility: "private",
     databaseId: NOTION_DB.nutrition,
     transform: (page, _ctx) => {
-      const date = getDate(page, "Log Date") || getTitle(page, "Date");
+      const date = getDate(page, "Log Date") || getTitle(page, "Date", { raw: true });
       if (!date) return null;
       const day: NutritionDay = {
         date,
@@ -137,6 +143,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "Movies",
     visibility: "public",
     databaseId: NOTION_DB.films,
+    needs: ["people"],
     transform: (page, ctx) => {
       const title = getTitle(page, "Title");
       if (!title) return null;
@@ -183,6 +190,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "TV",
     visibility: "public",
     databaseId: NOTION_DB.tv,
+    needs: ["people"],
     transform: (page, ctx) => {
       const title = getTitle(page, "Title");
       if (!title) return null;
@@ -230,6 +238,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "Audiobooks",
     visibility: "public",
     databaseId: NOTION_DB.books,
+    needs: ["people"],
     rowFilter: (page) =>
       getMultiSelect(page, "Format").includes("Audiobook") ||
       getSelect(page, "Source") === "Audible",
@@ -289,6 +298,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "Top Foods",
     visibility: "public",
     databaseId: NOTION_DB.mealEntries,
+    needs: ["days"],
     // The log runs to several thousand rows and grows daily.
     maxRows: 20000,
     // sortKey is a zero-padded count, so lexicographic desc == most logged.
@@ -298,7 +308,8 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
         const dayIds = getRelationIds(page, "Day");
         const day = dayIds.map((id) => ctx.dayById[id]).find(Boolean) ?? null;
         return {
-          item: getTitle(page, "Item"),
+          // Raw: foods.ts splits the title on its dashes to drop qualifiers.
+          item: getTitle(page, "Item", { raw: true }),
           meal: getSelect(page, "Meal"),
           day,
           calories: getNumber(page, "Calories"),
@@ -309,13 +320,17 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
         };
       });
 
-      return aggregateTopFoods(entries, { limit: 100, minCount: 2 }).map((food) => ({
-        // Stable id across syncs so the row updates in place.
-        notionId: food.key,
-        title: food.name,
-        sortKey: String(food.count).padStart(6, "0"),
-        data: food,
-      }));
+      return aggregateTopFoods(entries, { limit: 100, minCount: 2 }).map((food) => {
+        // The label is the one piece of meal text that is shown.
+        const name = normalizeDashes(food.name);
+        return {
+          // Stable id across syncs so the row updates in place.
+          notionId: food.key,
+          title: name,
+          sortKey: String(food.count).padStart(6, "0"),
+          data: { ...food, name },
+        };
+      });
     },
   },
 

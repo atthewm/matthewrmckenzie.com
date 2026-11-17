@@ -55,9 +55,12 @@ When Claude runs in a Linux sandbox with this repo mounted:
 contact details, offices, and bio. Metadata, JSON-LD, the `/card` page, and the
 vCard all read from it. Update the role there, not in twelve files.
 
-**Privacy rule:** `profile.mobile` must never be rendered in page HTML. It is
-written only into the vCard at `/card/vcard` so it reaches people who scan the
-conference QR without being exposed to scrapers. `directPhone` is public.
+**Privacy rule:** the personal mobile number is not in this repository, which
+is public. It comes from the `OWNER_MOBILE_E164` environment variable, is read
+only by `src/lib/owner-contact.ts` (a server-only module) for the vCard at
+`/card/vcard`, and must never be rendered in page HTML or imported into client
+code. That way it reaches people who scan the conference QR without being
+exposed to scrapers. `directPhone` is public.
 
 ## App registry
 

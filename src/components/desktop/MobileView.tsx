@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Mail, Calendar, Contact } from "lucide-react";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 import { profile } from "@/config/profile";
 import { PantherIcon } from "./PantherIcons";
 import WindowContent from "./WindowContent";
@@ -24,7 +25,8 @@ interface MobileViewProps {
 
 export default function MobileView({ contentMap }: MobileViewProps) {
   const { state, openItem, closeWindow, dispatch } = useDesktop();
-  const rootItems = getRootItems();
+  const { owner } = useOwnerSession();
+  const rootItems = getRootItems(false, owner);
   const startedRef = useRef(false);
 
   // Start every phone visit on the home screen; honor ?open=<id> deep links.
@@ -34,7 +36,8 @@ export default function MobileView({ contentMap }: MobileViewProps) {
     dispatch({ type: "CLOSE_ALL_WINDOWS" });
     const id = new URLSearchParams(window.location.search).get("open");
     const item = id ? findFSItem(id) : undefined;
-    if (item) {
+    // Owner-only apps cannot be opened by link.
+    if (item && !item.ownerOnly) {
       openItem(item);
       window.history.replaceState({}, "", "/");
     }

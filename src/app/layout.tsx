@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Marcellus, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import JsonLd, { personSchema, websiteSchema, profilePageSchema } from "@/components/ui/JsonLd";
+import JsonLd, { personSchema, websiteSchema } from "@/components/ui/JsonLd";
 import "./globals.css";
 import "@/styles/board.css";
 import "@/styles/board-cards.css";
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | Matthew McKenzie",
   },
   description:
-    "Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, leading private wealth relationships with high net worth investors, family offices, and RIAs. He also builds AI tooling and bakes.",
+    "Matthew McKenzie is Senior Vice President, Capital Formation at Menlo Equities, leading private wealth relationships with high net worth investors, family offices, and RIAs. He also bakes.",
   keywords: [
     "Matthew McKenzie",
     "capital formation",
@@ -52,7 +52,6 @@ export const metadata: Metadata = {
     "registered investment advisors",
     "UHNW investors",
     "Austin",
-    "MCP server",
   ],
   authors: [{ name: "Matthew McKenzie" }],
   creator: "Matthew McKenzie",
@@ -63,19 +62,18 @@ export const metadata: Metadata = {
     siteName: "Matthew McKenzie",
     title: "Matthew McKenzie | Capital Formation, Menlo Equities",
     description:
-      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs. Also builds AI tooling.",
+      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs.",
     images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Matthew McKenzie | Capital Formation, Menlo Equities",
     description:
-      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs. Also builds AI tooling.",
+      "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs.",
     images: ["/opengraph-image"],
   },
-  alternates: {
-    canonical: "https://matthewrmckenzie.com",
-  },
+  // No canonical here: each route sets its own (the home page in page.tsx), so
+  // a route that forgets one never inherits the home page URL.
   robots: {
     index: true,
     follow: true,
@@ -116,7 +114,6 @@ export default function RootLayout({
       <body className="antialiased">
         <JsonLd data={personSchema} />
         <JsonLd data={websiteSchema} />
-        <JsonLd data={profilePageSchema} />
         {children}
         <Analytics />
       </body>

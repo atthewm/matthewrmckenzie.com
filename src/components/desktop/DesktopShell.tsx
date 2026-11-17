@@ -173,7 +173,8 @@ function ShutdownSequence({ onComplete }: { onComplete: () => void }) {
 // DESKTOP SHELL
 // ============================================================================
 // Top-level client component that decides between desktop and mobile views.
-// Shows boot sequence on first load, then fades into the desktop.
+// Shows boot sequence on first load, then fades into the desktop. Renders
+// nothing on the server: the first paint is HomeIntro, which this covers.
 // ============================================================================
 
 interface DesktopShellProps {
@@ -190,12 +191,19 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
 
   useEffect(() => {
     setMounted(true);
+    // The desktop now covers the server-rendered intro (HomeIntro). Flag it so
+    // globals.css can take the covered links out of the tab order.
+    document.documentElement.dataset.desktopReady = "true";
 
     // Skip boot for reduced-motion preference or repeat visits
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!prefersReducedMotion && !sessionStorage.getItem(BOOT_SESSION_KEY)) {
       setBooting(true);
     }
+
+    return () => {
+      delete document.documentElement.dataset.desktopReady;
+    };
   }, []);
 
   const handleBootComplete = useCallback(() => {
@@ -213,11 +221,9 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
     setBooting(true);
   }, []);
 
-  if (!mounted) {
-    return (
-      <div className="fixed inset-0" style={{ background: "#e8e8e8" }} />
-    );
-  }
+  // Before mount the page shows the server-rendered intro that sits under the
+  // desktop (HomeIntro), so there is nothing to draw here yet.
+  if (!mounted) return null;
 
   return (
     <ShutdownProvider value={handleShutdown}>

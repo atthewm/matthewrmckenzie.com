@@ -4,14 +4,20 @@
 // Serves a vCard 3.0 file so anyone who scans the conference QR can tap
 // "Save contact" and land straight in their phone's address book.
 //
-// This is the ONLY place the personal mobile number is exposed. It is not
-// rendered in any page HTML, so it stays out of scrapers and search indexes
-// while still reaching people who actually meet Matthew.
+// This is the ONLY place the personal mobile number is exposed. It is not in
+// any page HTML, in client JavaScript or in the repository: it comes from the
+// OWNER_MOBILE_E164 environment variable through src/lib/owner-contact.ts, and
+// when that is unset the card simply has no mobile line. robots.txt keeps
+// crawlers away from this URL and the response is marked noindex.
 // ============================================================================
 
 import { profile, phoneE164 } from "@/config/profile";
+import { getOwnerMobile } from "@/lib/owner-contact";
 
 export const runtime = "nodejs";
+// Built once per deploy and served as a static file. REV is the build time,
+// and the mobile number is read from the environment at build time too.
+export const dynamic = "force-static";
 
 /** Escape per RFC 6350: backslash, comma, and semicolon are reserved. */
 function esc(value: string): string {
@@ -20,6 +26,7 @@ function esc(value: string): string {
 
 export async function GET() {
   const [austin, menloPark] = profile.offices;
+  const mobile = getOwnerMobile();
 
   const lines = [
     "BEGIN:VCARD",
@@ -30,7 +37,7 @@ export async function GET() {
     `TITLE:${esc(profile.title)}`,
     `EMAIL;type=INTERNET,WORK:${profile.email}`,
     `TEL;type=WORK,VOICE:${phoneE164.direct}`,
-    `TEL;type=CELL,VOICE:${phoneE164.mobile}`,
+    ...(mobile ? [`TEL;type=CELL,VOICE:${mobile}`] : []),
     `ADR;type=WORK;type=pref:;;${esc(austin.street)};${esc(austin.locality)};${austin.region};${austin.postalCode};USA`,
     `ADR;type=WORK:;;${esc(menloPark.street)};${esc(menloPark.locality)};${menloPark.region};${menloPark.postalCode};USA`,
     `URL:${profile.companyUrl}`,
@@ -48,7 +55,8 @@ export async function GET() {
     headers: {
       "Content-Type": "text/vcard; charset=utf-8",
       "Content-Disposition": 'attachment; filename="Matthew-McKenzie.vcf"',
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": "public, max-age=3600, s-maxage=86400",
+      "X-Robots-Tag": "noindex",
     },
   });
 }

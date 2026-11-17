@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
+import { PAGE_UPDATED, formatLongDate } from "@/lib/page-dates";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Your Data & Rights",
+  title: "Privacy",
   description: "Privacy policy for matthewrmckenzie.com. How data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
   alternates: { canonical: "/privacy" },
   openGraph: {
     images: ["/opengraph-image"],
-    title: "Privacy Policy | Your Data & Rights",
+    title: "Privacy | Matthew McKenzie",
     description: "Privacy policy for matthewrmckenzie.com. How data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
   },
 };
@@ -23,7 +24,7 @@ export default function PrivacyPolicyPage() {
       <article className="site-prose">
         <h1>Privacy Policy</h1>
         <p className="site-eyebrow">
-          Last updated: February 16, 2026
+          Last updated: {formatLongDate(PAGE_UPDATED.privacy)}
         </p>
 
         <h2>Overview</h2>

@@ -91,8 +91,17 @@ a retro dashboard app. We reuse that pattern for Notion.
 - The public read route can be CDN-cached (`s-maxage`) because it's just JSON.
 
 **Freshness:** scheduled (you chose auto-sync). `vercel.json` runs the sync
-hourly. Change the cron expression to taste. (Vercel Hobby allows daily crons;
-Pro/Team allows hourly — your team project supports hourly.)
+once a day, and each run is incremental: for every dataset it asks Notion only
+for the rows edited since that dataset's last successful run (a
+`last_edited_time` filter, see `src/lib/notion/incremental.ts`) and upserts
+them. Once a week, and on the first run, a dataset is rebuilt in full instead.
+The full rebuild is also the only pass that prunes rows deleted in Notion,
+because a filtered query cannot see a page that is gone. Top Foods is an
+aggregate of the whole meal log, so it is skipped on incremental runs and
+recomputed by the weekly rebuild. `?mode=full` forces a rebuild by hand, and
+`?status=1` also returns each dataset's `state` (last run, last full rebuild),
+which lives in `notion_cache` under the `_sync_state` dataset name, so no
+schema change is needed.
 
 **Durability of the scheduled run.** A cron-driven cache fails quietly unless it
 is built not to, so the sync makes three guarantees:
@@ -142,14 +151,16 @@ Every row is normalized into two payloads at sync time:
 
 The read route enforces it:
 
-- **Private datasets** (`nutrition`) → `401` unless the `mckenzie_auth` gate
-  cookie is present. Nothing leaks to the public.
+- **Private datasets** (`nutrition`) → `401` unless the request carries the
+  owner cookie (`src/lib/owner.ts`), and never cached. Nothing leaks to the
+  public.
 - **Public datasets** (`films`, `tv`, `audiobooks`, `favorite-foods`) → always
   return `data`; `private_data` is merged in **only** for an authenticated admin
   (it rides along under `_private`).
 
 This is exactly "sensitive private, the rest public," enforced server-side, and
-it reuses your existing `/gate` login + `SITE_LOCK_COOKIE_VALUE`.
+it reuses your existing `/gate` login: the admin and owner cookies it sets are
+HMACs of `SITE_LOCK_COOKIE_VALUE` and `OWNER_COOKIE_SECRET`.
 
 ---
 
@@ -274,14 +285,16 @@ Adding a new piece later = **one entry in `datasets.ts`** (+ optionally one app)
    before the run log existed.
 4. **Get the Supabase service-role key** (Project Settings → API).
 5. **Set env vars** in `.env.local` *and* the Vercel dashboard:
-   - `NOTION_TOKEN`, `NOTION_SYNC_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`
+   - `NOTION_TOKEN`, `CRON_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`
    - (`NEXT_PUBLIC_SUPABASE_URL` already set for the guestbook)
-6. **Deploy.** The hourly cron in `vercel.json` starts syncing.
+   - `CRON_SECRET` is the only way in: Vercel sends it as a bearer token on
+     every cron run, and the route accepts nothing else.
+6. **Deploy.** The cron in `vercel.json` starts syncing.
 7. **First sync now** (optional): `curl -X POST
    https://matthewrmckenzie.com/api/notion/sync -H "Authorization: Bearer
-   $NOTION_SYNC_SECRET"` — or one DB: `…/sync?only=films`.
-8. Open **Media ▸ Movies** (public) and **Health ▸ Nutrition** (after logging in
-   at `/gate`).
+   $CRON_SECRET"`, or one DB: `…/sync?only=films`.
+8. Open **Media ▸ Movies** (public) and **Health ▸ Nutrition** (owner only,
+   after signing in at `/gate`).
 
 Until step 5 is done, the apps render a friendly "not synced yet / private"
 state and the build stays green — nothing crashes on missing env.

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { dockItemIds, findFSItem, type FSItem } from "@/data/fs";
+import { dockItemIds, findFSItem, isListed, type FSItem } from "@/data/fs";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { getPantherIcon } from "./PantherIcons";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -189,6 +190,7 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
   const dockRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const reduceMotion = useReducedMotion();
+  const { owner } = useOwnerSession();
 
   // Roving tabindex (WAI-ARIA toolbar pattern): one item is the tab stop,
   // arrow keys move focus between items.
@@ -204,7 +206,8 @@ export default function Dock({ onStickiesToggle, stickiesActive }: DockProps = {
       if (!isMobile) dockEntries.push({ type: "separator" });
     } else {
       const fsItem = findFSItem(entry);
-      if (fsItem) {
+      // Owner-only apps (Life) stay out of the dock for everyone else.
+      if (fsItem && isListed(fsItem, owner)) {
         dockEntries.push({ type: "item", item: fsItem, itemIndex: itemCounter });
         itemCounter++;
       }

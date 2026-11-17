@@ -11,6 +11,10 @@ import { recipes } from "@/content/recipes/index";
 
 const SITE = "https://matthewrmckenzie.com";
 
+// Built once per deploy and served as a static file: nothing here depends on
+// the request.
+export const dynamic = "force-static";
+
 export async function GET() {
   const recipeLines = recipes
     .map((r) => `- ${r.title}: ${SITE}/recipes/${r.slug}`)
@@ -39,7 +43,6 @@ He also builds his own software: the mckm.at link shortener and data room platfo
 
 - About: ${SITE}/about
 - Work: ${SITE}/work
-- Projects: ${SITE}/projects
 - Writing: ${SITE}/writing
 - Recipes: ${SITE}/recipes
 - Contact: ${SITE}/contact

@@ -90,7 +90,8 @@ export default function Desktop({ contentMap }: DesktopProps) {
     const openId = params.get("open");
     if (openId) {
       const item = findFSItem(openId);
-      if (item) {
+      // Owner-only apps cannot be opened by link.
+      if (item && !item.ownerOnly) {
         dispatch({ type: "OPEN_WINDOW", payload: { fsItem: item } });
       }
       // Clean URL without reload
