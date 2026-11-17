@@ -4,14 +4,16 @@
 // Signing in at /gate sets one of two httpOnly cookies:
 //   admin  mckenzie_auth   value from SITE_LOCK_COOKIE_VALUE. Unlocks guestbook
 //                          moderation and the private Notion fields.
-//   guest  mckenzie_guest  its own value, derived from the same secret. It can
-//                          never be turned back into the admin value and it
-//                          unlocks nothing an anonymous visitor cannot see.
+//   guest  mckenzie_guest  its own value, derived from the guest password
+//                          alone. It says nothing about the admin secret, so
+//                          a guest cannot use it to work that secret out, and
+//                          it unlocks nothing an anonymous visitor cannot see.
 //
 // Everything here fails closed. There is no built-in cookie value: when
 // SITE_LOCK_COOKIE_VALUE is missing, or too short to be a real secret, nobody
-// is an admin or a guest and sign-in is refused. This repository is public, so
-// a default in the code would be a password anyone could read.
+// is an admin and admin sign-in is refused; with no guest password there is no
+// guest. This repository is public, so a default in the code would be a
+// password anyone could read.
 // ============================================================================
 
 import { createHmac } from "node:crypto";
@@ -36,11 +38,15 @@ export function adminCookieValue(): string | null {
   return value.length >= MIN_COOKIE_VALUE_LENGTH ? value : null;
 }
 
-/** The value a guest cookie must carry, or null when none can be derived. */
+/**
+ * The value a guest cookie must carry, or null when there is no guest account.
+ * Keyed by the guest password, which the guest already knows: changing that
+ * password signs every guest out, and the admin secret is never an input.
+ */
 export function guestCookieValue(): string | null {
-  const secret = adminCookieValue();
-  if (!secret) return null;
-  return createHmac("sha256", secret).update("mmck-guest-v1").digest("hex");
+  const password = process.env.SITE_LOCK_GUEST_PASSWORD ?? "";
+  if (!password) return null;
+  return createHmac("sha256", password).update("mmck-guest-v1").digest("hex");
 }
 
 function carries(req: Request, cookie: string, expected: string | null): boolean {

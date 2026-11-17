@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { describe, expect, test, vi } from "vitest";
 import { readCookie, safeEqual } from "./cookies";
 import {
@@ -11,6 +12,7 @@ import {
 import { OWNER_COOKIE, isOwnerRequest, ownerCookieValue } from "./owner";
 
 const SECRET = "0123456789abcdef0123456789abcdef";
+const GUEST_PASSWORD = "guest pass phrase";
 
 function requestWith(cookie?: string): Request {
   return new Request("https://matthewrmckenzie.com/api/anything", {
@@ -81,13 +83,30 @@ describe("admin cookie", () => {
 describe("guest cookie", () => {
   test("is its own value, never the admin one", () => {
     vi.stubEnv("SITE_LOCK_COOKIE_VALUE", SECRET);
+    vi.stubEnv("SITE_LOCK_GUEST_PASSWORD", GUEST_PASSWORD);
     const guest = guestCookieValue();
     expect(guest).toMatch(/^[0-9a-f]{64}$/);
     expect(guest).not.toBe(SECRET);
   });
 
+  test("is derived from the guest password alone, not from the admin secret", () => {
+    vi.stubEnv("SITE_LOCK_GUEST_PASSWORD", GUEST_PASSWORD);
+    vi.stubEnv("SITE_LOCK_COOKIE_VALUE", SECRET);
+    const withOneAdminSecret = guestCookieValue();
+    vi.stubEnv("SITE_LOCK_COOKIE_VALUE", "another-admin-secret-0123456789");
+    expect(guestCookieValue()).toBe(withOneAdminSecret);
+    vi.stubEnv("SITE_LOCK_COOKIE_VALUE", "");
+    expect(guestCookieValue()).toBe(withOneAdminSecret);
+    // Pinned independently of the helper.
+    expect(withOneAdminSecret).toBe(createHmac("sha256", GUEST_PASSWORD).update("mmck-guest-v1").digest("hex"));
+    // A new guest password signs every guest out.
+    vi.stubEnv("SITE_LOCK_GUEST_PASSWORD", "a different pass phrase");
+    expect(guestCookieValue()).not.toBe(withOneAdminSecret);
+  });
+
   test("does not make a guest an admin, or an admin cookie a guest one", () => {
     vi.stubEnv("SITE_LOCK_COOKIE_VALUE", SECRET);
+    vi.stubEnv("SITE_LOCK_GUEST_PASSWORD", GUEST_PASSWORD);
     const guest = guestCookieValue() as string;
     expect(isGuestRequest(requestWith(`${GUEST_COOKIE}=${guest}`))).toBe(true);
     expect(isAdminRequest(requestWith(`${GUEST_COOKIE}=${guest}`))).toBe(false);
@@ -95,14 +114,21 @@ describe("guest cookie", () => {
     expect(isGuestRequest(requestWith(`${GUEST_COOKIE}=${SECRET}`))).toBe(false);
   });
 
-  test("cannot be issued or accepted without a secret", () => {
-    vi.stubEnv("SITE_LOCK_COOKIE_VALUE", "");
+  test("cannot be issued or accepted while there is no guest password", () => {
+    vi.stubEnv("SITE_LOCK_COOKIE_VALUE", SECRET);
+    vi.stubEnv("SITE_LOCK_GUEST_PASSWORD", "");
     expect(guestCookieValue()).toBeNull();
     expect(isGuestRequest(requestWith(`${GUEST_COOKIE}=anything`))).toBe(false);
+    expect(isGuestRequest(requestWith(`${GUEST_COOKIE}=`))).toBe(false);
   });
 });
 
 describe("owner cookie", () => {
+  test("is an HMAC of the owner secret, pinned independently of the helper", () => {
+    vi.stubEnv("OWNER_COOKIE_SECRET", SECRET);
+    expect(ownerCookieValue()).toBe(createHmac("sha256", SECRET).update("mmck-owner-v1").digest("hex"));
+  });
+
   test("is refused without a secret and accepted only with the exact value", () => {
     vi.stubEnv("OWNER_COOKIE_SECRET", "");
     vi.stubEnv("WHOOP_ENCRYPTION_KEY", "");

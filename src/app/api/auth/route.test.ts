@@ -83,10 +83,17 @@ describe("POST /api/auth fails closed", () => {
 
   test("refuses the right password when the cookie value is too short to be a secret", async () => {
     configure({ SITE_LOCK_COOKIE_VALUE: "x".repeat(13) });
-    for (const body of [ADMIN, GUEST]) {
-      const response = await POST(post(body));
-      expect(response.status).toBe(503);
-      expect(response.headers.getSetCookie()).toEqual([]);
+    const response = await POST(post(ADMIN));
+    expect(response.status).toBe(503);
+    expect(response.headers.getSetCookie()).toEqual([]);
+  });
+
+  test("never gives a guest the admin cookie, whatever the admin secret is", async () => {
+    for (const cookieValue of [COOKIE_VALUE, "x".repeat(13), undefined]) {
+      configure({ SITE_LOCK_COOKIE_VALUE: cookieValue });
+      const response = await POST(post(GUEST));
+      expect(response.status).toBe(200);
+      expect(setCookieNames(response)).toEqual([GUEST_COOKIE]);
     }
   });
 
@@ -147,6 +154,32 @@ describe("POST /api/auth, admin", () => {
     const response = await POST(post(ADMIN));
     expect(response.status).toBe(200);
     expect(setCookieNames(response)).not.toContain(OWNER_COOKIE);
+  });
+});
+
+describe("POST /api/auth, cookie attributes in production", () => {
+  test("marks every cookie Secure, site wide, for thirty days", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    const response = await POST(post(ADMIN));
+    for (const name of [ADMIN_COOKIE, OWNER_COOKIE, SESSION_HINT_COOKIE]) {
+      const line = setCookie(response, name)?.toLowerCase() ?? "";
+      expect(line, name).toContain("secure");
+      expect(line, name).toContain("path=/");
+      expect(line, name).toContain("max-age=2592000");
+    }
+    expect(setCookie(response, ADMIN_COOKIE)?.toLowerCase()).toContain("samesite=lax");
+
+    const guest = await POST(post(GUEST));
+    const line = setCookie(guest, GUEST_COOKIE)?.toLowerCase() ?? "";
+    expect(line).toContain("secure");
+    expect(line).toContain("httponly");
+    expect(line).toContain("path=/");
+  });
+
+  test("leaves Secure off outside production so sign-in works on http://localhost", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    const response = await POST(post(ADMIN));
+    expect(setCookie(response, ADMIN_COOKIE)?.toLowerCase()).not.toContain("secure");
   });
 });
 
