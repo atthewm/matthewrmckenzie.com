@@ -10,12 +10,14 @@
 // so a field WHOOP adds later is private until someone decides otherwise.
 //
 // Public: the four headline scores (recovery percent, day strain, calories
-// burned, sleep performance percent) and, per recent workout, the calendar day
-// with its strain and calories.
+// burned, sleep performance percent), per recent workout (five at most) the
+// calendar day with its strain and calories, and lastSynced, the time the
+// cache last refreshed.
 // Private: profile (name, email, user id), body measurements, heart rate
 // figures (resting, average, max, HRV), blood oxygen, skin temperature,
-// respiratory rate, sleep stages, durations and need, every timestamp, every
-// WHOOP id, sport ids and heart rate zones.
+// respiratory rate, sleep stages, durations and need, every WHOOP timestamp
+// (cycle, sleep and workout start and end times), every WHOOP id, sport ids
+// and heart rate zones.
 // ============================================================================
 
 import type { WhoopDataResponse, WhoopDisconnected, WhoopWorkout } from "./client";

@@ -238,12 +238,13 @@ async function verify(files) {
     const url = `${base}/${rel}`;
     const expected = contentType(rel);
     try {
-      const res = await fetch(url, { headers: { range: "bytes=0-0" } });
+      // HEAD, so the check needs exactly 200 (a ranged GET would answer 206)
+      // without downloading every video.
+      const res = await fetch(url, { method: "HEAD" });
       const type = (res.headers.get("content-type") ?? "").split(";")[0].trim();
-      const ok = (res.status === 200 || res.status === 206) && type === expected;
+      const ok = res.status === 200 && type === expected;
       console.log(`${ok ? "ok  " : "FAIL"}  ${res.status}  ${type || "(no content type)"}  ${url}`);
       if (!ok) problems.push(`${url}: status ${res.status}, content type "${type}", expected ${expected}`);
-      await res.arrayBuffer();
     } catch (err) {
       problems.push(`${url}: ${err.message}`);
       console.log(`FAIL  no response  ${url}`);
