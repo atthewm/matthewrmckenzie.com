@@ -91,8 +91,17 @@ a retro dashboard app. We reuse that pattern for Notion.
 - The public read route can be CDN-cached (`s-maxage`) because it's just JSON.
 
 **Freshness:** scheduled (you chose auto-sync). `vercel.json` runs the sync
-hourly. Change the cron expression to taste. (Vercel Hobby allows daily crons;
-Pro/Team allows hourly — your team project supports hourly.)
+once a day, and each run is incremental: for every dataset it asks Notion only
+for the rows edited since that dataset's last successful run (a
+`last_edited_time` filter, see `src/lib/notion/incremental.ts`) and upserts
+them. Once a week, and on the first run, a dataset is rebuilt in full instead.
+The full rebuild is also the only pass that prunes rows deleted in Notion,
+because a filtered query cannot see a page that is gone. Top Foods is an
+aggregate of the whole meal log, so it is skipped on incremental runs and
+recomputed by the weekly rebuild. `?mode=full` forces a rebuild by hand, and
+`?status=1` also returns each dataset's `state` (last run, last full rebuild),
+which lives in `notion_cache` under the `_sync_state` dataset name, so no
+schema change is needed.
 
 **Durability of the scheduled run.** A cron-driven cache fails quietly unless it
 is built not to, so the sync makes three guarantees:

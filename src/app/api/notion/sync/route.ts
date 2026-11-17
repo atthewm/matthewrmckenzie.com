@@ -7,17 +7,32 @@
 //   Manual:  curl -X POST https://matthewrmckenzie.com/api/notion/sync \
 //              -H "Authorization: Bearer $NOTION_SYNC_SECRET"
 //   One DB:  .../api/notion/sync?only=films
+//   Rebuild: .../api/notion/sync?mode=full
+//
+// The scheduled run is incremental: each dataset asks Notion only for rows
+// edited since its last successful run. Once a week (and on the first run)
+// a dataset is rebuilt in full instead, which is also what prunes rows that
+// were deleted in Notion. `?mode=full` forces that rebuild by hand.
 // ============================================================================
 
 import { NextResponse } from "next/server";
 import { getCronSecret, isNotionConfigured } from "@/lib/notion/config";
-import { getServiceClient, readRecentRuns, recordSyncRuns, CONFIG_DATASET } from "@/lib/notion/cache";
+import {
+  getServiceClient,
+  readRecentRuns,
+  readSyncState,
+  recordSyncRuns,
+  CONFIG_DATASET,
+} from "@/lib/notion/cache";
+import { DATASET_LIST } from "@/lib/notion/datasets";
+import { parseRequestedMode } from "@/lib/notion/incremental";
 import { runSync } from "@/lib/notion/sync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-// A full run now walks the whole meal log (several thousand paginated rows) on
-// top of the media databases, which does not reliably fit in 60s.
+// The weekly full rebuild walks the whole meal log (several thousand paginated
+// rows) on top of the media databases, which does not reliably fit in 60s.
+// Incremental runs finish in seconds.
 export const maxDuration = 300;
 
 function authorized(req: Request): boolean {
@@ -64,7 +79,11 @@ async function handle(req: Request) {
   // deployment is exactly when someone reaches for this, and gating it behind
   // the checks it is meant to explain would make it useless.
   if (url.searchParams.get("status")) {
-    return NextResponse.json({ runs: await readRecentRuns() });
+    const [runs, state] = await Promise.all([
+      readRecentRuns(),
+      readSyncState(DATASET_LIST.map((d) => d.key)),
+    ]);
+    return NextResponse.json({ runs, state });
   }
 
   if (!isNotionConfigured()) {
@@ -82,7 +101,8 @@ async function handle(req: Request) {
   }
 
   const only = url.searchParams.get("only") || undefined;
-  const summary = await runSync(only);
+  const mode = parseRequestedMode(url.searchParams.get("mode"));
+  const summary = await runSync(only, { mode });
   return NextResponse.json(summary, { status: summary.ok ? 200 : 207 });
 }
 

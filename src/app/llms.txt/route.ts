@@ -11,6 +11,10 @@ import { recipes } from "@/content/recipes/index";
 
 const SITE = "https://matthewrmckenzie.com";
 
+// Built once per deploy and served as a static file: nothing here depends on
+// the request.
+export const dynamic = "force-static";
+
 export async function GET() {
   const recipeLines = recipes
     .map((r) => `- ${r.title}: ${SITE}/recipes/${r.slug}`)

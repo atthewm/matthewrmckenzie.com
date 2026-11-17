@@ -65,6 +65,11 @@ export interface DatasetDef {
   /** Row cap for this database. Defaults to the client's own limit. */
   maxRows?: number;
   /**
+   * Relation lookups the mapping reads from SyncContext. The sync only pays
+   * for a lookup table when a dataset that needs it has rows to map.
+   */
+  needs?: ReadonlyArray<"people" | "days">;
+  /**
    * Per-row mapping: one Notion page becomes one cache row. Most datasets use
    * this. Exactly one of `transform` or `aggregate` must be set.
    */
@@ -137,6 +142,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "Movies",
     visibility: "public",
     databaseId: NOTION_DB.films,
+    needs: ["people"],
     transform: (page, ctx) => {
       const title = getTitle(page, "Title");
       if (!title) return null;
@@ -183,6 +189,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "TV",
     visibility: "public",
     databaseId: NOTION_DB.tv,
+    needs: ["people"],
     transform: (page, ctx) => {
       const title = getTitle(page, "Title");
       if (!title) return null;
@@ -230,6 +237,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "Audiobooks",
     visibility: "public",
     databaseId: NOTION_DB.books,
+    needs: ["people"],
     rowFilter: (page) =>
       getMultiSelect(page, "Format").includes("Audiobook") ||
       getSelect(page, "Source") === "Audible",
@@ -289,6 +297,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     label: "Top Foods",
     visibility: "public",
     databaseId: NOTION_DB.mealEntries,
+    needs: ["days"],
     // The log runs to several thousand rows and grows daily.
     maxRows: 20000,
     // sortKey is a zero-padded count, so lexicographic desc == most logged.

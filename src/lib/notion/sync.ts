@@ -7,12 +7,43 @@
 // Everything the site reads is served from that cache, so this is the only
 // place that talks to Notion. Each dataset is isolated: one failing database
 // leaves the others (and the cached copy of the failing one) intact.
+//
+// Two kinds of run (see incremental.ts for the rules):
+//   incremental  ask Notion only for rows edited since the dataset's last
+//                successful run and upsert those. The everyday case.
+//   full         read the whole database, upsert it and prune what is gone.
+//                Once a week per dataset, and whenever there is no earlier
+//                run to be incremental against.
+// A dataset that aggregates a whole table (top-foods) cannot be patched from a
+// few changed rows, so it is skipped on incremental runs and recomputed by the
+// weekly full run.
 // ============================================================================
 
 import { queryDatabase, type QueryResult } from "./client";
 import { NOTION_DB } from "./config";
-import { DATASET_LIST, getDataset, type CacheRow, type SyncContext } from "./datasets";
-import { writeDataset, recordSyncRuns, type SyncRunRecord } from "./cache";
+import {
+  DATASET_LIST,
+  getDataset,
+  type CacheRow,
+  type DatasetDef,
+  type SyncContext,
+} from "./datasets";
+import {
+  writeDataset,
+  upsertRows,
+  deleteRows,
+  readSyncState,
+  writeSyncState,
+  recordSyncRuns,
+  type SyncRunRecord,
+} from "./cache";
+import {
+  chooseMode,
+  incrementalSince,
+  lastEditedSinceFilter,
+  type DatasetSyncState,
+  type RequestedMode,
+} from "./incremental";
 import { getDate, type NotionPage } from "./properties";
 
 /** Find a page's title text regardless of which property holds the title. */
@@ -28,13 +59,14 @@ function primaryTitle(page: NotionPage): string {
 }
 
 /**
- * Per-run query memo.
+ * Per-run memo for whole-database reads.
  *
  * Daily Logs is read twice in a full run: once to build the meal-entry day map
  * and once as the nutrition dataset itself. Caching it avoids paying for the
  * same pagination twice. Only the small reference databases are retained; the
  * meal log runs to thousands of rows and is read exactly once, so holding it
- * would cost memory for nothing.
+ * would cost memory for nothing. Filtered (incremental) queries never go
+ * through here.
  */
 function makeQueryCache() {
   const cache = new Map<string, QueryResult>();
@@ -88,8 +120,33 @@ async function buildDayMap(query: CachedQuery): Promise<Record<string, string>> 
   return map;
 }
 
+/**
+ * Relation lookup tables, each built at most once per run and only when a
+ * dataset that needs it actually has rows to map. On a quiet incremental run
+ * neither is fetched.
+ */
+function makeContextLoader(query: CachedQuery) {
+  let people: Promise<Record<string, string>> | undefined;
+  let days: Promise<Record<string, string>> | undefined;
+
+  return async function contextFor(def: DatasetDef): Promise<SyncContext> {
+    const needs = def.needs ?? [];
+    const [peopleById, dayById] = await Promise.all([
+      needs.includes("people") ? (people ??= buildPeopleMap(query)) : Promise.resolve({}),
+      needs.includes("days") ? (days ??= buildDayMap(query)) : Promise.resolve({}),
+    ]);
+    return { peopleById, dayById };
+  };
+}
+
+type ContextLoader = ReturnType<typeof makeContextLoader>;
+
+export type DatasetRunMode = "full" | "incremental" | "skipped";
+
 export interface DatasetResult {
   key: string;
+  mode: DatasetRunMode;
+  /** Rows written (full: the whole dataset; incremental: the changed rows). */
   count: number;
   ms: number;
   error?: string;
@@ -101,57 +158,124 @@ export interface SyncSummary {
   results: DatasetResult[];
 }
 
+export interface SyncOptions {
+  /** "auto" (default) lets each dataset decide; "full" forces a rebuild. */
+  mode?: RequestedMode;
+  /** Clock override for tests. */
+  now?: Date;
+}
+
+interface Outcome {
+  count: number;
+  error?: string;
+}
+
+/** Whole database in, upsert everything, prune what Notion no longer has. */
+async function runFull(def: DatasetDef, query: CachedQuery, contextFor: ContextLoader): Promise<Outcome> {
+  const { pages, truncated } = await query(def.databaseId, def.maxRows);
+  const filtered = def.rowFilter ? pages.filter(def.rowFilter) : pages;
+  const ctx = await contextFor(def);
+
+  let rows: CacheRow[];
+  if (def.aggregate) {
+    rows = def.aggregate(filtered, ctx);
+  } else if (def.transform) {
+    const mapped: CacheRow[] = [];
+    for (const page of filtered) {
+      const row = def.transform(page, ctx);
+      if (row) mapped.push(row);
+    }
+    rows = mapped;
+  } else {
+    throw new Error(`dataset "${def.key}" defines neither transform nor aggregate`);
+  }
+
+  const count = await writeDataset(def.key, rows);
+
+  // The rows that did arrive are still written: stale-but-partial beats
+  // dropping the dataset. The run is marked failed so a silent shortfall
+  // cannot hide behind a green status the way the film shelf did.
+  const error = truncated
+    ? `row cap reached: wrote ${count} rows but the source has more`
+    : undefined;
+  return { count, error };
+}
+
+/** Only the rows edited since `since`: upsert the ones that still belong, drop the rest. */
+async function runIncremental(def: DatasetDef, since: string, contextFor: ContextLoader): Promise<Outcome> {
+  if (!def.transform) {
+    throw new Error(`dataset "${def.key}" has no per-row transform and cannot sync incrementally`);
+  }
+  const { pages, truncated } = await queryDatabase(def.databaseId, {
+    filter: lastEditedSinceFilter(since),
+    max: def.maxRows,
+  });
+  if (pages.length === 0) return { count: 0 };
+
+  const ctx = await contextFor(def);
+  const rows: CacheRow[] = [];
+  const gone: string[] = [];
+  for (const page of pages) {
+    const row = !def.rowFilter || def.rowFilter(page) ? def.transform(page, ctx) : null;
+    if (row) rows.push(row);
+    // Edited, and no longer part of this dataset: make sure it is not cached.
+    else gone.push(page.id);
+  }
+
+  const count = await upsertRows(def.key, rows);
+  if (gone.length) await deleteRows(def.key, gone);
+
+  const error = truncated
+    ? `row cap reached: wrote ${count} changed rows but more were edited`
+    : undefined;
+  return { count, error };
+}
+
 /** Run the sync for all datasets, or just one when `only` is provided. */
-export async function runSync(only?: string): Promise<SyncSummary> {
-  const start = Date.now();
-  const defs = only ? [getDataset(only)].filter(Boolean) : DATASET_LIST;
+export async function runSync(only?: string, options: SyncOptions = {}): Promise<SyncSummary> {
+  const startedAt = options.now ?? new Date();
+  const startedIso = startedAt.toISOString();
+  const requested = options.mode ?? "auto";
+  const defs = (only ? [getDataset(only)] : DATASET_LIST).filter(
+    (d): d is DatasetDef => Boolean(d)
+  );
 
+  const states = await readSyncState(defs.map((d) => d.key));
   const query = makeQueryCache();
-
-  // Only pay for the relation maps the selected datasets actually need.
-  const needsPeople = defs.some((d) => d?.key !== "top-foods");
-  const needsDays = defs.some((d) => d?.key === "top-foods");
-  const [peopleById, dayById] = await Promise.all([
-    needsPeople ? buildPeopleMap(query) : Promise.resolve({}),
-    needsDays ? buildDayMap(query) : Promise.resolve({}),
-  ]);
-  const ctx: SyncContext = { peopleById, dayById };
+  const contextFor = makeContextLoader(query);
 
   const results: DatasetResult[] = [];
 
   for (const def of defs) {
-    if (!def) continue;
     const began = Date.now();
+    const state: DatasetSyncState | undefined = states[def.key];
+    const mode = chooseMode({ requested, state, now: startedAt });
+
+    if (mode === "incremental" && def.aggregate) {
+      results.push({ key: def.key, mode: "skipped", count: 0, ms: 0 });
+      continue;
+    }
+
     try {
-      const { pages, truncated } = await query(def.databaseId, def.maxRows);
-      const filtered = def.rowFilter ? pages.filter(def.rowFilter) : pages;
+      const outcome =
+        mode === "incremental" && state?.lastRunAt
+          ? await runIncremental(def, incrementalSince(state.lastRunAt), contextFor)
+          : await runFull(def, query, contextFor);
 
-      let rows: CacheRow[];
-      if (def.aggregate) {
-        rows = def.aggregate(filtered, ctx);
-      } else if (def.transform) {
-        const mapped: CacheRow[] = [];
-        for (const page of filtered) {
-          const row = def.transform(page, ctx);
-          if (row) mapped.push(row);
-        }
-        rows = mapped;
-      } else {
-        throw new Error(`dataset "${def.key}" defines neither transform nor aggregate`);
+      // Only a clean run moves the window forward. The run's start time is
+      // recorded, not its end, so edits made while it ran are picked up next
+      // time.
+      if (!outcome.error) {
+        await writeSyncState(def.key, {
+          lastRunAt: startedIso,
+          lastFullAt: mode === "full" ? startedIso : state?.lastFullAt ?? null,
+        });
       }
-
-      const count = await writeDataset(def.key, rows);
-
-      // The rows that did arrive are still written: stale-but-partial beats
-      // dropping the dataset. The run is marked failed so a silent shortfall
-      // cannot hide behind a green status the way the film shelf did.
-      const error = truncated
-        ? `row cap reached: wrote ${count} rows but the source has more`
-        : undefined;
-      results.push({ key: def.key, count, ms: Date.now() - began, error });
+      results.push({ key: def.key, mode, count: outcome.count, ms: Date.now() - began, error: outcome.error });
     } catch (err: any) {
       results.push({
         key: def.key,
+        mode,
         count: 0,
         ms: Date.now() - began,
         error: String(err?.message ?? err),
@@ -159,18 +283,20 @@ export async function runSync(only?: string): Promise<SyncSummary> {
     }
   }
 
-  const runs: SyncRunRecord[] = results.map((r) => ({
-    dataset: r.key,
-    ok: !r.error,
-    rowCount: r.count,
-    ms: r.ms,
-    error: r.error ?? null,
-  }));
+  const runs: SyncRunRecord[] = results
+    .filter((r) => r.mode !== "skipped")
+    .map((r) => ({
+      dataset: r.key,
+      ok: !r.error,
+      rowCount: r.count,
+      ms: r.ms,
+      error: r.error ?? null,
+    }));
   await recordSyncRuns(runs);
 
   return {
     ok: results.every((r) => !r.error),
-    ms: Date.now() - start,
+    ms: Date.now() - startedAt.getTime(),
     results,
   };
 }

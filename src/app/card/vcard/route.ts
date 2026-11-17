@@ -12,6 +12,8 @@
 import { profile, phoneE164 } from "@/config/profile";
 
 export const runtime = "nodejs";
+// Built once per deploy and served as a static file. REV is the build time.
+export const dynamic = "force-static";
 
 /** Escape per RFC 6350: backslash, comma, and semicolon are reserved. */
 function esc(value: string): string {
@@ -48,7 +50,7 @@ export async function GET() {
     headers: {
       "Content-Type": "text/vcard; charset=utf-8",
       "Content-Disposition": 'attachment; filename="Matthew-McKenzie.vcf"',
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": "public, max-age=3600, s-maxage=86400",
     },
   });
 }

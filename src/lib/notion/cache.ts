@@ -12,9 +12,19 @@
 // @ts-ignore - types provided by @supabase/supabase-js at runtime
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { CacheRow } from "./datasets";
+import type { DatasetSyncState } from "./incremental";
 
 export const CACHE_TABLE = "notion_cache";
 export const RUNS_TABLE = "notion_sync_runs";
+
+/**
+ * Sync bookkeeping (when each dataset last ran, and last ran in full) is kept
+ * in the cache table itself under this dataset name, one row per dataset, so
+ * incremental runs need no schema change. It is not a real dataset: the read
+ * API only serves keys from the dataset registry, so these rows never leave
+ * the server.
+ */
+export const STATE_DATASET = "_sync_state";
 
 /**
  * Sentinel `dataset` value for a run that never got as far as a dataset,
@@ -25,6 +35,8 @@ export const CONFIG_DATASET = "_config";
 
 /** Supabase rejects very large payloads, so upserts go up in batches. */
 const BATCH_SIZE = 500;
+/** Ids travel in the query string of a delete, so those batches stay small. */
+const DELETE_BATCH_SIZE = 100;
 
 let cached: SupabaseClient | null | undefined;
 
@@ -45,6 +57,31 @@ async function countDataset(supabase: SupabaseClient, dataset: string): Promise<
     .eq("dataset", dataset);
   if (error) throw new Error(`cache count failed: ${error.message}`);
   return count ?? 0;
+}
+
+/** Shape cache rows for the table, stamped with one `synced_at`. */
+function toRecords(dataset: string, rows: CacheRow[], stamp: string) {
+  return rows.map((r) => ({
+    id: `${dataset}:${r.notionId}`,
+    dataset,
+    notion_id: r.notionId,
+    title: r.title,
+    sort_key: r.sortKey,
+    data: r.data ?? null,
+    private_data: r.privateData ?? null,
+    synced_at: stamp,
+  }));
+}
+
+async function upsertRecords(
+  supabase: SupabaseClient,
+  records: ReturnType<typeof toRecords>
+): Promise<void> {
+  for (let i = 0; i < records.length; i += BATCH_SIZE) {
+    const batch = records.slice(i, i + BATCH_SIZE);
+    const up = await supabase.from(CACHE_TABLE).upsert(batch, { onConflict: "id" });
+    if (up.error) throw new Error(`cache upsert failed: ${up.error.message}`);
+  }
 }
 
 /**
@@ -75,22 +112,8 @@ export async function writeDataset(dataset: string, rows: CacheRow[]): Promise<n
   }
 
   const now = new Date().toISOString();
-  const records = rows.map((r) => ({
-    id: `${dataset}:${r.notionId}`,
-    dataset,
-    notion_id: r.notionId,
-    title: r.title,
-    sort_key: r.sortKey,
-    data: r.data ?? null,
-    private_data: r.privateData ?? null,
-    synced_at: now,
-  }));
-
-  for (let i = 0; i < records.length; i += BATCH_SIZE) {
-    const batch = records.slice(i, i + BATCH_SIZE);
-    const up = await supabase.from(CACHE_TABLE).upsert(batch, { onConflict: "id" });
-    if (up.error) throw new Error(`cache upsert failed: ${up.error.message}`);
-  }
+  const records = toRecords(dataset, rows, now);
+  await upsertRecords(supabase, records);
 
   // Anything still carrying an older stamp is gone from Notion.
   const del = await supabase
@@ -101,6 +124,100 @@ export async function writeDataset(dataset: string, rows: CacheRow[]): Promise<n
   if (del.error) throw new Error(`cache prune failed: ${del.error.message}`);
 
   return records.length;
+}
+
+/**
+ * Upsert the rows an incremental run found, leaving every other cached row
+ * alone. No pruning and no empty-result guard: a filtered query returning
+ * nothing just means nothing was edited.
+ */
+export async function upsertRows(dataset: string, rows: CacheRow[]): Promise<number> {
+  const supabase = getServiceClient();
+  if (!supabase) throw new Error("Supabase service client not configured");
+  if (rows.length === 0) return 0;
+  await upsertRecords(supabase, toRecords(dataset, rows, new Date().toISOString()));
+  return rows.length;
+}
+
+/**
+ * Remove cached rows by Notion page id. An incremental run calls this for
+ * edited pages that no longer belong in the dataset (a favorite unchecked, a
+ * book that stopped being an audiobook). Ids that were never cached are a
+ * no-op.
+ */
+export async function deleteRows(dataset: string, notionIds: string[]): Promise<void> {
+  const supabase = getServiceClient();
+  if (!supabase) throw new Error("Supabase service client not configured");
+  for (let i = 0; i < notionIds.length; i += DELETE_BATCH_SIZE) {
+    const batch = notionIds.slice(i, i + DELETE_BATCH_SIZE);
+    const del = await supabase.from(CACHE_TABLE).delete().eq("dataset", dataset).in("notion_id", batch);
+    if (del.error) throw new Error(`cache delete failed: ${del.error.message}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Sync state (last run and last full rebuild per dataset)
+// ---------------------------------------------------------------------------
+
+function toSyncState(data: unknown): DatasetSyncState {
+  const value = (data ?? {}) as Partial<Record<keyof DatasetSyncState, unknown>>;
+  return {
+    lastRunAt: typeof value.lastRunAt === "string" ? value.lastRunAt : null,
+    lastFullAt: typeof value.lastFullAt === "string" ? value.lastFullAt : null,
+  };
+}
+
+/**
+ * Sync state for the given dataset keys. A dataset with no state, or a read
+ * that fails, is simply absent from the result, which makes the caller fall
+ * back to a full rebuild: the safe direction.
+ */
+export async function readSyncState(keys: string[]): Promise<Record<string, DatasetSyncState>> {
+  const supabase = getServiceClient();
+  if (!supabase || keys.length === 0) return {};
+
+  const { data, error } = await supabase
+    .from(CACHE_TABLE)
+    .select("notion_id, data")
+    .eq("dataset", STATE_DATASET)
+    .in("notion_id", keys);
+
+  if (error) {
+    console.error(`[notion-sync] could not read sync state: ${error.message}`);
+    return {};
+  }
+  const states: Record<string, DatasetSyncState> = {};
+  for (const row of (data ?? []) as Array<{ notion_id: string; data: unknown }>) {
+    states[row.notion_id] = toSyncState(row.data);
+  }
+  return states;
+}
+
+/**
+ * Record a dataset's successful run. Best effort: if this write fails the
+ * next run sees the older state and re-reads a wider window (or rebuilds in
+ * full), so nothing is lost and the sync itself must not fail over it.
+ */
+export async function writeSyncState(key: string, state: DatasetSyncState): Promise<void> {
+  const supabase = getServiceClient();
+  if (!supabase) return;
+
+  const { error } = await supabase.from(CACHE_TABLE).upsert(
+    {
+      id: `${STATE_DATASET}:${key}`,
+      dataset: STATE_DATASET,
+      notion_id: key,
+      title: key,
+      sort_key: null,
+      data: state,
+      private_data: null,
+      synced_at: new Date().toISOString(),
+    },
+    { onConflict: "id" }
+  );
+  if (error) {
+    console.error(`[notion-sync] could not record sync state for "${key}": ${error.message}`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -186,11 +303,14 @@ export async function readDataset(
   const supabase = getServiceClient();
   if (!supabase) return { items: [], syncedAt: null };
 
-  const { data, error } = await supabase
-    .from(CACHE_TABLE)
-    .select("data, private_data, sort_key, synced_at")
-    .eq("dataset", dataset)
-    .order("sort_key", { ascending: !descending, nullsFirst: false });
+  const [{ data, error }, states] = await Promise.all([
+    supabase
+      .from(CACHE_TABLE)
+      .select("data, private_data, sort_key, synced_at")
+      .eq("dataset", dataset)
+      .order("sort_key", { ascending: !descending, nullsFirst: false }),
+    readSyncState([dataset]),
+  ]);
 
   if (error) throw new Error(`cache read failed: ${error.message}`);
   const rows = (data ?? []) as Array<{
@@ -206,9 +326,18 @@ export async function readDataset(
   );
   // Rows are ordered by sort_key, not freshness, so scan for the newest stamp
   // rather than trusting the first row.
-  const syncedAt = rows.reduce<string | null>(
+  const newestRow = rows.reduce<string | null>(
     (max, row) => (!max || row.synced_at > max ? row.synced_at : max),
     null
   );
+  // An incremental run that found nothing to change writes no rows, so the
+  // last successful run is the truer "synced at" when it is the later of the two.
+  const syncedAt = laterOf(newestRow, states[dataset]?.lastRunAt ?? null);
   return { items, syncedAt };
+}
+
+/** The later of two timestamps. Compared as instants, since formats can differ. */
+function laterOf(a: string | null, b: string | null): string | null {
+  if (!a || !b) return a ?? b;
+  return Date.parse(b) > Date.parse(a) ? b : a;
 }

@@ -44,6 +44,10 @@ function getEssayItems() {
   }
 }
 
+// Built once per deploy and served as a static file: the feed only changes
+// when the content does.
+export const dynamic = "force-static";
+
 export async function GET() {
   const now = new Date().toUTCString();
 
