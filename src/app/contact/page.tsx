@@ -6,13 +6,13 @@ import CalEmbed from "@/components/ui/CalEmbed";
 import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
-  title: "Contact | Investor Relations, Capital Formation, Collaboration",
-  description: "Reach Matthew McKenzie about capital formation, investor partnerships, growth strategy, or AI operations tooling. Schedule a call or send a message.",
+  title: "Contact",
+  description: "Reach Matthew McKenzie about capital formation, investor partnerships, or growth strategy. Schedule a call or send a message.",
   alternates: { canonical: "https://matthewrmckenzie.com/contact" },
   openGraph: {
     images: ["/opengraph-image"],
-    title: "Contact | Investor Relations, Capital Formation, Collaboration",
-    description: "Reach Matthew McKenzie about capital formation, investor partnerships, growth strategy, or AI operations tooling. Schedule a call or send a message.",
+    title: "Contact | Matthew McKenzie",
+    description: "Reach Matthew McKenzie about capital formation, investor partnerships, or growth strategy. Schedule a call or send a message.",
   },
 };
 

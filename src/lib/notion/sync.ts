@@ -44,7 +44,7 @@ import {
   type DatasetSyncState,
   type RequestedMode,
 } from "./incremental";
-import { getDate, type NotionPage } from "./properties";
+import { getDate, normalizeDashes, type NotionPage } from "./properties";
 
 /** Find a page's title text regardless of which property holds the title. */
 function primaryTitle(page: NotionPage): string {
@@ -90,7 +90,8 @@ async function buildPeopleMap(query: CachedQuery): Promise<Record<string, string
     if (truncated) {
       console.warn("[notion-sync] People hit the row cap; some relations will not resolve");
     }
-    for (const p of pages) map[p.id] = primaryTitle(p);
+    // Names end up on the public shelves, so they are normalized like other text.
+    for (const p of pages) map[p.id] = normalizeDashes(primaryTitle(p));
   } catch {
     // People DB optional: relations just won't resolve to names.
   }

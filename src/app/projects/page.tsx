@@ -5,12 +5,12 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
-  title: "Projects | AI Operations Tooling, Platforms, Open Source",
+  title: "Projects",
   description: "mckm.at, McKenzie OS, Eight Sleep integrations, and other projects by Matthew McKenzie.",
   alternates: { canonical: "https://matthewrmckenzie.com/projects" },
   openGraph: {
     images: ["/opengraph-image"],
-    title: "Projects | AI Operations Tooling, Platforms, Open Source",
+    title: "Projects | Matthew McKenzie",
     description: "mckm.at, McKenzie OS, Eight Sleep integrations, and other projects by Matthew McKenzie.",
   },
 };

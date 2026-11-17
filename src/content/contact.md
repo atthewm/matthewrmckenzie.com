@@ -1,6 +1,6 @@
 ---
 title: Contact
-updated: 2026-11-12
+updated: 2026-11-17
 ---
 
 # Contact
@@ -16,8 +16,6 @@ I am glad to talk about capital formation, private wealth partnerships, and real
 **Investors and advisors.** Family offices, RIAs, and private investors who want to learn about Menlo Equities' investment platforms.
 
 **Sponsors and operators.** If you are raising capital or pressure testing a business plan and want someone who knows the investor side.
-
-**Builders.** If you are working on MCP servers, agents, or tools for investor relations and want to compare notes.
 
 **General.** Press, speaking, collaboration, or anything else.
 

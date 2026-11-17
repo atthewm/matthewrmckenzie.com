@@ -25,6 +25,7 @@ import {
   getUrl,
   getFileUrl,
   getRelationIds,
+  normalizeDashes,
   parseStars,
 } from "./properties";
 import type {
@@ -114,7 +115,7 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
     visibility: "public",
     databaseId: NOTION_DB.nutrition,
     transform: (page, _ctx) => {
-      const date = getDate(page, "Log Date") || getTitle(page, "Date");
+      const date = getDate(page, "Log Date") || getTitle(page, "Date", { raw: true });
       if (!date) return null;
       const day: NutritionDay = {
         date,
@@ -307,7 +308,8 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
         const dayIds = getRelationIds(page, "Day");
         const day = dayIds.map((id) => ctx.dayById[id]).find(Boolean) ?? null;
         return {
-          item: getTitle(page, "Item"),
+          // Raw: foods.ts splits the title on its dashes to drop qualifiers.
+          item: getTitle(page, "Item", { raw: true }),
           meal: getSelect(page, "Meal"),
           day,
           calories: getNumber(page, "Calories"),
@@ -318,13 +320,17 @@ export const DATASETS: Record<NotionDatasetKey, DatasetDef> = {
         };
       });
 
-      return aggregateTopFoods(entries, { limit: 100, minCount: 2 }).map((food) => ({
-        // Stable id across syncs so the row updates in place.
-        notionId: food.key,
-        title: food.name,
-        sortKey: String(food.count).padStart(6, "0"),
-        data: food,
-      }));
+      return aggregateTopFoods(entries, { limit: 100, minCount: 2 }).map((food) => {
+        // The label is the one piece of meal text that is shown.
+        const name = normalizeDashes(food.name);
+        return {
+          // Stable id across syncs so the row updates in place.
+          notionId: food.key,
+          title: name,
+          sortKey: String(food.count).padStart(6, "0"),
+          data: { ...food, name },
+        };
+      });
     },
   },
 

@@ -19,7 +19,6 @@ interface Repo {
   icon: React.ReactNode;
   stars?: number;
   license?: string;
-  updated: string;
 }
 
 const repos: Repo[] = [
@@ -31,7 +30,6 @@ const repos: Repo[] = [
     languageColor: "#3178c6",
     category: ["health"],
     icon: <Moon size={14} />,
-    updated: "May 2026",
   },
   {
     name: "eightsleep-client",
@@ -41,7 +39,6 @@ const repos: Repo[] = [
     languageColor: "#3178c6",
     category: ["health"],
     icon: <Moon size={14} />,
-    updated: "May 2026",
   },
   {
     name: "matthewrmckenzie.com",
@@ -51,7 +48,6 @@ const repos: Repo[] = [
     languageColor: "#3178c6",
     category: ["projects"],
     icon: <Globe size={14} />,
-    updated: "Mar 2026",
   },
   {
     name: "cosmos-collector",
@@ -62,7 +58,6 @@ const repos: Repo[] = [
     category: ["projects"],
     icon: <Code2 size={14} />,
     license: "MIT",
-    updated: "Mar 2026",
   },
   {
     name: "snowcraft-remake",
@@ -72,7 +67,6 @@ const repos: Repo[] = [
     languageColor: "#3178c6",
     category: ["games"],
     icon: <Gamepad2 size={14} />,
-    updated: "Feb 2026",
   },
   {
     name: "snowcraft",
@@ -82,7 +76,6 @@ const repos: Repo[] = [
     languageColor: "#888",
     category: ["games"],
     icon: <Gamepad2 size={14} />,
-    updated: "Feb 2026",
   },
 ];
 
@@ -208,9 +201,6 @@ export default function GitHubApp() {
                         {repo.license}
                       </span>
                     )}
-                    <span className="text-[10px] text-desktop-text-secondary/60 ml-auto">
-                      {repo.updated}
-                    </span>
                   </div>
                 </div>
               </div>

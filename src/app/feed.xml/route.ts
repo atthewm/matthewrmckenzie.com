@@ -1,12 +1,15 @@
 // ============================================================================
 // RSS FEED
 // ============================================================================
-// Generates an RSS 2.0 feed with static pages and essays.
+// Generates an RSS 2.0 feed with static pages and essays. Every pubDate comes
+// from the content's own date (src/lib/page-dates.ts), never from a hand
+// written string or the clock.
 // ============================================================================
 
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { FALLBACK_DATE, contentDate, toIsoDay, toRssDate } from "@/lib/page-dates";
 
 const SITE_URL = "https://matthewrmckenzie.com";
 
@@ -33,9 +36,7 @@ function getEssayItems() {
           title: (data.title as string) || slug,
           link: `${SITE_URL}/writing/${slug}`,
           description: (data.description as string) || "",
-          pubDate: data.date
-            ? new Date(data.date as string).toUTCString()
-            : new Date().toUTCString(),
+          pubDate: toRssDate(toIsoDay(data.date) ?? FALLBACK_DATE),
         };
       })
       .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
@@ -57,15 +58,15 @@ export async function GET() {
       title: "About Matthew McKenzie",
       link: `${SITE_URL}/about`,
       description:
-        "Capital formation, private wealth, and AI operations tooling. Senior Vice President, Capital Formation at Menlo Equities.",
-      pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
+        "Senior Vice President, Capital Formation at Menlo Equities in Austin. Private wealth partnerships with high net worth investors, family offices, and RIAs.",
+      pubDate: toRssDate(contentDate("about")),
     },
     {
       title: "Work: Capital Formation, Investor Relations, Growth Strategy",
       link: `${SITE_URL}/work`,
       description:
-        "Capabilities in capital formation, investor relations, growth strategy, and AI operations tooling for real asset backed businesses.",
-      pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
+        "Capabilities in capital formation, investor relations, and growth strategy for real asset backed businesses.",
+      pubDate: toRssDate(contentDate("work")),
     },
   ];
 
@@ -74,7 +75,7 @@ export async function GET() {
   <channel>
     <title>Matthew McKenzie</title>
     <link>${SITE_URL}</link>
-    <description>Capital formation, growth strategy, and AI operations tooling for real asset backed businesses.</description>
+    <description>Capital formation and growth strategy for real asset backed businesses.</description>
     <language>en-us</language>
     <lastBuildDate>${now}</lastBuildDate>
     <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>

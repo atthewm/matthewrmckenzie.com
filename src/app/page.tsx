@@ -3,6 +3,7 @@ import { flattenFS } from "@/data/fs";
 import { getContent } from "@/lib/content";
 import DesktopShell from "@/components/desktop/DesktopShell";
 import HomeIntro from "@/components/home/HomeIntro";
+import JsonLd, { profilePageSchema } from "@/components/ui/JsonLd";
 
 // ============================================================================
 // HOME PAGE
@@ -40,6 +41,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={profilePageSchema} />
       <HomeIntro />
       <DesktopShell contentMap={contentMap} />
     </>

@@ -1,6 +1,6 @@
 ---
 title: About
-updated: 2026-11-12
+updated: 2026-11-17
 ---
 
 # About
@@ -21,7 +21,7 @@ He holds a BS in Economics and a BA in Public Policy from Southern Methodist Uni
 
 **Underwriting first.** He works alongside sponsors and operators to pressure test business plans and assumptions before going to market, so investors get clarity on what they are buying.
 
-**Building tools.** Matthew writes software that puts AI to work on real operations: MCP servers, agents, and data pipelines. This site, the mckm.at link and data room platform, and his personal health data stack are all his own builds.
+**Building tools.** This site, the mckm.at link and data room platform, and his personal health data stack are all his own builds.
 
 ## Outside Work
 

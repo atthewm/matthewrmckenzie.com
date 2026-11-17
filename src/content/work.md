@@ -1,6 +1,6 @@
 ---
 title: Work
-updated: 2026-11-12
+updated: 2026-11-17
 ---
 
 # Work
@@ -19,7 +19,7 @@ I lead private wealth capital formation at Menlo Equities. My work is building d
 
 **Underwriting and Strategy.** Working alongside sponsors and operators to pressure test business plans and assumptions, refine positioning, and prepare offerings for investors.
 
-**Tools and Automation.** Building software that puts AI to work on investor operations: MCP servers, agents, tracked sharing links, and data rooms through [mckm.at](https://mckm.at).
+**Tools and Automation.** Building tracked sharing links and data rooms for investor operations through [mckm.at](https://mckm.at).
 
 ## Experience
 
