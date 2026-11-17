@@ -1,14 +1,16 @@
 // ============================================================================
 // OWNER FLAG (server only)
 // ============================================================================
-// Account controls (WHOOP connect, refresh, disconnect) are for Matt only.
+// Account controls (WHOOP connect, refresh, disconnect), the full WHOOP feed
+// and the Life app are for Matt only.
 // Signing in at /gate with the admin account sets an httpOnly cookie whose
 // value is an HMAC derived from a server secret. The value is never sent to
 // the browser in a response body and is never readable from script. Guests
 // and visitors never get it, and with no secret configured nobody is owner.
 // ============================================================================
 
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac } from "node:crypto";
+import { readCookie, safeEqual } from "./cookies";
 
 export const OWNER_COOKIE = "mmck_owner";
 export const OWNER_MAX_AGE = 60 * 60 * 24 * 30;
@@ -25,21 +27,12 @@ export function ownerCookieValue(): string | null {
   return createHmac("sha256", secret).update("mmck-owner-v1").digest("hex");
 }
 
-function readCookie(header: string, name: string): string | null {
-  for (const part of header.split(";")) {
-    const [k, ...v] = part.trim().split("=");
-    if (k === name) return v.join("=");
-  }
-  return null;
-}
-
 /** True only when the request carries a valid owner cookie. */
 export function isOwnerRequest(req: Request): boolean {
   const expected = ownerCookieValue();
   if (!expected) return false;
-  const got = readCookie(req.headers.get("cookie") || "", OWNER_COOKIE);
-  if (!got || got.length !== expected.length) return false;
-  return timingSafeEqual(Buffer.from(got), Buffer.from(expected));
+  const got = readCookie(req.headers.get("cookie"), OWNER_COOKIE);
+  return got !== null && safeEqual(got, expected);
 }
 
 export const NO_STORE = { "Cache-Control": "private, no-store" } as const;

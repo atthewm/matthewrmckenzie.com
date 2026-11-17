@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Send, Check, X as XIcon } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 
 // ============================================================================
 // GUESTBOOK APP (Mac OS X 10.3 Panther Style)
@@ -26,10 +27,15 @@ export default function GuestbookApp() {
   const [website, setWebsite] = useState(""); // honeypot
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const { admin, ready } = useOwnerSession();
 
   const loadEntries = useCallback(async () => {
+    if (!ready) return;
     try {
-      const res = await fetch("/api/guestbook");
+      // Moderation uses its own uncached URL, which checks the admin cookie.
+      // Everyone else reads the public list, which the CDN can hold.
+      let res = await fetch(admin ? "/api/guestbook?view=admin" : "/api/guestbook");
+      if (admin && res.status === 401) res = await fetch("/api/guestbook");
       if (res.ok) {
         const data = await res.json();
         setEntries(data.entries ?? []);
@@ -38,7 +44,7 @@ export default function GuestbookApp() {
     } catch {
       // silent
     }
-  }, []);
+  }, [admin, ready]);
 
   useEffect(() => {
     loadEntries();

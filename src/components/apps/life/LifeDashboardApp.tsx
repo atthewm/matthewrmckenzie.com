@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Heart, RefreshCw } from "lucide-react";
 import { findFSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 import { whoopSplits } from "@/data/whoop/splits";
 import type { NutritionDay } from "@/data/notion/types";
 import {
@@ -16,10 +17,15 @@ import {
 } from "./LifeSections";
 
 // ============================================================================
-// LIFE DASHBOARD: unified public "Health and Diet" view
+// LIFE DASHBOARD: unified "Health and Diet" view, for the owner only
 // ============================================================================
+// WHOOP and diet side by side say more than either feed alone, so this app is
+// private: it is listed only for the signed-in owner (ownerOnly in fs.ts), it
+// loads nothing for anyone else, and the full WHOOP feed it reads is refused
+// by the server without the owner cookie.
+//
 // One screen composing three sections in the Panther window style:
-//   Activity  -> GET /api/whoop/data        (calories burned, strain, recovery, sleep)
+//   Activity  -> GET /api/whoop/data?scope=owner (calories burned, strain, recovery, sleep)
 //   Nutrition -> GET /api/notion/data?dataset=nutrition (calories, macros, streak)
 //   Training  -> static workout splits + the latest WHOOP workout
 // Reuses the existing HTTP feeds; no data-aggregation logic is duplicated here.
@@ -76,6 +82,7 @@ function normalizeWhoop(raw: WhoopRaw): { activity: WhoopActivity; latestWorkout
 
 export default function LifeDashboardApp() {
   const { openItem } = useDesktop();
+  const { owner, ready } = useOwnerSession();
 
   const [whoopLoading, setWhoopLoading] = useState(true);
   const [activity, setActivity] = useState<WhoopActivity | null>(null);
@@ -85,8 +92,9 @@ export default function LifeDashboardApp() {
   const [days, setDays] = useState<NutritionDay[]>([]);
 
   const load = useCallback(() => {
+    if (!owner) return;
     setWhoopLoading(true);
-    fetch("/api/whoop/data")
+    fetch("/api/whoop/data?scope=owner")
       .then((r) => (r.ok ? r.json() : { connected: false }))
       .catch(() => ({ connected: false }))
       .then((raw: WhoopRaw) => {
@@ -111,7 +119,7 @@ export default function LifeDashboardApp() {
         setDays([]);
         setNutritionState("error");
       });
-  }, []);
+  }, [owner]);
 
   useEffect(() => {
     load();
@@ -124,6 +132,14 @@ export default function LifeDashboardApp() {
     },
     [openItem],
   );
+
+  if (!owner) {
+    return (
+      <div className="flex h-full items-center justify-center bg-desktop-bg px-6 text-center text-[12px] text-desktop-text-secondary">
+        {ready ? "Life is private." : "Loading..."}
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col bg-desktop-bg text-desktop-text">

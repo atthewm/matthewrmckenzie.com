@@ -12,20 +12,10 @@ import { NextResponse } from "next/server";
 import { getDataset } from "@/lib/notion/datasets";
 import { readDataset } from "@/lib/notion/cache";
 import type { DatasetResponse } from "@/data/notion/types";
+import { isAdminRequest } from "@/lib/gate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const AUTH_COOKIE = "mckenzie_auth";
-const AUTH_VALUE = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
-
-function isAuthed(req: Request): boolean {
-  const cookie = req.headers.get("cookie") || "";
-  return cookie
-    .split(";")
-    .map((c) => c.trim())
-    .some((c) => c === `${AUTH_COOKIE}=${AUTH_VALUE}`);
-}
 
 export async function GET(req: Request) {
   const key = new URL(req.url).searchParams.get("dataset") || "";
@@ -34,7 +24,8 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: `unknown dataset: ${key}` }, { status: 404 });
   }
 
-  const authed = isAuthed(req);
+  // Fails closed: with no admin cookie value configured, nobody is an admin.
+  const authed = isAdminRequest(req);
   if (def.visibility === "private" && !authed) {
     return NextResponse.json(
       { error: "private dataset: admin only", key, authed: false },

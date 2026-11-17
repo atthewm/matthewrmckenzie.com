@@ -18,6 +18,8 @@ export interface FSItem {
   hidden?: boolean;
   /** Ids of items elsewhere in the tree to also pin on this folder's board */
   pins?: string[];
+  /** Listed only for the signed-in owner (see src/hooks/useOwnerSession.ts). */
+  ownerOnly?: boolean;
 }
 
 export const fileSystem: FSItem[] = [
@@ -26,8 +28,6 @@ export const fileSystem: FSItem[] = [
   { id: "work", name: "Work", type: "folder", icon: "Briefcase", staticRoute: "/work", description: "Resume, professional overview, and ways to work together.", pins: ["about", "card", "contact", "schedule", "linkedin"], children: [
     { id: "work-overview", name: "Work Overview", type: "app", icon: "Briefcase", appComponent: "ProjectsApp", contentPath: "work.md", description: "Professional work, projects, and case studies.", defaultSize: { width: 640, height: 560 } },
     { id: "resume", name: "Resume", type: "app", icon: "FileText", appComponent: "ResumeApp", contentPath: "resume.md", description: "Professional resume and experience.", defaultSize: { width: 560, height: 640 } },
-    { id: "capital-formation-overview", name: "Capital Formation Overview.pdf", type: "link", icon: "FileText", href: "/Matthew_McKenzie_Capital_Formation_Overview.pdf", description: "One-page capital formation overview (PDF)." },
-    { id: "working-with", name: "Working With Matthew.pdf", type: "link", icon: "FileText", href: "/Matthew_McKenzie_Working_With.pdf", description: "How I work with partners (PDF)." },
   ]},
   { id: "writing", name: "Writing", type: "folder", icon: "PenTool", staticRoute: "/writing", hidden: true, description: "Essays, notes, and long-form writing.", children: [
     { id: "essays", name: "Essays", type: "document", icon: "BookOpen", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
@@ -39,7 +39,7 @@ export const fileSystem: FSItem[] = [
   { id: "apple-music", name: "Apple Music", type: "app", icon: "ListMusic", appComponent: "AppleMusicFolder", description: "Apple Music playlists.", defaultSize: { width: 480, height: 420 } },
   { id: "contact", name: "Contact", type: "app", icon: "Mail", appComponent: "ContactApp", staticRoute: "/contact", description: "Get in touch.", defaultSize: { width: 480, height: 500 } },
   { id: "guestbook", name: "Guestbook", type: "app", icon: "BookOpen", appComponent: "GuestbookApp", description: "Sign the guestbook.", defaultSize: { width: 560, height: 500 } },
-  { id: "life", name: "Life", type: "app", icon: "Activity", appComponent: "LifeDashboardApp", description: "Unified Health and Diet dashboard: what I eat, calories burned, and workouts.", defaultSize: { width: 560, height: 720 } },
+  { id: "life", name: "Life", type: "app", icon: "Activity", appComponent: "LifeDashboardApp", ownerOnly: true, description: "Unified Health and Diet dashboard: what I eat, calories burned, and workouts.", defaultSize: { width: 560, height: 720 } },
   { id: "health", name: "Health", type: "folder", icon: "Heart", description: "WHOOP health metrics, workout splits, and fitness data.", children: [
     { id: "whoop-dashboard", name: "WHOOP Dashboard", type: "app", icon: "Activity", appComponent: "WhoopDashboardApp", description: "Health and fitness dashboard powered by WHOOP.", defaultSize: { width: 520, height: 640 } },
     { id: "nutrition", name: "Nutrition", type: "app", icon: "Activity", appComponent: "NutritionApp", description: "Daily macros, targets, and streaks (private, synced from Notion).", defaultSize: { width: 560, height: 680 } },
@@ -118,14 +118,26 @@ export function getStaticRouteItems(): FSItem[] {
   return flattenFS().filter((item) => item.staticRoute);
 }
 
-export function getRootItems(showHidden = false): FSItem[] {
-  if (showHidden) return fileSystem;
-  return fileSystem.filter((item) => !item.hidden);
+/** Whether an item may be listed for this viewer. Owner-only items are private. */
+export function isListed(item: FSItem, isOwner: boolean): boolean {
+  return !item.ownerOnly || isOwner;
+}
+
+/** The tree without owner-only items, for surfaces that never list them. */
+export function publicTree(items: FSItem[] = fileSystem): FSItem[] {
+  return items
+    .filter((item) => !item.ownerOnly)
+    .map((item) => (item.children ? { ...item, children: publicTree(item.children) } : item));
+}
+
+export function getRootItems(showHidden = false, isOwner = false): FSItem[] {
+  return fileSystem.filter((item) => (showHidden || !item.hidden) && isListed(item, isOwner));
 }
 
 // ---------------------------------------------------------------------------
 // Dock items - defines what appears in the bottom dock and in what order.
 // Each entry is an fsItem id. A "|" string represents a visual separator.
+// Owner-only entries ("life") are dropped by the Dock for everyone else.
 // ---------------------------------------------------------------------------
 
 export const dockItemIds: (string | "|")[] = [

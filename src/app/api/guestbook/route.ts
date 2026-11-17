@@ -1,16 +1,30 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { isAdminRequest } from "@/lib/gate";
+import { NO_STORE } from "@/lib/owner";
+
+export const dynamic = "force-dynamic";
+
+/** The public list changes only when an entry is approved, so the CDN may hold it. */
+const PUBLIC_CACHE = { "Cache-Control": "public, s-maxage=300" } as const;
 
 // ---------------------------------------------------------------------------
-// GET: Return approved guestbook entries (or all if admin)
+// GET: approved guestbook entries, for everyone.
+// GET ?view=admin: every entry, pending ones included, for the admin only.
+//
+// The two views have different URLs on purpose. The public one ignores cookies
+// entirely, so a cached copy can never hold a pending entry; the admin one is
+// never cached and checks the admin cookie value, not just its presence.
 // ---------------------------------------------------------------------------
 export async function GET(request: Request) {
-  if (!supabase) {
-    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  const adminView = new URL(request.url).searchParams.get("view") === "admin";
+  if (adminView && !isAdminRequest(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: NO_STORE });
   }
 
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const isAdmin = cookieHeader.includes("mckenzie_auth=");
+  if (!supabase) {
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503, headers: NO_STORE });
+  }
 
   let query = supabase
     .from("guestbook_entries")
@@ -18,17 +32,20 @@ export async function GET(request: Request) {
     .order("created_at", { ascending: false })
     .limit(100);
 
-  if (!isAdmin) {
+  if (!adminView) {
     query = query.eq("approved", true);
   }
 
   const { data, error } = await query;
 
   if (error) {
-    return NextResponse.json({ error: "Failed to load entries" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to load entries" }, { status: 500, headers: NO_STORE });
   }
 
-  return NextResponse.json({ entries: data, isAdmin });
+  return NextResponse.json(
+    { entries: data, isAdmin: adminView },
+    { headers: adminView ? NO_STORE : PUBLIC_CACHE }
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -91,14 +108,13 @@ export async function POST(request: Request) {
 // PATCH: Admin approve/reject an entry
 // ---------------------------------------------------------------------------
 export async function PATCH(request: Request) {
-  if (!supabase) {
-    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  // Fails closed: with no admin cookie value configured, nobody may moderate.
+  if (!isAdminRequest(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: NO_STORE });
   }
 
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const authValue = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
-  if (!cookieHeader.includes(`mckenzie_auth=${authValue}`)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!supabase) {
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
   }
 
   try {

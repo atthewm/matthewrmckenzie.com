@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Sun, Moon, Monitor } from "lucide-react";
 import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
+import { useOwnerSession } from "@/hooks/useOwnerSession";
 import { useOpenInBrowser } from "@/lib/browserStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useShutdown } from "./ShutdownContext";
@@ -417,7 +418,8 @@ export default function MenuBar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const rootItems = getRootItems();
+  const { owner } = useOwnerSession();
+  const rootItems = getRootItems(false, owner);
   const focusedWin = state.windows.find((w) => w.id === state.focusedWindowId);
   const hasWindows = state.windows.length > 0;
 
