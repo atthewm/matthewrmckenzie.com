@@ -1,5 +1,6 @@
 ---
 title: About
+updated: 2026-11-12
 ---
 
 # About

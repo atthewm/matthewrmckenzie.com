@@ -73,9 +73,8 @@ export const metadata: Metadata = {
       "Senior Vice President, Capital Formation at Menlo Equities. Private wealth, family offices, and RIAs. Also builds AI tooling.",
     images: ["/opengraph-image"],
   },
-  alternates: {
-    canonical: "https://matthewrmckenzie.com",
-  },
+  // No canonical here: each route sets its own (the home page in page.tsx), so
+  // a route that forgets one never inherits the home page URL.
   robots: {
     index: true,
     follow: true,

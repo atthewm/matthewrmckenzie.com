@@ -39,7 +39,6 @@ He also builds his own software: the mckm.at link shortener and data room platfo
 
 - About: ${SITE}/about
 - Work: ${SITE}/work
-- Projects: ${SITE}/projects
 - Writing: ${SITE}/writing
 - Recipes: ${SITE}/recipes
 - Contact: ${SITE}/contact

@@ -63,13 +63,6 @@ export async function GET() {
         "Capabilities in capital formation, investor relations, growth strategy, and AI operations tooling for real asset backed businesses.",
       pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
     },
-    {
-      title: "Projects: AI Operations Tooling and Platforms",
-      link: `${SITE_URL}/projects`,
-      description:
-        "mckm.at, McKenzie OS, Eight Sleep integrations, and more.",
-      pubDate: "Tue, 01 Apr 2026 00:00:00 GMT",
-    },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

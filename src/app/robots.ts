@@ -1,56 +1,17 @@
 import type { MetadataRoute } from "next";
+import { buildRobots } from "@/lib/robots-policy";
 
 // ============================================================================
 // ROBOTS.TXT
 // ============================================================================
-// AI bots (GPTBot, ClaudeBot, PerplexityBot) are explicitly allowed.
-// LLM context is available at /llms.txt (served from public/).
+// Search engines, the Ahrefs audit crawlers and answer engines that cite their
+// sources may read every public page. Bulk scrapers are refused. Each allowed
+// crawler gets its own group with the same private path rules as "*"; the
+// lists live in src/lib/robots-policy.ts.
+// LLM context is served at /llms.txt by src/app/llms.txt/route.ts and stays
+// open to every allowed crawler.
 // ============================================================================
 
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-      {
-        userAgent: "GPTBot",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-      {
-        userAgent: "ClaudeBot",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-      {
-        userAgent: "PerplexityBot",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-      {
-        userAgent: "CCBot",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-      {
-        userAgent: "Google-Extended",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-      {
-        userAgent: "Applebot-Extended",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-      {
-        userAgent: "Bingbot",
-        allow: "/",
-        disallow: ["/gate", "/api/"],
-      },
-    ],
-    sitemap: "https://matthewrmckenzie.com/sitemap.xml",
-  };
+  return buildRobots();
 }
