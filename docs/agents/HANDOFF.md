@@ -2,11 +2,11 @@
 
 ## Updated
 
-2026-11-21, Codex, GPT-6.
+2026-11-21 20:17 UTC, Codex, GPT-6.
 
 ## What's in flight
 
-The [nonvisual personal release](https://github.com/atthewm/matthewrmckenzie.com/compare/main...codex%2Fpass1-personal-production) fixes metadata and serves background videos from R2. The [shared standard](https://github.com/atthewm/matthewrmckenzie.com/pull/22) and [personal design](https://github.com/atthewm/matthewrmckenzie.com/pull/23) are separate reviews. Preserve the history in these three docs when integrating the branches.
+The [nonvisual personal release](https://github.com/atthewm/matthewrmckenzie.com/pull/24) fixes metadata and serves background videos from R2. The [shared standard](https://github.com/atthewm/matthewrmckenzie.com/pull/22) and [personal design](https://github.com/atthewm/matthewrmckenzie.com/pull/23) are separate reviews. Preserve the history in these three docs when integrating the branches.
 
 ## What's live
 
