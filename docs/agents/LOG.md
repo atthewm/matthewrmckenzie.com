@@ -1,5 +1,9 @@
 # Session log
 
+## 2026-11-21, Codex, shared instructions after PR 24
+
+Reconciled the repository standard from PR 22 with the release handoff, complete prior log, owner decisions and production before crawl. CLAUDE.md imports AGENTS.md and preserves its tool notes. Background docs identify the complete pre-migration Claude file by its original Git revision. The shared checker and a documentation-only diff cover this reconciliation. The release measurements and the production follow-up stay in the handoff.
+
 ## 2026-11-21, Codex, GPT-6
 
 Installed the shared agent standard in [matthewrmckenzie.com #22](https://github.com/atthewm/matthewrmckenzie.com/pull/22). Migrated general facts to AGENTS.md, retained the Claude-only sandbox instructions and linked the prior revision and source notes. Updated the README and seeded the handoff and decision history.

@@ -179,3 +179,7 @@ Edit the font imports in `globals.css` and the `fontFamily` config in `tailwind.
 - [Lucide React](https://lucide.dev/) (icons)
 - [Remark](https://remark.js.org/) (markdown processing)
 - Deployed on [Vercel](https://vercel.com/)
+
+## Working with Claude and ChatGPT
+
+[AGENTS.md](AGENTS.md) holds project facts and owner rules for both tools. Claude imports it from CLAUDE.md. Start with the [handoff](docs/agents/HANDOFF.md), the ten newest [log entries](docs/agents/LOG.md) and [Matthew's decisions](docs/agents/DECISIONS.md). Before finishing, refresh the handoff, prepend a log entry and record any new decision Matthew made in the same PR.
