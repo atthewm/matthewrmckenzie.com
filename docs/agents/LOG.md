@@ -31,3 +31,7 @@ The [nonvisual release](https://github.com/atthewm/matthewrmckenzie.com/pull/24)
 Cloudflare reported active domain ownership and SSL. All 68 R2 files passed public SHA-256, MIME and cache checks. The production Vercel project has the public media base configured for the next build. The locally built Vercel adapter output excludes all 34 videos and retains 34 posters. Each of the 34 old video URLs returned a permanent redirect to its matching object. The five Vercel projects have their approved nine-bot firewall rules. The release awaits a merge and production verification.
 
 The independent [design PR](https://github.com/atthewm/matthewrmckenzie.com/pull/23) awaits Matthew's review. Preserve the protected [PR 15](https://github.com/atthewm/matthewrmckenzie.com/pull/15).
+
+## 2026-11-21 23:34 UTC, Codex, final application and standard handoff
+
+Verified the application release from PR 24 and the already merged standard from PR 22 against the canonical host. The final production crawl measured 40 public HTML pages and all 40 sitemap entries. The app and standard passed the public HTTP, robots, redirect, media, privacy and mobile checks. Updated the next action to Matthew’s review of PR 23. Prior operator instructions and release observations remain in this log.
