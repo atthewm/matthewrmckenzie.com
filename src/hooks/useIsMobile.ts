@@ -1,18 +1,22 @@
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 
-const MOBILE_BREAKPOINT = 768;
+const PHONE = "(max-width: 767px)";
+
+function subscribe(listener: () => void) {
+  const query = window.matchMedia(PHONE);
+  query.addEventListener("change", listener);
+  return () => query.removeEventListener("change", listener);
+}
+
+function snapshot(): "phone" | "desktop" {
+  return window.matchMedia(PHONE).matches ? "phone" : "desktop";
+}
+
+/** Null during SSR and initial hydration; the static CSS layout already matches this viewport. */
+export function useViewport() {
+  return useSyncExternalStore(subscribe, snapshot, () => null);
+}
 
 export function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    function check() {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    }
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  return isMobile;
+  return useViewport() === "phone";
 }

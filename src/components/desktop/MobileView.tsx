@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef } from "react";
-import Link from "next/link";
-import { ArrowLeft, Mail, Calendar, Contact } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { getRootItems, findFSItem, type FSItem } from "@/data/fs";
 import { useDesktop } from "@/hooks/useDesktopStore";
 import { useOwnerSession } from "@/hooks/useOwnerSession";
-import { profile } from "@/config/profile";
-import { PantherIcon } from "./PantherIcons";
+import Springboard from "@/components/home/Springboard";
 import WindowContent from "./WindowContent";
 import BoardView from "@/components/board/BoardView";
 
@@ -88,69 +86,5 @@ export default function MobileView({ contentMap }: MobileViewProps) {
     );
   }
 
-  return (
-    <div className="fixed inset-0 overflow-y-auto" style={{ background: "#151619", color: "#ecebe7" }}>
-      <div className="safe-area-top px-5 pt-10 pb-10 max-w-md mx-auto">
-        <p style={{ color: "#cfae6b" }} className="font-mono text-[11px] uppercase tracking-[0.16em]">
-          {profile.company} &middot; {profile.primaryCity}
-        </p>
-        <h1 className="text-[34px] leading-[1.05] mt-3" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>
-          {profile.fullName}
-        </h1>
-        <p className="text-[15px] mt-2 leading-snug" style={{ color: "#a3a4aa" }}>
-          {profile.title}. Private wealth, family offices, and RIAs.
-        </p>
-
-        <div className="grid grid-cols-3 gap-2 mt-6">
-          <QuickAction href="/card" label="Save contact" icon={<Contact size={16} />} />
-          <QuickAction href="/contact" label="Email" icon={<Mail size={16} />} />
-          <QuickAction href={profile.scheduleUrl} label="Schedule" icon={<Calendar size={16} />} external />
-        </div>
-
-        <div className="mt-9 flex items-baseline justify-between">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em]" style={{ color: "#a3a4aa" }}>
-            McKenzie OS
-          </p>
-          <Link href="/about" className="text-[12px] underline underline-offset-4" style={{ color: "#a3a4aa" }}>
-            Reading view
-          </Link>
-        </div>
-        <div className="grid grid-cols-4 gap-y-5 gap-x-2 mt-4">
-          {rootItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => open(item)}
-              className="flex flex-col items-center gap-1.5 min-w-0"
-              aria-label={`Open ${item.name}`}
-            >
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center border active:scale-95 transition-transform"
-                   style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.08)" }}>
-                <PantherIcon itemId={item.id} size={36} />
-              </div>
-              <span className="text-[11px] text-center leading-tight w-full truncate" style={{ color: "#ecebe7" }}>
-                {item.name}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return <Springboard items={rootItems} onOpen={open} />;
 }
-
-function QuickAction({ href, label, icon, external = false }: { href: string; label: string; icon: React.ReactNode; external?: boolean }) {
-  const cls = "flex flex-col items-center justify-center gap-1.5 h-16 rounded-xl border text-[12px] active:scale-[0.98] transition-transform";
-  const style = { borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.04)", color: "#ecebe7" };
-  return external ? (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>
-      {icon}
-      {label}
-    </a>
-  ) : (
-    <Link href={href} className={cls} style={style}>
-      {icon}
-      {label}
-    </Link>
-  );
-}
-

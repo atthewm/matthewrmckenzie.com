@@ -4,7 +4,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { dockItemIds, findFSItem, isListed, type FSItem } from "@/data/fs";
 import { useOwnerSession } from "@/hooks/useOwnerSession";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { getPantherIcon } from "./PantherIcons";
+import { PantherIcon } from "./PantherIcons";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { trackEvent } from "@/lib/analytics";
@@ -78,7 +78,6 @@ function DockIcon({
   compact,
   reduceMotion,
 }: DockIconProps & { compact?: boolean; reduceMotion?: boolean }) {
-  const PantherIcon = getPantherIcon(item.id);
 
   const iconBox = compact ? 34 : 44;
   const iconSize = compact ? 28 : 38;
@@ -126,19 +125,7 @@ function DockIcon({
           transition: "filter 150ms ease",
         }}
       >
-        {PantherIcon ? (
-          <PantherIcon size={iconSize} />
-        ) : (
-          /* Fallback: generic document icon */
-          <svg width={iconSize} height={iconSize} viewBox="0 0 32 32" fill="none">
-            <rect x="5" y="3" width="22" height="26" rx="3" fill="#F8F8F5" stroke="#AAA" strokeWidth="1" />
-            <path d="M5 6a3 3 0 013-3h12l7 7v19a3 3 0 01-3 3H8a3 3 0 01-3-3V6z" fill="#F8F8F5" stroke="#AAA" strokeWidth="1" />
-            <path d="M20 3v7h7" fill="#EEEEE5" stroke="#AAA" strokeWidth="1" strokeLinejoin="round" />
-            <line x1="9" y1="15" x2="23" y2="15" stroke="#DDD" strokeWidth="0.8" />
-            <line x1="9" y1="18" x2="23" y2="18" stroke="#DDD" strokeWidth="0.8" />
-            <line x1="9" y1="21" x2="18" y2="21" stroke="#DDD" strokeWidth="0.8" />
-          </svg>
-        )}
+        <PantherIcon itemId={item.id} size={iconSize} />
       </div>
 
       {/* Active indicator dot */}

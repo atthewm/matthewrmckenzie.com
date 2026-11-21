@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Marcellus, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd, { personSchema, websiteSchema } from "@/components/ui/JsonLd";
+import { initialAppearanceScript } from "@/lib/appearance";
 import "./globals.css";
+import "@/styles/springboard.css";
 import "@/styles/board.css";
 import "@/styles/board-cards.css";
 import "@/styles/board-chrome.css";
@@ -93,8 +95,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f2ee" },
-    { media: "(prefers-color-scheme: dark)", color: "#151619" },
+    { media: "(prefers-color-scheme: light)", color: "#e2e6e8" },
+    { media: "(prefers-color-scheme: dark)", color: "#1c2329" },
   ],
 };
 
@@ -106,6 +108,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${marcellus.variable} ${spaceMono.variable}`}>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: initialAppearanceScript }} />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <link rel="alternate" type="application/rss+xml" title="Matthew McKenzie" href="/feed.xml" />

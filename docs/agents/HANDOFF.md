@@ -27,3 +27,7 @@ The design awaits gallery approval. Preserve the 11 testimonials, the $800M+ rai
 ## Don't touch
 
 Preserve [PR 15](https://github.com/atthewm/matthewrmckenzie.com/pull/15), the testimonials, the financial figure, alumniOf, the personal mobile number, Claude's original notes and send flags. Keep private Life and Nutrition behind owner authentication. Respect LinkedIn's crawl exclusion. The publisher serves WHOOP's full privacy policy but its firewall returns 403 to an automated request.
+
+## Personal design review
+
+The phone springboard, persistent Graphite appearance and reading-page design await Matthew’s review in the shared gallery. [PR 23](https://github.com/atthewm/matthewrmckenzie.com/pull/23)

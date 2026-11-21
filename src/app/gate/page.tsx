@@ -63,7 +63,10 @@ export default function GatePage() {
               background-size: 28px 100%;
               animation: mck-stripe 0.8s linear infinite;
             }
-            .mck-dots { animation: mck-pulse 2s ease-in-out infinite; }
+            .mck-dots { color: #c5c6cb; }
+            @media (prefers-reduced-motion: reduce) {
+              .mck-progress, .mck-dots, .mck-fade { animation: none !important; }
+            }
             .mck-fade { animation: mck-fade-in 0.35s ease-out forwards; }
             .mck-input {
               background: linear-gradient(180deg, #e8e8e8 0%, #ffffff 4px);
@@ -123,23 +126,23 @@ export default function GatePage() {
             <h1 style={{ fontSize: "28px", fontWeight: 700, letterSpacing: "4px", margin: 0, lineHeight: 1.2 }}>
               McKENZIE<span style={{ color: "#0071e3" }}>_</span>OS
             </h1>
-            <p style={{ fontSize: "11px", color: "#777", letterSpacing: "3px", textTransform: "uppercase", marginTop: "6px" }}>
+            <p style={{ fontSize: "13px", color: "#c5c6cb", letterSpacing: "3px", textTransform: "uppercase", marginTop: "6px" }}>
               Admin Login
             </p>
           </div>
           <div style={{ width: "100%", maxWidth: "240px", height: "18px", borderRadius: "9px", overflow: "hidden", background: "#333", border: "1px solid #555", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.5)" }}>
             <div className="mck-progress" style={{ width: "100%", height: "100%", borderRadius: "9px" }} />
           </div>
-          <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>Authentication required</p>
+          <p className="mck-dots" style={{ fontSize: "13px", color: "#c5c6cb", letterSpacing: "2px", margin: 0 }}>Authentication required</p>
           {/* Login form -- requires credentials for all users */}
-          <form onSubmit={handleLogin} className="mck-fade" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginTop: "24px" }}>
-            <input type="text" placeholder="Username" aria-label="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
-            <input type="password" placeholder="Password" aria-label="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
-            {error && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: 0 }}>{error}</p>}
-            <button type="submit" disabled={loading} className="mck-btn" style={{ width: "100%", maxWidth: "220px", padding: "8px 0", fontSize: "13px", fontWeight: 500, marginTop: "4px" }}>{loading ? "Authenticating..." : "Log In"}</button>
+          <form onSubmit={handleLogin} className="mck-fade" style={{ width: "min(100%, 260px)", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginTop: "24px" }}>
+            <input type="text" placeholder="Username" aria-label="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "100%", minHeight: "44px", maxWidth: "260px", padding: "9px 12px", fontSize: "16px", color: "#333" }} autoComplete="username" />
+            <input type="password" placeholder="Password" aria-label="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "100%", minHeight: "44px", maxWidth: "260px", padding: "9px 12px", fontSize: "16px", color: "#333" }} autoComplete="current-password" />
+            {error && <p style={{ color: "#ff6b6b", fontSize: "13px", margin: 0 }}>{error}</p>}
+            <button type="submit" disabled={loading} className="mck-btn" style={{ width: "100%", minHeight: "44px", maxWidth: "260px", padding: "9px 0", fontSize: "13px", fontWeight: 500, marginTop: "4px" }}>{loading ? "Authenticating..." : "Log In"}</button>
           </form>
         </div>
-        <p style={{ position: "absolute", bottom: "20px", fontSize: "9px", color: "#333", letterSpacing: "1px" }}>&copy; 2026 McKENZIE_OS</p>
+        <p style={{ position: "absolute", bottom: "20px", fontSize: "12px", color: "#aeb0b6", letterSpacing: "1px" }}>&copy; 2026 McKENZIE_OS</p>
       </div>
     </>
   );

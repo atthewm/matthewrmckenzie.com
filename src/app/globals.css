@@ -297,37 +297,47 @@
    ============================================================================ */
 
 .site {
-  --site-bg: #f4f2ee;
-  --site-surface: #fbfaf8;
-  --site-ink: #1c1d20;
-  --site-muted: #5d5f66;
-  --site-rule: #dcd8d0;
-  --site-gold: #9a7a3c;
-  --site-gold-soft: rgba(154, 122, 60, 0.12);
-  --site-link: #2e4a6b;
+  --site-bg: #e2e6e8;
+  --site-surface: #eef1f2;
+  --site-ink: #2f3a40;
+  --site-muted: #4e5a61;
+  --site-rule: #bbc5c9;
+  --site-gold: #735c1b;
+  --site-gold-soft: rgba(195, 161, 75, 0.12);
+  --site-link: #735c1b;
   background: var(--site-bg);
   color: var(--site-ink);
   font-family: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
   min-height: 100vh;
 }
 
+html[data-appearance="dark"] .site {
+    --site-bg: #1c2329;
+    --site-surface: #29333a;
+    --site-ink: #e8ecee;
+    --site-muted: #9aa7ad;
+    --site-rule: #46525a;
+    --site-gold: #d9be6b;
+    --site-gold-soft: rgba(217, 190, 107, 0.12);
+    --site-link: #d9be6b;
+}
 @media (prefers-color-scheme: dark) {
-  .site {
-    --site-bg: #151619;
-    --site-surface: #1c1d21;
-    --site-ink: #ecebe7;
-    --site-muted: #a3a4aa;
-    --site-rule: #2e3036;
-    --site-gold: #cfae6b;
-    --site-gold-soft: rgba(207, 174, 107, 0.12);
-    --site-link: #a9c3e2;
+  html:not([data-appearance="light"]) .site {
+    --site-bg: #1c2329;
+    --site-surface: #29333a;
+    --site-ink: #e8ecee;
+    --site-muted: #9aa7ad;
+    --site-rule: #46525a;
+    --site-gold: #d9be6b;
+    --site-gold-soft: rgba(217, 190, 107, 0.12);
+    --site-link: #d9be6b;
   }
 }
 
 /* Home intro (HomeIntro.tsx): the first paint of "/", in a fixed layer that the
    desktop covers once it mounts. Covered links leave the tab order. */
 .home-intro { position: fixed; inset: 0; overflow-y: auto; }
-html[data-desktop-ready] .home-intro-nav { visibility: hidden; }
+
 
 .site-display { font-family: var(--font-display), Georgia, serif; font-weight: 400; }
 .site-mono { font-family: var(--font-mono), ui-monospace, monospace; }
@@ -397,3 +407,16 @@ html[data-desktop-ready] .home-intro-nav { visibility: hidden; }
   .site { background: #fff; }
   .site-noprint { display: none !important; }
 }
+
+/* The Graphite desktop keeps legible window chrome across every wallpaper. */
+.dark { --desktop-bg: #252b34; --desktop-surface: #2a2d33; --desktop-border: #555d69; --desktop-text: #f4f1e9; --desktop-text-secondary: #b5b8be; --desktop-accent: #b0c4d8; }
+.site-eyebrow, .site-prose th { font-weight: 550; }
+.site-noprint nav a:focus-visible { outline-offset: -2px; }
+@media (max-width: 639px) {
+  .site-prose { font-size: 1rem; line-height: 1.72; }
+  .site-prose h2 { margin-top: 2rem; }
+  .site-prose table { display: block; overflow-x: auto; }
+}
+
+.site nav[aria-label="Main navigation"] a[aria-current] { border-color: var(--site-gold); color: var(--site-ink) !important; font-weight: 650; }
+.site nav[aria-label="Footer navigation"] a[aria-current] { text-decoration: underline; text-underline-offset: .22em; }

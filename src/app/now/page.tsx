@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default async function NowPage() {
   const content = await getContent("now");
   return (
-    <StaticPageLayout>
+    <StaticPageLayout section="/now">
       {content ? (
         <article className="site-prose" dangerouslySetInnerHTML={{ __html: content.html }} />
       ) : (

@@ -1,5 +1,7 @@
 "use client";
 
+import { chooseAppearance } from "@/lib/appearance";
+
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Sun, Moon, Monitor } from "lucide-react";
 import { useDesktop, type Theme } from "@/hooks/useDesktopStore";
@@ -462,11 +464,8 @@ export default function MenuBar() {
     const viewItems: MenuItem[] = [
       {
         type: "action",
-        label: state.resolvedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode",
-        action: () => dispatch({
-          type: "SET_THEME",
-          payload: { theme: state.resolvedTheme === "dark" ? "light" : "dark" },
-        }),
+        label: state.resolvedTheme === "dark" ? "Switch to Light Mode" : "Switch to Graphite",
+        action: () => chooseAppearance(state.resolvedTheme === "dark" ? "light" : "dark"),
       },
       { type: "separator" },
       {
@@ -735,7 +734,7 @@ export default function MenuBar() {
 
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
     { value: "light", label: "Light", icon: <Sun size={13} /> },
-    { value: "dark", label: "Dark", icon: <Moon size={13} /> },
+    { value: "dark", label: "Graphite", icon: <Moon size={13} /> },
     { value: "system", label: "System", icon: <Monitor size={13} /> },
   ];
 
@@ -825,10 +824,7 @@ export default function MenuBar() {
                 <button
                   key={t.value}
                   onClick={() => {
-                    dispatch({
-                      type: "SET_THEME",
-                      payload: { theme: t.value },
-                    });
+                    chooseAppearance(t.value);
                     setShowThemeMenu(false);
                   }}
                   className={`w-full flex items-center gap-2 px-3 py-1 text-2xs
