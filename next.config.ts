@@ -18,7 +18,14 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async redirects() {
-    return LEGACY_REDIRECTS.map((redirect) => ({ ...redirect, permanent: true }));
+    const redirects = [...LEGACY_REDIRECTS];
+    if (process.env.VERCEL_BACKGROUND_BUILD === "1") {
+      redirects.push({
+        source: "/backgrounds/video/:path*",
+        destination: "https://media.matthewrmckenzie.com/backgrounds/video/:path*",
+      });
+    }
+    return redirects.map((redirect) => ({ ...redirect, permanent: true }));
   },
   async headers() {
     return [

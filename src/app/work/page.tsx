@@ -6,12 +6,14 @@ import EmptyContent from "@/components/ui/EmptyContent";
 
 export const metadata: Metadata = {
   title: "Work",
-  description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses.",
+  description: "Capital formation for funds and direct investments, investor relations for family offices and institutions, and growth strategy for real asset businesses.",
   alternates: { canonical: "https://matthewrmckenzie.com/work" },
   openGraph: {
+    type: "website",
+    url: "https://matthewrmckenzie.com/work",
     images: ["/opengraph-image"],
     title: "Work | Matthew McKenzie",
-    description: "Capital formation across fund and direct investment vehicles. Investor relations for family offices and institutional allocators. Growth strategy for real asset backed businesses.",
+    description: "Capital formation for funds and direct investments, investor relations for family offices and institutions, and growth strategy for real asset businesses.",
   },
 };
 

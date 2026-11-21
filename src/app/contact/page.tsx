@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "Reach Matthew McKenzie about capital formation, investor partnerships, or growth strategy. Schedule a call or send a message.",
   alternates: { canonical: "https://matthewrmckenzie.com/contact" },
   openGraph: {
+    type: "website",
+    url: "https://matthewrmckenzie.com/contact",
     images: ["/opengraph-image"],
     title: "Contact | Matthew McKenzie",
     description: "Reach Matthew McKenzie about capital formation, investor partnerships, or growth strategy. Schedule a call or send a message.",

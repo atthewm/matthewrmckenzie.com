@@ -14,12 +14,13 @@ export const metadata: Metadata = {
   // `absolute` opts out of the root layout's "%s | Matthew McKenzie" template,
   // which would otherwise append the name a second time.
   title: { absolute: `${profile.fullName} | ${profile.title}` },
-  description: `${profile.title} at ${profile.company}. ${profile.tagline} Save contact, call, or email directly.`,
+  description: `${profile.title} at ${profile.company}. ${profile.tagline} Save his contact details.`,
   alternates: {
     canonical: "https://matthewrmckenzie.com/card",
   },
   openGraph: {
     type: "profile",
+    images: ["/opengraph-image"],
     title: `${profile.fullName} | ${profile.company}`,
     description: `${profile.title}. ${profile.tagline}`,
     url: "https://matthewrmckenzie.com/card",

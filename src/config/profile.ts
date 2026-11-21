@@ -64,7 +64,7 @@ export const profile = {
 
 export const previousCompany = {
   name: "Civitas Capital Group",
-  url: "https://civitascapital.com",
+  url: "https://www.civitascapital.com/",
   title: "Vice President, Investor Relations",
   start: "May 2016",
   end: "2026",
