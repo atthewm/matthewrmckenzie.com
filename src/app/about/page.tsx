@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "Senior Vice President, Capital Formation at Menlo Equities in Austin. Private wealth partnerships with high net worth investors, family offices, and RIAs.",
   alternates: { canonical: "https://matthewrmckenzie.com/about" },
   openGraph: {
+    type: "website",
+    url: "https://matthewrmckenzie.com/about",
     images: ["/opengraph-image"],
     title: "About | Matthew McKenzie",
     description: "Senior Vice President, Capital Formation at Menlo Equities in Austin. Private wealth partnerships with high net worth investors, family offices, and RIAs.",

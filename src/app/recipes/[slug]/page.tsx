@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const recipe = getRecipeBySlug(slug);
   if (!recipe) return {};
   return {
-    title: `${recipe.title} | Recipes`,
+    title: { absolute: recipe.title + (recipe.title.length + 10 <= 60 ? " | Recipes" : "") },
     description: recipe.subtitle,
     alternates: { canonical: `${SITE}/recipes/${slug}` },
-    openGraph: { title: recipe.title, description: recipe.subtitle, type: "article", images: ["/opengraph-image"] },
+    openGraph: { title: recipe.title, description: recipe.subtitle, type: "article", url: `${SITE}/recipes/${slug}`, images: ["/opengraph-image"] },
   };
 }
 

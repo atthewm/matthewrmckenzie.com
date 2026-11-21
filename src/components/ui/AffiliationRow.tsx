@@ -11,9 +11,9 @@ interface Affiliation {
 
 const affiliations: readonly Affiliation[] = [
   { name: "Menlo Equities", href: "https://www.menloequities.com", period: "2026 to present" },
-  { name: "Civitas Capital Group", href: "https://civitascapital.com", period: "previously, 2016 to 2026" },
+  { name: "Civitas Capital Group", href: "https://www.civitascapital.com/", period: "previously, 2016 to 2026" },
   { name: "SMU", href: "https://www.smu.edu" },
-  { name: "Villanova", href: "https://www1.villanova.edu" },
+  { name: "Villanova", href: "https://www.villanova.edu/university.html" },
 ];
 
 export default function AffiliationRow() {

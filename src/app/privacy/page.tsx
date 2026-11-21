@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "Privacy policy for matthewrmckenzie.com. How data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
   alternates: { canonical: "/privacy" },
   openGraph: {
+    type: "website",
+    url: "https://matthewrmckenzie.com/privacy",
     images: ["/opengraph-image"],
     title: "Privacy | Matthew McKenzie",
     description: "Privacy policy for matthewrmckenzie.com. How data is collected, used, and protected when you visit Matthew McKenzie's personal site.",
@@ -82,7 +84,7 @@ export default function PrivacyPolicyPage() {
           addresses, request timestamps) as part of normal web hosting
           operations. Refer to{" "}
           <a
-            href="https://vercel.com/legal/privacy-policy"
+            href="https://vercel.com/legal/privacy-notice"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -94,7 +96,7 @@ export default function PrivacyPolicyPage() {
           WHOOP data is accessed through the official WHOOP Developer API. Refer
           to{" "}
           <a
-            href="https://www.whoop.com/us/en/privacy-policy/"
+            href="https://www.whoop.com/us/en/full-privacy-policy/"
             target="_blank"
             rel="noopener noreferrer"
           >

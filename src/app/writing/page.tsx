@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, and building durable businesses.",
   alternates: { canonical: "https://matthewrmckenzie.com/writing" },
   openGraph: {
+    type: "website",
+    url: "https://matthewrmckenzie.com/writing",
     images: ["/opengraph-image"],
     title: "Writing | Matthew McKenzie",
     description: "Essays and longer form thinking by Matthew McKenzie on capital formation, investor partnerships, and building durable businesses.",
