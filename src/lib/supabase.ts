@@ -1,3 +1,5 @@
+import "server-only";
+
 /* eslint-disable */
 // @ts-ignore
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
