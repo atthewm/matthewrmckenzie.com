@@ -33,3 +33,5 @@ Preserve [PR 15](https://github.com/atthewm/matthewrmckenzie.com/pull/15), the t
 ## Credential review, November 22, 2026
 
 Notion and WHOOP credentials now stay behind build-time server boundaries. Provider failures retain an HTTP status, and public OAuth return URLs omit provider diagnostics. Current signing rules reject the historic short example.
+
+The postbuild check reads every compiled public script, style, map, HTML page and static component payload. It rejects the configured Supabase anonymous key and private service credentials. The historical public environment variable names are read only in server modules.

@@ -1,5 +1,9 @@
 # Session log
 
+## November 22, 2026 compiled public output
+
+Added a server-only guard to the legacy Supabase module and enforced the absence of credentials in public build output. The anonymous-key regression fixture covers opaque and provider-formatted keys.
+
 ## November 22, 2026 credential review
 
 The credential review adds server-only imports for Notion configuration and WHOOP storage, encryption and OAuth token handling. Storage and OAuth failures discard upstream response bodies. Regression tests use local fixtures. No provider setting or data was changed.

@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { containsCredential } from "../../scripts/check-public-build.mjs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { queryDatabase } from "./notion/client";
@@ -10,7 +11,7 @@ afterEach(() => {
 });
 
 describe("private service boundaries", () => {
-  it.each(["notion/config", "whoop/kv", "whoop/crypto", "whoop/tokens", "supabase-server"])(
+  it.each(["notion/config", "whoop/kv", "whoop/crypto", "whoop/tokens", "supabase", "supabase-server"])(
     "keeps %s behind Next's server-only import",
     (module) => {
       const source = readFileSync(new URL(`./${module}.ts`, import.meta.url), "utf8");
@@ -37,5 +38,21 @@ describe("private service boundaries", () => {
     const location = new URL(response.headers.get("location")!);
     expect(location.searchParams.get("whoop_auth")).toBe("error");
     expect(location.searchParams.get("whoop_message")).not.toContain("local diagnostic fixture");
+  });
+});
+
+describe("compiled browser settings", () => {
+  it("rejects opaque configured values and Supabase browser keys while allowing metadata", () => {
+    const registered = "local-opaque-canary";
+    const publishable = ["sb", "publishable", "a".repeat(24)].join("_");
+    const jwt = [
+      Buffer.from('{"alg":"HS256"}').toString("base64url"),
+      Buffer.from('{"role":"anon"}').toString("base64url"),
+      "synthetic-signature",
+    ].join(".");
+    expect(containsCredential("NEXT_PUBLIC_SUPABASE_URL", [registered])).toBe(false);
+    expect(containsCredential(registered, [registered])).toBe(true);
+    expect(containsCredential(publishable)).toBe(true);
+    expect(containsCredential(jwt)).toBe(true);
   });
 });
