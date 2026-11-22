@@ -1,3 +1,4 @@
+import { hasLockSession } from "@/lib/lock-session";
 // ============================================================================
 // GET /api/notion/data?dataset=<key> : read synced data for the UI
 // ============================================================================
@@ -16,16 +17,6 @@ import type { DatasetResponse } from "@/data/notion/types";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const AUTH_COOKIE = "mckenzie_auth";
-const AUTH_VALUE = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
-
-function isAuthed(req: Request): boolean {
-  const cookie = req.headers.get("cookie") || "";
-  return cookie
-    .split(";")
-    .map((c) => c.trim())
-    .some((c) => c === `${AUTH_COOKIE}=${AUTH_VALUE}`);
-}
 
 export async function GET(req: Request) {
   const key = new URL(req.url).searchParams.get("dataset") || "";
@@ -34,7 +25,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: `unknown dataset: ${key}` }, { status: 404 });
   }
 
-  const authed = isAuthed(req);
+  const authed = await hasLockSession(req.headers.get("cookie"), "admin");
   if (def.visibility === "private" && !authed) {
     return NextResponse.json(
       { error: "private dataset: admin only", key, authed: false },

@@ -1,3 +1,4 @@
+import { hasLockSession } from "@/lib/lock-session";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
@@ -95,9 +96,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
   }
 
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const authValue = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
-  if (!cookieHeader.includes(`mckenzie_auth=${authValue}`)) {
+  if (!(await hasLockSession(request.headers.get("cookie"), "admin"))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

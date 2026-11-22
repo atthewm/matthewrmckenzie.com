@@ -1,3 +1,4 @@
+import { hasLockSession, issueLockSession, lockCookies } from "@/lib/lock-session";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -10,10 +11,8 @@ import type { NextRequest } from "next/server";
 // (useful for taking the site private temporarily).
 // ---------------------------------------------------------------------------
 
-const AUTH_COOKIE = "mckenzie_auth";
-const AUTH_VALUE = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Full site lock mode: redirect unauthenticated users to /gate
   if (process.env.SITE_LOCK_ENABLED === "true") {
     // Bypass token: allows dev/preview access via ?token=<value>
@@ -22,9 +21,11 @@ export function middleware(request: NextRequest) {
       const url = new URL(request.url);
       const tokenParam = url.searchParams.get("token");
       if (tokenParam === bypassToken) {
+        const session = await issueLockSession("guest");
+        if (!session) return NextResponse.redirect(new URL("/gate", request.url));
         url.searchParams.delete("token");
         const response = NextResponse.redirect(url);
-        response.cookies.set(AUTH_COOKIE, AUTH_VALUE, {
+        response.cookies.set(lockCookies.guest, session, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
@@ -34,8 +35,8 @@ export function middleware(request: NextRequest) {
       }
     }
 
-    const auth = request.cookies.get(AUTH_COOKIE);
-    if (auth?.value !== AUTH_VALUE) {
+    const cookies = request.headers.get("cookie");
+    if (!(await hasLockSession(cookies, "admin")) && !(await hasLockSession(cookies, "guest"))) {
       return NextResponse.redirect(new URL("/gate", request.url));
     }
   }

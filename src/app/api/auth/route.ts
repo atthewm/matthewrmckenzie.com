@@ -1,29 +1,16 @@
+import { issueLockSession, lockCookies } from "@/lib/lock-session";
 import { NextResponse } from "next/server";
 import { OWNER_COOKIE, OWNER_MAX_AGE, ownerCookieValue } from "@/lib/owner";
 
 // ---------------------------------------------------------------------------
 // Credentials are read from environment variables so they never live in code.
-// Fallbacks are provided for local development only.
 // ---------------------------------------------------------------------------
 const ADMIN_USER = process.env.SITE_LOCK_ADMIN_USER ?? "admin";
 const ADMIN_PASS = process.env.SITE_LOCK_ADMIN_PASSWORD ?? "";
 const GUEST_USER = process.env.SITE_LOCK_GUEST_USER ?? "guest";
 const GUEST_PASS = process.env.SITE_LOCK_GUEST_PASSWORD ?? "";
-const AUTH_COOKIE = "mckenzie_auth";
-const AUTH_VALUE = process.env.SITE_LOCK_COOKIE_VALUE ?? "mck_gate_2026";
 
 export async function POST(request: Request) {
-  // If the site lock is explicitly disabled, let everyone through.
-  if (process.env.SITE_LOCK_ENABLED === "false") {
-    const response = NextResponse.json({ success: true });
-    response.cookies.set(AUTH_COOKIE, AUTH_VALUE, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30,
-    });
-    return response;
-  }
 
   try {
     const { username, password } = await request.json();
@@ -39,8 +26,11 @@ export async function POST(request: Request) {
       password === GUEST_PASS;
 
     if (isAdmin || isGuest) {
+      const role = isAdmin ? "admin" : "guest";
+      const session = await issueLockSession(role);
+      if (!session) return NextResponse.json({ success: false, error: "Sign-in is unavailable" }, { status: 503 });
       const response = NextResponse.json({ success: true, role: isAdmin ? "admin" : "guest" });
-      response.cookies.set(AUTH_COOKIE, AUTH_VALUE, {
+      response.cookies.set(lockCookies[role], session, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
