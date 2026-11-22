@@ -30,6 +30,7 @@ describe("currentDayStrain", () => {
     for (const patch of [
       { updated_at: "2026-11-16T18:00:00Z" }, { updated_at: "2026-11-17T11:00:00Z" },
       { updated_at: "invalid" }, { updated_at: undefined }, { updated_at: "2030-01-01T00:00:00Z" },
+      { timezone_offset: undefined }, { timezone_offset: "+27:90" },
       { end: now }, { score_state: "PENDING_SCORE" as const }, { score: { ...cycle.score, strain: 22 } },
     ]) {
       expect(currentDayStrain({ ...fresh, latestCycle: { ...cycle, ...patch } }, noon)).toBeNull();

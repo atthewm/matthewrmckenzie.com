@@ -73,6 +73,7 @@ export function currentDayStrain(data: WhoopDataResponse, now = Date.now()): num
       !Number.isFinite(synced) || synced > now || validThrough - synced > 90 * 60_000) return null;
 
   const offset = cycle.timezone_offset === "Z" ? "+00:00" : cycle.timezone_offset;
+  if (!offset || !/^[+-](?:0\d|1[0-4]):[0-5]\d$/.test(offset)) return null;
   if (localDay(cycle.updated_at, offset) !== localDay(new Date(validThrough).toISOString(), offset)) return null;
   return Math.round(strain * 10) / 10;
 }

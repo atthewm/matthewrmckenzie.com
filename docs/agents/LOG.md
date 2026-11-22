@@ -2,7 +2,7 @@
 
 ## 2026-11-22, Codex, public Day Strain for mckm.at
 
-Added a score-only view to the WHOOP endpoint. It checks that the cycle is open, scored, updated on the current local day within six hours and present in a feed refreshed within 90 minutes. It leaves a five minute margin for a visible card to refresh. The personal site keeps all credentials and cycle timestamps. The existing dashboard and owner views retain their contracts. Local verification covered fresh and stale synthetic cycles over HTTP, the existing production response, and 256 unit tests.
+Added a score-only view to the WHOOP endpoint. It checks that the cycle is open, scored, updated on the current local day within six hours and present in a feed refreshed within 90 minutes. It leaves a five minute margin for a visible card to refresh. The personal site keeps all credentials and cycle timestamps. The score-only view also hides a cycle with a missing or invalid local UTC offset. The existing dashboard and owner views retain their contracts. Local verification covered fresh and stale synthetic cycles over HTTP and an unavailable upstream.
 
 ## 2026-11-21 22:33 UTC, Codex, production after crawl
 

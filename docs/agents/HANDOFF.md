@@ -6,7 +6,7 @@
 
 ## What's in flight
 
-The mckm.at business card uses `GET /api/whoop/data?view=day-strain`. Local branch `codex/public-day-strain-2026-11-22` adds that view to the existing public WHOOP route. It checks the cycle and sync times on this server, then returns one number or null. The consumer hides responses from the former endpoint that have no dayStrain field. This branch is ready for review with the mckm.at redesign.
+The mckm.at business card uses `GET /api/whoop/data?view=day-strain`. The personal site serves that view through its existing public WHOOP route. It checks the cycle and sync times on this server, then returns one number or null. The consumer hides responses from the former endpoint that have no dayStrain field.
 
 [Personal design PR 23](https://github.com/atthewm/matthewrmckenzie.com/pull/23) is open for Matthew’s review. It covers the phone springboard, reading pages, persistent Graphite appearance, first-gesture audio and contrast. Its review contains 120 local captures across 15 surfaces at 390 and 1440 pixels in light and dark.
 

@@ -125,6 +125,14 @@ describe("GET /api/whoop/data (public view)", () => {
     expect(await (await GET(get("/api/whoop/data?view=day-strain"))).json()).toEqual({ dayStrain: null });
   });
 
+  test("an unavailable card reading carries only null and cannot be cached", async () => {
+    vi.mocked(fetchDashboardData).mockRejectedValue(new Error("unavailable fixture"));
+    const response = await GET(get("/api/whoop/data?view=day-strain"));
+    expect(response.status).toBe(503);
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    expect(await response.json()).toEqual({ dayStrain: null });
+  });
+
   test("serves the headline scores only", async () => {
     const response = await GET(get("/api/whoop/data"));
 
