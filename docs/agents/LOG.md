@@ -1,5 +1,9 @@
 # Session log
 
+## November 22, 2026 credential review
+
+The credential review adds server-only imports for Notion configuration and WHOOP storage, encryption and OAuth token handling. Storage and OAuth failures discard upstream response bodies. Regression tests use local fixtures. No provider setting or data was changed.
+
 ## 2026-11-22, Codex, public Day Strain for mckm.at
 
 Added a score-only view to the WHOOP endpoint. It checks that the cycle is open, scored, updated on the current local day within six hours and present in a feed refreshed within 90 minutes. It leaves a five minute margin for a visible card to refresh. The personal site keeps all credentials and cycle timestamps. The score-only view also hides a cycle with a missing or invalid local UTC offset. The existing dashboard and owner views retain their contracts. Local verification covered fresh and stale synthetic cycles over HTTP and an unavailable upstream.

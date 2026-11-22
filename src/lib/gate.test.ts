@@ -64,8 +64,8 @@ describe("admin cookie", () => {
   test("refuses every cookie main handed out, which carried the raw secret", () => {
     vi.stubEnv("SITE_LOCK_COOKIE_VALUE", SECRET);
     expect(isAdminRequest(requestWith(`${ADMIN_COOKIE}=${SECRET}`))).toBe(false);
-    // The built-in default main fell back to: refused, and too short to be a secret anyway.
-    expect(isAdminRequest(requestWith(`${ADMIN_COOKIE}=mck_gate_2026`))).toBe(false);
+    // An unconfigured, short cookie value also fails closed.
+    expect(isAdminRequest(requestWith(`${ADMIN_COOKIE}=short-fixture`))).toBe(false);
     // An HMAC under an older label does not pass either.
     expect(isAdminRequest(requestWith(`${ADMIN_COOKIE}=${hmac(SECRET, "admin-session-v1")}`))).toBe(false);
   });
