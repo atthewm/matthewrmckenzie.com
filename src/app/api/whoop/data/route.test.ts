@@ -103,6 +103,36 @@ beforeEach(() => {
 });
 
 describe("GET /api/whoop/data (public view)", () => {
+  test("the card view sends only a current Day Strain, with no cache or cycle timestamps", async () => {
+    const now = "2026-11-17T18:00:00Z";
+    const clock = vi.spyOn(Date, "now").mockReturnValue(Date.parse(now));
+    vi.mocked(fetchDashboardData).mockResolvedValue({
+      ...FULL,
+      lastSynced: now,
+      latestCycle: { ...FULL.latestCycle!, updated_at: now, timezone_offset: "-06:00" },
+    });
+    try {
+      const response = await GET(get("/api/whoop/data?view=day-strain"));
+      expect(response.headers.get("cache-control")).toBe("private, no-store");
+      expect(await response.json()).toEqual({ dayStrain: 10 });
+    } finally {
+      clock.mockRestore();
+    }
+  });
+
+  test("the card view hides a stale cycle even when the dashboard has just synced", async () => {
+    vi.mocked(fetchDashboardData).mockResolvedValue({ ...FULL, lastSynced: new Date().toISOString() });
+    expect(await (await GET(get("/api/whoop/data?view=day-strain"))).json()).toEqual({ dayStrain: null });
+  });
+
+  test("an unavailable card reading carries only null and cannot be cached", async () => {
+    vi.mocked(fetchDashboardData).mockRejectedValue(new Error("unavailable fixture"));
+    const response = await GET(get("/api/whoop/data?view=day-strain"));
+    expect(response.status).toBe(503);
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    expect(await response.json()).toEqual({ dayStrain: null });
+  });
+
   test("serves the headline scores only", async () => {
     const response = await GET(get("/api/whoop/data"));
 

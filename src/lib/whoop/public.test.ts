@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { WhoopDashboardData } from "./client";
-import { localDay, toPublicWhoop } from "./public";
+import { currentDayStrain, localDay, toPublicWhoop } from "./public";
 
 const base = {
   connected: true,
@@ -12,6 +12,39 @@ const base = {
   latestSleep: null,
   recentWorkouts: [],
 } as unknown as WhoopDashboardData;
+
+describe("currentDayStrain", () => {
+  const noon = Date.parse("2026-11-17T18:00:00Z");
+  const now = new Date(noon).toISOString();
+  const cycle = {
+    id: 1, user_id: 1, start: "2026-11-17T04:00:00Z", end: null,
+    timezone_offset: "-06:00", updated_at: "2026-11-17T17:00:00Z", score_state: "SCORED" as const,
+    score: { strain: 10.55, kilojoule: 500, average_heart_rate: 70, max_heart_rate: 90 },
+  };
+  const fresh = { ...base, latestCycle: cycle, lastSynced: now };
+  test("accepts an open scored cycle from today including zero", () => {
+    expect(currentDayStrain(fresh, noon)).toBe(10.6);
+    expect(currentDayStrain({ ...fresh, latestCycle: { ...cycle, score: { ...cycle.score, strain: 0 } } }, noon)).toBe(0);
+  });
+  test("rejects old measurements, closed cycles, and stale syncs independently", () => {
+    for (const patch of [
+      { updated_at: "2026-11-16T18:00:00Z" }, { updated_at: "2026-11-17T11:00:00Z" },
+      { updated_at: "invalid" }, { updated_at: undefined }, { updated_at: "2030-01-01T00:00:00Z" },
+      { timezone_offset: undefined }, { timezone_offset: "+27:90" },
+      { end: now }, { score_state: "PENDING_SCORE" as const }, { score: { ...cycle.score, strain: 22 } },
+    ]) {
+      expect(currentDayStrain({ ...fresh, latestCycle: { ...cycle, ...patch } }, noon)).toBeNull();
+    }
+    expect(currentDayStrain({ ...fresh, lastSynced: "2026-11-17T15:00:00Z" }, noon)).toBeNull();
+    expect(currentDayStrain({ connected: false }, noon)).toBeNull();
+  });
+  test("hides a recent update from the previous local day", () => {
+    const nextDay = Date.parse("2026-11-18T06:05:00Z");
+    const value = { ...fresh, lastSynced: new Date(nextDay).toISOString(),
+      latestCycle: { ...cycle, updated_at: "2026-11-18T05:50:00Z" } };
+    expect(currentDayStrain(value, nextDay)).toBeNull();
+  });
+});
 
 function keysDeep(value: unknown, into = new Set<string>()): Set<string> {
   if (Array.isArray(value)) value.forEach((v) => keysDeep(v, into));
