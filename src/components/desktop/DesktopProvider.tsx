@@ -11,6 +11,7 @@ import {
   type DesktopContextValue,
 } from "@/hooks/useDesktopStore";
 import type { FSItem } from "@/data/fs";
+import { APPEARANCE_EVENT, readAppearance, type Appearance } from "@/lib/appearance";
 import { trackEvent } from "@/lib/analytics";
 
 // ============================================================================
@@ -30,7 +31,12 @@ export default function DesktopProvider({ children }: { children: React.ReactNod
     if (saved) {
       dispatch({ type: "HYDRATE", payload: saved });
     }
+    const restore = () => dispatch({ type: "SET_THEME", payload: { theme: readAppearance() } });
+    restore();
+    const update = (event: Event) => dispatch({ type: "SET_THEME", payload: { theme: (event as CustomEvent<Appearance>).detail } });
+    window.addEventListener(APPEARANCE_EVENT, update);
     setHydrated(true);
+    return () => window.removeEventListener(APPEARANCE_EVENT, update);
   }, []);
 
   // Persist state changes
@@ -41,12 +47,13 @@ export default function DesktopProvider({ children }: { children: React.ReactNod
 
   // Apply theme class to document
   useEffect(() => {
+    if (!hydrated) return;
     if (state.resolvedTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, [state.resolvedTheme]);
+  }, [hydrated, state.resolvedTheme]);
 
   // Action helpers
   const openItem = useCallback(

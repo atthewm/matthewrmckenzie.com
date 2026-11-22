@@ -12,9 +12,8 @@ import Spotlight from "./Spotlight";
 import DesktopIcon from "./DesktopIcon";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useDesktop } from "@/hooks/useDesktopStore";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSecrets } from "@/lib/useSecrets";
-import { findFSItem } from "@/data/fs";
+import { dockItemIds, findFSItem } from "@/data/fs";
 
 // ============================================================================
 // DESKTOP
@@ -23,7 +22,6 @@ import { findFSItem } from "@/data/fs";
 // Icons are now in the Dock; the desktop surface is clean.
 // ============================================================================
 
-const MOBILE_WELCOME_KEY = "mmck-mobile-welcomed";
 const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 interface DesktopProps {
@@ -33,8 +31,6 @@ interface DesktopProps {
 export default function Desktop({ contentMap }: DesktopProps) {
   useKeyboardShortcuts();
   const { dispatch } = useDesktop();
-  const isMobile = useIsMobile();
-  const didOpenRef = useRef(false);
   const { revealed, reveal } = useSecrets();
   const [toast, setToast] = useState<string | null>(null);
   const [stickiesVisible, setStickiesVisible] = useState(false);
@@ -42,13 +38,13 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const [exposeActive, setExposeActive] = useState(false);
   const [spotlightActive, setSpotlightActive] = useState(false);
 
-  // Desktop icons (right column + second column for overflow)
+  // Desktop shortcuts occupy only positions not already used by a dock launcher.
   const DESKTOP_ICON_IDS = [
     // Right column: key items
     "now", "recipes", "health", "apple-music",
     // Second column: projects & extras
     "github-projects", "chess", "minesweeper", "photo-booth",
-  ];
+  ].filter((id) => !dockItemIds.includes(id));
   const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
 
   const getDefaultIconPositions = useCallback((): Record<string, { x: number; y: number }> => {
@@ -99,22 +95,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
     }
   }, [dispatch]);
 
-  // On mobile first load (no ?open param), auto-open the README window
-  useEffect(() => {
-    if (!isMobile || didOpenRef.current) return;
-    if (sessionStorage.getItem(MOBILE_WELCOME_KEY)) return;
-    // Skip if we just opened something via ?open=
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("open")) return;
 
-    didOpenRef.current = true;
-    sessionStorage.setItem(MOBILE_WELCOME_KEY, "1");
-
-    const readme = findFSItem("readme");
-    if (readme) {
-      dispatch({ type: "OPEN_WINDOW", payload: { fsItem: readme } });
-    }
-  }, [isMobile, dispatch]);
 
   // Toast auto-dismiss
   useEffect(() => {
@@ -257,7 +238,7 @@ export default function Desktop({ contentMap }: DesktopProps) {
       />
 
       {/* Desktop icons (draggable, hidden on mobile) */}
-      {!isMobile && DESKTOP_ICON_IDS.map((id) => {
+      {DESKTOP_ICON_IDS.map((id) => {
         const item = findFSItem(id);
         if (!item) return null;
         const pos = resolvedPositions[id] || { x: 0, y: 40 };

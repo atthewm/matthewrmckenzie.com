@@ -22,7 +22,7 @@ export default async function ContactPage() {
   const content = await getContent("contact");
 
   return (
-    <StaticPageLayout hideCta>
+    <StaticPageLayout section="/contact" hideCta>
       <JsonLd data={breadcrumbSchema([
         { name: "Home", url: "https://matthewrmckenzie.com" },
         { name: "Contact", url: "https://matthewrmckenzie.com/contact" },

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import AppearancePicker from "./AppearancePicker";
 import CtaBlock from "./CtaBlock";
 
 // ============================================================================
@@ -13,6 +14,8 @@ interface StaticPageLayoutProps {
   children: React.ReactNode;
   /** Wider column for index pages such as /recipes. */
   wide?: boolean;
+  /** Reading section for the header and footer, available in the static HTML. */
+  section?: string;
   /** Hide the closing contact block (e.g. on /contact itself). */
   hideCta?: boolean;
 }
@@ -31,7 +34,7 @@ const footerLinks = [
   { href: "/privacy", label: "Privacy" },
 ];
 
-export default function StaticPageLayout({ children, wide = false, hideCta = false }: StaticPageLayoutProps) {
+export default function StaticPageLayout({ children, wide = false, hideCta = false, section }: StaticPageLayoutProps) {
   const column = wide ? "max-w-5xl" : "max-w-[680px]";
   return (
     <div className="site">
@@ -50,10 +53,10 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
           </Link>
           <Link
             href="/"
-            className="site-mono text-[11px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full border whitespace-nowrap"
+            className="site-mono inline-flex items-center min-h-11 text-[11px] uppercase tracking-[0.08em] px-3 rounded-full border whitespace-nowrap"
             style={{ borderColor: "var(--site-rule)", color: "var(--site-muted)" }}
           >
-            Open desktop
+            Open McKenzie OS
           </Link>
         </div>
         <nav
@@ -64,6 +67,7 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
             <Link
               key={link.href}
               href={link.href}
+              aria-current={section === link.href ? "location" : undefined}
               className="py-3 text-[14px] whitespace-nowrap border-b-2 border-transparent hover:border-[var(--site-gold)] transition-colors"
               style={{ color: "var(--site-muted)" }}
             >
@@ -89,12 +93,13 @@ export default function StaticPageLayout({ children, wide = false, hideCta = fal
           </div>
           <nav aria-label="Footer navigation" className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-2 text-[13px]">
             {footerLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="hover:underline" style={{ color: "var(--site-muted)" }}>
+              <Link key={l.href} href={l.href} aria-current={section === l.href ? "location" : undefined} className="hover:underline" style={{ color: "var(--site-muted)" }}>
                 {l.label}
               </Link>
             ))}
           </nav>
         </div>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-5"><AppearancePicker /></div>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10 site-mono text-[11px]" style={{ color: "var(--site-muted)" }}>
           &copy; {new Date().getFullYear()} Matthew McKenzie &middot; Short links by{" "}
           <a href="https://mckm.at" className="site-link">mckm.at</a>

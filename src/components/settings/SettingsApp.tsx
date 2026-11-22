@@ -1,5 +1,7 @@
 "use client";
 
+import AppearancePicker from "@/components/ui/AppearancePicker";
+
 import React, { useState } from "react";
 import { useSettings, type FontFamily, type ScreensaverType } from "@/hooks/useSettingsStore";
 import { zenThemes } from "@/config/themes";
@@ -71,7 +73,8 @@ function AppearanceTab() {
 
   return (
     <div className="space-y-4">
-      <SectionLabel>Theme</SectionLabel>
+      <AppearancePicker />
+      <SectionLabel>Wallpaper</SectionLabel>
       <div className="grid grid-cols-3 gap-2">
         {zenThemes.map((theme) => (
           <button

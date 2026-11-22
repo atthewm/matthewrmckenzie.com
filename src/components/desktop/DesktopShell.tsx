@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
 import MobileView from "./MobileView";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useViewport } from "@/hooks/useIsMobile";
 import Screensaver from "./Screensaver";
 import { playStartupChime } from "@/lib/startupChime";
 import { playShutdown } from "@/lib/soundEffects";
@@ -24,11 +24,6 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
   const chimePlayed = useRef(false);
 
   useEffect(() => {
-    // Play startup chime on first interaction or immediately if autoplay allowed
-    if (!chimePlayed.current) {
-      chimePlayed.current = true;
-      playStartupChime();
-    }
     const t1 = setTimeout(() => setPhase("icon"), 400);
     const t2 = setTimeout(() => setPhase("progress"), 1200);
     return () => { clearTimeout(t1); clearTimeout(t2); };
@@ -52,7 +47,7 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div
-      className={`fixed inset-0 z-boot flex flex-col items-center justify-center ${
+      className={`boot-sequence fixed inset-0 z-boot flex flex-col items-center justify-center ${
         phase === "fade" ? "opacity-0" : "opacity-100"
       }`}
       style={{
@@ -60,6 +55,11 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
         transition: "opacity 0.4s ease",
       }}
     >
+      <button type="button" className="boot-chime" onClick={(event) => {
+        if (!event.nativeEvent.isTrusted || chimePlayed.current) return;
+        chimePlayed.current = true;
+        playStartupChime();
+      }}>Play startup sound</button>
       {/* Happy Mac icon */}
       <div
         style={{
@@ -184,26 +184,17 @@ interface DesktopShellProps {
 const BOOT_SESSION_KEY = "mmck-booted";
 
 export default function DesktopShell({ contentMap }: DesktopShellProps) {
-  const [mounted, setMounted] = useState(false);
   const [booting, setBooting] = useState(false);
   const [shuttingDown, setShuttingDown] = useState(false);
-  const isMobile = useIsMobile();
+  const viewport = useViewport();
 
   useEffect(() => {
-    setMounted(true);
-    // The desktop now covers the server-rendered intro (HomeIntro). Flag it so
-    // globals.css can take the covered links out of the tab order.
-    document.documentElement.dataset.desktopReady = "true";
-
     // Skip boot for reduced-motion preference or repeat visits
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!prefersReducedMotion && !sessionStorage.getItem(BOOT_SESSION_KEY)) {
       setBooting(true);
     }
 
-    return () => {
-      delete document.documentElement.dataset.desktopReady;
-    };
   }, []);
 
   const handleBootComplete = useCallback(() => {
@@ -223,12 +214,14 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
 
   // Before mount the page shows the server-rendered intro that sits under the
   // desktop (HomeIntro), so there is nothing to draw here yet.
-  if (!mounted) return null;
+  if (viewport === null) return null;
+  const isMobile = viewport === "phone";
 
   return (
     <ShutdownProvider value={handleShutdown}>
       <DesktopProvider>
         <SettingsProvider>
+          <ReadyWorkspace />
           {booting && !isMobile && <BootSequence onComplete={handleBootComplete} />}
           {shuttingDown && <ShutdownSequence onComplete={handleShutdownComplete} />}
           <Screensaver />
@@ -237,4 +230,13 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
       </DesktopProvider>
     </ShutdownProvider>
   );
+}
+
+/** The providers hydrate in order. Keep the static home visible until the interactive branch exists. */
+function ReadyWorkspace() {
+  useLayoutEffect(() => {
+    document.documentElement.dataset.desktopReady = "true";
+    return () => { delete document.documentElement.dataset.desktopReady; };
+  }, []);
+  return null;
 }

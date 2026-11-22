@@ -14,7 +14,7 @@
   --c-panel-2: #323d45;
   --c-ink: #e8ecee;
   --c-ink-2: #9aa7ad;
-  --c-ink-3: #717e85;
+  --c-ink-3: #adb5b8;
   --c-line: #3a454c;
   --c-line-2: #46525a;
   --c-gold: #d9be6b;
@@ -139,7 +139,7 @@
 .card-btn--primary {
   background: var(--c-gold);
   border-color: var(--c-gold);
-  color: #1c2329;
+  color: var(--c-on-gold, #1c2329);
   font-weight: 600;
 }
 
@@ -147,7 +147,7 @@
 .card-btn--primary:focus-visible {
   background: var(--c-gold-2);
   border-color: var(--c-gold-2);
-  color: #1c2329;
+  color: var(--c-on-gold, #1c2329);
 }
 
 .card-btn svg {
@@ -311,5 +311,21 @@
   .card-btn,
   .card-chip {
     transition: none;
+  }
+}
+
+/* The mckm.at slate and gold palette on a light device, or when chosen in appearance settings. */
+html[data-appearance="light"] .card-stage {
+  --c-bg: #e2e6e8; --c-bg-2: #e9ecee; --c-panel: #eef1f2; --c-panel-2: #f5f7f7;
+  --c-ink: #2f3a40; --c-ink-2: #4e5a61; --c-ink-3: #586469;
+  --c-line: #cdd5d8; --c-line-2: #bbc5c9; --c-gold: #735c1b; --c-gold-2: #57430f;
+  --c-gold-tint: #eee4ce; --c-on-gold: #fffbea;
+}
+@media (prefers-color-scheme: light) {
+  html:not([data-appearance="dark"]) .card-stage {
+    --c-bg: #e2e6e8; --c-bg-2: #e9ecee; --c-panel: #eef1f2; --c-panel-2: #f5f7f7;
+    --c-ink: #2f3a40; --c-ink-2: #4e5a61; --c-ink-3: #586469;
+    --c-line: #cdd5d8; --c-line-2: #bbc5c9; --c-gold: #735c1b; --c-gold-2: #57430f;
+    --c-gold-tint: #eee4ce; --c-on-gold: #fffbea;
   }
 }

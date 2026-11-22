@@ -22,7 +22,7 @@ export default async function AboutPage() {
   const content = await getContent("about");
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout section="/about">
       <JsonLd data={profilePageSchema} />
       <JsonLd data={breadcrumbSchema([
         { name: "Home", url: "https://matthewrmckenzie.com" },

@@ -124,14 +124,14 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
       {/* Label */}
       <span
         className={`
-          text-3xs font-medium text-center leading-tight line-clamp-2 px-1 py-0.5 rounded
+          text-[12px] font-semibold text-center leading-tight line-clamp-2 px-1.5 py-0.5 rounded
           ${selected
             ? "bg-desktop-accent text-white"
-            : "text-desktop-text"
+            : "bg-black/65 text-white"
           }
         `}
         style={{
-          textShadow: selected ? "none" : "0 1px 2px rgba(255,255,255,0.5)",
+          textShadow: "none",
         }}
       >
         {item.name}

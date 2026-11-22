@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <StaticPageLayout>
+    <StaticPageLayout section="/privacy">
       <JsonLd data={breadcrumbSchema([
         { name: "Home", url: "https://matthewrmckenzie.com" },
         { name: "Privacy Policy", url: "https://matthewrmckenzie.com/privacy" },

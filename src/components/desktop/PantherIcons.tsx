@@ -15,6 +15,10 @@ interface IconProps {
 // ---------------------------------------------------------------------------
 
 const iconMap: Record<string, string> = {
+  card: "address-book.png",
+  hobbies: "pictures-folder.png",
+  "top-foods": "home-folder.png",
+  "url-shortener": "network.png",
   // Core apps
   "start-here":     "help.png",
   "about":          "finder.png",
@@ -26,15 +30,15 @@ const iconMap: Record<string, string> = {
   "terminal":       "terminal.png",
   "stickies":       "stickies.png",
   "contact":        "mail.png",
-  "guestbook":      "address-book.png",
+  "guestbook":      "documents.png",
   "linktree":       "internet-connection.png",
   "schedule":       "ical.png",
   "ichat":          "ichat.png",
   "photo-booth":    "image-capture.png",
   "chess":          "generic-application.png",
   "minesweeper":    "calculator.png",
-  "github-projects":"terminal.png",
-  "whats-new":      "sherlock.png",
+  "github-projects":"console.png",
+  "whats-new":      "preview.png",
 
   // Media
   "media":          "movies-folder.png",
@@ -109,27 +113,6 @@ function PantherIconImg({ src, size = 32, alt }: { src: string; size?: number; a
 }
 
 // ---------------------------------------------------------------------------
-// Get a Panther icon React component for an fsItem ID (used by Dock)
-// ---------------------------------------------------------------------------
-
-const iconCache = new Map<string, React.FC<IconProps>>();
-
-export function getPantherIcon(fsItemId: string): React.FC<IconProps> | null {
-  const filename = iconMap[fsItemId];
-  if (!filename) return null;
-
-  const cached = iconCache.get(fsItemId);
-  if (cached) return cached;
-
-  const IconComponent: React.FC<IconProps> = ({ size = 32 }) => (
-    <PantherIconImg src={`/icons/panther/${filename}`} size={size} alt={fsItemId} />
-  );
-  IconComponent.displayName = `PantherIcon_${fsItemId}`;
-  iconCache.set(fsItemId, IconComponent);
-  return IconComponent;
-}
-
-// ---------------------------------------------------------------------------
 // Get the PNG path for an fsItem ID (used by DesktopIcon, FolderView, etc.)
 // ---------------------------------------------------------------------------
 
@@ -144,7 +127,7 @@ export function getPantherIconPath(fsItemId: string): string {
 
 export function PantherIcon({ itemId, size = 32 }: { itemId: string; size?: number }) {
   const path = getPantherIconPath(itemId);
-  return <PantherIconImg src={path} size={size} alt={itemId} />;
+  return <PantherIconImg src={path} size={size} alt="" />;
 }
 
 export type { IconProps };

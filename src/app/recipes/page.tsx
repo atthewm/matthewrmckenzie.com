@@ -25,7 +25,7 @@ export default function RecipesPage() {
   })).filter((g) => g.items.length > 0);
 
   return (
-    <StaticPageLayout wide>
+    <StaticPageLayout section="/recipes" wide>
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: "https://matthewrmckenzie.com" },

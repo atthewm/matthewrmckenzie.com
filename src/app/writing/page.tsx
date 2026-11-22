@@ -21,7 +21,7 @@ export default async function WritingPage() {
   const content = await getContent("writing");
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout section="/writing">
       <JsonLd data={breadcrumbSchema([
         { name: "Home", url: "https://matthewrmckenzie.com" },
         { name: "Writing", url: "https://matthewrmckenzie.com/writing" },

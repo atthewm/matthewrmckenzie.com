@@ -43,7 +43,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
   ].filter((f) => f.value);
 
   return (
-    <StaticPageLayout>
+    <StaticPageLayout section="/recipes">
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: SITE },

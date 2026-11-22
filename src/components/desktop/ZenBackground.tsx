@@ -194,7 +194,7 @@ function DefaultGradient() {
   return (
     <>
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 desktop-gradient"
         style={{
           background: `
             radial-gradient(ellipse at 20% 20%, rgba(140, 180, 220, 0.6) 0%, transparent 50%),
