@@ -38,6 +38,8 @@ export interface WhoopCycle {
   user_id: number;
   start: string;
   end: string | null;
+  updated_at?: string;
+  timezone_offset?: string;
   score_state: "SCORED" | "PENDING_SCORE" | "UNSCORABLE";
   score?: WhoopCycleScore;
 }

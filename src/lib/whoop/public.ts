@@ -54,6 +54,30 @@ function isNumber(value: unknown): value is number {
 }
 
 /**
+ * The cache can refresh even when the band has supplied no new data. A card
+ * reading must come from the current physiological cycle, updated today in
+ * the wearer's time zone. Reserve five minutes for a visible card to refresh.
+ * No cycle timestamp leaves the server.
+ */
+export function currentDayStrain(data: WhoopDataResponse, now = Date.now()): number | null {
+  if (!data.connected) return null;
+  const cycle = data.latestCycle;
+  const strain = cycle?.score?.strain;
+  if (!cycle?.updated_at || cycle.end != null || cycle.score_state !== "SCORED" ||
+      !isNumber(strain) || strain < 0 || strain > 21) return null;
+
+  const updated = Date.parse(cycle.updated_at);
+  const synced = Date.parse(data.lastSynced);
+  const validThrough = now + 5 * 60_000;
+  if (!Number.isFinite(updated) || updated > now || validThrough - updated > 6 * 3_600_000 ||
+      !Number.isFinite(synced) || synced > now || validThrough - synced > 90 * 60_000) return null;
+
+  const offset = cycle.timezone_offset === "Z" ? "+00:00" : cycle.timezone_offset;
+  if (localDay(cycle.updated_at, offset) !== localDay(new Date(validThrough).toISOString(), offset)) return null;
+  return Math.round(strain * 10) / 10;
+}
+
+/**
  * The local calendar day a workout started on. WHOOP sends the start in UTC
  * with the wearer's offset alongside; an evening workout must not show up
  * under tomorrow's date. Returns null when the start is unreadable.

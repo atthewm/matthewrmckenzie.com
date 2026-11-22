@@ -1,5 +1,7 @@
 # Matthew's decisions
 
+* 2026-11-22. Show only current Day Strain below the professional bio on mckm.at. Hide an unavailable or stale reading and keep WHOOP credentials on the server.
+
 * 2026-11-21. Use one shared standard for Claude and ChatGPT. Put facts in AGENTS.md and have Claude import it. Preserve the prior Claude notes and their distinct tool instructions.
 * 2026-11-21. Build robots groups from one private path list, allow Googlebot, Bingbot, Applebot, DuckDuckBot, AhrefsBot, AhrefsSiteAudit, OAI-SearchBot, ChatGPT-User, GPTBot, PerplexityBot, Perplexity-User, Claude-SearchBot, Claude-User, ClaudeBot, Google-Extended and Applebot-Extended, block CCBot, Bytespider, Diffbot, Meta-ExternalAgent, Amazonbot, cohere-ai, ImagesiftBot, Omgilibot and PetalBot, allow the OG image and use one sitemap line.
 * 2026-11-21. Start at 390 pixels. Show before and after at 390 and 1440 in light and dark from a local production build. Wait for my approval before merging design.
