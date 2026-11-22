@@ -39,8 +39,7 @@ async function notionFetch(path: string, body: unknown): Promise<any> {
   });
 
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Notion ${path} failed (${res.status}): ${text.slice(0, 300)}`);
+    throw new Error(`Notion request failed (${res.status})`);
   }
   return res.json();
 }

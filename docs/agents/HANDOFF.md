@@ -29,3 +29,7 @@ The design awaits gallery approval. Preserve the 11 testimonials, the $800M+ rai
 ## Don't touch
 
 Preserve [PR 15](https://github.com/atthewm/matthewrmckenzie.com/pull/15), the testimonials, the financial figure, alumniOf, the personal mobile number, Claude's original notes and send flags. Keep private Life and Nutrition behind owner authentication. Respect LinkedIn's crawl exclusion. The publisher serves WHOOP's full privacy policy but its firewall returns 403 to an automated request.
+
+## Credential review, November 22, 2026
+
+Notion and WHOOP credentials now stay behind build-time server boundaries. Provider failures retain an HTTP status, and public OAuth return URLs omit provider diagnostics. Current signing rules reject the historic short example.

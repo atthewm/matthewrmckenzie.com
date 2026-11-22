@@ -1,3 +1,5 @@
+import "server-only";
+
 // ============================================================================
 // VERCEL KV (Upstash Redis REST API)
 // ============================================================================
@@ -22,8 +24,7 @@ async function kvFetch(path: string): Promise<unknown> {
     cache: "no-store",
   });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`KV request failed (${res.status}): ${text}`);
+    throw new Error(`KV request failed (${res.status})`);
   }
   const json = await res.json();
   return json.result;

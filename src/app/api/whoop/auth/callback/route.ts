@@ -19,8 +19,7 @@ export async function GET(request: NextRequest) {
 
     // Check for OAuth errors
     if (error) {
-      const desc = searchParams.get("error_description") || "Authorization denied";
-      return redirectWithMessage(`WHOOP authorization failed: ${desc}`, "error");
+      return redirectWithMessage("WHOOP authorization was denied. Please try connecting again.", "error");
     }
 
     // Validate required params
@@ -55,8 +54,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!tokenRes.ok) {
-      const errorText = await tokenRes.text();
-      console.error("WHOOP token exchange failed:", tokenRes.status, errorText);
+      console.error("WHOOP token exchange failed:", tokenRes.status);
       return redirectWithMessage("Failed to exchange authorization code for tokens", "error");
     }
 
