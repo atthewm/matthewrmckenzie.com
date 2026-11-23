@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useRef, useEffect, useState } from "react";
-import { useDesktop, type WindowState } from "@/hooks/useDesktopStore";
+import { DESKTOP_DOCK_CLEARANCE, MENU_BAR_HEIGHT, useDesktop, type WindowState } from "@/hooks/useDesktopStore";
 import { useSettings } from "@/hooks/useSettingsStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { playWindowClose, playMinimize } from "@/lib/soundEffects";
@@ -270,6 +270,15 @@ export default function Window({ windowState, children }: WindowProps) {
         height: isMobile && !windowState.isMaximized
           ? Math.min(windowState.height, window.innerHeight - 94)
           : windowState.height,
+        // Fit the current workspace even when restoring an older saved window.
+        ...(windowState.isMaximized && !isMobile && {
+          top: MENU_BAR_HEIGHT,
+          left: 0,
+          right: 0,
+          bottom: DESKTOP_DOCK_CLEARANCE,
+          width: "auto",
+          height: "auto",
+        }),
         zIndex: windowState.zIndex,
         borderRadius: windowState.isMaximized ? 0 : 10,
         boxShadow: isFocused ? focusedShadow : unfocusedShadow,

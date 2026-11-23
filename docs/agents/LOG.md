@@ -1,5 +1,9 @@
 # Session log
 
+## 2026-11-23, Panther Trash and public website check
+
+Integrated the existing filled Panther wastebasket as a desktop shortcut, Dock item and phone launcher. Visitors can preview and save an Austin pixel drawing, a startup chime and brownie trial notes. The preview assets load when Trash opens. Verified all 40 published sitemap pages and the public app launchers. Repaired two overflowing recipe tables, maximized-window controls and the embedded Contact calendar. The local build passed verification, 268 tests and the 40-page metadata check. The design review includes 390 and 1440 pixel screenshots in both themes. Matthew’s visual review is pending.
+
 ## November 22, 2026 compiled public output
 
 Added a server-only guard to the legacy Supabase module and enforced the absence of credentials in public build output. The anonymous-key regression fixture covers opaque and provider-formatted keys.

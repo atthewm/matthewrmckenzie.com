@@ -33,6 +33,7 @@ export const fileSystem: FSItem[] = [
     { id: "essays", name: "Essays", type: "document", icon: "BookOpen", description: "Collected essays and reflections.", defaultSize: { width: 640, height: 560 } },
   ]},
   { id: "now", name: "Now", type: "document", icon: "Zap", contentPath: "now.md", description: "What I'm up to right now.", defaultSize: { width: 520, height: 440 } },
+  { id: "trash", name: "Trash", type: "app", icon: "Trash2", appComponent: "TrashApp", description: "Open the filled wastebasket.", defaultSize: { width: 520, height: 550 } },
   { id: "photos", name: "Photos", type: "app", icon: "Image", appComponent: "InstagramApp", description: "Photos currently mirror Instagram.", defaultSize: { width: 480, height: 560 } },
   { id: "music", name: "Music", type: "app", icon: "Headphones", appComponent: "SoundCloudPlayer", description: "SoundCloud player.", defaultSize: { width: 420, height: 500 } },
   { id: "videos", name: "Zune", type: "app", icon: "Music", appComponent: "ZunePlayer", description: "Zune-style music player.", defaultSize: { width: 380, height: 560 } },
@@ -167,4 +168,6 @@ export const dockItemIds: (string | "|")[] = [
   "terminal",
   "stickies",
   "settings",
+  "|",
+  "trash",
 ];

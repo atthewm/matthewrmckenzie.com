@@ -35,6 +35,10 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
 
   const index = recipes.findIndex((r) => r.slug === slug);
   const next = recipes[(index + 1) % recipes.length];
+  // A wide nutrition table can scroll independently of the recipe on a phone.
+  const recipeHtml = content.html
+    .replaceAll("<table>", '<div class="overflow-x-auto print:overflow-visible" role="region" aria-label="Recipe table" tabindex="0"><table>')
+    .replaceAll("</table>", "</table></div>");
 
   const facts = [
     { label: "Yield", value: recipe.yield },
@@ -83,7 +87,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         </div>
       </header>
 
-      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: content.html }} />
+      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: recipeHtml }} />
 
       {next && next.slug !== slug && (
         <nav aria-label="Next recipe" className="site-noprint mt-14 pt-6 border-t" style={{ borderColor: "var(--site-rule)" }}>

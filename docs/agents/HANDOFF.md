@@ -2,7 +2,13 @@
 
 ## Updated
 
-2026-11-22, Codex.
+2026-11-23, Codex.
+
+## Panther Trash review
+
+The local branch `codex/panther-trash-discoveries` starts from main commit `5d7e555`. It adds the filled Panther Trash to the desktop, Dock and phone launcher. The three files contain an original Austin pixel drawing, an original startup chime and a kitchen note drawn from the published brownie recipes.
+
+The public check found two recipe pages with overflowing nutrition tables, window controls under the menu bar after maximizing, and an unreliable Contact calendar. The branch fixes all four. The visual gallery and audit are in the November 23 `on-my/outputs` workspace. Review them with Matthew before publishing. This branch is independent of PR 23.
 
 ## What's in flight
 
@@ -20,7 +26,7 @@ After the standard merged, mobile Lighthouse measured LCP of 0.98 seconds on hom
 
 ## Next step
 
-Open `~/screenshots/codex-1/index.html` and select the personal design review. PR 23 has the before-and-after checks and public route evidence. Record Matthew’s decision in DECISIONS.md when he gives it.
+Review the Trash gallery in `on-my/outputs/trash-review.html`. The earlier design review is at `~/screenshots/codex-1/index.html`. PR 23 has the before-and-after checks and public route evidence. Record Matthew’s decision in DECISIONS.md when he gives it.
 
 ## Waiting on Matthew
 
