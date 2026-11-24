@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { GET, POST } from "./route";
+import { records, kvDel, kvSet } from "@/test/session-kv";
+
+vi.mock("@/lib/whoop/kv", () => import("@/test/session-kv"));
+import { DELETE, GET, POST } from "./route";
 import {
   ADMIN_COOKIE,
   GUEST_COOKIE,
   SESSION_HINT_COOKIE,
-  adminCookieValue,
-  guestCookieValue,
 } from "@/lib/gate";
-import { OWNER_COOKIE, ownerCookieValue } from "@/lib/owner";
+import { OWNER_COOKIE } from "@/lib/owner";
 import { signInLimiter } from "@/lib/sign-in-limit";
 
 const COOKIE_VALUE = "0123456789abcdef0123456789abcdef";
@@ -48,6 +49,7 @@ function configure(overrides: Record<string, string | undefined> = {}) {
 }
 
 beforeEach(() => {
+  records.clear();
   configure();
   signInLimiter.clear();
 });
@@ -257,12 +259,12 @@ describe("POST /api/auth, admin", () => {
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ success: true, role: "admin" });
     expect(setCookieNames(response).sort()).toEqual([ADMIN_COOKIE, OWNER_COOKIE, SESSION_HINT_COOKIE].sort());
-    expect(setCookie(response, ADMIN_COOKIE)).toContain(`${ADMIN_COOKIE}=${adminCookieValue()}`);
-    expect(setCookie(response, OWNER_COOKIE)).toContain(`${OWNER_COOKIE}=${ownerCookieValue()}`);
+    expect(setCookie(response, ADMIN_COOKIE)).toContain(`${ADMIN_COOKIE}=v3.`);
+    expect(setCookie(response, OWNER_COOKIE)).toContain(`${OWNER_COOKIE}=v3.`);
     expect(response.headers.get("cache-control")).toBe("private, no-store");
   });
 
-  test("never sends a secret to the browser, only HMACs of them", async () => {
+  test("never sends account passwords or signing secrets to the browser", async () => {
     const response = await POST(post(ADMIN));
     const everything = `${response.headers.getSetCookie().join("\n")}\n${await response.text()}`;
     expect(everything).not.toContain(COOKIE_VALUE);
@@ -321,12 +323,10 @@ describe("POST /api/auth, guest", () => {
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ success: true, role: "guest" });
     expect(setCookieNames(response)).toEqual([GUEST_COOKIE]);
-    expect(setCookie(response, GUEST_COOKIE)).toContain(`${GUEST_COOKIE}=${guestCookieValue()}`);
+    expect(setCookie(response, GUEST_COOKIE)).toContain(`${GUEST_COOKIE}=v3.`);
     expect(setCookie(response, GUEST_COOKIE)?.toLowerCase()).toContain("httponly");
     const everything = response.headers.getSetCookie().join("\n");
     expect(everything).not.toContain(COOKIE_VALUE);
-    expect(everything).not.toContain(adminCookieValue() as string);
-    expect(everything).not.toContain(ownerCookieValue() as string);
   });
 });
 
@@ -352,13 +352,59 @@ describe("GET /api/auth", () => {
   });
 
   test("reports each valid cookie on its own", async () => {
-    const admin = await GET(get(`${ADMIN_COOKIE}=${adminCookieValue()}`));
+    const adminLogin = await POST(post(ADMIN));
+    const adminCookie = setCookie(adminLogin, ADMIN_COOKIE)!.split(";")[0];
+    const admin = await GET(get(adminCookie));
     expect(await admin.json()).toEqual({ admin: true, owner: false, guest: false });
-
-    const owner = await GET(get(`${ADMIN_COOKIE}=${adminCookieValue()}; ${OWNER_COOKIE}=${ownerCookieValue()}`));
+    const ownerCookie = setCookie(adminLogin, OWNER_COOKIE)!.split(";")[0];
+    const owner = await GET(get(adminCookie + "; " + ownerCookie));
     expect(await owner.json()).toEqual({ admin: true, owner: true, guest: false });
-
-    const guest = await GET(get(`${GUEST_COOKIE}=${guestCookieValue()}`));
+    const guestLogin = await POST(post(GUEST));
+    const guest = await GET(get(setCookie(guestLogin, GUEST_COOKIE)!.split(";")[0]));
     expect(await guest.json()).toEqual({ admin: false, owner: false, guest: true });
+  });
+});
+
+function browserSession(response: Response) {
+  return response.headers.getSetCookie().map(line => line.split(";")[0]).join("; ");
+}
+
+describe("retiring a browser login", () => {
+  test("accepts the original browser host behind Next and refuses another origin", async () => {
+    const local = new Request("http://localhost:3000/api/auth", {
+      method: "DELETE", headers: { host: "127.0.0.1:3000", origin: "http://127.0.0.1:3000" },
+    });
+    expect((await DELETE(local)).status).toBe(200);
+    const other = new Request(local, { headers: { host: "127.0.0.1:3000", origin: "https://other.invalid" } });
+    expect((await DELETE(other)).status).toBe(403);
+  });
+  test("sign-out removes the stored login and clears all four cookies", async () => {
+    const cookie = browserSession(await POST(post(ADMIN)));
+    const request = new Request("https://matthewrmckenzie.com/api/auth", { headers: { cookie } });
+    const result = await DELETE(request);
+    expect(result.status).toBe(200);
+    expect(result.headers.getSetCookie()).toHaveLength(4);
+    for (const line of result.headers.getSetCookie()) expect(line.toLowerCase()).toContain("max-age=0");
+    expect(await (await GET(request)).json()).toEqual({ admin: false, owner: false, guest: false });
+    expect((await DELETE(request)).status).toBe(200);
+  });
+  test("changing to guest retires the earlier owner session", async () => {
+    const cookie = browserSession(await POST(post(ADMIN)));
+    const res = await POST(post(GUEST, { cookie }));
+    expect(setCookie(res, OWNER_COOKIE)?.toLowerCase()).toContain("max-age=0");
+    expect(setCookie(res, ADMIN_COOKIE)?.toLowerCase()).toContain("max-age=0");
+    expect(await (await GET(post({}, { cookie }))).json()).toEqual({ admin: false, owner: false, guest: false });
+  });
+  test("does not acknowledge failed creation or revocation", async () => {
+    kvSet.mockRejectedValueOnce(new Error("storage unavailable"));
+    const login = await POST(post(ADMIN));
+    expect(login.status).toBe(503);
+    expect(login.headers.getSetCookie()).toEqual([]);
+    const cookie = browserSession(await POST(post(ADMIN)));
+    kvDel.mockRejectedValueOnce(new Error("storage unavailable"));
+    const logout = await DELETE(post({}, { cookie }));
+    expect(logout.status).toBe(503);
+    expect(logout.headers.getSetCookie()).toEqual([]);
+    expect((await DELETE(post({}, { cookie }))).status).toBe(200);
   });
 });

@@ -1,14 +1,35 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, FormEvent } from "react";
+import { finishGateChange } from "@/hooks/useOwnerSession";
 
 export default function GatePage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/auth", { cache: "no-store", signal: controller.signal })
+      .then(res => res.ok ? res.json() : null)
+      .then(session => { if (!controller.signal.aborted) setSignedIn(Boolean(session?.admin || session?.guest || session?.owner)); })
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
+
+  async function signOut() {
+    setLoading(true);
+    setError("");
+    try {
+      const result = await fetch("/api/auth", { method: "DELETE" });
+      if (!result.ok) throw new Error();
+      finishGateChange("/gate");
+    } catch {
+      setError("Sign-out could not finish. Try again.");
+      setLoading(false);
+    }
+  }
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -21,8 +42,9 @@ export default function GatePage() {
         body: JSON.stringify({ username, password }),
       });
       if (res.ok) {
-        router.push("/");
-        router.refresh();
+        finishGateChange("/");
+      } else if (res.status === 503) {
+        setError("Sign-in is unavailable. Try again later.");
       } else if (res.status === 429) {
         setError("Too many attempts. Try again in a few minutes.");
       } else {
@@ -124,20 +146,24 @@ export default function GatePage() {
               McKENZIE<span style={{ color: "#0071e3" }}>_</span>OS
             </h1>
             <p style={{ fontSize: "11px", color: "#777", letterSpacing: "3px", textTransform: "uppercase", marginTop: "6px" }}>
-              Admin Login
+              {signedIn ? "Current session" : "Admin Login"}
             </p>
           </div>
           <div style={{ width: "100%", maxWidth: "240px", height: "18px", borderRadius: "9px", overflow: "hidden", background: "#333", border: "1px solid #555", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.5)" }}>
             <div className="mck-progress" style={{ width: "100%", height: "100%", borderRadius: "9px" }} />
           </div>
-          <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>Authentication required</p>
-          {/* Login form -- requires credentials for all users */}
-          <form onSubmit={handleLogin} className="mck-fade" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginTop: "24px" }}>
+          <p className="mck-dots" style={{ fontSize: "11px", color: "#666", letterSpacing: "2px", margin: 0 }}>{signedIn ? "Signed in on this device" : "Authentication required"}</p>
+          {signedIn ? (
+            <div style={{ textAlign: "center" }}>
+              {error && <p role="alert">{error}</p>}
+              <button type="button" disabled={loading} onClick={signOut} className="mck-btn" style={{ minWidth: "160px", minHeight: "44px" }}>{loading ? "Signing out..." : "Sign out"}</button>
+            </div>
+          ) : <form onSubmit={handleLogin} className="mck-fade" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginTop: "24px" }}>
             <input type="text" placeholder="Username" aria-label="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoFocus autoComplete="username" />
             <input type="password" placeholder="Password" aria-label="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mck-input" style={{ width: "100%", maxWidth: "220px", padding: "8px 12px", fontSize: "13px", color: "#333" }} autoComplete="current-password" />
-            {error && <p style={{ color: "#ff6b6b", fontSize: "11px", margin: 0 }}>{error}</p>}
+            {error && <p role="alert" style={{ color: "#ff6b6b", fontSize: "11px", margin: 0 }}>{error}</p>}
             <button type="submit" disabled={loading} className="mck-btn" style={{ width: "100%", maxWidth: "220px", padding: "8px 0", fontSize: "13px", fontWeight: 500, marginTop: "4px" }}>{loading ? "Authenticating..." : "Log In"}</button>
-          </form>
+          </form>}
         </div>
         <p style={{ position: "absolute", bottom: "20px", fontSize: "9px", color: "#333", letterSpacing: "1px" }}>&copy; 2026 McKENZIE_OS</p>
       </div>

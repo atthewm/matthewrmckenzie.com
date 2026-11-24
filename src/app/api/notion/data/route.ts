@@ -31,7 +31,7 @@ export async function GET(req: Request) {
 
   // Fails closed: with no owner secret configured, nobody is the owner.
   const isPrivate = def.visibility === "private";
-  if (isPrivate && !isOwnerRequest(req)) {
+  if (isPrivate && !await isOwnerRequest(req)) {
     return NextResponse.json(
       { error: "private dataset", key, authed: false },
       { status: 401, headers: NO_STORE }
@@ -39,7 +39,7 @@ export async function GET(req: Request) {
   }
 
   // Fails closed too: with no admin cookie value configured, nobody is admin.
-  const authed = isPrivate || isAdminRequest(req);
+  const authed = isPrivate || await isAdminRequest(req);
 
   const { items, syncedAt } = await readDataset(def.key, {
     includePrivate: authed,

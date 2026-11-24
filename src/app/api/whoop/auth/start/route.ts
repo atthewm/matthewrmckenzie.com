@@ -9,10 +9,12 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { WHOOP_AUTH_URL, WHOOP_SCOPES, getEnvVar } from "@/lib/whoop/config";
 import { kvSet } from "@/lib/whoop/kv";
-import { isOwnerRequest, NO_STORE } from "@/lib/owner";
+import { NO_STORE } from "@/lib/owner";
+import { activeGateSession, ownerFlowBinding } from "@/lib/gate-session";
 
 export async function GET(request: Request) {
-  if (!isOwnerRequest(request)) {
+  const id = await activeGateSession(request, "owner");
+  if (!id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403, headers: NO_STORE });
   }
   try {
@@ -23,7 +25,9 @@ export async function GET(request: Request) {
     const state = randomBytes(32).toString("hex");
 
     // Store state in KV with 10-minute TTL for verification in callback
-    await kvSet("whoop:oauth_state", state, 600);
+    const binding = ownerFlowBinding(id, state);
+    if (!binding) return NextResponse.json({ error: "Forbidden" }, { status: 403, headers: NO_STORE });
+    await kvSet("whoop:oauth_state:" + binding, "pending", 600);
 
     const params = new URLSearchParams({
       client_id: clientId,

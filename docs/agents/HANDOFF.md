@@ -1,5 +1,11 @@
 # Handoff
 
+## November 24, 2026, gate session remediation
+
+Branch `codex/personal-session-security-only-20261124` applies the gate fix to main at `1354cf5`. The design candidate at `a051c51` contains the same session implementation. The gate now signs and registers each login separately for 30 days. Authenticated readers check the live KV grant and its signed deadline. Signing out at `/gate` retires that login, clears its browser cookies, and refreshes other open desktop tabs. Pending WHOOP connections are tied to the initiating owner session and can complete once.
+
+The local candidate passed 270 tests, TypeScript, lint and the production build. Lint reported the same six existing warnings. A loopback production-build run used Valkey 9.2 for real session creation, absolute expiry, independent logins, revocation and the OAuth continuation. The remediation packet under `~/audits/my-project/remediation/personal/` has the review and four-view screenshots. Before release, check the existing KV binding’s command permissions and immediate revocation from deployed staging regions, and verify a normal owner sign-in. Existing pre-v3 sessions will require a new login. The optional guest account is currently disabled in production.
+
 ## Updated
 
 2026-11-23, Codex.
