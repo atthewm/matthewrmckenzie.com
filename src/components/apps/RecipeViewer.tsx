@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Download, ExternalLink } from "lucide-react";
 import type { FSItem } from "@/data/fs";
 import { getRecipeBySlug } from "@/content/recipes/index";
+import { RecipeToolPanel } from "@/components/recipes/RecipeToolPanel";
+import { toolForRecipe } from "@/components/recipes/kitchenTools";
 
 // ============================================================================
 // RECIPE VIEWER (Mac OS X 10.3 Panther Document Style)
@@ -102,6 +104,7 @@ export default function RecipeViewer({ contentHtml, fsItem }: RecipeViewerProps)
               ))}
             </dl>
           )}
+          {toolForRecipe(slug) && <RecipeToolPanel slug={slug} />}
         </div>
 
         {html ? (

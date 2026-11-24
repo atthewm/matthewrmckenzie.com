@@ -498,6 +498,11 @@ export default function MenuBar() {
     ];
 
     const windowItems: MenuItem[] = [
+      { type: "action", label: "Saved Desks", action: () => {
+        const desks = findFSItem("saved-desks");
+        if (desks) openItem(desks);
+      } },
+      { type: "separator" },
       {
         type: "action",
         label: "Minimize",

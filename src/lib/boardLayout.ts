@@ -105,13 +105,16 @@ export function buildGroups(folder: FSItem, isOwner = false): BoardGroup[] {
 
   if (folder.id === "recipes") {
     const byId = new Map(children.map((c) => [c.id, c]));
-    return RECIPE_CATEGORIES.map((category) => ({
+    const groups: BoardGroup[] = RECIPE_CATEGORIES.map((category) => ({
       id: `cat-${category}`,
       label: category,
       items: recipeIndex
         .filter((r) => r.category === category && byId.has(r.slug))
         .map((r) => byId.get(r.slug)!),
     })).filter((g) => g.items.length > 0);
+    const tools = children.filter((child) => child.appComponent !== "RecipeViewer");
+    if (tools.length) groups.push({ id: "kitchen-tools", label: "Kitchen tools", items: tools });
+    return groups;
   }
 
   const loose = [...children.filter((c) => c.type !== "folder"), ...pinnedRefs(folder, isOwner)];

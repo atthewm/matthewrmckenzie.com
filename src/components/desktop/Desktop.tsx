@@ -20,8 +20,15 @@ import { findFSItem } from "@/data/fs";
 // DESKTOP
 // ============================================================================
 // Main desktop view: wallpaper, menu bar, windows, and bottom dock.
-// Icons are now in the Dock; the desktop surface is clean.
+// Desktop shortcuts and the Dock open the same application windows.
 // ============================================================================
+
+const DESKTOP_ICON_IDS = [
+  "now", "recipes", "health", "apple-music",
+  "github-projects", "chess", "minesweeper", "photo-booth",
+  "trash",
+];
+const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
 
 const MOBILE_WELCOME_KEY = "mmck-mobile-welcomed";
 const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
@@ -42,27 +49,11 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const [exposeActive, setExposeActive] = useState(false);
   const [spotlightActive, setSpotlightActive] = useState(false);
 
-  // Desktop icons (right column + second column for overflow)
-  const DESKTOP_ICON_IDS = [
-    // Right column: key items
-    "now", "recipes", "health", "apple-music",
-    // Second column: projects & extras
-    "github-projects", "chess", "minesweeper", "photo-booth",
-  ];
-  const ICON_STORAGE_KEY = "mmck-desktop-icon-positions";
-
-  const getDefaultIconPositions = useCallback((): Record<string, { x: number; y: number }> => {
-    const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
-    const positions: Record<string, { x: number; y: number }> = {};
-    const col1 = DESKTOP_ICON_IDS.slice(0, 4); // right column
-    const col2 = DESKTOP_ICON_IDS.slice(4);     // second column
-    col1.forEach((id, i) => {
-      positions[id] = { x: vw - 100, y: 36 + i * 90 };
-    });
-    col2.forEach((id, i) => {
-      positions[id] = { x: vw - 200, y: 36 + i * 90 };
-    });
-    return positions;
+  const [viewport, setViewport] = useState(() => ({ width: window.innerWidth, height: window.innerHeight }));
+  useEffect(() => {
+    const resize = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
   }, []);
 
   const [iconPositions, setIconPositions] = useState<Record<string, { x: number; y: number }>>(() => {
@@ -73,8 +64,6 @@ export default function Desktop({ contentMap }: DesktopProps) {
     } catch { /* empty */ }
     return {};
   });
-
-  const resolvedPositions = { ...getDefaultIconPositions(), ...iconPositions };
 
   const handleIconDragEnd = useCallback((id: string, x: number, y: number) => {
     setIconPositions((prev) => {
@@ -230,6 +219,9 @@ export default function Desktop({ contentMap }: DesktopProps) {
     setContextMenu({ x: e.clientX, y: e.clientY, items });
   }, [dispatch]);
 
+  // Leave one row above the Dock for Trash when the screen is short.
+  const shortcutRows = Math.max(1, Math.min(4, Math.floor((viewport.height - 174) / 90)));
+
   return (
     <div className="fixed inset-0 overflow-hidden">
       {/* Skip to content for keyboard / screen reader users */}
@@ -257,16 +249,19 @@ export default function Desktop({ contentMap }: DesktopProps) {
       />
 
       {/* Desktop icons (draggable, hidden on mobile) */}
-      {!isMobile && DESKTOP_ICON_IDS.map((id) => {
+      {!isMobile && DESKTOP_ICON_IDS.map((id, index) => {
         const item = findFSItem(id);
         if (!item) return null;
-        const pos = resolvedPositions[id] || { x: 0, y: 40 };
+        const defaultPosition = id === "trash"
+          ? { x: viewport.width - 100, y: viewport.height - 158 }
+          : { x: viewport.width - (Math.floor(index / shortcutRows) + 1) * 100, y: 36 + (index % shortcutRows) * 90 };
+        const pos = iconPositions[id] ?? defaultPosition;
         return (
           <DesktopIcon
             key={id}
             item={item}
-            x={pos.x}
-            y={pos.y}
+            x={Math.max(0, Math.min(pos.x, viewport.width - 80))}
+            y={Math.max(26, Math.min(pos.y, viewport.height - 88))}
             onDragEnd={handleIconDragEnd}
           />
         );

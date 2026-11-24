@@ -41,6 +41,7 @@ export interface WindowState {
 export type Theme = "light" | "dark" | "system";
 
 export interface DesktopState {
+  deskWindowIds?: string[];
   windows: WindowState[];
   nextZIndex: number;
   focusedWindowId: string | null;
@@ -64,6 +65,7 @@ export type DesktopAction =
   | { type: "RESIZE_WINDOW"; payload: { id: string; width: number; height: number; x?: number; y?: number } }
   | { type: "SET_THEME"; payload: { theme: Theme } }
   | { type: "SET_RESOLVED_THEME"; payload: { resolvedTheme: "light" | "dark" } }
+  | { type: "OPEN_DESK"; payload: { windows: WindowState[] } }
   | { type: "CLOSE_ALL_WINDOWS" }
   | { type: "HYDRATE"; payload: DesktopState };
 
@@ -96,13 +98,20 @@ function getDefaultWindowPosition(index: number, width?: number, height?: number
       height: winH,
     };
   }
-  const base = 80;
-  const offset = index * 30;
+  const offset = 80 + index * 30;
+  if (typeof window === "undefined") return { x: offset, y: offset };
+  const winWidth = Math.min(width ?? 600, window.innerWidth);
+  const winHeight = Math.min(height ?? 450, window.innerHeight - MENU_BAR_HEIGHT - DESKTOP_DOCK_CLEARANCE);
   return {
-    x: base + offset,
-    y: base + offset,
+    x: Math.min(offset, window.innerWidth - winWidth),
+    y: Math.min(offset, window.innerHeight - DESKTOP_DOCK_CLEARANCE - winHeight),
+    width: winWidth,
+    height: winHeight,
   };
 }
+
+export const MENU_BAR_HEIGHT = 22;
+export const DESKTOP_DOCK_CLEARANCE = 64;
 
 /**
  * Boards (folders) open nearly full screen but stay a normal window, so they
@@ -110,14 +119,13 @@ function getDefaultWindowPosition(index: number, width?: number, height?: number
  */
 function getBoardWindowGeometry() {
   if (typeof window === "undefined" || window.innerWidth < 768) return null;
-  const MENU_BAR = 22;
   const DOCK = 84;
   const INSET = 14;
   return {
     x: INSET,
-    y: MENU_BAR + INSET / 2,
+    y: MENU_BAR_HEIGHT + INSET / 2,
     width: window.innerWidth - INSET * 2,
-    height: window.innerHeight - MENU_BAR - DOCK - INSET / 2,
+    height: window.innerHeight - MENU_BAR_HEIGHT - DOCK - INSET / 2,
   };
 }
 
@@ -215,9 +223,7 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
 
     case "MAXIMIZE_WINDOW": {
       const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
-      // On mobile: fit between menu bar (22px) and dock (~64px + safe area)
-      const maxY = isMobileView ? 22 : 0;
-      const dockAllowance = isMobileView ? 72 : 48;
+      const dockAllowance = isMobileView ? 72 : DESKTOP_DOCK_CLEARANCE;
       return {
         ...state,
         windows: state.windows.map((w) =>
@@ -227,9 +233,9 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
                 isMaximized: true,
                 preMaximize: { x: w.x, y: w.y, width: w.width, height: w.height },
                 x: 0,
-                y: maxY,
+                y: MENU_BAR_HEIGHT,
                 width: typeof window !== "undefined" ? window.innerWidth : 1200,
-                height: typeof window !== "undefined" ? window.innerHeight - maxY - dockAllowance : 700,
+                height: typeof window !== "undefined" ? window.innerHeight - MENU_BAR_HEIGHT - dockAllowance : 700,
                 zIndex: state.nextZIndex,
               }
             : w
@@ -288,8 +294,15 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
       };
     }
 
+    case "OPEN_DESK": {
+      const windows = action.payload.windows;
+      if (!windows.length) return state;
+      return { ...state, windows, deskWindowIds: windows.map(w => w.id), nextZIndex: windows.length + 1,
+        focusedWindowId: windows.filter(w => !w.isMinimized).at(-1)?.id ?? null };
+    }
+
     case "CLOSE_ALL_WINDOWS": {
-      return { ...state, windows: [], focusedWindowId: null };
+      return { ...state, windows: [], deskWindowIds: undefined, focusedWindowId: null };
     }
 
     case "SET_THEME": {

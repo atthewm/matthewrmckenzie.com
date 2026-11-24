@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import DesktopProvider from "./DesktopProvider";
 import SettingsProvider from "./SettingsProvider";
 import Desktop from "./Desktop";
+import KitchenTimersProvider from "@/components/kitchen/KitchenTimersProvider";
 import MobileView from "./MobileView";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Screensaver from "./Screensaver";
@@ -232,7 +233,9 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
           {booting && !isMobile && <BootSequence onComplete={handleBootComplete} />}
           {shuttingDown && <ShutdownSequence onComplete={handleShutdownComplete} />}
           <Screensaver />
-          {isMobile ? <MobileView contentMap={contentMap} /> : <Desktop contentMap={contentMap} />}
+          <KitchenTimersProvider>
+            {isMobile ? <MobileView contentMap={contentMap} /> : <Desktop contentMap={contentMap} />}
+          </KitchenTimersProvider>
         </SettingsProvider>
       </DesktopProvider>
     </ShutdownProvider>

@@ -6,6 +6,8 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import { getContent } from "@/lib/content";
 import { recipes, getRecipeBySlug } from "@/content/recipes/index";
 import { recipeSchema } from "@/lib/recipe-schema";
+import { RecipeToolPanel } from "@/components/recipes/RecipeToolPanel";
+import { toolForRecipe } from "@/components/recipes/kitchenTools";
 
 const SITE = "https://matthewrmckenzie.com";
 
@@ -35,6 +37,10 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
 
   const index = recipes.findIndex((r) => r.slug === slug);
   const next = recipes[(index + 1) % recipes.length];
+  // A wide nutrition table can scroll independently of the recipe on a phone.
+  const recipeHtml = content.html
+    .replaceAll("<table>", '<div class="overflow-x-auto print:overflow-visible" role="region" aria-label="Recipe table" tabindex="0"><table>')
+    .replaceAll("</table>", "</table></div>");
 
   const facts = [
     { label: "Yield", value: recipe.yield },
@@ -83,7 +89,8 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         </div>
       </header>
 
-      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: content.html }} />
+      {toolForRecipe(slug) && <RecipeToolPanel slug={slug} />}
+      <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: recipeHtml }} />
 
       {next && next.slug !== slug && (
         <nav aria-label="Next recipe" className="site-noprint mt-14 pt-6 border-t" style={{ borderColor: "var(--site-rule)" }}>

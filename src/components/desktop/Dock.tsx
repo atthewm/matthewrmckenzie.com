@@ -80,7 +80,8 @@ function DockIcon({
 }: DockIconProps & { compact?: boolean; reduceMotion?: boolean }) {
   const PantherIcon = getPantherIcon(item.id);
 
-  const iconBox = compact ? 34 : 44;
+  // Fit the whole Dock, including the Trash and owner-only app, on tablets.
+  const iconBox = compact ? 34 : "clamp(30px, 4.1vw, 44px)";
   const iconSize = compact ? 28 : 38;
 
   // Magnification: full scale at hovered, slightly less for neighbors.
@@ -116,7 +117,7 @@ function DockIcon({
 
       {/* Panther Aqua Icon */}
       <div
-        className="relative flex items-center justify-center"
+        className="relative flex items-center justify-center [&>img]:max-h-[90%] [&>img]:max-w-[90%] [&>svg]:max-h-[90%] [&>svg]:max-w-[90%]"
         style={{
           width: iconBox,
           height: iconBox,

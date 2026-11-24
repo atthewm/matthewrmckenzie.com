@@ -1,5 +1,7 @@
 "use client";
 
+import { useDesktop } from "@/hooks/useDesktopStore";
+import { findFSItem } from "@/data/fs";
 import React, { useState, useCallback, useRef, useEffect } from "react";
 
 // ============================================================================
@@ -84,6 +86,7 @@ const NUMBER_COLORS: Record<number, string> = {
 };
 
 export default function MinesweeperApp() {
+  const { openItem } = useDesktop();
   const [difficulty, setDifficulty] = useState<Difficulty>("beginner");
   const config = CONFIGS[difficulty];
   const [board, setBoard] = useState<CellData[][]>(() => createBoard(config.rows, config.cols, config.mines));
@@ -216,15 +219,21 @@ export default function MinesweeperApp() {
         style={{ borderBottom: "1px solid var(--desktop-border)" }}
       >
         <select
+          aria-label="Difficulty"
           value={difficulty}
           onChange={(e) => resetGame(e.target.value as Difficulty)}
-          className="text-[11px] px-1.5 py-0.5 rounded border bg-white"
+          className="text-[11px] px-1.5 py-0.5 rounded border bg-desktop-surface"
           style={{ borderColor: "var(--desktop-border)", color: "var(--desktop-text)" }}
         >
           <option value="beginner">Beginner</option>
           <option value="intermediate">Intermediate</option>
           <option value="expert">Expert</option>
         </select>
+
+        <button className="min-h-8 px-1 text-[12px] font-semibold text-desktop-accent" onClick={() => {
+          const daily = findFSItem("daily-minesweeper");
+          if (daily) openItem(daily);
+        }}>Daily Survey</button>
 
         <button
           onClick={() => resetGame()}

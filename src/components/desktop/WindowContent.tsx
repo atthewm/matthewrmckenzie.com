@@ -40,6 +40,7 @@ import TopFoodsApp from "@/components/apps/TopFoodsApp";
 import RecipesApp from "@/components/apps/RecipesApp";
 import LifeDashboardApp from "@/components/apps/life/LifeDashboardApp";
 import BusinessCardApp from "@/components/apps/BusinessCardApp";
+import dynamic from "next/dynamic";
 import HobbiesApp from "@/components/apps/HobbiesApp";
 
 interface WindowContentProps {
@@ -84,6 +85,14 @@ const appComponents: Record<string, React.ComponentType<{ contentHtml?: string; 
   LifeDashboardApp,
   BusinessCardApp,
   HobbiesApp,
+  BakePlannerApp: dynamic(() => import("@/components/apps/RecipeToolApps").then((module) => module.BakePlannerApp)),
+  BrownieComparisonApp: dynamic(() => import("@/components/apps/RecipeToolApps").then((module) => module.BrownieComparisonApp)),
+  KitchenTimersApp: dynamic(() => import("@/components/apps/KitchenTimersApp")),
+  MixCDApp: dynamic(() => import("@/components/apps/collection/MixCDApp")),
+  StartupArchiveApp: dynamic(() => import("@/components/apps/collection/StartupArchiveApp")),
+  SavedDesksApp: dynamic(() => import("@/components/apps/SavedDesksApp")),
+  DailyMinesweeperApp: dynamic(() => import("@/components/apps/DailyMinesweeperApp")),
+  TrashApp: dynamic(() => import("@/components/apps/trash/TrashApp")),
 };
 
 export default function WindowContent({ windowState, contentMap }: WindowContentProps) {

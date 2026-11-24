@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { findFSItem } from "@/data/fs";
+import { useDesktop } from "@/hooks/useDesktopStore";
 import { ChevronDown, ChevronRight, Sparkles, Wrench, Bug, Palette } from "lucide-react";
 
 // ============================================================================
@@ -194,7 +196,11 @@ function ReleaseCard({ release, defaultOpen }: { release: Release; defaultOpen: 
   );
 }
 
+const featuredIds = ["bake-by-sunday", "compare-brownies", "mix-cd", "saved-desks", "startup-archive", "daily-minesweeper"];
+
 export default function WhatsNewApp() {
+  const { openItem } = useDesktop();
+
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
@@ -232,6 +238,18 @@ export default function WhatsNewApp() {
 
       {/* Releases */}
       <div className="flex-1 overflow-auto px-5 pb-4">
+        <section aria-label="New on the desktop" className="mb-4">
+          <h3 className="mb-2 text-xs font-semibold text-desktop-text">New on the desktop</h3>
+          <div className="grid grid-cols-2 gap-x-3">
+            {featuredIds.map((id) => {
+              const item = findFSItem(id);
+              return item && <button type="button" key={id} onClick={() => openItem(item)}
+                className="min-h-11 border-t border-desktop-border text-left text-xs text-desktop-accent underline underline-offset-2 focus-visible:ring-2">
+                {item.name}
+              </button>;
+            })}
+          </div>
+        </section>
         <div className="space-y-2">
           {releases.map((r, i) => (
             <ReleaseCard key={r.version} release={r} defaultOpen={i === 0} />
