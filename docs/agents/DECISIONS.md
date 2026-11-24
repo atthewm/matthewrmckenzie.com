@@ -14,3 +14,4 @@
 * 2026-11-21. Apply the nine-bot bulk scraper firewall rule to the five named Vercel projects. Keep verified bots and both Ahrefs crawlers out of the rule.
 * 2026-11-23. Add a filled Panther-style trash can to the personal desktop, with Easter egg files visitors can discover by opening it.
 * 2026-11-23. Implement Bake by Sunday, Compare Brownies, Mix CD, Saved Desks, Startup Disk Archive and Daily Minesweeper on the personal site.
+* 2026-11-23. Publish the reviewed Trash, six desktop features and site repairs. Confirm the public site works before calling this chat ready to archive.

@@ -4,17 +4,17 @@
 
 2026-11-23, Codex.
 
-## Six desktop features in review
+## Approved desktop release
 
-Matthew selected Bake by Sunday, Compare Brownies, Mix CD, Saved Desks, Startup Disk Archive and Daily Minesweeper. They are implemented on the local Trash branch. The What's New window opens all six. The Kitchen desk includes three persistent timers with an optional bell. The archive shows three real revisions of the site.
+Matthew selected Bake by Sunday, Compare Brownies, Mix CD, Saved Desks, Startup Disk Archive and Daily Minesweeper. Matthew approved publishing them together with the filled Trash and the site repairs. The What's New window opens all six. The Kitchen desk includes three persistent timers with an optional bell. The archive shows three real revisions of the site.
 
-The local production build passed 278 tests and its public output checks. All 40 sitemap pages loaded at 390 and 1440 pixels without browser errors or horizontal overflow. The feature gallery is in `on-my/outputs/desktop-features.html`. It shows the previous entry points and the new screens in both themes. Matthew’s visual approval is pending.
+The local production build passed 278 tests and its public output checks. All 40 sitemap pages loaded at 390 and 1440 pixels without browser errors or horizontal overflow. The feature gallery is in `on-my/outputs/desktop-features.html`. It shows the previous entry points and the new screens in both themes. Matthew approved the release after receiving the gallery.
 
-## Panther Trash review
+## Panther Trash
 
 The local branch `codex/panther-trash-discoveries` starts from main commit `5d7e555`. It adds the filled Panther Trash to the desktop, Dock and phone launcher. The three files contain an original Austin pixel drawing, an original startup chime and a kitchen note drawn from the published brownie recipes.
 
-The public check found two recipe pages with overflowing nutrition tables, window controls under the menu bar after maximizing, and an unreliable Contact calendar. The branch fixes all four. The visual gallery and audit are in the November 23 `on-my/outputs` workspace. Review them with Matthew before publishing. This branch is independent of PR 23.
+The public check found two recipe pages with overflowing nutrition tables, window controls under the menu bar after maximizing, and an unreliable Contact calendar. The branch fixes all four. The visual gallery and audit are in the November 23 `on-my/outputs` workspace. This branch is independent of PR 23.
 
 ## What's in flight
 
@@ -32,11 +32,11 @@ After the standard merged, mobile Lighthouse measured LCP of 0.98 seconds on hom
 
 ## Next step
 
-Review the six features in `on-my/outputs/desktop-features.html` and the Trash gallery in `on-my/outputs/trash-review.html`. The earlier design review is at `~/screenshots/codex-1/index.html`. PR 23 has the before-and-after checks and public route evidence. Record Matthew’s decision in DECISIONS.md when he gives it.
+The approved desktop release goes through main and the existing Vercel production deployment. The independent design review for PR 23 is at `~/screenshots/codex-1/index.html`.
 
 ## Waiting on Matthew
 
-The design awaits gallery approval. Preserve the 11 testimonials, the $800M+ raise figure and the Southern Methodist University and Villanova University alumniOf entries while reviewing the Work pages.
+PR 23 still awaits its separate design approval. Preserve the 11 testimonials, the $800M+ raise figure and the Southern Methodist University and Villanova University alumniOf entries while reviewing the Work pages.
 
 ## Don't touch
 

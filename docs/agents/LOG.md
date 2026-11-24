@@ -1,5 +1,9 @@
 # Session log
 
+## 2026-11-23, desktop release approval
+
+Matthew approved publishing the reviewed Trash, six desktop features and related site repairs. The release uses the existing main branch deployment. PR 23 remains a separate review.
+
 ## 2026-11-23, six desktop features
 
 Added a two-loaf bake planner, the batch 03 and 04 brownie comparison, a five-track Mix CD, saved window layouts, a three-edition site archive and a shared daily mine puzzle. The Meeting and Kitchen desks work on desktop and phone. Kitchen timers survive a refresh and announce completion while another window is active.
