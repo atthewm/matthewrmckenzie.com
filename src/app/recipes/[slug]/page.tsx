@@ -6,6 +6,8 @@ import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import { getContent } from "@/lib/content";
 import { recipes, getRecipeBySlug } from "@/content/recipes/index";
 import { recipeSchema } from "@/lib/recipe-schema";
+import { RecipeToolPanel } from "@/components/recipes/RecipeToolPanel";
+import { toolForRecipe } from "@/components/recipes/kitchenTools";
 
 const SITE = "https://matthewrmckenzie.com";
 
@@ -87,6 +89,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
         </div>
       </header>
 
+      {toolForRecipe(slug) && <RecipeToolPanel slug={slug} />}
       <article className="site-prose mt-10" dangerouslySetInnerHTML={{ __html: recipeHtml }} />
 
       {next && next.slug !== slug && (

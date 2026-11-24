@@ -41,6 +41,7 @@ export interface WindowState {
 export type Theme = "light" | "dark" | "system";
 
 export interface DesktopState {
+  deskWindowIds?: string[];
   windows: WindowState[];
   nextZIndex: number;
   focusedWindowId: string | null;
@@ -64,6 +65,7 @@ export type DesktopAction =
   | { type: "RESIZE_WINDOW"; payload: { id: string; width: number; height: number; x?: number; y?: number } }
   | { type: "SET_THEME"; payload: { theme: Theme } }
   | { type: "SET_RESOLVED_THEME"; payload: { resolvedTheme: "light" | "dark" } }
+  | { type: "OPEN_DESK"; payload: { windows: WindowState[] } }
   | { type: "CLOSE_ALL_WINDOWS" }
   | { type: "HYDRATE"; payload: DesktopState };
 
@@ -292,8 +294,15 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
       };
     }
 
+    case "OPEN_DESK": {
+      const windows = action.payload.windows;
+      if (!windows.length) return state;
+      return { ...state, windows, deskWindowIds: windows.map(w => w.id), nextZIndex: windows.length + 1,
+        focusedWindowId: windows.filter(w => !w.isMinimized).at(-1)?.id ?? null };
+    }
+
     case "CLOSE_ALL_WINDOWS": {
-      return { ...state, windows: [], focusedWindowId: null };
+      return { ...state, windows: [], deskWindowIds: undefined, focusedWindowId: null };
     }
 
     case "SET_THEME": {

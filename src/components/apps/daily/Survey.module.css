@@ -1,0 +1,39 @@
+.survey {
+  --paper: #f5f1e7;
+  --ink: #263e36;
+  --muted: #516358;
+  --rule: #bdc4b5;
+  --tile: #406356;
+  width: 100%;
+  min-height: 100%;
+  padding: clamp(15px, 4vw, 25px);
+  box-sizing: border-box;
+  background: var(--paper);
+  color: var(--ink);
+}
+:global(.dark) .survey {
+  --paper: #1c2825;
+  --ink: #f2f2e4;
+  --muted: #b9c8bc;
+  --rule: #59685e;
+  --tile: #49735f;
+}
+.survey header, .summary, .stats, .sheet, .actions { max-width: 360px; margin-inline: auto; }
+.survey header p, .axis, .stats { font: 11px/1.3 ui-monospace, monospace; }
+.survey header p { color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.survey h2 { font: 600 32px/1.1 Georgia, serif; margin-top: 3px; letter-spacing: -.035em; }
+.summary { font-size: 13px; line-height: 1.5; margin-block: 9px 12px; }
+.stats { display: flex; align-items: center; justify-content: space-between; border-block: 1px solid var(--rule); padding: 8px 0; font-variant-numeric: tabular-nums; }
+.stats span, .actions button { display: inline-flex; align-items: center; gap: 5px; }
+.sheet { display: grid; grid-template-columns: 16px repeat(7, minmax(0, 1fr)); gap: 3px; margin-block: 12px; }
+.row { display: contents; }
+.axis { align-self: center; justify-self: center; color: var(--muted); }
+.sheet button { aspect-ratio: 1; display: grid; place-items: center; border-radius: 3px; background: var(--tile); color: #fff9df; font: 600 16px/1 ui-monospace, monospace; box-shadow: inset 0 -2px 0 #182c2538; }
+.sheet button[data-state="clear"] { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }
+.sheet button[data-state="marked"] { background: #f4cc82; color: #342b18; }
+.sheet button[data-state="mine"] { background: #99442e; color: white; }
+.sheet button:focus-visible, .actions button:focus-visible { outline: 3px solid var(--desktop-accent); outline-offset: 1px; z-index: 1; }
+.actions { display: flex; gap: 9px; align-items: center; }
+.actions button { flex-shrink: 0; min-height: 40px; background: var(--ink); color: var(--paper); border-radius: 5px; padding: 7px 12px; font-size: 13px; font-weight: 600; }
+.actions button[aria-pressed="true"] { background: #f4cc82; color: #342b18; }
+.actions span { color: var(--muted); font-size: 12px; line-height: 1.3; }

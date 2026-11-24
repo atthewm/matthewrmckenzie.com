@@ -37,6 +37,14 @@ const iconMap: Record<string, string> = {
   "whats-new":      "sherlock.png",
   "trash":          "trash-full.png",
 
+  "saved-desks":        "desktop.png",
+  "startup-archive":    "macintosh-hd.png",
+  "mix-cd":             "itunes-2.png",
+  "daily-minesweeper":  "daily-survey.png",
+  "bake-by-sunday":     "ical.png",
+  "compare-brownies":   "preview.png",
+  "kitchen-timer":      "kitchen-timer.png",
+
   // Media
   "media":          "movies-folder.png",
   "photos":         "iphoto.png",

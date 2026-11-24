@@ -3,6 +3,7 @@ import Link from "next/link";
 import StaticPageLayout from "@/components/ui/StaticPageLayout";
 import JsonLd, { breadcrumbSchema } from "@/components/ui/JsonLd";
 import { recipes, RECIPE_CATEGORIES } from "@/content/recipes/index";
+import { kitchenTools } from "@/components/recipes/kitchenTools";
 
 export const metadata: Metadata = {
   title: "Recipes",
@@ -39,7 +40,12 @@ export default function RecipesPage() {
           Weekly sourdough, cards from the family recipe box, and a running series of protein-forward
           desserts. Most include macros. Every recipe can be downloaded as plain text.
         </p>
-        <nav aria-label="Recipe categories" className="flex flex-wrap gap-2 mt-6">
+        <nav aria-label="Kitchen tools" className="flex flex-wrap gap-x-5 mt-4 text-[15px]">
+          {kitchenTools.map((tool) => (
+            <Link key={tool.id} className="site-link py-2" href={`/recipes/${tool.slug}#${tool.id}`}>{tool.title}</Link>
+          ))}
+        </nav>
+        <nav aria-label="Recipe categories" className="flex flex-wrap gap-2 mt-4">
           {groups.map((g) => (
             <a
               key={g.category}

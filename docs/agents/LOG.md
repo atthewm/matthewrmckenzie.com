@@ -1,5 +1,11 @@
 # Session log
 
+## 2026-11-23, six desktop features
+
+Added a two-loaf bake planner, the batch 03 and 04 brownie comparison, a five-track Mix CD, saved window layouts, a three-edition site archive and a shared daily mine puzzle. The Meeting and Kitchen desks work on desktop and phone. Kitchen timers survive a refresh and announce completion while another window is active.
+
+The local production build passed type checking, all 278 tests, the 40-page metadata check and the compiled public output check. Chromium loaded all 40 sitemap pages at both widths with zero uncaught errors or horizontal overflow. Browser interaction checks also covered WebKit, playing the five previews, saved layouts, recipe schedules, timers, the archive and daily puzzles. The review gallery includes 390 and 1440 pixel captures in light and dark. Hold for visual review before merging.
+
 ## 2026-11-23, Panther Trash and public website check
 
 Integrated the existing filled Panther wastebasket as a desktop shortcut, Dock item and phone launcher. Visitors can preview and save an Austin pixel drawing, a startup chime and brownie trial notes. The preview assets load when Trash opens. Verified all 40 published sitemap pages and the public app launchers. Repaired two overflowing recipe tables, maximized-window controls and the embedded Contact calendar. The local build passed verification, 268 tests and the 40-page metadata check. The design review includes 390 and 1440 pixel screenshots in both themes. Matthew’s visual review is pending.

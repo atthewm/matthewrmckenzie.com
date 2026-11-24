@@ -1,0 +1,20 @@
+.archive {
+  --paper: #f5f2e8; --ink: #282d2a; --muted: #535f56; --rule: #b6bbac; --panel: #e2e5d8;
+  --selection: #314f42; --selection-ink: #f4f7ec;
+  container-type:inline-size; min-height: 100%; color: var(--ink); background: var(--paper);
+  padding: clamp(14px, 4%, 26px); font: 14px/1.5 var(--user-font-family, system-ui), sans-serif;
+}
+:global(.dark) .archive { --paper:#242b29; --ink:#f0efe4; --muted:#bec7bb; --rule:#56625a; --panel:#323c35; --selection:#bad4b8; --selection-ink:#1e3026; }
+.heading,.recordHead,.slide figcaption,.eject,.slide figcaption a { display:flex; align-items:center; }
+.heading { gap:12px; padding-bottom:16px; }
+.heading h2,.record h3,.empty h3 { font: 600 clamp(21px, 4vw, 27px)/1.15 Georgia, serif; margin:0; }
+.heading p,.empty p { margin:4px 0 0; color:var(--muted); font-size:13px; }
+.rack { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+.rack button { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:7px; min-height:70px; text-align:left; background:var(--panel); border:1px solid var(--rule); border-radius:3px; padding:8px; }
+.rack button[aria-pressed="true"] { background:var(--selection); color:var(--selection-ink); border-color:var(--selection); }
+.rack b,.rack small { display:block; }.rack b { font-size:13px; line-height:1.2; }.rack small,.record time,.source { font:11px/1.5 ui-monospace, monospace; }.rack small { margin-top:3px; }
+.record,.empty { margin-top:18px; border-top:1px solid var(--rule); padding-top:14px; }
+.recordHead { justify-content:space-between; gap:10px; }.record time { color:var(--muted); }.record h3 { margin-top:3px; }.eject { gap:4px; min-height:44px; padding:0 9px; color:var(--ink); border-bottom:1px solid var(--rule); }
+.slide { margin:14px 0 0; }.slide>a { display:block; background:#1c231f; padding:5px; border:1px solid var(--rule); }.slide img { width:100%; height:auto; display:block; }.slide figcaption { justify-content:space-between; color:var(--muted); font-size:12px; }.slide figcaption a { min-height:34px; gap:5px; text-decoration:underline; }.record p { margin:8px 0; max-width:60ch; }.source { display:inline-block; padding:6px 0; text-decoration:underline; text-underline-offset:3px; }.empty { min-height:230px; display:grid; place-content:center; text-align:center; justify-items:center; gap:6px; }
+.archive :is(button,a):focus-visible { outline:2px solid var(--desktop-accent); outline-offset:2px; }
+@container (min-width: 480px) { .rack button { flex-direction:row; align-items:center; justify-content:flex-start; } }

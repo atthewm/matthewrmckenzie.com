@@ -2,13 +2,17 @@
 
 import React, { useRef } from "react";
 import { soundcloudConfig } from "@/config/playlists";
-import { Volume2 } from "lucide-react";
+import { findFSItem } from "@/data/fs";
+import { useDesktop } from "@/hooks/useDesktopStore";
+import { Disc3, Volume2 } from "lucide-react";
 
 // ============================================================================
 // SOUNDCLOUD PLAYER (McKenzie OS QuickTime-Inspired)
 // ============================================================================
 
 export default function SoundCloudPlayer() {
+  const { openItem } = useDesktop();
+  const mix = findFSItem("mix-cd");
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const colorHex = soundcloudConfig.color.replace("#", "");
   const embedUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(
@@ -48,13 +52,16 @@ export default function SoundCloudPlayer() {
 
       {/* Footer */}
       <div
-        className="shrink-0 h-[22px] flex items-center justify-center"
+        className="shrink-0 min-h-11 flex items-center justify-between"
         style={{
           background: "linear-gradient(180deg, #2e2e32 0%, #222226 100%)",
           borderTop: "1px solid rgba(255,255,255,0.06)",
         }}
       >
-        <div className="flex items-center gap-2">
+        {mix && <button type="button" className="flex min-h-11 items-center gap-2 px-3 text-xs text-gray-100 underline underline-offset-2 focus-visible:ring-2" onClick={() => openItem(mix)}>
+          <Disc3 size={15} aria-hidden="true" /> Open Mix CD
+        </button>}
+        <div className="ml-auto flex items-center gap-2 pr-3">
           <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
           <span className="text-[9px] text-gray-500">Music</span>
         </div>

@@ -1,0 +1,33 @@
+.app {
+  --surface:#f7f5f1; --ink:#242829; --muted:#575b59; --rule:#c7c6c0; --desk:#d7d4c9;
+  container-type:inline-size; background:var(--surface); color:var(--ink); min-height:100%; font:14px/1.45 Arial,sans-serif;
+}
+:global(.dark) .app { --surface:#272a2a; --ink:#f2f0e8; --muted:#c0c4be; --rule:#5b5e59; --desk:#373e3d; }
+.desk { display:grid; justify-items:center; align-items:center; background:var(--desk); padding:16px 12px 5px; border-bottom:1px solid var(--rule); }
+.package { position:relative; width:min(100%,316px); padding-right:21%; }
+.disc { position:absolute; left:28%; width:68%; top:3%; aspect-ratio:1; border:1px solid #797b77; border-radius:50%; background:repeating-radial-gradient(transparent 0 2px,#7777 3px,transparent 4px),conic-gradient(from 50deg,#707985,#f0e6d0,#cdc9ec,#929eac,#d3ebe5,#a9a79f,#eae8d9,#81839b,#707985); box-shadow:1px 2px 3px #303b3a5e; }
+.disc i { position:absolute; inset:40%; border:2px solid #777c78; border-radius:50%; background:var(--desk); box-shadow:0 0 0 7px #bfc6cb,0 0 0 8px #666a6e; }
+.sleeve { display:grid; justify-items:center; width:100%; min-width:0; }
+.front, .reverse {
+  position:relative; width:100%; aspect-ratio:1; color:#122a36; background:#f2d6a4;
+  border:1px solid #958d78; box-shadow:1px 2px 4px #36404555;
+}
+.front { display:flex; flex-direction:column; justify-content:space-between; overflow:hidden; padding:12px; }
+.front>p { display:flex; justify-content:space-between; border-bottom:1px solid #173d48; padding-bottom:5px; z-index:1; font:600 10px/1.2 ui-monospace,monospace; }
+.grooves { position:absolute; inset:24% -24% 12% -18%; transform:rotate(-19deg); background:repeating-radial-gradient(ellipse at 50% 120%,transparent 0 5px,#1c4951 5px 9px,transparent 9px 12px); }
+.front h2 { position:relative; align-self:flex-start; margin:auto 0 5px; padding-right:4px; background:#f2d6a4; font:italic 600 clamp(34px,9cqi,51px)/.98 Georgia,serif; letter-spacing:-.07em; }
+.imprint { position:relative; margin-top:3px; background:#f2d6a4; font:10px/1.2 ui-monospace,monospace; }
+.reverse { display:flex; flex-flow:column; text-align:left; padding:12px; }
+.reverse>p:first-child { margin:0 0 6px; padding-bottom:4px; border-bottom:1px solid #958d78; font:10px/1.2 ui-monospace,monospace; }
+.reverse h2 { margin:0; font:italic 600 clamp(16px,5cqi,24px)/1.05 Georgia,serif; letter-spacing:-.04em; }
+.linerText { margin:6px 0; font: 13px/1.4 Georgia,serif; }
+.reverse a { margin-top:auto; font-size:12px; line-height:1.2; text-decoration:underline; text-underline-offset:2px; }
+.trackList { width:100%; }.trackList h3 { font:11px/1.5 ui-monospace,monospace; margin-bottom:2px; }
+.trackList ol { list-style:none; padding:0; margin:0; }.trackList li+li { border-top:1px solid var(--rule); }
+.trackList button { display:flex; align-items:center; gap:8px; text-align:left; width:100%; min-height:40px; padding:5px 7px; font:600 13px/1.25 Arial,sans-serif; }
+.trackList button>span:first-child { font:11px/1.4 ui-monospace,monospace; }.trackList button[aria-pressed=true] { background:var(--ink); color:var(--surface); border-radius:2px; }
+.flip,.transport { display:flex; align-items:center; gap:6px; }.flip { min-height:40px; padding:4px 10px; font-size:12px; }
+.panel { padding:15px clamp(14px,4cqi,26px) 20px; }.trackHeader,.credits { display:flex; align-items:center; justify-content:space-between; gap:10px; }.trackHeader>div:first-child { min-width:0; }.eyebrow { color:var(--muted); font:11px/1.5 ui-monospace,monospace; }.panel h3 { margin:2px 0; font:600 clamp(19px,5cqi,25px)/1.16 Georgia,serif; }.artist { color:var(--muted); font-size:13px; }.transport { gap:1px; flex:none; }.transport button { display:grid; place-items:center; width:40px; height:44px; }.transport button:disabled { opacity:.3; }
+.panel audio { width:100%; height:40px; margin:9px 0 0; display:block; }.credits { font-size:12px; flex-wrap:wrap; gap:0 8px; }.credits small { font-size:11px; color:var(--muted); }.credits a { text-decoration:underline; text-underline-offset:3px; padding:8px 0; }.error { font-size:12px; margin:4px 0; }.app :is(button,a):focus-visible { outline:2px solid var(--desktop-accent); outline-offset:2px; }
+@container (min-width:460px) { .desk { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:14px; padding:20px 16px 7px; }.package { padding-right:18%; }.trackList button{min-height:43px;} }
+@container (max-width:459px) { .desk { padding:12px 16px 9px; }.package { max-width:255px; padding-right:45px; }.trackList button { min-height:44px; }.reverse { padding:9px; }.linerText { font-size:12px; } }

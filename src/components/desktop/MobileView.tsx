@@ -60,6 +60,9 @@ export default function MobileView({ contentMap }: MobileViewProps) {
     openItem(item);
   }
 
+  const deskWindows = state.deskWindowIds?.includes(top?.id ?? "")
+    ? state.windows.filter(w => state.deskWindowIds?.includes(w.id)) : [];
+
   if (top && currentItem) {
     return (
       <div className="fixed inset-0 bg-desktop-surface flex flex-col z-50">
@@ -75,7 +78,16 @@ export default function MobileView({ contentMap }: MobileViewProps) {
           <div className="flex-1 text-center text-sm font-semibold text-desktop-text truncate px-2">
             {currentItem.name}
           </div>
-          <div className="w-16" />
+          {deskWindows.length > 1 ? (
+            <label className="relative flex items-center justify-center min-h-11 min-w-12 text-xs font-medium text-desktop-accent px-2 focus-within:outline">
+              Switch
+              <select aria-label="Switch desk window" value={top.id}
+                className="absolute inset-0 opacity-0 w-full h-full"
+                onChange={event => dispatch({ type: "RESTORE_WINDOW", payload: { id: event.target.value } })}>
+                {deskWindows.map(w => <option key={w.id} value={w.id}>{w.title}</option>)}
+              </select>
+            </label>
+          ) : <div className="w-16" />}
         </div>
         <div className={`flex-1 overscroll-contain ${currentItem.type === "folder" ? "overflow-hidden" : "overflow-auto"}`}>
           {currentItem.type === "folder" ? (
