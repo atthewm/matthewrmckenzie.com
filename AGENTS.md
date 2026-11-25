@@ -98,3 +98,7 @@ Read [the handoff](docs/agents/HANDOFF.md) for current work, [the session log](d
 The [original working notes](https://github.com/atthewm/matthewrmckenzie.com/blob/0624f4679f8159b838d73c79585df42ca223d652/CLAUDE.md) are preserved at the parent commit. [Claude's archived audit](docs/archive/CLAUDE_AUDIT_LOG.md), [open decisions](docs/OPEN_ITEMS_punchlist.md), [tech debt review](docs/OPEN_ITEMS_techdebt.md), [design system](docs/design-system/README.md) and [Notion sync notes](docs/notion-sync-blueprint.md) supply historical context.
 
 ## Codex only
+
+## Local release checks
+
+Run `npm run ci:local` from the repository root to run the checks in `.github/workflows/verify.yml` in order. Use Node 22. A failing command stops the run. Use a clean checkout without production credentials. Before merging, rebase on the current `origin/main`, run this command and the site checks, and paste the full pass/fail summary and tested Git SHA into the pull request. See [the handoff](docs/agents/HANDOFF.md) for the job inventory and runner-minute estimate.

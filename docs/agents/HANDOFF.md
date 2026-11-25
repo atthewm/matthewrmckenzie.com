@@ -1,5 +1,13 @@
 # Handoff
 
+## November 25, 2026 local release checks
+
+The `verify` job uses Node 22. It installs the lockfile, runs `npm run verify`, `npm test`, and the production-style build with the media base configured. Finally it checks the staged video directory and the permanent media redirect. The local command includes every step after checkout and Node setup.
+
+`.github/workflows/verify.yml` runs on pull requests and main pushes. The current production branch has zero scheduled GitHub Actions workflows. The December 1 restore list is empty. No cron expressions or manual dispatches were changed.
+
+The estimate uses 6 merged pull requests in 3.51 days since November 21 at 18:44 Pacific, or 51.3 per 30 days. At 2 minimum workflow runs per merge and 2 minutes per run, that contributes about 205.2 of the portfolio's 2,000 monthly Linux minutes. Rounding uses the median successful hosted job minutes, rounded per runner. Including all pull request updates and direct main pushes observed in the same period projects 222.2 minutes per 30 days. Scheduled runs contribute zero minutes. These projections describe the prior hosted workflow pace.
+
 ## November 24, 2026, gate session remediation
 
 Branch `codex/personal-session-lifetime-20261124` builds on the reviewed personal journey at `8932c4e`. The gate now signs and registers each login separately for 30 days. Authenticated readers check the live KV grant and its signed deadline. Signing out at `/gate` retires that login, clears its browser cookies, and refreshes other open desktop tabs. Pending WHOOP connections are tied to the initiating owner session and can complete once.

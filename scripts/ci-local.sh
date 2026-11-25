@@ -1,0 +1,17 @@
+#!/bin/sh
+# Run the commands from .github/workflows/verify.yml in job order.
+set -eu
+
+npm ci
+npm run verify
+npm test
+VERCEL_BACKGROUND_BUILD=1 NEXT_PUBLIC_BACKGROUNDS_BASE_URL=https://media.matthewrmckenzie.com/backgrounds npm run build
+test ! -e public/backgrounds/video
+node --input-type=module <<'NODE'
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+const { redirects } = JSON.parse(readFileSync(".next/routes-manifest.json", "utf8"));
+const video = redirects.find(({ source }) => source === "/backgrounds/video/:path*");
+assert.equal(video?.statusCode, 308);
+assert.equal(video.destination, "https://media.matthewrmckenzie.com/backgrounds/video/:path*");
+NODE
