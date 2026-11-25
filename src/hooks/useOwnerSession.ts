@@ -27,6 +27,14 @@ const SIGNED_OUT: OwnerSession = { admin: false, owner: false };
 
 let pending: Promise<OwnerSession> | null = null;
 
+const GATE_CHANGE = "mmck_gate_changed";
+
+/** A full navigation drops owner-only data held by open windows in this document. */
+export function finishGateChange(destination: string) {
+  try { localStorage.setItem(GATE_CHANGE, crypto.randomUUID()); } catch { /* Storage can be disabled. */ }
+  window.location.replace(destination);
+}
+
 function hasSessionHint(): boolean {
   if (typeof document === "undefined") return false;
   return document.cookie.split(";").some((part) => part.trim().startsWith(`${SESSION_HINT_COOKIE}=`));
@@ -55,7 +63,17 @@ export function useOwnerSession(): OwnerSessionState {
     fetchOwnerSession().then((session) => {
       if (alive) setState({ ...session, ready: true });
     });
+    function refreshOnGateChange(event: StorageEvent) {
+      if (event.key === GATE_CHANGE) window.location.reload();
+    }
+    function refreshOnRestore(event: PageTransitionEvent) {
+      if (event.persisted && (pending || hasSessionHint())) window.location.reload();
+    }
+    window.addEventListener("storage", refreshOnGateChange);
+    window.addEventListener("pageshow", refreshOnRestore);
     return () => {
+      window.removeEventListener("storage", refreshOnGateChange);
+      window.removeEventListener("pageshow", refreshOnRestore);
       alive = false;
     };
   }, []);

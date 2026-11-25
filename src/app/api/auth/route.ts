@@ -5,7 +5,8 @@
 //         admin  the admin cookie, the owner cookie (when an owner secret is
 //                set) and a readable hint that a session exists
 //         guest  the guest cookie only, never the admin one
-// GET   reports which of those cookies the request carries and are valid.
+// GET reports which grants are currently active. DELETE retires the current
+// login in KV and clears the browser cookies.
 //
 // Credentials are always required. There is no "lock off" shortcut and no
 // built-in cookie value: with the secrets unset, sign-in is refused.
@@ -26,19 +27,18 @@
 // ============================================================================
 
 import { NextResponse } from "next/server";
-import { safeEqual } from "@/lib/cookies";
+import { readCookie, safeEqual } from "@/lib/cookies";
 import {
   ADMIN_COOKIE,
   GATE_MAX_AGE,
   GUEST_COOKIE,
   MIN_ADMIN_PASSWORD_LENGTH,
   SESSION_HINT_COOKIE,
-  adminCookieValue,
-  guestCookieValue,
   isAdminRequest,
   isGuestRequest,
 } from "@/lib/gate";
-import { NO_STORE, OWNER_COOKIE, OWNER_MAX_AGE, isOwnerRequest, ownerCookieValue } from "@/lib/owner";
+import { NO_STORE, OWNER_COOKIE, isOwnerRequest } from "@/lib/owner";
+import { issueGateSession, revokeGateSessions } from "@/lib/gate-session";
 import { clientAddress, signInLimiter } from "@/lib/sign-in-limit";
 
 export const dynamic = "force-dynamic";
@@ -101,6 +101,7 @@ function matches(username: string, password: string, account: Account): boolean 
 }
 
 export async function POST(request: Request) {
+  if (!sameOrigin(request)) return refuse(403, "Invalid request origin");
   const address = clientAddress(request);
   // Cheap early answer for an address that is already waiting.
   const early = signInLimiter.check(address);
@@ -117,7 +118,7 @@ export async function POST(request: Request) {
     return refuse(400, "Bad request");
   }
 
-  // From here to the end of the attempt nothing awaits, so the check, the
+  // Until the credentials have been checked, nothing awaits. The check, the
   // comparison and the count happen as one step. A burst of parallel guesses
   // from one address cannot all slip past the check before the first miss
   // is counted.
@@ -135,36 +136,59 @@ export async function POST(request: Request) {
   // whoever knows the guest password cannot use it to reset admin guessing.
   if (isAdmin) signInLimiter.recordSuccess(address);
 
-  if (isAdmin) {
-    const adminValue = adminCookieValue();
-    if (!adminValue) return refuse(503, "Sign-in is not configured");
-
-    const response = NextResponse.json({ success: true, role: "admin" }, { headers: NO_STORE });
-    response.cookies.set(ADMIN_COOKIE, adminValue, cookieOptions());
-    // Owner flag: only the admin account gets it, and only with a secret set.
-    const owner = ownerCookieValue();
-    if (owner) {
-      response.cookies.set(OWNER_COOKIE, owner, cookieOptions({ sameSite: "strict", maxAge: OWNER_MAX_AGE }));
+  const role = isAdmin ? "admin" : "guest";
+  try {
+    await revokeGateSessions(request);
+    const session = await issueGateSession(role);
+    if (!session) return refuse(503, "Sign-in is not configured");
+    const response = NextResponse.json({ success: true, role }, { headers: NO_STORE });
+    // Remove any stale grants when this browser switches accounts.
+    for (const name of [ADMIN_COOKIE, GUEST_COOKIE, OWNER_COOKIE, SESSION_HINT_COOKIE]) {
+      if (readCookie(request.headers.get("cookie"), name) !== null) expireCookie(response, name);
     }
-    response.cookies.set(SESSION_HINT_COOKIE, "1", cookieOptions({ httpOnly: false }));
+    response.cookies.set(isAdmin ? ADMIN_COOKIE : GUEST_COOKIE, session.gate, cookieOptions());
+    if (session.owner) response.cookies.set(OWNER_COOKIE, session.owner, cookieOptions({ sameSite: "strict" }));
+    if (isAdmin) response.cookies.set(SESSION_HINT_COOKIE, "1", cookieOptions({ httpOnly: false }));
     return response;
+  } catch {
+    return refuse(503, "Session storage is unavailable. Try again.");
   }
+}
 
-  const guestValue = guestCookieValue();
-  if (!guestValue) return refuse(503, "Sign-in is not configured");
+function expireCookie(response: NextResponse, name: string) {
+  response.cookies.set(name, "", cookieOptions({
+    maxAge: 0,
+    httpOnly: name !== SESSION_HINT_COOKIE,
+    sameSite: name === OWNER_COOKIE ? "strict" : "lax",
+  }));
+}
 
-  const response = NextResponse.json({ success: true, role: "guest" }, { headers: NO_STORE });
-  response.cookies.set(GUEST_COOKIE, guestValue, cookieOptions());
+function sameOrigin(request: Request) {
+  const origin = request.headers.get("origin");
+  if (!origin) return true;
+  // Next can normalize an internal listener to localhost. The HTTP Host is
+  // the authority the browser addressed. Ignore forwarded-host overrides.
+  const url = new URL(request.url);
+  const host = request.headers.get("host") || url.host;
+  return origin === url.protocol + "//" + host;
+}
+
+export async function DELETE(request: Request) {
+  if (!sameOrigin(request)) return refuse(403, "Invalid request origin");
+  try {
+    await revokeGateSessions(request);
+  } catch {
+    // Keep the browser credential so the owner can retry revocation.
+    return refuse(503, "Sign-out could not finish. Try again.");
+  }
+  const response = NextResponse.json({ success: true }, { headers: NO_STORE });
+  for (const name of [ADMIN_COOKIE, GUEST_COOKIE, OWNER_COOKIE, SESSION_HINT_COOKIE]) expireCookie(response, name);
   return response;
 }
 
 export async function GET(request: Request) {
-  return NextResponse.json(
-    {
-      admin: isAdminRequest(request),
-      owner: isOwnerRequest(request),
-      guest: isGuestRequest(request),
-    },
-    { headers: NO_STORE }
-  );
+  const [admin, owner, guest] = await Promise.all([
+    isAdminRequest(request), isOwnerRequest(request), isGuestRequest(request),
+  ]);
+  return NextResponse.json({ admin, owner, guest }, { headers: NO_STORE });
 }

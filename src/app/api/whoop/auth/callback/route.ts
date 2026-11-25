@@ -8,7 +8,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { WHOOP_TOKEN_URL, getEnvVar } from "@/lib/whoop/config";
 import { storeTokens, type TokenSet } from "@/lib/whoop/tokens";
-import { kvGet, kvDel } from "@/lib/whoop/kv";
+import { kvTake } from "@/lib/whoop/kv";
+import { activeGateSession, ownerFlowBinding } from "@/lib/gate-session";
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,18 +24,17 @@ export async function GET(request: NextRequest) {
     }
 
     // Validate required params
-    if (!code || !state) {
+    if (!code || !state || !/^[a-f0-9]{64}$/.test(state)) {
       return redirectWithMessage("Missing authorization code or state parameter", "error");
     }
 
-    // Verify CSRF state
-    const storedState = await kvGet("whoop:oauth_state");
-    if (!storedState || storedState !== state) {
-      return redirectWithMessage("Invalid state parameter. Please try connecting again.", "error");
+    // A top-level provider redirect carries the Lax admin cookie. The Strict owner
+    // grant was checked at the start and bound to this same live login.
+    const id = await activeGateSession(request, "admin");
+    const binding = id && ownerFlowBinding(id, state);
+    if (!binding || await kvTake("whoop:oauth_state:" + binding) !== "pending") {
+      return redirectWithMessage("The connection request expired. Please connect again.", "error");
     }
-
-    // Clean up used state
-    await kvDel("whoop:oauth_state");
 
     // Exchange code for tokens
     const clientId = getEnvVar("WHOOP_CLIENT_ID");

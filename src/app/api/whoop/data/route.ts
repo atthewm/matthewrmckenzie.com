@@ -26,7 +26,7 @@ const PUBLIC_CACHE = { "Cache-Control": "public, s-maxage=900, stale-while-reval
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const ownerScope = params.get("scope") === "owner";
-  if (ownerScope && !isOwnerRequest(request)) {
+  if (ownerScope && !await isOwnerRequest(request)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403, headers: NO_STORE });
   }
 

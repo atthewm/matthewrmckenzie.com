@@ -1,11 +1,18 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { records } from "@/test/session-kv";
+import { issueGateSession } from "@/lib/gate-session";
+
+vi.mock("@/lib/whoop/kv", () => import("@/test/session-kv"));
 
 vi.mock("@/lib/notion/cache", () => ({ readDataset: vi.fn() }));
 
 import { GET } from "./route";
 import { readDataset } from "@/lib/notion/cache";
-import { ADMIN_COOKIE, adminCookieValue } from "@/lib/gate";
-import { OWNER_COOKIE, ownerCookieValue } from "@/lib/owner";
+import { ADMIN_COOKIE } from "@/lib/gate";
+import { OWNER_COOKIE } from "@/lib/owner";
+
+let adminValue: string;
+let ownerValue: string;
 
 const COOKIE_VALUE = "0123456789abcdef0123456789abcdef";
 const OWNER_SECRET = "owner-secret-owner-secret-owner-secret-00";
@@ -17,14 +24,18 @@ function get(dataset: string, cookie?: string): Request {
 }
 
 const includedPrivate = () => vi.mocked(readDataset).mock.calls.at(-1)?.[1]?.includePrivate;
-const adminCookie = () => `${ADMIN_COOKIE}=${adminCookieValue()}`;
-const ownerCookie = () => `${OWNER_COOKIE}=${ownerCookieValue()}`;
+const adminCookie = () => `${ADMIN_COOKIE}=${adminValue}`;
+const ownerCookie = () => `${OWNER_COOKIE}=${ownerValue}`;
 
-beforeEach(() => {
+beforeEach(async () => {
+  records.clear();
   vi.stubEnv("SITE_LOCK_COOKIE_VALUE", COOKIE_VALUE);
   vi.stubEnv("OWNER_COOKIE_SECRET", OWNER_SECRET);
   vi.mocked(readDataset).mockReset();
   vi.mocked(readDataset).mockResolvedValue({ items: [{ title: "Heat" }], syncedAt: "2026-11-17T12:00:00.000Z" });
+  const adminSession = (await issueGateSession("admin"))!;
+  ownerValue = adminSession.owner!;
+  adminValue = adminSession.gate;
 });
 
 describe("GET /api/notion/data, public datasets", () => {
@@ -41,8 +52,8 @@ describe("GET /api/notion/data, public datasets", () => {
     for (const cookie of [
       `${ADMIN_COOKIE}=`,
       `${ADMIN_COOKIE}=guess`,
-      `${ADMIN_COOKIE}=${adminCookieValue()}x`,
-      `x${ADMIN_COOKIE}=${adminCookieValue()}`,
+      `${ADMIN_COOKIE}=${adminValue}x`,
+      `x${ADMIN_COOKIE}=${adminValue}`,
       // The cookie main handed out carried the raw secret. It no longer works.
       `${ADMIN_COOKIE}=${COOKIE_VALUE}`,
     ]) {

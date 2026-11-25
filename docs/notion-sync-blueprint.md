@@ -158,9 +158,9 @@ The read route enforces it:
   return `data`; `private_data` is merged in **only** for an authenticated admin
   (it rides along under `_private`).
 
-This is exactly "sensitive private, the rest public," enforced server-side, and
-it reuses your existing `/gate` login: the admin and owner cookies it sets are
-HMACs of `SITE_LOCK_COOKIE_VALUE` and `OWNER_COOKIE_SECRET`.
+The server checks the current gate session before it serves private fields. Each
+login has its own 30-day deadline and KV record. Signing out at `/gate` retires
+the current record for both the admin and owner cookies.
 
 ---
 

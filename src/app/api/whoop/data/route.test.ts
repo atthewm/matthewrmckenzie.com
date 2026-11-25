@@ -1,10 +1,16 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { records } from "@/test/session-kv";
+import { issueGateSession } from "@/lib/gate-session";
+
+vi.mock("@/lib/whoop/kv", () => import("@/test/session-kv"));
 
 vi.mock("@/lib/whoop/client", () => ({ fetchDashboardData: vi.fn() }));
 
 import { GET } from "./route";
 import { fetchDashboardData, type WhoopDashboardData } from "@/lib/whoop/client";
-import { OWNER_COOKIE, ownerCookieValue } from "@/lib/owner";
+import { OWNER_COOKIE } from "@/lib/owner";
+
+let ownerValue: string;
 
 const OWNER_SECRET = "owner-secret-owner-secret-owner-secret-00";
 
@@ -93,13 +99,17 @@ function get(path: string, cookie?: string): Request {
   return new Request(`https://matthewrmckenzie.com${path}`, { headers: cookie ? { cookie } : {} });
 }
 
-const ownerCookie = () => `${OWNER_COOKIE}=${ownerCookieValue()}`;
+const ownerCookie = () => `${OWNER_COOKIE}=${ownerValue}`;
 
-beforeEach(() => {
+beforeEach(async () => {
+  records.clear();
   vi.stubEnv("OWNER_COOKIE_SECRET", OWNER_SECRET);
   vi.stubEnv("WHOOP_ENCRYPTION_KEY", "");
   vi.mocked(fetchDashboardData).mockReset();
   vi.mocked(fetchDashboardData).mockResolvedValue(FULL);
+  vi.stubEnv("SITE_LOCK_COOKIE_VALUE", "gate-fixture-only-0123456789");
+  const adminSession = (await issueGateSession("admin"))!;
+  ownerValue = adminSession.owner!;
 });
 
 describe("GET /api/whoop/data (public view)", () => {

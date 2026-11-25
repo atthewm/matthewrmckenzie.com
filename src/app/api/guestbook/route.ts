@@ -37,7 +37,7 @@ const MODERATION_OFF = "Moderation is not configured";
 // ---------------------------------------------------------------------------
 export async function GET(request: Request) {
   const adminView = new URL(request.url).searchParams.get("view") === "admin";
-  if (adminView && !isAdminRequest(request)) {
+  if (adminView && !await isAdminRequest(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: NO_STORE });
   }
 
@@ -140,7 +140,7 @@ function validModeration(body: unknown): { id: string | number; approved: boolea
 
 export async function PATCH(request: Request) {
   // Fails closed: with no admin cookie value configured, nobody may moderate.
-  if (!isAdminRequest(request)) {
+  if (!await isAdminRequest(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: NO_STORE });
   }
 

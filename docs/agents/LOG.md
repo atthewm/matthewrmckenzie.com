@@ -1,5 +1,9 @@
 # Session log
 
+## 2026-11-24, gate session lifetime and revocation
+
+Replaced static gate cookies with distinct role-bound logins in the existing KV store. The new gate checks server-side expiry, supports sign-out, and retires pending WHOOP connections for the affected login. All 270 tests passed. TypeScript and lint passed with six existing warnings. The production build checked 40 indexable pages and 158 public or rendered files. A private Valkey fixture and keyboard-driven browser journeys checked sign-out and role isolation. The local branch awaits staging command checks and owner review of the four-view screenshots.
+
 ## 2026-11-23, desktop release approval
 
 Matthew approved publishing the reviewed Trash, six desktop features and related site repairs. The release uses the existing main branch deployment. PR 23 remains a separate review.

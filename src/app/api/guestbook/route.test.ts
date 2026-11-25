@@ -1,4 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { records } from "@/test/session-kv";
+import { issueGateSession } from "@/lib/gate-session";
+
+vi.mock("@/lib/whoop/kv", () => import("@/test/session-kv"));
 
 // Recording stand-ins for the two Supabase clients the route may use: the
 // anon client (row level security applies) and the service role client.
@@ -32,7 +36,10 @@ vi.mock("@/lib/supabase-server", () => ({
 }));
 
 import { GET, PATCH, POST } from "./route";
-import { ADMIN_COOKIE, GUEST_COOKIE, adminCookieValue, guestCookieValue } from "@/lib/gate";
+import { ADMIN_COOKIE, GUEST_COOKIE } from "@/lib/gate";
+
+let guestValue: string;
+let adminValue: string;
 
 const COOKIE_VALUE = "0123456789abcdef0123456789abcdef";
 const ENTRIES = [
@@ -52,16 +59,20 @@ function patch(body: unknown, cookie?: string): Request {
   });
 }
 
-const adminCookie = () => `${ADMIN_COOKIE}=${adminCookieValue()}`;
+const adminCookie = () => `${ADMIN_COOKIE}=${adminValue}`;
 const filteredToApproved = (query: Query) =>
   query.calls.some((c) => c.method === "eq" && c.args[0] === "approved" && c.args[1] === true);
 
-beforeEach(() => {
+beforeEach(async () => {
+  records.clear();
   queries.length = 0;
   result = { data: ENTRIES, error: null };
   serviceConfigured = true;
   vi.stubEnv("SITE_LOCK_COOKIE_VALUE", COOKIE_VALUE);
   vi.stubEnv("SITE_LOCK_GUEST_PASSWORD", "guest pass phrase");
+  const adminSession = (await issueGateSession("admin"))!;
+  adminValue = adminSession.gate;
+  guestValue = (await issueGateSession("guest"))!.gate;
 });
 
 describe("GET /api/guestbook (public list)", () => {
@@ -113,7 +124,7 @@ describe("GET /api/guestbook?view=admin", () => {
     await refused(`${ADMIN_COOKIE}=anything`);
     await refused(`${adminCookie()}x`);
     await refused(`not_${adminCookie()}`);
-    await refused(`${GUEST_COOKIE}=${guestCookieValue()}`);
+    await refused(`${GUEST_COOKIE}=${guestValue}`);
     // The cookie main handed out carried the raw secret.
     await refused(`${ADMIN_COOKIE}=${COOKIE_VALUE}`);
   });
@@ -179,7 +190,7 @@ describe("POST /api/guestbook (sign the book)", () => {
 
 describe("PATCH /api/guestbook (moderation)", () => {
   test("is refused without the exact admin cookie value, before any key is used", async () => {
-    for (const cookie of [undefined, `${ADMIN_COOKIE}=`, `${ADMIN_COOKIE}=guess`, `${ADMIN_COOKIE}=${COOKIE_VALUE}`, `${GUEST_COOKIE}=${guestCookieValue()}`]) {
+    for (const cookie of [undefined, `${ADMIN_COOKIE}=`, `${ADMIN_COOKIE}=guess`, `${ADMIN_COOKIE}=${COOKIE_VALUE}`, `${GUEST_COOKIE}=${guestValue}`]) {
       const response = await PATCH(patch({ id: "2", approved: true }, cookie));
       expect(response.status, cookie).toBe(401);
     }
