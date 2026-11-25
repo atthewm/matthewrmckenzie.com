@@ -193,7 +193,7 @@ export default function DesktopShell({ contentMap }: DesktopShellProps) {
   useEffect(() => {
     setMounted(true);
     // The desktop now covers the server-rendered intro (HomeIntro). Flag it so
-    // globals.css can take the covered links out of the tab order.
+    // globals.css can hide the covered introduction from assistive technology.
     document.documentElement.dataset.desktopReady = "true";
 
     // Skip boot for reduced-motion preference or repeat visits

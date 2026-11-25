@@ -8,7 +8,7 @@ import { profile } from "@/config/profile";
 // and readers without JavaScript) this is the page: who Matthew is, his role,
 // and plain links into the reading pages. It sits in a fixed layer that the
 // desktop covers once it mounts; DesktopShell then sets data-desktop-ready on
-// <html>, and globals.css takes the covered links out of the tab order.
+// <html>, and globals.css hides the covered introduction.
 // Styled with the reading-site tokens (.site), the same ones /about uses.
 // ============================================================================
 
@@ -24,7 +24,7 @@ const links = [
 
 export default function HomeIntro() {
   return (
-    <div id="home-intro" className="site home-intro">
+    <main id="home-intro" className="site home-intro">
       <div className="mx-auto max-w-[560px] px-6 pb-12 pt-[16vh]">
         <p className="site-eyebrow">
           {profile.company} &middot; {profile.primaryCity}
@@ -36,7 +36,7 @@ export default function HomeIntro() {
         <p className="mt-6 text-[15px] leading-[1.7]">{profile.bio}</p>
         <nav
           aria-label="Site sections"
-          className="home-intro-nav mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[15px]"
+          className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[15px]"
         >
           {links.map((link) => (
             <Link key={link.href} href={link.href} prefetch={false} className="site-link">
@@ -45,6 +45,6 @@ export default function HomeIntro() {
           ))}
         </nav>
       </div>
-    </div>
+    </main>
   );
 }

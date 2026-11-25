@@ -65,7 +65,7 @@ export default function MobileView({ contentMap }: MobileViewProps) {
 
   if (top && currentItem) {
     return (
-      <div className="fixed inset-0 bg-desktop-surface flex flex-col z-50">
+      <main aria-label={currentItem.name} className="fixed inset-0 bg-desktop-surface flex flex-col z-50">
         <div className="flex items-center h-12 px-2 border-b border-desktop-border shrink-0 safe-area-top">
           <button
             onClick={() => closeWindow(top.id)}
@@ -75,9 +75,9 @@ export default function MobileView({ contentMap }: MobileViewProps) {
             <ArrowLeft size={18} />
             Back
           </button>
-          <div className="flex-1 text-center text-sm font-semibold text-desktop-text truncate px-2">
+          <h1 className="flex-1 text-center text-sm font-semibold text-desktop-text truncate px-2">
             {currentItem.name}
-          </div>
+          </h1>
           {deskWindows.length > 1 ? (
             <label className="relative flex items-center justify-center min-h-11 min-w-12 text-xs font-medium text-desktop-accent px-2 focus-within:outline">
               Switch
@@ -96,12 +96,12 @@ export default function MobileView({ contentMap }: MobileViewProps) {
             <WindowContent windowState={top} contentMap={contentMap} />
           )}
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="fixed inset-0 overflow-y-auto" style={{ background: "#151619", color: "#ecebe7" }}>
+    <main className="fixed inset-0 overflow-y-auto" style={{ background: "#151619", color: "#ecebe7" }}>
       <div className="safe-area-top px-5 pt-10 pb-10 max-w-md mx-auto">
         <p style={{ color: "#cfae6b" }} className="font-mono text-[11px] uppercase tracking-[0.16em]">
           {profile.company} &middot; {profile.primaryCity}
@@ -135,7 +135,7 @@ export default function MobileView({ contentMap }: MobileViewProps) {
               className="flex flex-col items-center gap-1.5 min-w-0"
               aria-label={`Open ${item.name}`}
             >
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center border active:scale-95 transition-transform"
+              <div aria-hidden="true" className="w-14 h-14 rounded-2xl flex items-center justify-center border active:scale-95 transition-transform"
                    style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.08)" }}>
                 <PantherIcon itemId={item.id} size={36} />
               </div>
@@ -146,7 +146,7 @@ export default function MobileView({ contentMap }: MobileViewProps) {
           ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

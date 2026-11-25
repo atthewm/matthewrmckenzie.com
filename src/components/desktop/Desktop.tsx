@@ -15,6 +15,7 @@ import { useDesktop } from "@/hooks/useDesktopStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSecrets } from "@/lib/useSecrets";
 import { findFSItem } from "@/data/fs";
+import { profile } from "@/config/profile";
 
 // ============================================================================
 // DESKTOP
@@ -223,7 +224,8 @@ export default function Desktop({ contentMap }: DesktopProps) {
   const shortcutRows = Math.max(1, Math.min(4, Math.floor((viewport.height - 174) / 90)));
 
   return (
-    <div className="fixed inset-0 overflow-hidden">
+    <main aria-label="Desktop workspace" className="fixed inset-0 overflow-hidden">
+      <h1 className="sr-only">{profile.fullName}</h1>
       {/* Skip to content for keyboard / screen reader users */}
       <a
         href="#desktop-workspace"
@@ -239,10 +241,9 @@ export default function Desktop({ contentMap }: DesktopProps) {
       <MenuBar />
 
       {/* Click on empty desktop to unfocus + easter egg + right-click */}
-      <main
+      <div
         id="desktop-workspace"
-        role="main"
-        aria-label="Desktop workspace"
+        tabIndex={-1}
         className="absolute top-[26px] left-0 right-0 bottom-0"
         onClick={handleDesktopClick}
         onContextMenu={handleContextMenu}
@@ -307,6 +308,6 @@ export default function Desktop({ contentMap }: DesktopProps) {
           {toast}
         </div>
       )}
-    </div>
+    </main>
   );
 }

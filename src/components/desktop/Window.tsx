@@ -324,7 +324,7 @@ export default function Window({ windowState, children }: WindowProps) {
       >
         {/* Traffic lights - larger touch targets on mobile */}
         <div
-          className={`flex items-center ${isMobile ? "gap-[10px]" : "gap-[8px]"} mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
+          className={`flex items-center ${isMobile ? "gap-[10px]" : "gap-3"} mr-3 z-20 ${isFocused ? "" : "aqua-buttons-unfocused"}`}
         >
           <button onClick={handleClose} aria-label="Close window" className={`aqua-btn aqua-close ${isMobile ? "aqua-btn-mobile" : ""}`} />
           <button onClick={handleMinimize} aria-label="Minimize window" className={`aqua-btn aqua-minimize ${isMobile ? "aqua-btn-mobile" : ""}`} />
