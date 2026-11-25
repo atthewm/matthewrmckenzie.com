@@ -16,7 +16,8 @@
     "predev": "node scripts/stage-background-videos.mjs && node scripts/build-recipe-index.mjs",
     "prebuild": "node scripts/stage-background-videos.mjs && node scripts/build-recipe-index.mjs",
     "audit:metadata": "node scripts/verify-page-metadata.mjs",
-    "postbuild": "npm run audit:metadata && node scripts/check-public-build.mjs"
+    "postbuild": "npm run audit:metadata && node scripts/check-public-build.mjs",
+    "ci:local": "sh scripts/ci-local.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
