@@ -137,6 +137,13 @@
   transition: all 0.15s ease;
 }
 
+.aqua-btn:not(.aqua-btn-mobile)::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+}
+
 .aqua-btn::after {
   content: "";
   position: absolute;
@@ -302,7 +309,7 @@
   --site-ink: #1c1d20;
   --site-muted: #5d5f66;
   --site-rule: #dcd8d0;
-  --site-gold: #9a7a3c;
+  --site-gold: #846729;
   --site-gold-soft: rgba(154, 122, 60, 0.12);
   --site-link: #2e4a6b;
   background: var(--site-bg);
@@ -325,9 +332,9 @@
 }
 
 /* Home intro (HomeIntro.tsx): the first paint of "/", in a fixed layer that the
-   desktop covers once it mounts. Covered links leave the tab order. */
+   desktop replaces once it mounts. */
 .home-intro { position: fixed; inset: 0; overflow-y: auto; }
-html[data-desktop-ready] .home-intro-nav { visibility: hidden; }
+html[data-desktop-ready] .home-intro { display: none; }
 
 .site-display { font-family: var(--font-display), Georgia, serif; font-weight: 400; }
 .site-mono { font-family: var(--font-mono), ui-monospace, monospace; }

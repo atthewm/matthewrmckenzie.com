@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useDesktop } from "@/hooks/useDesktopStore";
 
@@ -74,7 +75,7 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
           }}
         />
 
-        <h1 className="text-base font-semibold text-desktop-text mt-3">McKenzie OS</h1>
+        <h2 className="text-base font-semibold text-desktop-text mt-3">McKenzie OS</h2>
         <p className="text-[11px] text-desktop-text-secondary mt-0.5">
           Version 2.0 &middot; Matthew McKenzie
         </p>
@@ -110,6 +111,7 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
 
           {/* System Info toggle */}
           <button
+            aria-expanded={showSystemInfo}
             onClick={() => setShowSystemInfo(!showSystemInfo)}
             className="flex items-center gap-1 mt-2 text-[10px] font-medium transition-colors"
             style={{ color: "var(--desktop-accent)" }}
@@ -145,6 +147,12 @@ export default function AboutApp({ contentHtml }: AboutAppProps) {
 
       {/* Content area */}
       <div className="flex-1 overflow-auto px-6 py-4">
+        <Link
+          href="/writing"
+          className="float-right ml-3 inline-flex min-h-7 items-center rounded-sm text-xs text-desktop-text underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          Read my writing
+        </Link>
         {contentHtml ? (
           <div
             className="prose prose-sm dark:prose-invert max-w-none

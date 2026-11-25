@@ -4,6 +4,12 @@
 
 Replaced static gate cookies with distinct role-bound logins in the existing KV store. The new gate checks server-side expiry, supports sign-out, and retires pending WHOOP connections for the affected login. All 270 tests passed. TypeScript and lint passed with six existing warnings. The production build checked 40 indexable pages and 158 public or rendered files. A private Valkey fixture and keyboard-driven browser journeys checked sign-out and role isolation. The local branch awaits staging command checks and owner review of the four-view screenshots.
 
+## 2026-11-24, personal site journey review
+
+The About window now links directly to Writing. Strengthened the reading gold, gave the active shell a single main landmark and improved keyboard focus, named launcher icons and the spacing of Panther window controls. The existing profile identifies Menlo Equities as current and Civitas Capital Group as previous.
+
+All 278 repository tests, TypeScript, lint and the production build passed. The four Chrome journeys, all four no-JavaScript and keyboard runs, and two phone WebKit journeys reached Contact. Each of 24 candidate states returned zero axe findings. November 24 visual evidence lives in the rollout workspace under `outputs/personal-site/`. Awaiting design review, separate from PR 23.
+
 ## 2026-11-23, desktop release approval
 
 Matthew approved publishing the reviewed Trash, six desktop features and related site repairs. The release uses the existing main branch deployment. PR 23 remains a separate review.

@@ -115,8 +115,8 @@ function DockIcon({
     >
       {!compact && <DockTooltip label={item.name} visible={isHovered} />}
 
-      {/* Panther Aqua Icon */}
-      <div
+      {/* The button carries the app name. */}
+      <div aria-hidden="true"
         className="relative flex items-center justify-center [&>img]:max-h-[90%] [&>img]:max-w-[90%] [&>svg]:max-h-[90%] [&>svg]:max-w-[90%]"
         style={{
           width: iconBox,

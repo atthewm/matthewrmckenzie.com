@@ -82,7 +82,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
     <button
       className={`
         absolute flex flex-col items-center gap-1 p-1.5 rounded w-[80px]
-        focus-visible:outline-none
+        focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:ring-2 focus-visible:ring-black
         transition-shadow duration-100 group
         ${dragging ? "opacity-80" : ""}
       `}
@@ -111,6 +111,7 @@ export default function DesktopIcon({ item, x, y, onDragEnd }: DesktopIconProps)
     >
       {/* Panther PNG icon */}
       <div
+        aria-hidden="true"
         className="relative flex items-center justify-center group-hover:scale-105 transition-transform duration-150"
         style={{
           width: boxSize,
