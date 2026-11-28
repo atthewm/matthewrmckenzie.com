@@ -313,7 +313,7 @@ export default function TerminalApp() {
         case "github":
         case "gh":
         case "repos": {
-          addOutput("Opening GitHub projects...");
+          addOutput("Opening GitHub...");
           const ghItem = findFSItem("github-projects");
           if (ghItem) setTimeout(() => openItem(ghItem), 300);
           break;

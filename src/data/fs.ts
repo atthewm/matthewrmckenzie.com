@@ -94,7 +94,7 @@ export const fileSystem: FSItem[] = [
     { id: "linkedin", name: "LinkedIn", type: "link", icon: "Linkedin", href: "https://www.linkedin.com/in/mrmckenzie/", description: "Connect on LinkedIn." },
     { id: "github", name: "GitHub", type: "link", icon: "Github", href: "https://github.com/atthewm", description: "View code on GitHub." },
   ]},
-  { id: "github-projects", name: "GitHub", type: "app", icon: "Github", appComponent: "GitHubApp", description: "Public repositories and open source projects.", defaultSize: { width: 520, height: 580 } },
+  { id: "github-projects", name: "GitHub", type: "app", icon: "Github", appComponent: "GitHubApp", description: "Public repositories and open source code.", defaultSize: { width: 520, height: 580 } },
   { id: "whats-new", name: "What's New", type: "app", icon: "Sparkles", appComponent: "WhatsNewApp", description: "Changelog and release history for McKenzie OS.", defaultSize: { width: 460, height: 560 }, children: [
     { id: "startup-archive", name: "Startup Disk Archive", type: "app", icon: "HardDrive", appComponent: "StartupArchiveApp", description: "Mount a disk to explore an earlier version of the site.", defaultSize: { width: 680, height: 630 } },
   ]},

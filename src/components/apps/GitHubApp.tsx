@@ -7,7 +7,7 @@ import { ExternalLink, GitFork, Code2, Moon, Gamepad2, Globe } from "lucide-reac
 // GITHUB APP - Public Repositories Showcase
 // ============================================================================
 
-type RepoCategory = "all" | "health" | "projects" | "games";
+type RepoCategory = "all" | "health" | "tools" | "games";
 
 interface Repo {
   name: string;
@@ -46,7 +46,7 @@ const repos: Repo[] = [
     url: "https://github.com/atthewm/matthewrmckenzie.com",
     language: "TypeScript",
     languageColor: "#3178c6",
-    category: ["projects"],
+    category: ["tools"],
     icon: <Globe size={14} />,
   },
   {
@@ -55,7 +55,7 @@ const repos: Repo[] = [
     url: "https://github.com/atthewm/cosmos-collector",
     language: "Python",
     languageColor: "#3572A5",
-    category: ["projects"],
+    category: ["tools"],
     icon: <Code2 size={14} />,
     license: "MIT",
   },
@@ -81,7 +81,7 @@ const repos: Repo[] = [
 
 const filters: { label: string; value: RepoCategory }[] = [
   { label: "All", value: "all" },
-  { label: "Projects", value: "projects" },
+  { label: "Tools", value: "tools" },
   { label: "Health Data", value: "health" },
   { label: "Games", value: "games" },
 ];
@@ -131,7 +131,7 @@ export default function GitHubApp() {
               @atthewm
             </a>
             <p className="text-[10px] text-desktop-text-secondary">
-              Health data pipelines, tools, and side projects
+              Health data pipelines, tools and games
             </p>
           </div>
         </div>

@@ -17,7 +17,7 @@ import {
 // ============================================================================
 // LINKTREE APP - Link Bio Page
 // ============================================================================
-// Full link bio with sections: social, projects, tools.
+// Full link bio with sections: social, tools, connect.
 // ============================================================================
 
 interface LinkItem {
@@ -29,11 +29,11 @@ interface LinkItem {
 
 const socialLinks: LinkItem[] = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/mrmckenzie/", icon: Linkedin, description: "Connect professionally" },
-  { label: "GitHub", href: "https://github.com/atthewm", icon: Github, description: "Code and open source projects" },
+  { label: "GitHub", href: "https://github.com/atthewm", icon: Github, description: "Code and open source" },
   { label: "Instagram", href: "https://www.instagram.com/mrem/", icon: Instagram, description: "Photos and stories" },
 ];
 
-const projectLinks: LinkItem[] = [
+const toolLinks: LinkItem[] = [
   { label: "mckm.at", href: "https://mckm.at", icon: Link2, description: "Link shortener and data rooms" },
   { label: "Eight Sleep Consumer", href: "https://github.com/atthewm/eightsleep-consumer", icon: Moon, description: "Sleep data pipeline and integrations" },
   { label: "Eight Sleep Client", href: "https://github.com/atthewm/eightsleep-client", icon: Moon, description: "TypeScript client for the Eight Sleep API" },
@@ -132,7 +132,7 @@ export default function LinktreeApp() {
           </div>
 
           <LinkSection title="Social" links={socialLinks} />
-          <LinkSection title="Projects" links={projectLinks} />
+          <LinkSection title="Tools" links={toolLinks} />
           <LinkSection title="Connect" links={actionLinks} />
         </div>
       </div>
